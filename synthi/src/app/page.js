@@ -496,11 +496,9 @@ export default function ModernHome() {
                 }`}
               style={{ transitionDelay: "200ms" }}
             >
-              Power for <span className="text-[#58A4B0]">Everyone</span>.
               <br />
               <span className="text-3xl md:text-5xl text-[#AFAFAF]">
-                Premium for the <span className="inline-block relative whitespace-nowrap">
-                  Ambitious
+                Synthi is where <span className="text-[#58A4B0]">serious developers</span> build, <span className="inline-block relative whitespace-nowrap">
                   <svg
                     className={`absolute left-0 -bottom-2 w-full h-3 pointer-events-none ${businessVisible ? 'draw-line-animated' : ''}`}
                     viewBox="0 0 200 12"
@@ -614,7 +612,9 @@ export default function ModernHome() {
               <span className="text-[#E5E5E5] text-lg font-semibold">Your work is yours. Forever.</span>
             </div>
             <p className="text-[#AFAFAF] text-sm mt-4 max-w-2xl mx-auto">
-              No lock-in, no data hostage. Export everything, anytime. We're here to empower you, not trap you.
+            No lock-in, no proprietary traps.
+            Export or self-host your work at any time.
+            Synthi strengthens your workflow — without holding it hostage.
             </p>
           </div>
         </div>
