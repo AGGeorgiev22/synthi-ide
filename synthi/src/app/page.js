@@ -498,7 +498,7 @@ export default function ModernHome() {
             >
               <br />
               <span className="text-3xl md:text-5xl text-[#AFAFAF]">
-                Synthi is where <span className="text-[#58A4B0]">everybody builds scalable software</span> build, <span className="inline-block relative whitespace-nowrap">
+                Synthi is where <span className="text-[#58A4B0]">everybody</span> builds, <span className="inline-block relative whitespace-nowrap">
                 faster
                   <svg
                     className={`absolute left-0 -bottom-2 w-full h-3 pointer-events-none ${businessVisible ? 'draw-line-animated' : ''}`}
