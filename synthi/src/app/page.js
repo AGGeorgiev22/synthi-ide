@@ -374,7 +374,11 @@ export default function ModernHome() {
       <div className="fixed top-0 left-0 right-0 z-50 bg-[#131112]/80 backdrop-blur-md border-b border-[#E5E5E5]/5">
         <div className="px-8 py-4 flex items-center">
           <div className="flex items-center gap-3">
-            <span className="text-[#E5E5E5] font-semibold text-lg tracking-tight">synthi</span>
+            <img
+              src="/synthi-logo.svg"
+              alt="Synthi 26 Logo"
+              className="h-6 inline-block object-contain"
+            />
             <span className="text-[#E5E5E5] font-semibold text-sm -ml-2 -mt-2 tracking-tight">26'</span>
           </div>
         </div>
@@ -487,8 +491,8 @@ export default function ModernHome() {
         </div>
       </div>
 
-            {/* Business Model */}
-            <div ref={businessRef} className="relative z-10 min-h-screen flex items-center justify-center px-6 md:px-20 py-20 md:py-32">
+      {/* Business Model */}
+      <div ref={businessRef} className="relative z-10 min-h-screen flex items-center justify-center px-6 md:px-20 py-20 md:py-32">
         <div className="max-w-6xl w-full space-y-16">
           <div className="text-center space-y-6">
             <h2
@@ -499,7 +503,7 @@ export default function ModernHome() {
               <br />
               <span className="text-3xl md:text-5xl text-[#AFAFAF]">
                 Synthi is where <span className="text-[#58A4B0]">everybody</span> builds, <span className="inline-block relative whitespace-nowrap">
-                faster
+                  faster
                   <svg
                     className={`absolute left-0 -bottom-2 w-full h-3 pointer-events-none ${businessVisible ? 'draw-line-animated' : ''}`}
                     viewBox="0 0 200 12"
@@ -613,9 +617,9 @@ export default function ModernHome() {
               <span className="text-[#E5E5E5] text-lg font-semibold">Your work is yours. Forever.</span>
             </div>
             <p className="text-[#AFAFAF] text-sm mt-4 max-w-2xl mx-auto">
-            No lock-in, no proprietary traps.
-            Export or self-host your work at any time.
-            Synthi strengthens your workflow — without holding it hostage.
+              No lock-in, no proprietary traps.
+              Export or self-host your work at any time.
+              Synthi strengthens your workflow — without holding it hostage.
             </p>
           </div>
         </div>
