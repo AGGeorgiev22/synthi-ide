@@ -30,6 +30,7 @@ export default function RootLayout({ children }) {
           {children}
         </main>
         <Toaster richColors />
+        <Analytics />
       </body>
     </html>
   );
