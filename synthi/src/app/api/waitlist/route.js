@@ -73,7 +73,6 @@ export async function GET(req) {
         { 
           message: "Waitlist retrieved successfully",
           count: waitlist.emails.length,
-          emails: waitlist.emails 
         },
         { status: 200 }
       );
