@@ -98,8 +98,8 @@ export default function ModernHome() {
   /**
    * Typewriter strings for hero
    */
-  const firstLine = "The IDE that truly";
-  const secondLine = "understands you.";
+  const firstLine = "The Cloud IDE for Everybody,;
+  const secondLine = "Build the Impossible, Instantly.";
 
   /* ---------- Efficient scroll handling (single rAF-driven listener) ---------- */
   useEffect(() => {
