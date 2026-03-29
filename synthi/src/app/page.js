@@ -127,6 +127,9 @@ export default function ModernHome() {
   const [expandedCard, setExpandedCard] = useState(null);
   const [openFaq, setOpenFaq] = useState(null);
   const [showCommandPalette, setShowCommandPalette] = useState(false);
+  const [mousePos, setMousePos] = useState({ x: 0.5, y: 0.5 }); // normalised 0..1
+  const [cursorTrail, setCursorTrail] = useState([]);
+  const cursorTrailRef = useRef(null);
 
   /* ---------- Derive language from editor content ---------- */
   const detectedLang = detectLanguage(editorCode);
@@ -136,10 +139,38 @@ export default function ModernHome() {
   const editorLines = editorCode.split('\n');
 
   /* Generate static star field (seeded PRNG for SSR consistency) */
-  const stars = React.useMemo(() => {
+  const { stars, driftParticles, auroraRibbons, starClusters } = React.useMemo(() => {
     let t = 42;
     const rand = () => { t = (t + 0x6D2B79F5) | 0; let v = Math.imul(t ^ (t >>> 15), 1 | t); v ^= v + Math.imul(v ^ (v >>> 7), 61 | v); return ((v ^ (v >>> 14)) >>> 0) / 4294967296; };
-    return Array.from({ length: 140 }, () => ({ x: rand() * 100, y: rand() * 100, size: rand() * 1.5 + 1, opacity: rand() * 0.12 + 0.08 }));
+    const _stars = Array.from({ length: 140 }, (_, i) => ({
+      x: rand() * 100, y: rand() * 100, size: rand() * 1.5 + 1, opacity: rand() * 0.12 + 0.08,
+      twinkle: i % 5 === 0, // ~28 stars twinkle
+      twinkleDelay: rand() * 6, twinkleDuration: rand() * 3 + 2,
+    }));
+    // Star clusters — 3 dense groupings of 15 stars each
+    const clusterCenters = [{ cx: 15, cy: 25 }, { cx: 72, cy: 18 }, { cx: 55, cy: 70 }];
+    const _clusters = clusterCenters.flatMap(({ cx, cy }) =>
+      Array.from({ length: 15 }, () => ({
+        x: cx + (rand() - 0.5) * 12, y: cy + (rand() - 0.5) * 10,
+        size: rand() * 1.2 + 0.5, opacity: rand() * 0.15 + 0.06,
+        twinkle: rand() > 0.6, twinkleDelay: rand() * 8, twinkleDuration: rand() * 4 + 2,
+      }))
+    );
+    // Drifting particles — 60 tiny motes
+    const _drift = Array.from({ length: 60 }, () => ({
+      x: rand() * 100, y: rand() * 100, size: rand() * 1.5 + 0.5,
+      opacity: rand() * 0.06 + 0.02, duration: rand() * 30 + 25, delay: rand() * 20,
+      dx: (rand() - 0.5) * 30, dy: rand() * -20 - 10, // drift up-ish
+    }));
+    // Aurora ribbons — 3 ribbons
+    const _aurora = Array.from({ length: 3 }, (_, i) => ({
+      top: 15 + i * 25 + rand() * 10, // spread across viewport
+      left: -10, width: 120, height: rand() * 80 + 60,
+      hue: i === 0 ? '88, 164, 176' : i === 1 ? '50, 116, 100' : '100, 180, 160',
+      duration: rand() * 8 + 12, delay: i * 3,
+      opacity: rand() * 0.02 + 0.015,
+    }));
+    return { stars: _stars, driftParticles: _drift, auroraRibbons: _aurora, starClusters: _clusters };
   }, []);
 
   /* Ghost typing: types out INITIAL_CODE on mount */
@@ -238,6 +269,8 @@ export default function ModernHome() {
       if (shootingStarRef.current) clearTimeout(shootingStarRef.current);
       if (hmrTimerRef.current) clearTimeout(hmrTimerRef.current);
       if (bugFixRef.current) clearTimeout(bugFixRef.current);
+      if (cursorTrailRef.current) clearTimeout(cursorTrailRef.current);
+      if (cometRef.current) clearTimeout(cometRef.current);
     };
   }, []);
 
@@ -253,6 +286,53 @@ export default function ModernHome() {
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
   }, []);
+
+  /* Mouse tracking for nebula parallax + cursor trail */
+  useEffect(() => {
+    if (!mounted) return;
+    let trailId = 0;
+    const onMove = (e) => {
+      const nx = e.clientX / window.innerWidth;
+      const ny = e.clientY / window.innerHeight;
+      setMousePos({ x: nx, y: ny });
+      // Spawn cursor trail particle every ~80ms (throttled via ID check)
+      trailId++;
+      if (trailId % 3 === 0) {
+        const p = { id: trailId, x: e.clientX, y: e.clientY + window.scrollY };
+        setCursorTrail(prev => [...prev.slice(-12), p]);
+      }
+    };
+    window.addEventListener('mousemove', onMove, { passive: true });
+    return () => window.removeEventListener('mousemove', onMove);
+  }, [mounted]);
+
+  /* Cursor trail cleanup — remove particles after 800ms */
+  useEffect(() => {
+    if (cursorTrail.length === 0) return;
+    cursorTrailRef.current = setTimeout(() => {
+      setCursorTrail(prev => prev.slice(1));
+    }, 800);
+    return () => clearTimeout(cursorTrailRef.current);
+  }, [cursorTrail]);
+
+  /* Comet — fires every 20-35s (separate from shooting stars) */
+  const [comet, setComet] = useState(null);
+  const cometRef = useRef(null);
+  useEffect(() => {
+    if (!mounted) return;
+    const fire = () => {
+      const x = Math.random() * 40 + 5;
+      const y = Math.random() * 30;
+      setComet({ x, y, id: Date.now() });
+      setTimeout(() => setComet(null), 3000);
+    };
+    const schedule = () => {
+      cometRef.current = setTimeout(() => { fire(); schedule(); }, Math.random() * 15000 + 20000);
+    };
+    // first comet after 10s
+    cometRef.current = setTimeout(() => { fire(); schedule(); }, 10000);
+    return () => clearTimeout(cometRef.current);
+  }, [mounted]);
 
   /* Editor event handlers */
   const handleEditorChange = (e) => {
@@ -710,6 +790,61 @@ export default function ModernHome() {
           100% { opacity: 1; transform: translateY(0); }
         }
         .badge-slide-up { animation: badgeSlideUp 0.4s ease-out both; }
+
+        /* ─── Star twinkle ─── */
+        @keyframes starTwinkle {
+          0%, 100% { opacity: var(--base-opacity); transform: scale(1); }
+          50% { opacity: calc(var(--base-opacity) + 0.2); transform: scale(1.6); filter: blur(0.5px); }
+        }
+
+        /* ─── Nebula breathing ─── */
+        @keyframes nebulaBreath {
+          0%, 100% { transform: scale(1); opacity: var(--base-o); }
+          50% { transform: scale(1.08); opacity: calc(var(--base-o) + 0.015); }
+        }
+
+        /* ─── Aurora wave ─── */
+        @keyframes auroraWave {
+          0% { transform: translateX(-5%) skewX(-3deg) scaleY(1); opacity: var(--a-opacity); }
+          25% { transform: translateX(2%) skewX(2deg) scaleY(1.15); opacity: calc(var(--a-opacity) + 0.01); }
+          50% { transform: translateX(5%) skewX(-1deg) scaleY(0.9); opacity: var(--a-opacity); }
+          75% { transform: translateX(-2%) skewX(3deg) scaleY(1.1); opacity: calc(var(--a-opacity) + 0.008); }
+          100% { transform: translateX(-5%) skewX(-3deg) scaleY(1); opacity: var(--a-opacity); }
+        }
+
+        /* ─── Drifting particles ─── */
+        @keyframes driftFloat {
+          0% { transform: translate(0, 0); opacity: var(--d-opacity); }
+          50% { opacity: calc(var(--d-opacity) + 0.03); }
+          100% { transform: translate(var(--dx), var(--dy)); opacity: 0; }
+        }
+
+        /* ─── Comet ─── */
+        @keyframes cometTravel {
+          0% { transform: translate(0, 0) rotate(210deg) scaleX(1); opacity: 0; }
+          8% { opacity: 0.9; }
+          70% { opacity: 0.5; }
+          100% { transform: translate(500px, 500px) rotate(210deg) scaleX(2); opacity: 0; }
+        }
+        .comet {
+          height: 2px; width: 120px;
+          background: linear-gradient(90deg, rgba(88,164,176,0.9), rgba(88,164,176,0.4), rgba(255,255,255,0.1), transparent);
+          border-radius: 2px;
+          animation: cometTravel 3s linear forwards;
+          filter: blur(0.5px);
+        }
+        .comet::before {
+          content: ''; position: absolute; left: -3px; top: -2px;
+          width: 6px; height: 6px; border-radius: 50%;
+          background: radial-gradient(circle, rgba(88,164,176,0.8), transparent);
+          filter: blur(1px);
+        }
+
+        /* ─── Cursor trail particle ─── */
+        @keyframes cursorFade {
+          0% { opacity: 0.5; transform: scale(1); }
+          100% { opacity: 0; transform: scale(0.2) translateY(-15px); }
+        }
       `}</style>
 
       {/* Top nav */}
@@ -749,23 +884,92 @@ export default function ModernHome() {
       {/* Base dark background */}
       <div className="fixed inset-0 bg-[#131112]" />
 
-      {/* Deep space — static star field */}
+      {/* Distant planet — large blurred sphere */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{ transform: `translateY(${scrollY * 0.02}px)` }}>
+        <div className="absolute" style={{ top: '12%', right: '8%', width: 280, height: 280, borderRadius: '50%', background: 'radial-gradient(circle at 35% 35%, rgba(88,164,176,0.06), rgba(50,116,100,0.03) 50%, transparent 70%)', filter: 'blur(40px)' }} />
+        {/* subtle ring */}
+        <div className="absolute" style={{ top: 'calc(12% + 120px)', right: 'calc(8% - 40px)', width: 360, height: 30, borderRadius: '50%', border: '1px solid rgba(88,164,176,0.03)', transform: 'rotateX(75deg)' }} />
+      </div>
+
+      {/* Deep space — static star field with twinkling */}
       <div className="fixed inset-0 pointer-events-none" style={{ transform: `translateY(${scrollY * 0.05}px)` }}>
         {mounted && stars.map((s, i) => (
-          <div key={i} className="absolute rounded-full bg-white" style={{ left: `${s.x}%`, top: `${s.y}%`, width: s.size, height: s.size, opacity: s.opacity }} />
+          <div key={i} className="absolute rounded-full bg-white" style={{
+            left: `${s.x}%`, top: `${s.y}%`, width: s.size, height: s.size,
+            opacity: s.opacity,
+            '--base-opacity': s.opacity,
+            ...(s.twinkle ? { animation: `starTwinkle ${s.twinkleDuration}s ease-in-out ${s.twinkleDelay}s infinite` } : {}),
+          }} />
         ))}
       </div>
 
-      {/* Nebula dust cloud — massive soft teal glow */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none" style={{ transform: `translateY(${scrollY * 0.08}px)` }}>
-        <div className="absolute top-[20%] left-[30%] w-[800px] h-[800px] bg-[#58A4B0] opacity-[0.04] rounded-full blur-[200px]" />
-        <div className="absolute bottom-[10%] right-[15%] w-[600px] h-[600px] bg-[#327464] opacity-[0.05] rounded-full blur-[180px]" />
+      {/* Star clusters — denser regions */}
+      <div className="fixed inset-0 pointer-events-none" style={{ transform: `translateY(${scrollY * 0.04}px)` }}>
+        {mounted && starClusters.map((s, i) => (
+          <div key={`cl-${i}`} className="absolute rounded-full bg-white" style={{
+            left: `${s.x}%`, top: `${s.y}%`, width: s.size, height: s.size,
+            opacity: s.opacity,
+            '--base-opacity': s.opacity,
+            ...(s.twinkle ? { animation: `starTwinkle ${s.twinkleDuration}s ease-in-out ${s.twinkleDelay}s infinite` } : {}),
+          }} />
+        ))}
+      </div>
+
+      {/* Aurora ribbons — slow undulating gradient bands */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{ transform: `translateY(${scrollY * 0.03}px)` }}>
+        {mounted && auroraRibbons.map((r, i) => (
+          <div key={`aurora-${i}`} className="absolute" style={{
+            top: `${r.top}%`, left: `${r.left}%`, width: `${r.width}%`, height: r.height,
+            background: `linear-gradient(90deg, transparent, rgba(${r.hue},${r.opacity}), rgba(${r.hue},${r.opacity * 1.5}), rgba(${r.hue},${r.opacity}), transparent)`,
+            filter: 'blur(60px)',
+            '--a-opacity': r.opacity,
+            animation: `auroraWave ${r.duration}s ease-in-out ${r.delay}s infinite`,
+          }} />
+        ))}
+      </div>
+
+      {/* Nebula dust clouds — with breathing + mouse parallax */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none" style={{
+        transform: `translateY(${scrollY * 0.08}px) translate(${(mousePos.x - 0.5) * -20}px, ${(mousePos.y - 0.5) * -15}px)`,
+        transition: 'transform 0.3s ease-out',
+      }}>
+        <div className="absolute top-[20%] left-[30%] w-[800px] h-[800px] bg-[#58A4B0] rounded-full blur-[200px]"
+          style={{ '--base-o': '0.04', opacity: 0.04, animation: 'nebulaBreath 18s ease-in-out infinite' }} />
+        <div className="absolute bottom-[10%] right-[15%] w-[600px] h-[600px] bg-[#327464] rounded-full blur-[180px]"
+          style={{ '--base-o': '0.05', opacity: 0.05, animation: 'nebulaBreath 22s ease-in-out 4s infinite' }} />
+      </div>
+
+      {/* Drifting particles — tiny floating motes */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        {mounted && driftParticles.map((p, i) => (
+          <div key={`drift-${i}`} className="absolute rounded-full bg-white/80" style={{
+            left: `${p.x}%`, top: `${p.y}%`, width: p.size, height: p.size,
+            '--d-opacity': p.opacity, '--dx': `${p.dx}px`, '--dy': `${p.dy}px`,
+            opacity: p.opacity,
+            animation: `driftFloat ${p.duration}s linear ${p.delay}s infinite`,
+          }} />
+        ))}
       </div>
 
       {/* Shooting star */}
       {shootingStar && (
         <div key={shootingStar.id} className="fixed pointer-events-none z-0 shooting-star" style={{ left: `${shootingStar.x}%`, top: `${shootingStar.y}%` }} />
       )}
+
+      {/* Comet — longer, glowing, rarer */}
+      {comet && (
+        <div key={comet.id} className="fixed pointer-events-none z-0 comet" style={{ left: `${comet.x}%`, top: `${comet.y}%` }} />
+      )}
+
+      {/* Cursor trail particles */}
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        {cursorTrail.map((p) => (
+          <div key={p.id} className="absolute rounded-full bg-[#58A4B0]" style={{
+            left: p.x, top: p.y, width: 3, height: 3,
+            animation: 'cursorFade 0.8s ease-out forwards',
+          }} />
+        ))}
+      </div>
 
       {/* Subtle gradient for depth */}
       <div className="fixed inset-0 bg-gradient-to-b from-transparent via-[#131112]/50 to-[#131112] pointer-events-none" />
