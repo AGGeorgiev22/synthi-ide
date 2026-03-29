@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { ChevronDown, Rocket, Zap, Shield, Users, Cloud, Linkedin, Play } from "lucide-react";
+import { ChevronDown, Rocket, Zap, Shield, Users, Cloud, Linkedin, Play, Unlock } from "lucide-react";
 import { toast } from "sonner";
 
 const BUILD_LOGS = [
@@ -124,6 +124,7 @@ export default function ModernHome() {
   const [hmrStep, setHmrStep] = useState(0);
   const [bugFixStep, setBugFixStep] = useState(0);
   const bugFixRef = useRef(null);
+  const [expandedCard, setExpandedCard] = useState(null);
 
   /* ---------- Derive language from editor content ---------- */
   const detectedLang = detectLanguage(editorCode);
@@ -735,10 +736,7 @@ export default function ModernHome() {
                     <div className="w-3 h-3 rounded-full bg-[#FEBC2E]" />
                     <div className="w-3 h-3 rounded-full bg-[#28C840]" />
                   </div>
-                  <div className="px-3 py-1 text-xs font-mono rounded-md text-white bg-white/10 border-b-2 border-[#58A4B0] transition-all duration-300">
-                    {detectedLang}
-                  </div>
-                  <span className="text-[10px] text-slate-500 font-mono">auto-detected</span>
+                  <span className="text-[10px] text-slate-500 font-mono">auto-detects language</span>
                 </div>
                 <div className="relative">
                   <button
@@ -843,7 +841,7 @@ export default function ModernHome() {
 
               {/* Bottom status bar */}
               <div className="flex items-center justify-between px-4 py-2 border-t border-white/5 bg-[#1A1A1A]/60 text-xs text-slate-500 font-mono">
-                <span>Ln {editorLines.length}, Col 1</span>
+                <span>Ln {editorLines.length}</span>
                 <div className="flex items-center gap-3">
                   <span className="flex items-center gap-1">
                     <span className={`w-1.5 h-1.5 rounded-full inline-block ${showAiSuggestion ? 'bg-[#58A4B0]' : 'bg-slate-600'}`} />
@@ -860,7 +858,7 @@ export default function ModernHome() {
 
       {/* Business Model */}
       <div ref={businessRef} className="relative z-10 min-h-screen flex items-center justify-center px-6 md:px-20 py-20 md:py-32">
-        <div className="max-w-6xl w-full space-y-16">
+        <div className="max-w-7xl w-full space-y-16">
           <div className="text-center space-y-6">
             <h2
               className={`text-4xl md:text-6xl font-bold text-[#E5E5E5] tracking-tight transition-all duration-1000 ${businessVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"
@@ -899,7 +897,7 @@ export default function ModernHome() {
             </h2>
 
             <p
-              className={`text-slate-400 text-lg md:text-xl leading-relaxed max-w-3xl mx-auto transition-all duration-1000 ${businessVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"
+              className={`text-slate-300 text-lg md:text-xl leading-relaxed max-w-3xl mx-auto transition-all duration-1000 ${businessVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"
                 }`}
               style={{ transitionDelay: "400ms" }}
             >
@@ -913,14 +911,14 @@ export default function ModernHome() {
             style={{ transitionDelay: "600ms" }}
           >
             {/* Free Tier */}
-            <div className="relative group bg-[#1a1a1a] border border-[#E5E5E5]/10 rounded-2xl p-8 hover:border-[#58A4B0]/30 transition-all duration-300">
+            <div className="relative group bg-white/[0.03] backdrop-blur-xl border border-white/[0.08] rounded-2xl p-10 hover:border-[#58A4B0]/30 transition-all duration-300">
               <div className="absolute -top-3 left-6">
                 <span className="bg-[#58A4B0] text-black px-4 py-1 rounded-full text-sm font-bold">FREE FOREVER</span>
               </div>
               <div className="space-y-6 mt-4">
                 <div>
                   <h3 className="text-3xl font-bold text-[#E5E5E5] mb-2">Core</h3>
-                  <p className="text-slate-400">Everything you need to build great software.</p>
+                  <p className="text-slate-300">Everything you need to build great software.</p>
                 </div>
                 <div className="space-y-3">
                   {[
@@ -931,25 +929,33 @@ export default function ModernHome() {
                     "Unlimited projects"
                   ].map((feature, i) => (
                     <div key={i} className="flex items-start gap-3">
-                      <div className="w-5 h-5 rounded-full bg-[#58A4B0]/20 flex items-center justify-center mt-0.5 flex-shrink-0">
-                        <div className="w-2 h-2 rounded-full bg-[#58A4B0]" />
+                      <div className="w-5 h-5 rounded-full bg-white/[0.06] flex items-center justify-center mt-0.5 flex-shrink-0">
+                        <svg className="w-3 h-3 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
                       </div>
                       <span className="text-[#E5E5E5]">{feature}</span>
                     </div>
                   ))}
                 </div>
+                <button
+                  onClick={scrollToBottom}
+                  className="w-full py-3 rounded-lg border border-white/20 text-white font-semibold font-mono text-sm tracking-wide hover:bg-white/[0.05] transition-all duration-300 cursor-pointer"
+                >
+                  Join Free
+                </button>
               </div>
             </div>
 
             {/* Premium Tier */}
-            <div className="relative group bg-gradient-to-br from-[#1a1a1a] to-[#0a0a0a] border-2 border-[#58A4B0] rounded-2xl p-8 shadow-lg shadow-[#58A4B0]/20">
+            <div className="relative group bg-white/[0.03] backdrop-blur-xl border border-[#58A4B0]/40 rounded-2xl p-10 transition-all duration-300" style={{ boxShadow: '0 0 80px -20px rgba(88, 164, 176, 0.25)' }}>
               <div className="absolute -top-3 left-6">
                 <span className="bg-gradient-to-r from-[#58A4B0] to-[#327464] text-white px-4 py-1 rounded-full text-sm font-bold">PREMIUM</span>
               </div>
               <div className="space-y-6 mt-4">
                 <div>
                   <h3 className="text-3xl font-bold text-[#E5E5E5] mb-2">Pro</h3>
-                  <p className="text-slate-400">For developers who demand more.</p>
+                  <p className="text-slate-300">For developers who demand more.</p>
                 </div>
                 <div className="space-y-3">
                   {[
@@ -960,8 +966,8 @@ export default function ModernHome() {
                     "Premium support"
                   ].map((feature, i) => (
                     <div key={i} className="flex items-start gap-3">
-                      <div className="w-5 h-5 rounded-full bg-[#58A4B0] flex items-center justify-center mt-0.5 flex-shrink-0">
-                        <svg className="w-3 h-3 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                      <div className="w-5 h-5 rounded-full bg-[#58A4B0]/20 flex items-center justify-center mt-0.5 flex-shrink-0">
+                        <svg className="w-3 h-3 text-[#58A4B0]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                         </svg>
                       </div>
@@ -969,6 +975,12 @@ export default function ModernHome() {
                     </div>
                   ))}
                 </div>
+                <button
+                  onClick={scrollToBottom}
+                  className="w-full py-3 rounded-lg bg-[#58A4B0] text-black font-semibold font-mono text-sm tracking-wide hover:bg-[#6BB8C4] transition-all duration-300 cursor-pointer"
+                >
+                  Get Pro Access
+                </button>
               </div>
             </div>
           </div>
@@ -983,7 +995,7 @@ export default function ModernHome() {
               <div className="w-3 h-3 rounded-full bg-emerald-400 animate-pulse" />
               <span className="text-[#E5E5E5] text-lg font-semibold">Your work is yours. Forever.</span>
             </div>
-            <p className="text-slate-400 text-sm mt-4 max-w-2xl mx-auto">
+            <p className="text-slate-300 text-base mt-4 max-w-2xl mx-auto">
               No lock-in, no proprietary traps.
               Export or self-host your work at any time.
               Synthi strengthens your workflow — without holding it hostage.
@@ -1037,12 +1049,17 @@ export default function ModernHome() {
                   <span className="text-[#58A4B0] text-xs">✦</span>
                 </div>
               </div>
-              <div className="relative z-[3] p-6 space-y-3">
+              <div className="relative z-[3] p-6 space-y-3 cursor-pointer" onClick={() => setExpandedCard(expandedCard === 'ai' ? null : 'ai')}>
                 <div className="w-10 h-10 rounded-xl bg-white/[0.05] backdrop-blur-sm border border-white/[0.1] flex items-center justify-center shadow-lg shadow-black/20">
                   <Users className="text-[#58A4B0]" size={20} />
                 </div>
-                <h3 className="text-xl font-bold text-white">AI Pair Programmer</h3>
-                <p className="text-slate-400 text-sm leading-relaxed">Integrated AI assistants help optimize, refactor, and guide your code — so your ideas come to life faster and smarter.</p>
+                <div className="flex items-center justify-between">
+                  <h3 className="text-xl font-bold text-white">AI Pair Programmer</h3>
+                  <ChevronDown className={`text-slate-500 transition-transform duration-300 ${expandedCard === 'ai' ? 'rotate-180' : ''}`} size={16} />
+                </div>
+                <div style={{ maxHeight: expandedCard === 'ai' ? '80px' : '0', opacity: expandedCard === 'ai' ? 1 : 0, overflow: 'hidden', transition: 'max-height 0.4s ease-out, opacity 0.3s ease-out' }}>
+                  <p className="text-slate-400 text-sm leading-relaxed">Integrated AI assistants help optimize, refactor, and guide your code — so your ideas come to life faster and smarter.</p>
+                </div>
               </div>
             </div>
 
@@ -1114,12 +1131,17 @@ export default function ModernHome() {
                   </div>
                 )}
               </div>
-              <div className="relative z-[3] p-5 space-y-2.5">
+              <div className="relative z-[3] p-5 space-y-2.5 cursor-pointer" onClick={() => setExpandedCard(expandedCard === 'bugs' ? null : 'bugs')}>
                 <div className="w-10 h-10 rounded-xl bg-white/[0.05] backdrop-blur-sm border border-white/[0.1] flex items-center justify-center shadow-lg shadow-black/20">
                   <Shield className="text-[#58A4B0]" size={20} />
                 </div>
-                <h3 className="text-lg font-bold text-white">Bugs Fixed Before You Notice.</h3>
-                <p className="text-slate-400 text-xs leading-relaxed">Real-time scanning detects errors and offers intelligent fixes for cleaner code.</p>
+                <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-bold text-white">Bugs Fixed Before You Notice.</h3>
+                  <ChevronDown className={`text-slate-500 transition-transform duration-300 ${expandedCard === 'bugs' ? 'rotate-180' : ''}`} size={16} />
+                </div>
+                <div style={{ maxHeight: expandedCard === 'bugs' ? '80px' : '0', opacity: expandedCard === 'bugs' ? 1 : 0, overflow: 'hidden', transition: 'max-height 0.4s ease-out, opacity 0.3s ease-out' }}>
+                  <p className="text-slate-400 text-xs leading-relaxed">Real-time scanning detects errors and offers intelligent fixes for cleaner code.</p>
+                </div>
               </div>
             </div>
 
@@ -1151,12 +1173,17 @@ export default function ModernHome() {
                   </div>
                 </div>
               </div>
-              <div className="relative z-[3] p-5 space-y-2.5">
+              <div className="relative z-[3] p-5 space-y-2.5 cursor-pointer" onClick={() => setExpandedCard(expandedCard === 'cloud' ? null : 'cloud')}>
                 <div className="w-10 h-10 rounded-xl bg-white/[0.05] backdrop-blur-sm border border-white/[0.1] flex items-center justify-center shadow-lg shadow-black/20">
                   <Cloud className="text-[#58A4B0]" size={20} />
                 </div>
-                <h3 className="text-lg font-bold text-white">Code Without Hardware Limits.</h3>
-                <p className="text-slate-400 text-xs leading-relaxed">Cloud compilation with instant delivery — infinitely scalable, zero local strain.</p>
+                <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-bold text-white">Code Without Hardware Limits.</h3>
+                  <ChevronDown className={`text-slate-500 transition-transform duration-300 ${expandedCard === 'cloud' ? 'rotate-180' : ''}`} size={16} />
+                </div>
+                <div style={{ maxHeight: expandedCard === 'cloud' ? '80px' : '0', opacity: expandedCard === 'cloud' ? 1 : 0, overflow: 'hidden', transition: 'max-height 0.4s ease-out, opacity 0.3s ease-out' }}>
+                  <p className="text-slate-400 text-xs leading-relaxed">Cloud compilation with instant delivery — infinitely scalable, zero local strain.</p>
+                </div>
               </div>
             </div>
 
@@ -1180,12 +1207,50 @@ export default function ModernHome() {
                   <div className="w-5 h-5 rounded-full bg-[#58A4B0]/20 border border-[#58A4B0]/40 collab-pulse" style={{ animationDelay: '1s' }} />
                 </div>
               </div>
-              <div className="relative z-[3] p-5 space-y-2.5">
+              <div className="relative z-[3] p-5 space-y-2.5 cursor-pointer" onClick={() => setExpandedCard(expandedCard === 'collab' ? null : 'collab')}>
                 <div className="w-10 h-10 rounded-xl bg-white/[0.05] backdrop-blur-sm border border-white/[0.1] flex items-center justify-center shadow-lg shadow-black/20">
                   <Zap className="text-[#58A4B0]" size={20} />
                 </div>
-                <h3 className="text-lg font-bold text-white">Seamless Collaboration</h3>
-                <p className="text-slate-400 text-xs leading-relaxed">Work together in real time with AI-enhanced insights across the cloud.</p>
+                <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-bold text-white">Seamless Collaboration</h3>
+                  <ChevronDown className={`text-slate-500 transition-transform duration-300 ${expandedCard === 'collab' ? 'rotate-180' : ''}`} size={16} />
+                </div>
+                <div style={{ maxHeight: expandedCard === 'collab' ? '80px' : '0', opacity: expandedCard === 'collab' ? 1 : 0, overflow: 'hidden', transition: 'max-height 0.4s ease-out, opacity 0.3s ease-out' }}>
+                  <p className="text-slate-400 text-xs leading-relaxed">Work together in real time with AI-enhanced insights across the cloud.</p>
+                </div>
+              </div>
+            </div>
+
+            {/* ── AI Tools Freedom — small card ── */}
+            <div
+              className="spotlight-card group relative bg-[#141414] border border-white/[0.08] rounded-2xl overflow-hidden transition-all duration-300 hover:border-[#58A4B0]/30"
+              onMouseMove={handleCardMouseMove}
+            >
+              <div className="spotlight-overlay" />
+              {/* Micro-UI: tool badges */}
+              <div className="h-36 relative overflow-hidden border-b border-white/5 bg-gradient-to-br from-purple-500/[0.02] to-[#58A4B0]/[0.03] flex items-center justify-center">
+                <div className="flex flex-wrap gap-2 justify-center px-4">
+                  {['Claude Code', 'Codex', 'Cursor', 'GPT'].map((tool, i) => (
+                    <div key={i} className="px-2.5 py-1 rounded-lg bg-white/[0.04] border border-white/10 text-[10px] font-mono text-slate-400">
+                      {tool}
+                    </div>
+                  ))}
+                </div>
+                <div className="absolute top-3 right-3">
+                  <Unlock className="text-[#58A4B0]/40" size={14} />
+                </div>
+              </div>
+              <div className="relative z-[3] p-5 space-y-2.5 cursor-pointer" onClick={() => setExpandedCard(expandedCard === 'freedom' ? null : 'freedom')}>
+                <div className="w-10 h-10 rounded-xl bg-white/[0.05] backdrop-blur-sm border border-white/[0.1] flex items-center justify-center shadow-lg shadow-black/20">
+                  <Unlock className="text-[#58A4B0]" size={20} />
+                </div>
+                <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-bold text-white">Your Tools, Your Choice.</h3>
+                  <ChevronDown className={`text-slate-500 transition-transform duration-300 ${expandedCard === 'freedom' ? 'rotate-180' : ''}`} size={16} />
+                </div>
+                <div style={{ maxHeight: expandedCard === 'freedom' ? '80px' : '0', opacity: expandedCard === 'freedom' ? 1 : 0, overflow: 'hidden', transition: 'max-height 0.4s ease-out, opacity 0.3s ease-out' }}>
+                  <p className="text-slate-400 text-xs leading-relaxed">Synthi doesn&apos;t lock you in. Use Claude Code, Codex, or any AI tool you prefer — we integrate, not isolate.</p>
+                </div>
               </div>
             </div>
 
@@ -1236,12 +1301,17 @@ export default function ModernHome() {
                   </div>
                 </div>
               </div>
-              <div className="relative z-[3] p-6 space-y-3">
+              <div className="relative z-[3] p-6 space-y-3 cursor-pointer" onClick={() => setExpandedCard(expandedCard === 'hmr' ? null : 'hmr')}>
                 <div className="w-10 h-10 rounded-xl bg-white/[0.05] backdrop-blur-sm border border-white/[0.1] flex items-center justify-center shadow-lg shadow-black/20">
                   <Rocket className="text-[#58A4B0]" size={20} />
                 </div>
-                <h3 className="text-xl font-bold text-white">Hot Reload for Compiled Languages</h3>
-                <p className="text-slate-400 text-sm leading-relaxed">See changes instantly — whether you&apos;re building an OS kernel, a game engine, or a systems server. Compiled HMR, seamless.</p>
+                <div className="flex items-center justify-between">
+                  <h3 className="text-xl font-bold text-white">Hot Reload for Compiled Languages</h3>
+                  <ChevronDown className={`text-slate-500 transition-transform duration-300 ${expandedCard === 'hmr' ? 'rotate-180' : ''}`} size={16} />
+                </div>
+                <div style={{ maxHeight: expandedCard === 'hmr' ? '80px' : '0', opacity: expandedCard === 'hmr' ? 1 : 0, overflow: 'hidden', transition: 'max-height 0.4s ease-out, opacity 0.3s ease-out' }}>
+                  <p className="text-slate-400 text-sm leading-relaxed">See changes instantly — whether you&apos;re building an OS kernel, a game engine, or a systems server. Compiled HMR, seamless.</p>
+                </div>
               </div>
             </div>
           </div>
