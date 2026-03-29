@@ -122,6 +122,8 @@ export default function ModernHome() {
   const hmrTimerRef = useRef(null);
   const [shootingStar, setShootingStar] = useState(null);
   const [hmrStep, setHmrStep] = useState(0);
+  const [bugFixStep, setBugFixStep] = useState(0);
+  const bugFixRef = useRef(null);
 
   /* ---------- Derive language from editor content ---------- */
   const detectedLang = detectLanguage(editorCode);
@@ -134,7 +136,7 @@ export default function ModernHome() {
   const stars = React.useMemo(() => {
     let t = 42;
     const rand = () => { t = (t + 0x6D2B79F5) | 0; let v = Math.imul(t ^ (t >>> 15), 1 | t); v ^= v + Math.imul(v ^ (v >>> 7), 61 | v); return ((v ^ (v >>> 14)) >>> 0) / 4294967296; };
-    return Array.from({ length: 120 }, () => ({ x: rand() * 100, y: rand() * 100, size: rand() * 1.2 + 0.4, opacity: rand() * 0.07 + 0.03 }));
+    return Array.from({ length: 140 }, () => ({ x: rand() * 100, y: rand() * 100, size: rand() * 1.5 + 1, opacity: rand() * 0.12 + 0.08 }));
   }, []);
 
   /* Ghost typing: types out INITIAL_CODE on mount */
@@ -180,6 +182,15 @@ export default function ModernHome() {
     return () => clearTimeout(hmrTimerRef.current);
   }, []);
 
+  /* Bug fix card animation cycle: 0=normal, 1=strikethrough, 2=fix slides in, 3=badge */
+  useEffect(() => {
+    const DURATIONS = [2000, 800, 800, 2000];
+    let step = 0;
+    const advance = () => { step = (step + 1) % 4; setBugFixStep(step); bugFixRef.current = setTimeout(advance, DURATIONS[step]); };
+    bugFixRef.current = setTimeout(advance, DURATIONS[0]);
+    return () => clearTimeout(bugFixRef.current);
+  }, []);
+
   /* Compile sequence */
   const handleRunClick = useCallback(() => {
     if (isCompiling) return;
@@ -223,6 +234,7 @@ export default function ModernHome() {
       if (aiTimeoutRef.current) clearTimeout(aiTimeoutRef.current);
       if (shootingStarRef.current) clearTimeout(shootingStarRef.current);
       if (hmrTimerRef.current) clearTimeout(hmrTimerRef.current);
+      if (bugFixRef.current) clearTimeout(bugFixRef.current);
     };
   }, []);
 
@@ -270,9 +282,8 @@ export default function ModernHome() {
   /**
    * Typewriter strings for hero
    */
-  const firstLine = "The Cloud IDE for Everybody,";
-  const secondLine = "Build the Impossible, Instantly.";
-
+  const firstLine = "Welcome to Synthi.";
+  const secondLine = "The world's first ADE."
   /* ---------- Efficient scroll handling (single rAF-driven listener) ---------- */
   useEffect(() => {
     let ticking = false;
@@ -519,10 +530,12 @@ export default function ModernHome() {
         .ai-icon-float { animation: aiIconFloat 3s ease-in-out infinite; }
 
         /* Bug fix animation */
-        @keyframes bugFixReveal { from { opacity: 0; max-height: 0; } to { opacity: 1; max-height: 24px; } }
-        .bug-fix-new { animation: bugFixReveal 0.5s ease-out 1.5s both; overflow: hidden; }
-        @keyframes bugFixBadge { 0% { opacity: 0; transform: scale(0.8); } 100% { opacity: 1; transform: scale(1); } }
-        .bug-fix-badge { animation: bugFixBadge 0.4s ease-out 2s both; }
+        @keyframes bugFixStrike { from { opacity: 1; } to { opacity: 0.35; } }
+        .bug-strike { animation: bugFixStrike 0.3s ease-out both; }
+        @keyframes bugFixSlideIn { from { opacity: 0; max-height: 0; transform: translateY(-4px); } to { opacity: 1; max-height: 24px; transform: translateY(0); } }
+        .bug-slide-in { animation: bugFixSlideIn 0.4s ease-out both; }
+        @keyframes bugBadgePop { 0% { opacity: 0; transform: scale(0.7); } 100% { opacity: 1; transform: scale(1); } }
+        .bug-badge-pop { animation: bugBadgePop 0.35s ease-out both; }
 
         /* Cloud data flow */
         @keyframes cloudPulseMini { 0%,100% { box-shadow: 0 0 0 0 rgba(88,164,176,0.2); } 50% { box-shadow: 0 0 12px 4px rgba(88,164,176,0.15); } }
@@ -661,13 +674,13 @@ export default function ModernHome() {
               <span className="text-emerald-400 text-sm font-medium">All systems operational</span>
             </div>
             {/* Headline with typewriter effect */}
-            <div className="space-y-2">
-              <h1 className="text-5xl md:text-7xl font-bold bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent tracking-tight">
+            <div className="space-y-2 pr-12">
+              <h1 className="text-xl sm:text-xl md:text-2xl lg:text-5xl font-bold bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent tracking-tight leading-[1.05]">
                 {typewriterText}
                 {!showSecondLine && typewriterText.length < firstLine.length && <span className="cursor-blink text-white">|</span>}
               </h1>
               {showSecondLine && (
-                <h1 className="text-5xl md:text-7xl font-bold bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent tracking-tight">
+                <h1 className="text-xl sm:text-xl md:text-2xl lg:text-7xl font-bold bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent tracking-tight leading-[1.05]">
                   {secondLineText}
                   {!typewriterComplete && secondLineText.length < secondLine.length && <span className="cursor-blink text-white">|</span>}
                   {typewriterComplete && <span className="cursor-blink text-white">|</span>}
@@ -1076,20 +1089,30 @@ export default function ModernHome() {
               onMouseMove={handleCardMouseMove}
             >
               <div className="spotlight-overlay" />
-              {/* Micro-UI: bug → fix */}
+              {/* Micro-UI: bug → fix (live cycling) */}
               <div className="h-36 relative overflow-hidden border-b border-white/5 bg-gradient-to-br from-red-500/[0.03] to-emerald-500/[0.03] p-5">
                 <div className="font-mono text-[10px] leading-[20px]" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
                   <div><span className="text-slate-700 mr-2">7</span><span className="text-slate-500">{"  if ("}</span><span className="text-[#E06C75]">user.role</span><span className="text-slate-500">{" === "}</span><span className="text-[#98C379]">{'"admin"'}</span><span className="text-slate-500">{")"}</span></div>
-                  <div className="opacity-40 line-through"><span className="text-slate-700 mr-2">8</span><span className="text-red-400/80">{"    return data.unfiltered()"}</span></div>
-                  <div className="bug-fix-new"><span className="text-slate-700 mr-2">8</span><span className="text-emerald-400">{"    return data.filtered(scope)"}</span></div>
+                  {bugFixStep === 0 ? (
+                    <div><span className="text-slate-700 mr-2">8</span><span className="text-slate-500">{"    return data.unfiltered()"}</span></div>
+                  ) : (
+                    <>
+                      <div className={bugFixStep >= 1 ? 'bug-strike line-through' : ''}><span className="text-slate-700 mr-2">8</span><span className="text-red-400/80">{"    return data.unfiltered()"}</span></div>
+                      {bugFixStep >= 2 && (
+                        <div className="bug-slide-in"><span className="text-slate-700 mr-2">8</span><span className="text-emerald-400">{"    return data.filtered(scope)"}</span></div>
+                      )}
+                    </>
+                  )}
                   <div><span className="text-slate-700 mr-2">9</span><span className="text-slate-500">{"  }"}</span></div>
                 </div>
-                <div className="absolute bottom-3 right-3 bug-fix-badge">
-                  <div className="flex items-center gap-1 bg-emerald-500/10 border border-emerald-500/20 rounded-full px-2 py-0.5 text-[9px] text-emerald-400 font-mono">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                    Fixed
+                {bugFixStep >= 3 && (
+                  <div className="absolute bottom-3 right-3 bug-badge-pop">
+                    <div className="flex items-center gap-1 bg-emerald-500/10 border border-emerald-500/20 rounded-full px-2 py-0.5 text-[9px] text-emerald-400 font-mono">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                      Fixed
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
               <div className="relative z-[3] p-5 space-y-2.5">
                 <div className="w-10 h-10 rounded-xl bg-white/[0.05] backdrop-blur-sm border border-white/[0.1] flex items-center justify-center shadow-lg shadow-black/20">
