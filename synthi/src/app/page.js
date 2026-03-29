@@ -125,6 +125,8 @@ export default function ModernHome() {
   const [bugFixStep, setBugFixStep] = useState(0);
   const bugFixRef = useRef(null);
   const [expandedCard, setExpandedCard] = useState(null);
+  const [openFaq, setOpenFaq] = useState(null);
+  const [showCommandPalette, setShowCommandPalette] = useState(false);
 
   /* ---------- Derive language from editor content ---------- */
   const detectedLang = detectLanguage(editorCode);
@@ -239,6 +241,19 @@ export default function ModernHome() {
     };
   }, []);
 
+  /* Ctrl+K Easter egg — command palette */
+  useEffect(() => {
+    const handler = (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        setShowCommandPalette(true);
+        setTimeout(() => setShowCommandPalette(false), 2800);
+      }
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, []);
+
   /* Editor event handlers */
   const handleEditorChange = (e) => {
     const val = e.target.value;
@@ -278,6 +293,21 @@ export default function ModernHome() {
     const rect = card.getBoundingClientRect();
     card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
     card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+  };
+
+  /* Pricing Pro card: spotlight + 3D magnetic tilt */
+  const handleProCardMouseMove = (e) => {
+    handleCardMouseMove(e);
+    const card = e.currentTarget;
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const rotateX = ((y - rect.height / 2) / (rect.height / 2)) * -3;
+    const rotateY = ((x - rect.width / 2) / (rect.width / 2)) * 3;
+    card.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+  };
+  const handleProCardMouseLeave = (e) => {
+    e.currentTarget.style.transform = 'perspective(800px) rotateX(0deg) rotateY(0deg)';
   };
 
   /**
@@ -576,6 +606,110 @@ export default function ModernHome() {
         .hmr-slide-in { animation: hmrSlideIn 0.4s ease-out both; }
         @keyframes hmrStrike { from { opacity: 1; } to { opacity: 0.35; } }
         .hmr-strike { animation: hmrStrike 0.3s ease-out both; }
+
+        /* ─── Pricing card spotlight + micro-grid ─── */
+        .pricing-card { --mouse-x: 0px; --mouse-y: 0px; position: relative; }
+        .pricing-spotlight {
+          position: absolute; inset: 0; border-radius: inherit;
+          background: radial-gradient(400px circle at var(--mouse-x) var(--mouse-y), rgba(88,164,176,0.06), transparent 45%);
+          opacity: 0; transition: opacity 0.5s; pointer-events: none; z-index: 2;
+        }
+        .pricing-card:hover .pricing-spotlight { opacity: 1; }
+        .pricing-grid {
+          position: absolute; inset: 0; border-radius: inherit; overflow: hidden;
+          pointer-events: none; z-index: 1;
+        }
+        .pricing-grid::before {
+          content: ''; position: absolute; inset: 0;
+          background-image:
+            linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+          background-size: 24px 24px;
+          mask-image: radial-gradient(350px circle at var(--mouse-x) var(--mouse-y), black 0%, transparent 70%);
+          -webkit-mask-image: radial-gradient(350px circle at var(--mouse-x) var(--mouse-y), black 0%, transparent 70%);
+          opacity: 0; transition: opacity 0.5s;
+        }
+        .pricing-card:hover .pricing-grid::before { opacity: 1; }
+
+        /* Animated teal border for Pro card */
+        @keyframes proEdgeFlow {
+          0% { background-position: 0% 50%; }
+          100% { background-position: 300% 50%; }
+        }
+        .pro-card-border { position: relative; }
+        .pro-card-border::before {
+          content: ''; position: absolute; inset: -1px; border-radius: inherit; z-index: 0;
+          background: linear-gradient(90deg, rgba(88,164,176,0.15), rgba(88,164,176,0.5), rgba(50,116,100,0.5), rgba(88,164,176,0.15), rgba(88,164,176,0.5));
+          background-size: 300% 100%;
+          animation: proEdgeFlow 4s linear infinite;
+          mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+          -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+          mask-composite: exclude;
+          -webkit-mask-composite: xor;
+          padding: 1px;
+        }
+
+        /* ─── Cascading value reveal ─── */
+        .cascade-check {
+          transform: scale(0.85); opacity: 0.5;
+          transition: transform 0.5s ease-out, opacity 0.5s ease-out;
+        }
+        .cascade-text {
+          opacity: 0.6; transform: translateX(-3px);
+          transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+        }
+        @keyframes cascadePing {
+          0% { transform: scale(0.85); opacity: 0.5; }
+          50% { transform: scale(1.25); opacity: 1; }
+          100% { transform: scale(1); opacity: 1; }
+        }
+        .pricing-card:hover .cascade-check { animation: cascadePing 0.35s ease-out forwards; }
+        .pricing-card:hover .cascade-text { opacity: 1; transform: translateX(0); }
+        .pricing-card:hover .cascade-item:nth-child(1) .cascade-check { animation-delay: 0s; }
+        .pricing-card:hover .cascade-item:nth-child(1) .cascade-text { transition-delay: 0s; }
+        .pricing-card:hover .cascade-item:nth-child(2) .cascade-check { animation-delay: 0.07s; }
+        .pricing-card:hover .cascade-item:nth-child(2) .cascade-text { transition-delay: 0.07s; }
+        .pricing-card:hover .cascade-item:nth-child(3) .cascade-check { animation-delay: 0.14s; }
+        .pricing-card:hover .cascade-item:nth-child(3) .cascade-text { transition-delay: 0.14s; }
+        .pricing-card:hover .cascade-item:nth-child(4) .cascade-check { animation-delay: 0.21s; }
+        .pricing-card:hover .cascade-item:nth-child(4) .cascade-text { transition-delay: 0.21s; }
+        .pricing-card:hover .cascade-item:nth-child(5) .cascade-check { animation-delay: 0.28s; }
+        .pricing-card:hover .cascade-item:nth-child(5) .cascade-text { transition-delay: 0.28s; }
+
+        /* ─── Magnetic tilt for Pro card ─── */
+        .pro-tilt { transition: transform 0.15s ease-out; will-change: transform; transform-style: preserve-3d; }
+
+        /* ─── FAQ accordion ─── */
+        .faq-answer {
+          display: grid; grid-template-rows: 0fr;
+          transition: grid-template-rows 0.35s ease-out, opacity 0.3s ease-out;
+          opacity: 0;
+        }
+        .faq-answer.open { grid-template-rows: 1fr; opacity: 1; }
+        .faq-answer > div { overflow: hidden; }
+
+        /* ─── Command palette Easter egg ─── */
+        @keyframes cmdPaletteIn {
+          0% { opacity: 0; transform: translateY(-12px) scale(0.96); }
+          100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @keyframes cmdPaletteOut {
+          0% { opacity: 1; transform: scale(1); }
+          100% { opacity: 0; transform: translateY(-8px) scale(0.97); }
+        }
+        .cmd-palette-in { animation: cmdPaletteIn 0.25s ease-out forwards; }
+        .cmd-palette-out { animation: cmdPaletteOut 0.3s ease-in forwards; }
+        @keyframes cmdScan {
+          0% { width: 0%; } 100% { width: 100%; }
+        }
+        .cmd-scan-bar { animation: cmdScan 2s ease-out forwards; }
+
+        /* ─── No-tracking badge ─── */
+        @keyframes badgeSlideUp {
+          0% { opacity: 0; transform: translateY(8px); }
+          100% { opacity: 1; transform: translateY(0); }
+        }
+        .badge-slide-up { animation: badgeSlideUp 0.4s ease-out both; }
       `}</style>
 
       {/* Top nav */}
@@ -616,14 +750,14 @@ export default function ModernHome() {
       <div className="fixed inset-0 bg-[#131112]" />
 
       {/* Deep space — static star field */}
-      <div className="fixed inset-0 pointer-events-none">
+      <div className="fixed inset-0 pointer-events-none" style={{ transform: `translateY(${scrollY * 0.05}px)` }}>
         {mounted && stars.map((s, i) => (
           <div key={i} className="absolute rounded-full bg-white" style={{ left: `${s.x}%`, top: `${s.y}%`, width: s.size, height: s.size, opacity: s.opacity }} />
         ))}
       </div>
 
       {/* Nebula dust cloud — massive soft teal glow */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+      <div className="fixed inset-0 overflow-hidden pointer-events-none" style={{ transform: `translateY(${scrollY * 0.08}px)` }}>
         <div className="absolute top-[20%] left-[30%] w-[800px] h-[800px] bg-[#58A4B0] opacity-[0.04] rounded-full blur-[200px]" />
         <div className="absolute bottom-[10%] right-[15%] w-[600px] h-[600px] bg-[#327464] opacity-[0.05] rounded-full blur-[180px]" />
       </div>
@@ -911,11 +1045,16 @@ export default function ModernHome() {
             style={{ transitionDelay: "600ms" }}
           >
             {/* Free Tier */}
-            <div className="relative group bg-white/[0.03] backdrop-blur-xl border border-white/[0.08] rounded-2xl p-10 hover:border-[#58A4B0]/30 transition-all duration-300">
-              <div className="absolute -top-3 left-6">
+            <div
+              className="pricing-card relative group bg-white/[0.03] backdrop-blur-xl border border-white/[0.08] rounded-2xl p-10 hover:border-[#58A4B0]/30 transition-all duration-300"
+              onMouseMove={handleCardMouseMove}
+            >
+              <div className="pricing-spotlight" />
+              <div className="pricing-grid" />
+              <div className="absolute -top-3 left-6 z-[3]">
                 <span className="bg-[#58A4B0] text-black px-4 py-1 rounded-full text-sm font-bold">FREE FOREVER</span>
               </div>
-              <div className="space-y-6 mt-4">
+              <div className="relative z-[3] space-y-6 mt-4">
                 <div>
                   <h3 className="text-3xl font-bold text-[#E5E5E5] mb-2">Core</h3>
                   <p className="text-slate-300">Everything you need to build great software.</p>
@@ -928,13 +1067,13 @@ export default function ModernHome() {
                     "Seamless collaboration",
                     "Unlimited projects"
                   ].map((feature, i) => (
-                    <div key={i} className="flex items-start gap-3">
-                      <div className="w-5 h-5 rounded-full bg-white/[0.06] flex items-center justify-center mt-0.5 flex-shrink-0">
+                    <div key={i} className="cascade-item flex items-start gap-3">
+                      <div className="cascade-check w-5 h-5 rounded-full bg-white/[0.06] flex items-center justify-center mt-0.5 flex-shrink-0">
                         <svg className="w-3 h-3 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                         </svg>
                       </div>
-                      <span className="text-[#E5E5E5]">{feature}</span>
+                      <span className="cascade-text text-[#E5E5E5]">{feature}</span>
                     </div>
                   ))}
                 </div>
@@ -948,11 +1087,18 @@ export default function ModernHome() {
             </div>
 
             {/* Premium Tier */}
-            <div className="relative group bg-white/[0.03] backdrop-blur-xl border border-[#58A4B0]/40 rounded-2xl p-10 transition-all duration-300" style={{ boxShadow: '0 0 80px -20px rgba(88, 164, 176, 0.25)' }}>
-              <div className="absolute -top-3 left-6">
+            <div
+              className="pricing-card pro-card-border pro-tilt relative group bg-white/[0.03] backdrop-blur-xl rounded-2xl p-10"
+              onMouseMove={handleProCardMouseMove}
+              onMouseLeave={handleProCardMouseLeave}
+              style={{ boxShadow: '0 0 80px -20px rgba(88, 164, 176, 0.25)' }}
+            >
+              <div className="pricing-spotlight" />
+              <div className="pricing-grid" />
+              <div className="absolute -top-3 left-6 z-[3]">
                 <span className="bg-gradient-to-r from-[#58A4B0] to-[#327464] text-white px-4 py-1 rounded-full text-sm font-bold">PREMIUM</span>
               </div>
-              <div className="space-y-6 mt-4">
+              <div className="relative z-[3] space-y-6 mt-4">
                 <div>
                   <h3 className="text-3xl font-bold text-[#E5E5E5] mb-2">Pro</h3>
                   <p className="text-slate-300">For developers who demand more.</p>
@@ -965,13 +1111,13 @@ export default function ModernHome() {
                     "Enhanced model access",
                     "Premium support"
                   ].map((feature, i) => (
-                    <div key={i} className="flex items-start gap-3">
-                      <div className="w-5 h-5 rounded-full bg-[#58A4B0]/20 flex items-center justify-center mt-0.5 flex-shrink-0">
+                    <div key={i} className="cascade-item flex items-start gap-3">
+                      <div className="cascade-check w-5 h-5 rounded-full bg-[#58A4B0]/20 flex items-center justify-center mt-0.5 flex-shrink-0">
                         <svg className="w-3 h-3 text-[#58A4B0]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                         </svg>
                       </div>
-                      <span className="text-[#E5E5E5] font-medium">{feature}</span>
+                      <span className="cascade-text text-[#E5E5E5] font-medium">{feature}</span>
                     </div>
                   ))}
                 </div>
@@ -1318,6 +1464,72 @@ export default function ModernHome() {
         </div>
       </div>
 
+
+      {/* Command Palette Easter Egg (Ctrl+K) */}
+      {showCommandPalette && (
+        <div className="fixed inset-0 z-[100] flex items-start justify-center pt-[20vh] pointer-events-none">
+          <div className="cmd-palette-in w-[480px] bg-[#1a1a1a]/95 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-2xl overflow-hidden pointer-events-auto" style={{ boxShadow: '0 0 80px -20px rgba(88,164,176,0.3)' }}>
+            <div className="flex items-center gap-3 px-5 py-4 border-b border-white/5">
+              <div className="text-[#58A4B0] text-sm font-mono">✦</div>
+              <span className="text-white/40 text-sm font-mono flex-1">Synthi AI — what would you like to build?</span>
+              <kbd className="text-[10px] text-slate-500 bg-white/5 border border-white/10 rounded px-1.5 py-0.5 font-mono">Esc</kbd>
+            </div>
+            <div className="px-5 py-3 space-y-2">
+              <div className="flex items-center gap-2 text-slate-400 text-xs font-mono">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                Scanning workspace...
+              </div>
+              <div className="w-full h-0.5 bg-white/5 rounded-full overflow-hidden">
+                <div className="h-full bg-gradient-to-r from-[#58A4B0] to-[#327464] cmd-scan-bar rounded-full"></div>
+              </div>
+              <div className="text-[10px] text-slate-600 font-mono mt-1">Try it when Synthi launches. Press Ctrl+K anytime.</div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* FAQ Section */}
+      <div className="relative z-10 px-6 md:px-20 py-20 md:py-32">
+        <div className="max-w-3xl mx-auto space-y-10">
+          <div className="text-center space-y-4">
+            <h2 className="text-3xl md:text-5xl font-bold text-white tracking-tight">Questions?</h2>
+            <p className="text-slate-400 text-lg">Quick answers to what you&apos;re probably wondering.</p>
+          </div>
+          <div className="space-y-3">
+            {[
+              { q: "Is Synthi really free?", a: "Yes. The Core plan is free forever — real-time analysis, cloud compilation, AI suggestions, collaboration, and unlimited projects. No credit card, no trials, no tricks." },
+              { q: "When does it launch?", a: "We're in closed alpha. Join the waitlist to secure early access — the first wave of invites goes out soon." },
+              { q: "Can I use my own AI tools?", a: "Absolutely. Synthi integrates with Claude Code, Codex, Cursor, and more. We're a platform, not a walled garden — use whatever makes you productive." },
+              { q: "What about my data?", a: "Your code stays yours. No training on your data, no telemetry surprises. Export or self-host at any time — zero lock-in, guaranteed." },
+              { q: "What makes this different from VS Code or Cursor?", a: "Synthi compiles in the cloud, not on your machine. That means instant builds regardless of your hardware, native HMR for compiled languages, and AI that understands your entire project context — not just the open file." },
+            ].map((item, i) => (
+              <div
+                key={i}
+                className="group bg-white/[0.02] border border-white/[0.06] rounded-xl overflow-hidden hover:border-[#58A4B0]/20 transition-colors duration-300 cursor-pointer"
+                onClick={() => setOpenFaq(openFaq === i ? null : i)}
+              >
+                <div className="flex items-center justify-between px-6 py-4">
+                  <span className="text-[#E5E5E5] font-medium text-sm md:text-base">{item.q}</span>
+                  <ChevronDown className={`text-slate-500 flex-shrink-0 ml-4 transition-transform duration-300 ${openFaq === i ? 'rotate-180' : ''}`} size={16} />
+                </div>
+                <div className={`faq-answer ${openFaq === i ? 'open' : ''}`}>
+                  <div>
+                    <div className="px-6 pb-4 text-slate-400 text-sm leading-relaxed">{item.a}</div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* No-tracking badge */}
+      <div className="relative z-10 flex justify-center pb-12">
+        <div className="badge-slide-up inline-flex items-center gap-2 bg-white/[0.03] border border-white/[0.06] rounded-full px-5 py-2.5">
+          <Shield className="text-emerald-400" size={14} />
+          <span className="text-slate-400 text-xs font-medium">Zero tracking. No cookies. We respect developers.</span>
+        </div>
+      </div>
 
       {/* Footer */}
       <footer className="relative z-10 py-8 border-t border-[#E5E5E5]/10">
