@@ -1,6 +1,6 @@
 "use client";
-import React, { useState, useEffect, useRef, useCallback } from "react";
-import { ChevronDown, Rocket, Zap, Shield, Users, Cloud, Linkedin, Play, Unlock } from "lucide-react";
+import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import { ChevronDown, Rocket, Zap, Shield, Users, Cloud, Linkedin, Play, Unlock, Terminal, ArrowRight, Clock, Check, Star, GitBranch, Globe, Cpu, Code, Sparkles, Volume2, VolumeX, Home, Layers, HelpCircle, DollarSign, GripVertical, ArrowUp } from "lucide-react";
 import { toast } from "sonner";
 
 const BUILD_LOGS = [
@@ -131,6 +131,68 @@ export default function ModernHome() {
   const [cursorTrail, setCursorTrail] = useState([]);
   const cursorTrailRef = useRef(null);
 
+  /* Boot sequence */
+  const [bootPhase, setBootPhase] = useState(0); // 0=booting, 1=progress, 2=done
+  const [bootLines, setBootLines] = useState([]);
+  const [bootProgress, setBootProgress] = useState(0);
+
+  /* Custom cursor */
+  const [cursorPos, setCursorPos] = useState({ x: -100, y: -100 });
+  const [cursorHover, setCursorHover] = useState(false);
+  const [cursorClick, setCursorClick] = useState(false);
+
+  /* Shortcut sheet */
+  const [showShortcuts, setShowShortcuts] = useState(false);
+
+  /* Language carousel */
+  const [langIndex, setLangIndex] = useState(0);
+
+  /* Sticky CTA */
+  const [showStickyCta, setShowStickyCta] = useState(false);
+  const [stickyEmail, setStickyEmail] = useState('');
+
+  /* Section visibility for scroll reveals */
+  const [comparisonVisible, setComparisonVisible] = useState(false);
+  const [roadmapVisible, setRoadmapVisible] = useState(false);
+  const comparisonRef = useRef(null);
+  const roadmapRef = useRef(null);
+
+  /* Stats counter */
+  const [statsVisible, setStatsVisible] = useState(false);
+  const statsRef = useRef(null);
+
+  /* Before/after slider */
+  const [sliderPos, setSliderPos] = useState(50);
+  const [isDragging, setIsDragging] = useState(false);
+  const sliderRef = useRef(null);
+
+  /* Ambient sound */
+  const [ambientOn, setAmbientOn] = useState(false);
+  const ambientRef = useRef(null);
+
+  /* Section particle bursts — track which sections already burst */
+  const [burstSections, setBurstSections] = useState(new Set());
+
+  /* Konami code easter egg */
+  const [konamiActive, setKonamiActive] = useState(false);
+  const konamiBuffer = useRef([]);
+
+  /* Tracking badge tooltip */
+  const [badgeTooltip, setBadgeTooltip] = useState(false);
+
+  /* Nav dots — section list */
+  const SECTIONS = useMemo(() => [
+    { id: 'hero', label: 'Home' },
+    { id: 'business', label: 'Pricing' },
+    { id: 'features', label: 'Features' },
+    { id: 'comparison', label: 'Compare' },
+    { id: 'roadmap', label: 'Migration' },
+    { id: 'faq', label: 'FAQ' },
+  ], []);
+  const [activeSection, setActiveSection] = useState('hero');
+  const heroRef = useRef(null);
+  const faqRef = useRef(null);
+
   /* ---------- Derive language from editor content ---------- */
   const detectedLang = detectLanguage(editorCode);
   const langGlow = LANG_GLOWS[detectedLang] || LANG_GLOWS["Plain Text"];
@@ -173,9 +235,9 @@ export default function ModernHome() {
     return { stars: _stars, driftParticles: _drift, auroraRibbons: _aurora, starClusters: _clusters };
   }, []);
 
-  /* Ghost typing: types out INITIAL_CODE on mount */
+  /* Ghost typing: types out INITIAL_CODE after boot finishes */
   useEffect(() => {
-    if (!mounted) return;
+    if (!mounted || bootPhase !== 2) return;
     let i = 0;
     typingRef.current = setInterval(() => {
       i += 2;
@@ -189,7 +251,7 @@ export default function ModernHome() {
       setEditorCode(INITIAL_CODE.slice(0, i));
     }, 20);
     return () => { if (typingRef.current) clearInterval(typingRef.current); };
-  }, [mounted]);
+  }, [mounted, bootPhase]);
 
   /* Shooting star — fires every 8-15s */
   useEffect(() => {
@@ -334,6 +396,169 @@ export default function ModernHome() {
     return () => clearTimeout(cometRef.current);
   }, [mounted]);
 
+  /* Boot sequence — 2.5s terminal animation before revealing page */
+  const BOOT_LINES = useMemo(() => [
+    { text: '$ synthi init', delay: 0 },
+    { text: '  → Loading cloud runtime...', delay: 300 },
+    { text: '  → Connecting to Synthi Edge Network...', delay: 700 },
+    { text: '  → AI modules ready', delay: 1100 },
+    { text: '  → Workspace synced ✓', delay: 1500 },
+    { text: '  → All systems operational', delay: 1900 },
+  ], []);
+  useEffect(() => {
+    if (bootPhase !== 0) return;
+    BOOT_LINES.forEach((line, i) => {
+      setTimeout(() => setBootLines(prev => [...prev, line.text]), line.delay);
+    });
+    // progress bar
+    const pInterval = setInterval(() => {
+      setBootProgress(prev => {
+        if (prev >= 100) { clearInterval(pInterval); return 100; }
+        return Math.min(prev + Math.random() * 15 + 5, 100);
+      });
+    }, 150);
+    // transition to done
+    setTimeout(() => { clearInterval(pInterval); setBootProgress(100); setBootPhase(1); }, 2200);
+    setTimeout(() => setBootPhase(2), 2800);
+    return () => clearInterval(pInterval);
+  }, [bootPhase, BOOT_LINES]);
+
+  /* Custom cursor tracking */
+  useEffect(() => {
+    const onMove = (e) => setCursorPos({ x: e.clientX, y: e.clientY });
+    const onDown = () => { setCursorClick(true); setTimeout(() => setCursorClick(false), 150); };
+    window.addEventListener('mousemove', onMove, { passive: true });
+    window.addEventListener('mousedown', onDown);
+    // Track hover on interactive elements
+    const onOver = (e) => {
+      if (e.target.closest('button, a, input, textarea, [role="button"], .cursor-pointer')) setCursorHover(true);
+    };
+    const onOut = (e) => {
+      if (e.target.closest('button, a, input, textarea, [role="button"], .cursor-pointer')) setCursorHover(false);
+    };
+    document.addEventListener('mouseover', onOver, { passive: true });
+    document.addEventListener('mouseout', onOut, { passive: true });
+    return () => {
+      window.removeEventListener('mousemove', onMove);
+      window.removeEventListener('mousedown', onDown);
+      document.removeEventListener('mouseover', onOver);
+      document.removeEventListener('mouseout', onOut);
+    };
+  }, []);
+
+  /* "?" shortcut sheet */
+  useEffect(() => {
+    const handler = (e) => {
+      if (e.key === '?' && !e.ctrlKey && !e.metaKey && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
+        setShowShortcuts(prev => !prev);
+      }
+      if (e.key === 'Escape') setShowShortcuts(false);
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, []);
+
+  /* Konami code: ↑↑↓↓←→←→BA */
+  useEffect(() => {
+    const KONAMI = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+    const handler = (e) => {
+      if (document.activeElement?.tagName === 'INPUT' || document.activeElement?.tagName === 'TEXTAREA') return;
+      const buf = konamiBuffer.current;
+      buf.push(e.key);
+      if (buf.length > KONAMI.length) buf.shift();
+      if (buf.length === KONAMI.length && buf.every((k, i) => k === KONAMI[i])) {
+        buf.length = 0;
+        setKonamiActive(true);
+        setTimeout(() => setKonamiActive(false), 3000);
+      }
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, []);
+
+  /* Language showcase carousel — auto-rotate every 3s */
+  const LANG_SHOWCASE = useMemo(() => [
+    { name: 'TypeScript', color: '#3178c6', snippet: 'const app = express();\napp.get("/", handler);' },
+    { name: 'Rust', color: '#dea584', snippet: 'fn main() {\n  println!("blazing fast");\n}' },
+    { name: 'Python', color: '#3776ab', snippet: 'async def serve():\n  await uvicorn.run(app)' },
+    { name: 'Go', color: '#00ADD8', snippet: 'func main() {\n  http.ListenAndServe()\n}' },
+  ], []);
+  useEffect(() => {
+    const timer = setInterval(() => setLangIndex(prev => (prev + 1) % LANG_SHOWCASE.length), 3000);
+    return () => clearInterval(timer);
+  }, [LANG_SHOWCASE]);
+
+  /* Magnetic button handler */
+  const handleMagneticMove = useCallback((e) => {
+    const btn = e.currentTarget;
+    const rect = btn.getBoundingClientRect();
+    const x = e.clientX - rect.left - rect.width / 2;
+    const y = e.clientY - rect.top - rect.height / 2;
+    btn.style.transform = `translate(${x * 0.15}px, ${y * 0.15}px)`;
+  }, []);
+  const handleMagneticLeave = useCallback((e) => {
+    e.currentTarget.style.transform = 'translate(0, 0)';
+  }, []);
+
+  /* Before/after slider drag */
+  const handleSliderDrag = useCallback((clientX) => {
+    if (!sliderRef.current) return;
+    const rect = sliderRef.current.getBoundingClientRect();
+    const x = Math.max(0, Math.min(clientX - rect.left, rect.width));
+    setSliderPos((x / rect.width) * 100);
+  }, []);
+  useEffect(() => {
+    if (!isDragging) return;
+    const onMove = (e) => handleSliderDrag(e.touches ? e.touches[0].clientX : e.clientX);
+    const onUp = () => setIsDragging(false);
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseup', onUp);
+    window.addEventListener('touchmove', onMove, { passive: true });
+    window.addEventListener('touchend', onUp);
+    return () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); window.removeEventListener('touchmove', onMove); window.removeEventListener('touchend', onUp); };
+  }, [isDragging, handleSliderDrag]);
+
+  /* Ambient sound */
+  const toggleAmbient = useCallback(() => {
+    if (!ambientRef.current) {
+      ambientRef.current = new Audio('data:audio/wav;base64,UklGRl9vT19teleVJaw==');
+      // We'll use the Web Audio API for a generated hum instead
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = 85;
+      gain.gain.value = 0;
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      // Add a second oscillator for texture
+      const osc2 = ctx.createOscillator();
+      osc2.type = 'sine';
+      osc2.frequency.value = 127.5;
+      const gain2 = ctx.createGain();
+      gain2.gain.value = 0;
+      osc2.connect(gain2);
+      gain2.connect(ctx.destination);
+      osc2.start();
+      ambientRef.current = { ctx, gains: [gain, gain2] };
+    }
+    const { gains } = ambientRef.current;
+    if (ambientOn) {
+      gains.forEach(g => g.gain.linearRampToValueAtTime(0, g.context.currentTime + 0.5));
+    } else {
+      gains[0].gain.linearRampToValueAtTime(0.015, gains[0].context.currentTime + 0.5);
+      gains[1].gain.linearRampToValueAtTime(0.008, gains[1].context.currentTime + 0.5);
+    }
+    setAmbientOn(!ambientOn);
+  }, [ambientOn]);
+
+  /* Section nav dot click handler */
+  const scrollToSection = useCallback((id) => {
+    const refs = { hero: heroRef, business: businessRef, features: featuresRef, comparison: comparisonRef, roadmap: roadmapRef, faq: faqRef };
+    refs[id]?.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, []);
+
   /* Editor event handlers */
   const handleEditorChange = (e) => {
     const val = e.target.value;
@@ -365,6 +590,36 @@ export default function ModernHome() {
         ))}</span>
       </div>
     ));
+  };
+
+  /* Section particle burst — generates 12 teal particles on first visibility */
+  const renderBurst = (sectionId, isVisible) => {
+    if (!isVisible) return null;
+    if (!burstSections.has(sectionId)) {
+      // Schedule state update outside render
+      setTimeout(() => setBurstSections(prev => new Set(prev).add(sectionId)), 0);
+    }
+    if (burstSections.has(sectionId)) return null; // already burst, don't render again
+    return (
+      <div className="absolute inset-0 pointer-events-none overflow-visible" style={{ zIndex: 5 }}>
+        {Array.from({ length: 12 }).map((_, i) => {
+          const angle = (i / 12) * Math.PI * 2;
+          const dist = 40 + Math.random() * 40;
+          return (
+            <div
+              key={i}
+              className="burst-particle"
+              style={{
+                left: '50%', top: '50%',
+                '--bx': `${Math.cos(angle) * dist}px`,
+                '--by': `${Math.sin(angle) * dist}px`,
+                animationDelay: `${i * 30}ms`,
+              }}
+            />
+          );
+        })}
+      </div>
+    );
   };
 
   /* Mouse spotlight handler for bento cards */
@@ -406,6 +661,9 @@ export default function ModernHome() {
           const progress = scrollHeight > 0 ? (y / scrollHeight) * 100 : 0;
           setScrollY(y);
           setScrollProgress(progress);
+          // Sticky CTA: show after scrolling past hero
+          if (progress > 8 && progress < 92) setShowStickyCta(true);
+          else setShowStickyCta(false);
           if (featuresRef.current) {
             const rect = featuresRef.current.getBoundingClientRect();
             const isVisible = rect.top < window.innerHeight * 0.75 && rect.bottom > 0;
@@ -416,6 +674,28 @@ export default function ModernHome() {
             const isVisible = rect.top < window.innerHeight * 0.75 && rect.bottom > 0;
             if (isVisible && !businessVisible) setBusinessVisible(true);
           }
+          if (comparisonRef.current) {
+            const rect = comparisonRef.current.getBoundingClientRect();
+            if (rect.top < window.innerHeight * 0.75 && rect.bottom > 0 && !comparisonVisible) setComparisonVisible(true);
+          }
+          if (roadmapRef.current) {
+            const rect = roadmapRef.current.getBoundingClientRect();
+            if (rect.top < window.innerHeight * 0.75 && rect.bottom > 0 && !roadmapVisible) setRoadmapVisible(true);
+          }
+          if (statsRef.current) {
+            const rect = statsRef.current.getBoundingClientRect();
+            if (rect.top < window.innerHeight * 0.8 && rect.bottom > 0 && !statsVisible) setStatsVisible(true);
+          }
+          // Active section detection for nav dots
+          const sectionRefs = { hero: heroRef, business: businessRef, features: featuresRef, comparison: comparisonRef, roadmap: roadmapRef, faq: faqRef };
+          let current = 'hero';
+          for (const [id, ref] of Object.entries(sectionRefs)) {
+            if (ref.current) {
+              const rect = ref.current.getBoundingClientRect();
+              if (rect.top < window.innerHeight * 0.5) current = id;
+            }
+          }
+          setActiveSection(current);
           ticking = false;
         });
         ticking = true;
@@ -426,11 +706,15 @@ export default function ModernHome() {
     return () => window.removeEventListener("scroll", onScroll);
   }, [featuresVisible]);
 
-  /* ---------- Mount: stars + typewriter ---------- */
+  /* ---------- Mount ---------- */
   useEffect(() => {
     setMounted(true);
     fetchWaitlistCount();
-    // first-line typewriter
+  }, []);
+
+  /* ---------- Hero typewriter — starts after boot finishes ---------- */
+  useEffect(() => {
+    if (bootPhase !== 2) return;
     let i = 0;
     const firstLineInterval = setInterval(() => {
       if (i < firstLine.length) {
@@ -442,7 +726,7 @@ export default function ModernHome() {
       }
     }, 45);
     return () => clearInterval(firstLineInterval);
-  }, []);
+  }, [bootPhase]);
 
   useEffect(() => {
     if (showSecondLine) {
@@ -509,9 +793,44 @@ export default function ModernHome() {
 
   return (
     <div className="relative min-h-screen">
+      {/* ═══ Boot sequence overlay ═══ */}
+      {bootPhase < 2 && (
+        <div className={`fixed inset-0 z-[200] bg-[#0a0a0a] flex items-center justify-center ${bootPhase === 1 ? 'boot-fade-out' : ''}`}>
+          <div className="w-full max-w-md px-8 space-y-4">
+            <div className="flex items-center gap-2 mb-6">
+              <Terminal className="text-[#58A4B0]" size={18} />
+              <span className="text-[#58A4B0] font-mono text-sm font-bold">synthi</span>
+            </div>
+            <div className="font-mono text-xs space-y-1.5" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+              {bootLines.map((line, i) => (
+                <div key={i} className="boot-line-in text-slate-400" style={{ animationDelay: `${i * 0.05}s` }}>
+                  {line.includes('\u2713') ? <span className="text-emerald-400">{line}</span> : line}
+                </div>
+              ))}
+            </div>
+            <div className="mt-4 h-1 w-full bg-white/5 rounded-full overflow-hidden">
+              <div className="h-full bg-gradient-to-r from-[#58A4B0] to-[#327464] rounded-full transition-all duration-200" style={{ width: `${bootProgress}%` }} />
+            </div>
+            <div className="text-right text-[10px] font-mono text-slate-600">{Math.round(bootProgress)}%</div>
+          </div>
+        </div>
+      )}
+
+      {/* ═══ Custom cursor ═══ */}
+      <div className="fixed pointer-events-none z-[300] hidden md:block" style={{ left: cursorPos.x, top: cursorPos.y }}>
+        <div className="absolute rounded-full bg-[#58A4B0] transition-all duration-75" style={{ width: cursorClick ? 4 : 5, height: cursorClick ? 4 : 5, transform: 'translate(-50%, -50%)' }} />
+        <div className="absolute rounded-full border transition-all duration-200" style={{
+          width: cursorHover ? 40 : 24, height: cursorHover ? 40 : 24,
+          borderColor: cursorHover ? 'rgba(88,164,176,0.5)' : 'rgba(88,164,176,0.25)',
+          transform: 'translate(-50%, -50%)',
+          ...(cursorClick ? { animation: 'cursorRingPulse 0.15s ease-out' } : {}),
+        }} />
+      </div>
+
       <style jsx global>{`
         @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
-        body { font-family: 'Space Grotesk', sans-serif; }
+        body { font-family: 'Space Grotesk', sans-serif; cursor: none; }
+        *, *::before, *::after { cursor: none !important; }
         @keyframes scroll-bounce {
           0%,100% { opacity: 0; transform: translateY(-6px); }
           50% { opacity: 1; transform: translateY(6px); }
@@ -845,6 +1164,155 @@ export default function ModernHome() {
           0% { opacity: 0.5; transform: scale(1); }
           100% { opacity: 0; transform: scale(0.2) translateY(-15px); }
         }
+
+        /* ─── Boot sequence ─── */
+        @keyframes bootFadeOut {
+          0% { opacity: 1; }
+          100% { opacity: 0; transform: scale(1.02); pointer-events: none; }
+        }
+        @keyframes bootLineIn {
+          from { opacity: 0; transform: translateX(-8px); }
+          to { opacity: 1; transform: translateX(0); }
+        }
+        .boot-line-in { animation: bootLineIn 0.25s ease-out both; }
+        @keyframes bootProgressFill {
+          from { width: 0%; }
+        }
+        .boot-fade-out { animation: bootFadeOut 0.6s ease-in forwards; }
+
+        /* ─── Custom cursor ─── */
+        @keyframes cursorRingPulse {
+          0%, 100% { transform: translate(-50%, -50%) scale(1); }
+          50% { transform: translate(-50%, -50%) scale(0.8); }
+        }
+
+        /* ─── Section divider morphs ─── */
+        @keyframes dividerDraw {
+          from { stroke-dashoffset: 800; }
+          to { stroke-dashoffset: 0; }
+        }
+        @keyframes dividerPulse {
+          0%, 100% { opacity: 0.3; }
+          50% { opacity: 0.6; }
+        }
+
+        /* ─── Scroll text reveal / cipher decode ─── */
+        @keyframes revealChar {
+          0% { opacity: 0; transform: translateY(8px) rotateX(40deg); filter: blur(4px); }
+          100% { opacity: 1; transform: translateY(0) rotateX(0deg); filter: blur(0); }
+        }
+        .text-reveal span { display: inline-block; opacity: 0; animation: revealChar 0.5s ease-out forwards; }
+        .text-reveal-hidden span { opacity: 0; }
+
+        /* ─── Sticky CTA ─── */
+        @keyframes stickySlideUp {
+          from { transform: translateY(100%); opacity: 0; }
+          to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes stickySlideDown {
+          from { transform: translateY(0); opacity: 1; }
+          to { transform: translateY(100%); opacity: 0; }
+        }
+
+        /* ─── Language carousel ─── */
+        @keyframes langSlideIn {
+          from { opacity: 0; transform: translateY(8px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ─── Roadmap timeline ─── */
+        @keyframes timelineDotPing {
+          0% { transform: scale(1); opacity: 0.8; }
+          100% { transform: scale(2.5); opacity: 0; }
+        }
+
+        /* ─── Shortcut sheet ─── */
+        @keyframes sheetIn {
+          from { opacity: 0; transform: scale(0.95) translateY(8px); }
+          to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        @keyframes sheetOut {
+          from { opacity: 1; transform: scale(1); }
+          to { opacity: 0; transform: scale(0.95) translateY(8px); }
+        }
+
+        /* ─── Milestone counter ─── */
+        @keyframes milestoneGlow {
+          0%, 100% { box-shadow: 0 0 0 0 rgba(88,164,176,0); }
+          50% { box-shadow: 0 0 20px 4px rgba(88,164,176,0.15); }
+        }
+
+        /* ─── Stats counter spring ─── */
+        @keyframes countSlideUp {
+          0% { opacity: 0; transform: translateY(20px); }
+          60% { opacity: 1; transform: translateY(-3px); }
+          80% { transform: translateY(1px); }
+          100% { transform: translateY(0); }
+        }
+
+        /* ─── Section particle burst ─── */
+        @keyframes particleBurst {
+          0% { opacity: 1; transform: translate(0, 0) scale(1); }
+          100% { opacity: 0; transform: translate(var(--bx), var(--by)) scale(0); }
+        }
+        .burst-particle {
+          position: absolute;
+          width: 4px; height: 4px;
+          border-radius: 50%;
+          background: rgba(88, 164, 176, 0.8);
+          animation: particleBurst 0.8s ease-out forwards;
+          pointer-events: none;
+        }
+
+        /* ─── Nav dot pulse ─── */
+        @keyframes navDotPulse {
+          0%, 100% { box-shadow: 0 0 0 0 rgba(88,164,176,0.4); }
+          50% { box-shadow: 0 0 8px 3px rgba(88,164,176,0.2); }
+        }
+
+        /* ─── Before/after slider glow ─── */
+        @keyframes sliderGlow {
+          0%, 100% { box-shadow: 0 0 8px rgba(88,164,176,0.3); }
+          50% { box-shadow: 0 0 16px rgba(88,164,176,0.6); }
+        }
+
+        /* ─── Mobile dock ─── */
+        @keyframes dockSlideUp {
+          from { transform: translateY(100%); opacity: 0; }
+          to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* ─── Konami Matrix rain ─── */
+        @keyframes matrixFadeIn {
+          from { opacity: 0; } to { opacity: 1; }
+        }
+        @keyframes matrixFadeOut {
+          from { opacity: 1; } to { opacity: 0; }
+        }
+        @keyframes matrixDrop {
+          0% { transform: translateY(-100%); opacity: 1; }
+          90% { opacity: 0.6; }
+          100% { transform: translateY(100vh); opacity: 0; }
+        }
+        .matrix-overlay {
+          animation: matrixFadeIn 0.3s ease-out;
+        }
+        .matrix-overlay.fading {
+          animation: matrixFadeOut 0.6s ease-in forwards;
+        }
+        .matrix-col {
+          animation: matrixDrop var(--drop-dur) linear var(--drop-delay) infinite;
+        }
+
+        /* ─── Back to top ─── */
+        @keyframes bttFadeIn {
+          from { opacity: 0; transform: translateY(8px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes bttFadeOut {
+          from { opacity: 1; transform: translateY(0); }
+          to { opacity: 0; transform: translateY(8px); }
+        }
       `}</style>
 
       {/* Top nav */}
@@ -858,26 +1326,49 @@ export default function ModernHome() {
             />
             <span className="text-[#E5E5E5] font-semibold text-sm -ml-2 -mt-2 tracking-tight">26'</span>
           </div>
+          {/* Ambient sound toggle */}
+          <button
+            onClick={toggleAmbient}
+            className="ml-auto text-slate-500 hover:text-[#58A4B0] transition-colors p-1.5 rounded-lg hover:bg-white/[0.04]"
+            title={ambientOn ? 'Mute ambient' : 'Enable ambient sound'}
+          >
+            {ambientOn ? <Volume2 size={14} /> : <VolumeX size={14} />}
+          </button>
         </div>
       </div>
 
       {/* Floating rocket progress indicator */}
       <div
-        className="fixed right-4 z-50 transition-all duration-300 ease-out"
+        className="fixed right-4 z-50 transition-all duration-300 ease-out hidden md:flex flex-col items-center gap-3"
         style={{
-          top: `${Math.min(scrollProgress * 0.8 + 10, 85)}%`,
-          opacity: scrollProgress > 5 ? 1 : 0,
+          top: '50%',
+          transform: 'translateY(-50%)',
+          opacity: scrollProgress > 3 ? 1 : 0,
         }}
       >
-        <div className="relative">
-          <Rocket
-            className="text-[#58A4B0] transform rotate-180"
-            size={32}
-            style={{
-              filter: 'drop-shadow(0 0 8px rgba(88, 164, 176, 0.6))',
-            }}
-          />
-          <div className="absolute top-8 left-1/2 -translate-x-1/2 w-0.5 h-12 bg-gradient-to-b from-[#58A4B0] to-transparent opacity-60" />
+        {SECTIONS.map((s) => (
+          <button
+            key={s.id}
+            onClick={() => scrollToSection(s.id)}
+            className="group relative flex items-center"
+            title={s.label}
+          >
+            <span className={`block w-2 h-2 rounded-full transition-all duration-300 ${
+              activeSection === s.id
+                ? 'bg-[#58A4B0] scale-125'
+                : 'bg-white/20 hover:bg-white/40'
+            }`} style={activeSection === s.id ? { animation: 'navDotPulse 2s ease-in-out infinite' } : {}} />
+            <span className="absolute right-5 bg-[#1a1a1a]/90 border border-white/10 rounded px-2 py-1 text-[10px] text-slate-300 font-mono opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+              {s.label}
+            </span>
+          </button>
+        ))}
+        {/* Thin progress line with rocket */}
+        <div className="relative mt-1 flex flex-col items-center">
+          <div className="w-px h-8 bg-white/[0.06] rounded-full overflow-hidden relative">
+            <div className="w-full bg-[#58A4B0]/40 rounded-full transition-all duration-300" style={{ height: `${scrollProgress}%` }} />
+          </div>
+          <Rocket size={10} className="text-[#58A4B0] mt-1.5 transition-all duration-300" style={{ opacity: 0.6 + scrollProgress * 0.004, transform: `rotate(${-45 + scrollProgress * 0.9}deg)` }} />
         </div>
       </div>
 
@@ -997,14 +1488,14 @@ export default function ModernHome() {
       </div>
 
       {/* Main content - hero section */}
-      <div className="relative z-10 flex items-center justify-center min-h-screen px-6 md:px-12 lg:px-20">
+      <div ref={heroRef} className="relative z-10 flex items-center justify-center min-h-screen px-6 md:px-12 lg:px-20">
         <div className="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-[1.15fr_1fr] gap-10 lg:gap-16 items-center">
           {/* Left: text content */}
           <div className="flex flex-col items-start">
             {/* Operational status indicator */}
             <div
-              className={`flex items-center gap-2 mb-2 ml-0.5 transition-all duration-1000 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
-              style={{ transitionDelay: '0ms' }}
+              className={`flex items-center gap-2 mb-2 ml-0.5 transition-all duration-700 ease-out ${bootPhase === 2 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
+              style={{ transitionDelay: '100ms' }}
             >
               <div className="relative">
                 <div className="w-2 h-2 rounded-full bg-emerald-400" />
@@ -1013,7 +1504,10 @@ export default function ModernHome() {
               <span className="text-emerald-400 text-sm font-medium">All systems operational</span>
             </div>
             {/* Headline with typewriter effect */}
-            <div className="space-y-2 pr-12">
+            <div
+              className={`space-y-2 pr-12 transition-all duration-700 ease-out ${bootPhase === 2 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
+              style={{ transitionDelay: '200ms' }}
+            >
               <h1 className="text-xl sm:text-xl md:text-2xl lg:text-5xl font-bold bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent tracking-tight leading-[1.05]">
                 {typewriterText}
                 {!showSecondLine && typewriterText.length < firstLine.length && <span className="cursor-blink text-white">|</span>}
@@ -1028,19 +1522,22 @@ export default function ModernHome() {
             </div>
             {/* Subheading */}
             <p
-              className={`text-slate-400 text-lg md:text-xl mt-6 max-w-xl leading-relaxed transition-all duration-1000 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
-              style={{ transitionDelay: '600ms' }}
+              className={`text-slate-400 text-lg md:text-xl mt-6 max-w-xl leading-relaxed transition-all duration-700 ease-out ${bootPhase === 2 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
+              style={{ transitionDelay: '400ms' }}
             >
               Built so you can focus on your ideas. It handles the rest itself. You&apos;ll love it.
             </p>
             {/* Join waitlist button */}
             <div
-              className={`flex gap-4 mt-6 transition-all duration-1000 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
-              style={{ transitionDelay: '800ms' }}
+              className={`flex gap-4 mt-6 transition-all duration-700 ease-out ${bootPhase === 2 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
+              style={{ transitionDelay: '600ms' }}
             >
               <button
                 onClick={scrollToBottom}
+                onMouseMove={handleMagneticMove}
+                onMouseLeave={handleMagneticLeave}
                 className="group relative px-6 md:px-8 py-3.5 bg-white text-black font-semibold rounded-lg overflow-hidden transition-all duration-300 hover:-translate-y-1 cursor-pointer"
+                style={{ transition: 'transform 0.2s ease-out' }}
               >
                 <span className="relative z-10 font-mono text-sm tracking-wide">JOIN WAITLIST</span>
                 <div className="absolute inset-0 bg-gradient-to-r from-[#E5E5E5] to-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -1050,7 +1547,8 @@ export default function ModernHome() {
 
           {/* Right: Interactive IDE Window */}
           <div
-            className={`relative transition-all duration-1000 delay-300 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
+            className={`relative transition-all duration-700 ease-out ${bootPhase === 2 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+            style={{ transitionDelay: '800ms' }}
           >
             {/* "Click to edit" tooltip */}
             {ghostTypingDone && !isEditorActive && !isCompiling && (
@@ -1194,10 +1692,45 @@ export default function ModernHome() {
         </div>
       </div>
 
+      {/* ═══ Animated Stats Counter Bar ═══ */}
+      <div ref={statsRef} className="relative z-10 py-16 px-6 md:px-20">
+        <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+          {[
+            { value: 200, prefix: '<', suffix: 'ms', label: 'Compile time' },
+            { value: 40, prefix: '', suffix: '+', label: 'Languages' },
+            { value: 0, prefix: '', suffix: '', label: 'Tracking scripts' },
+            { value: 99.9, prefix: '', suffix: '%', label: 'Uptime target' },
+          ].map((stat, i) => (
+            <div
+              key={i}
+              className="text-center"
+              style={{
+                animation: statsVisible ? `countSlideUp 0.7s ease-out ${i * 120}ms both` : 'none',
+                opacity: statsVisible ? undefined : 0,
+              }}
+            >
+              <div className="text-3xl md:text-4xl font-bold text-white font-mono">
+                {stat.prefix}{statsVisible ? (Number.isInteger(stat.value) ? stat.value : stat.value.toFixed(1)) : 0}{stat.suffix}
+              </div>
+              <div className="text-slate-500 text-sm mt-1">{stat.label}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ═══ Section divider: Hero → Business ═══ */}
+      <div className="relative z-10 w-full overflow-hidden" style={{ height: 60 }}>
+        <svg className="w-full h-full" viewBox="0 0 1200 60" preserveAspectRatio="none" fill="none">
+          <path d="M0,30 C200,10 400,50 600,30 C800,10 1000,50 1200,30" stroke="url(#divGrad1)" strokeWidth="1" strokeDasharray="800" style={{ animation: businessVisible ? 'dividerDraw 2s ease-out forwards' : 'none', strokeDashoffset: 800 }} />
+          <defs><linearGradient id="divGrad1" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stopColor="rgba(88,164,176,0)" /><stop offset="50%" stopColor="rgba(88,164,176,0.3)" /><stop offset="100%" stopColor="rgba(88,164,176,0)" /></linearGradient></defs>
+        </svg>
+      </div>
+
       {/* Business Model */}
       <div ref={businessRef} className="relative z-10 min-h-screen flex items-center justify-center px-6 md:px-20 py-20 md:py-32">
         <div className="max-w-7xl w-full space-y-16">
-          <div className="text-center space-y-6">
+          <div className="text-center space-y-6 relative">
+            {renderBurst('business', businessVisible)}
             <h2
               className={`text-4xl md:text-6xl font-bold text-[#E5E5E5] tracking-tight transition-all duration-1000 ${businessVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"
                 }`}
@@ -1354,6 +1887,14 @@ export default function ModernHome() {
         </div>
       </div>
 
+      {/* ═══ Section divider: Business → Features ═══ */}
+      <div className="relative z-10 w-full overflow-hidden" style={{ height: 60 }}>
+        <svg className="w-full h-full" viewBox="0 0 1200 60" preserveAspectRatio="none" fill="none">
+          <path d="M0,30 Q300,5 600,30 Q900,55 1200,30" stroke="url(#divGrad2)" strokeWidth="1" strokeDasharray="800" style={{ animation: featuresVisible ? 'dividerDraw 2s ease-out forwards' : 'none', strokeDashoffset: 800 }} />
+          <defs><linearGradient id="divGrad2" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stopColor="rgba(50,116,100,0)" /><stop offset="50%" stopColor="rgba(50,116,100,0.3)" /><stop offset="100%" stopColor="rgba(50,116,100,0)" /></linearGradient></defs>
+        </svg>
+      </div>
+
       {/* Features - Bento Grid */}
       <div
         ref={featuresRef}
@@ -1361,7 +1902,8 @@ export default function ModernHome() {
       >
         <div className="max-w-7xl mx-auto space-y-12">
           {/* Section header */}
-          <div className="text-center space-y-4">
+          <div className="text-center space-y-4 relative">
+            {renderBurst('features', featuresVisible)}
             <h2
               className={`text-4xl md:text-6xl font-bold text-white tracking-tight transition-all duration-1000 ${featuresVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
             >
@@ -1668,6 +2210,178 @@ export default function ModernHome() {
         </div>
       </div>
 
+      {/* ═══ Language Showcase Carousel ═══ */}
+      <div className="relative z-10 px-6 md:px-20 py-20 md:py-28">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-12">
+            <span className="text-[#58A4B0] font-mono text-xs tracking-widest uppercase mb-3 block">Polyglot by design</span>
+            <h2 className="text-3xl md:text-5xl font-bold text-white tracking-tight text-reveal">
+              {'Any language. One IDE.'.split('').map((c, i) => (
+                <span key={i} style={{ animationDelay: `${i * 40}ms` }}>{c === ' ' ? '\u00A0' : c}</span>
+              ))}
+            </h2>
+          </div>
+          <div className="relative overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.02] backdrop-blur-sm">
+            {/* Language tabs */}
+            <div className="flex border-b border-white/[0.06]">
+              {LANG_SHOWCASE.map((lang, i) => (
+                <button key={lang.name} onClick={() => setLangIndex(i)} className={`flex-1 px-4 py-3 text-sm font-mono transition-all duration-300 ${langIndex === i ? 'text-white bg-white/[0.04]' : 'text-slate-500 hover:text-slate-300'}`}>
+                  <span className="inline-block w-2 h-2 rounded-full mr-2" style={{ backgroundColor: lang.color, opacity: langIndex === i ? 1 : 0.4 }} />
+                  {lang.name}
+                </button>
+              ))}
+            </div>
+            {/* Code display */}
+            <div className="p-6 min-h-[200px] relative">
+              <pre key={langIndex} className="text-sm md:text-base font-mono text-slate-300 leading-relaxed" style={{ animation: 'langSlideIn 0.4s ease-out' }}>
+                <code>{LANG_SHOWCASE[langIndex].snippet}</code>
+              </pre>
+              <div className="absolute bottom-4 right-4 flex items-center gap-2 text-xs text-slate-600 font-mono">
+                <Code size={12} />
+                {LANG_SHOWCASE[langIndex].name}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ═══ Before / After IDE Slider ═══ */}
+      <div className="relative z-10 px-6 md:px-20 py-16 md:py-24">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-10">
+            <span className="text-[#58A4B0] font-mono text-xs tracking-widest uppercase mb-3 block">See the difference</span>
+            <h2 className="text-3xl md:text-4xl font-bold text-white tracking-tight">Drag to compare</h2>
+          </div>
+          <div
+            ref={sliderRef}
+            className="relative overflow-hidden rounded-2xl border border-white/[0.06] h-[280px] md:h-[340px] select-none"
+            onMouseDown={(e) => { setIsDragging(true); handleSliderDrag(e.clientX); }}
+            onTouchStart={(e) => { setIsDragging(true); handleSliderDrag(e.touches[0].clientX); }}
+          >
+            {/* Left side: Local IDE (full width, clipped) */}
+            <div className="absolute inset-0 bg-[#1a1a1a]">
+              <div className="p-6 md:p-8 h-full flex flex-col justify-center">
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="w-2.5 h-2.5 rounded-full bg-red-500/60" />
+                  <span className="text-slate-500 text-xs font-mono">Local IDE</span>
+                </div>
+                <div className="space-y-3 font-mono text-sm">
+                  <div className="flex items-center gap-2"><Clock size={12} className="text-red-400" /><span className="text-slate-400">Build time:</span><span className="text-red-400">47.2s</span></div>
+                  <div className="flex items-center gap-2"><Cpu size={12} className="text-orange-400" /><span className="text-slate-400">CPU usage:</span><span className="text-orange-400">98%</span></div>
+                  <div className="flex items-center gap-2"><Zap size={12} className="text-red-400" /><span className="text-slate-400">Fan noise:</span><span className="text-red-400">Jet engine</span></div>
+                  <div className="flex items-center gap-2"><Cloud size={12} className="text-slate-600" /><span className="text-slate-400">HMR:</span><span className="text-slate-600">Not supported</span></div>
+                  <div className="mt-4 text-xs text-red-400/60 font-mono">⚠ Out of memory — restart required</div>
+                </div>
+              </div>
+            </div>
+            {/* Right side: Synthi (clipped by slider position) */}
+            <div className="absolute inset-0 bg-[#0d1117]" style={{ clipPath: `inset(0 0 0 ${sliderPos}%)` }}>
+              <div className="p-6 md:p-8 h-full flex flex-col justify-center">
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="w-2.5 h-2.5 rounded-full bg-emerald-400" />
+                  <span className="text-[#58A4B0] text-xs font-mono">Synthi Cloud</span>
+                </div>
+                <div className="space-y-3 font-mono text-sm">
+                  <div className="flex items-center gap-2"><Clock size={12} className="text-emerald-400" /><span className="text-slate-400">Build time:</span><span className="text-emerald-400">0.18s</span></div>
+                  <div className="flex items-center gap-2"><Cpu size={12} className="text-emerald-400" /><span className="text-slate-400">CPU usage:</span><span className="text-emerald-400">2%</span></div>
+                  <div className="flex items-center gap-2"><Zap size={12} className="text-emerald-400" /><span className="text-slate-400">Fan noise:</span><span className="text-emerald-400">Silent</span></div>
+                  <div className="flex items-center gap-2"><Cloud size={12} className="text-emerald-400" /><span className="text-slate-400">HMR:</span><span className="text-emerald-400">Instant</span></div>
+                  <div className="mt-4 text-xs text-emerald-400/60 font-mono">✓ All systems operational</div>
+                </div>
+              </div>
+            </div>
+            {/* Drag handle */}
+            <div
+              className="absolute top-0 bottom-0 w-0.5 bg-[#58A4B0] z-10"
+              style={{ left: `${sliderPos}%`, animation: 'sliderGlow 2s ease-in-out infinite' }}
+            >
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-[#58A4B0]/20 border border-[#58A4B0]/40 backdrop-blur-sm flex items-center justify-center cursor-grab active:cursor-grabbing">
+                <GripVertical size={14} className="text-[#58A4B0]" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ═══ Comparison Table ═══ */}
+      <div ref={comparisonRef} className="relative z-10 px-6 md:px-20 py-20 md:py-28">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-12">
+            <span className="text-[#58A4B0] font-mono text-xs tracking-widest uppercase mb-3 block">The honest comparison</span>
+            <h2 className={`text-3xl md:text-5xl font-bold text-white tracking-tight ${comparisonVisible ? 'text-reveal' : 'text-reveal-hidden'}`}>
+              {'Synthi vs. the rest'.split('').map((c, i) => (
+                <span key={i} style={{ animationDelay: `${i * 40}ms` }}>{c === ' ' ? '\u00A0' : c}</span>
+              ))}
+            </h2>
+          </div>
+          <div className={`overflow-hidden rounded-2xl border border-white/[0.06] transition-all duration-1000 ${comparisonVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
+            <table className="w-full text-left text-sm">
+              <thead>
+                <tr className="border-b border-white/[0.06] bg-white/[0.02]">
+                  <th className="px-6 py-4 text-slate-400 font-medium">Feature</th>
+                  <th className="px-6 py-4 text-[#58A4B0] font-semibold">Synthi</th>
+                  <th className="px-6 py-4 text-slate-400 font-medium">VS Code</th>
+                  <th className="px-6 py-4 text-slate-400 font-medium">Replit</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  ['Cloud Compile', true, false, true],
+                  ['Built-in AI', true, false, true],
+                  ['Compiled HMR', true, false, false],
+                  ['Real-time Collab', true, false, true],
+                  ['Full Offline Mode', true, true, false],
+                  ['Free Forever Tier', true, true, false],
+                ].map(([feature, synthi, vscode, replit], i) => (
+                  <tr key={i} className="border-b border-white/[0.04] hover:bg-white/[0.02] transition-colors" style={{ transitionDelay: comparisonVisible ? `${i * 80}ms` : '0ms', opacity: comparisonVisible ? 1 : 0, transform: comparisonVisible ? 'translateX(0)' : 'translateX(-20px)', transition: 'opacity 0.5s ease-out, transform 0.5s ease-out' }}>
+                    <td className="px-6 py-3.5 text-slate-300">{feature}</td>
+                    <td className="px-6 py-3.5">{synthi ? <Check size={16} className="text-emerald-400" /> : <span className="text-slate-600">—</span>}</td>
+                    <td className="px-6 py-3.5">{vscode ? <Check size={16} className="text-slate-400" /> : <span className="text-slate-600">—</span>}</td>
+                    <td className="px-6 py-3.5">{replit ? <Check size={16} className="text-slate-400" /> : <span className="text-slate-600">—</span>}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      {/* ═══ Merge with Synthi — Migration Roadmap ═══ */}
+      <div ref={roadmapRef} className="relative z-10 px-6 md:px-20 py-20 md:py-28">
+        <div className="max-w-3xl mx-auto">
+          <div className="text-center mb-16">
+            <span className="text-[#58A4B0] font-mono text-xs tracking-widest uppercase mb-3 block">Switch in minutes</span>
+            <h2 className={`text-3xl md:text-5xl font-bold text-white tracking-tight ${roadmapVisible ? 'text-reveal' : 'text-reveal-hidden'}`}>
+              {'Merge with Synthi'.split('').map((c, i) => (
+                <span key={i} style={{ animationDelay: `${i * 40}ms` }}>{c === ' ' ? '\u00A0' : c}</span>
+              ))}
+            </h2>
+            <p className={`text-slate-400 text-lg mt-4 transition-all duration-1000 delay-300 ${roadmapVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>Your workflow, your extensions, your settings — nothing left behind.</p>
+          </div>
+          <div className={`relative transition-all duration-1000 ${roadmapVisible ? 'opacity-100' : 'opacity-0'}`}>
+            {/* Vertical line */}
+            <div className="absolute left-4 md:left-6 top-0 bottom-0 w-px bg-gradient-to-b from-[#58A4B0]/40 via-[#327464]/20 to-transparent" />
+            {[
+              { step: '01', title: 'Sign up & open Synthi', desc: 'One click — your cloud workspace is ready in seconds. No installs, no setup.', done: true },
+              { step: '02', title: 'Import your project', desc: 'Clone from Git, drag & drop a folder, or connect your existing repo. It just works.', done: true },
+              { step: '03', title: 'Bring your extensions', desc: 'Install any VS Code extension via our VSIX tool. Your entire extension library carries over.', done: true },
+              { step: '04', title: 'Sync settings & keybinds', desc: 'Import your settings.json and keybindings. Synthi feels exactly like home.', done: true },
+              { step: '05', title: 'Build — faster than before', desc: 'Cloud compile kicks in automatically. Same project, dramatically faster builds.', done: true },
+            ].map((item, i) => (
+              <div key={i} className="relative pl-12 md:pl-16 pb-10 last:pb-0" style={{ transitionDelay: roadmapVisible ? `${i * 150}ms` : '0ms', opacity: roadmapVisible ? 1 : 0, transform: roadmapVisible ? 'translateY(0)' : 'translateY(20px)', transition: 'opacity 0.6s ease-out, transform 0.6s ease-out' }}>
+                {/* Dot */}
+                <div className="absolute left-2.5 md:left-4.5 top-1.5 w-3 h-3 rounded-full border-2 bg-[#58A4B0] border-[#58A4B0]">
+                  <div className="absolute inset-0 rounded-full" style={{ animation: 'timelineDotPing 2s ease-out infinite', animationDelay: `${i * 300}ms` }} />
+                </div>
+                <span className="text-[10px] font-mono uppercase tracking-widest text-[#58A4B0]">{item.step}</span>
+                <h3 className="text-white font-semibold mt-1">{item.title}</h3>
+                <p className="text-slate-400 text-sm mt-0.5">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
 
       {/* Command Palette Easter Egg (Ctrl+K) */}
       {showCommandPalette && (
@@ -1693,7 +2407,7 @@ export default function ModernHome() {
       )}
 
       {/* FAQ Section */}
-      <div className="relative z-10 px-6 md:px-20 py-20 md:py-32">
+      <div ref={faqRef} className="relative z-10 px-6 md:px-20 py-20 md:py-32">
         <div className="max-w-3xl mx-auto space-y-10">
           <div className="text-center space-y-4">
             <h2 className="text-3xl md:text-5xl font-bold text-white tracking-tight">Questions?</h2>
@@ -1727,11 +2441,74 @@ export default function ModernHome() {
         </div>
       </div>
 
-      {/* No-tracking badge */}
+      {/* No-tracking badge with tooltip */}
       <div className="relative z-10 flex justify-center pb-12">
-        <div className="badge-slide-up inline-flex items-center gap-2 bg-white/[0.03] border border-white/[0.06] rounded-full px-5 py-2.5">
+        <div
+          className="badge-slide-up inline-flex items-center gap-2 bg-white/[0.03] border border-white/[0.06] rounded-full px-5 py-2.5 relative"
+          onMouseEnter={() => setBadgeTooltip(true)}
+          onMouseLeave={() => setBadgeTooltip(false)}
+        >
           <Shield className="text-emerald-400" size={14} />
           <span className="text-slate-400 text-xs font-medium">Zero tracking. No cookies. We respect developers.</span>
+          {badgeTooltip && (
+            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2.5 px-4 py-2.5 bg-[#1a1a1a]/95 backdrop-blur-xl border border-white/[0.08] rounded-lg shadow-2xl whitespace-nowrap" style={{ animation: 'badgeSlideUp 0.2s ease-out' }}>
+              <div className="text-emerald-400 text-xs font-semibold mb-1">Verified Privacy</div>
+              <div className="text-slate-400 text-[11px] leading-relaxed">No Google Analytics. No Mixpanel.<br/>No cookies. No fingerprinting.</div>
+              <div className="absolute top-full left-1/2 -translate-x-1/2 w-2 h-2 bg-[#1a1a1a]/95 border-r border-b border-white/[0.08] rotate-45 -mt-1" />
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* ═══ Shortcut Sheet Modal (press ?) ═══ */}
+      {showShortcuts && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm" onClick={() => setShowShortcuts(false)}>
+          <div className="sheet-in w-[380px] bg-[#141414]/95 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-2xl p-6" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-5">
+              <h3 className="text-white font-semibold text-sm">Keyboard Shortcuts</h3>
+              <button onClick={() => setShowShortcuts(false)} className="text-slate-500 hover:text-white transition-colors text-xs font-mono">ESC</button>
+            </div>
+            <div className="space-y-3">
+              {[
+                ['?', 'Toggle this sheet'],
+                ['Ctrl + K', 'Command palette'],
+                ['↑ ↓', 'Scroll sections'],
+                ['Tab', 'Navigate elements'],
+              ].map(([key, desc]) => (
+                <div key={key} className="flex items-center justify-between">
+                  <span className="text-slate-400 text-sm">{desc}</span>
+                  <kbd className="bg-white/[0.06] border border-white/[0.08] rounded px-2 py-0.5 text-xs font-mono text-slate-300">{key}</kbd>
+                </div>
+              ))}
+            </div>
+            <div className="mt-5 pt-4 border-t border-white/[0.06] text-center text-[10px] text-slate-600 font-mono">
+              Press <kbd className="bg-white/[0.06] rounded px-1.5 py-0.5 text-slate-400">?</kbd> anywhere to toggle
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ═══ Sticky Bottom CTA Bar ═══ */}
+      <div className={`fixed bottom-0 left-0 right-0 z-40 transition-all duration-500 ${showStickyCta ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'}`} style={{ animation: showStickyCta ? 'stickySlideUp 0.5s ease-out' : 'none' }}>
+        <div className="bg-[#0a0a0a]/90 backdrop-blur-xl border-t border-white/[0.06]">
+          <div className="max-w-4xl mx-auto px-6 py-3 flex items-center justify-between gap-4">
+            <span className="text-white text-sm font-medium hidden md:block">Ready to build the future?</span>
+            <div className="flex-1 md:flex-none flex items-center gap-2">
+              <input
+                type="email"
+                value={stickyEmail}
+                onChange={e => setStickyEmail(e.target.value)}
+                placeholder="your@email.com"
+                className="flex-1 md:w-56 bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-1.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#58A4B0]/40 transition-colors"
+              />
+              <button
+                onClick={async () => { if (stickyEmail) { setEmail(stickyEmail); await handleSubmit(new Event('submit')); setStickyEmail(''); }}}
+                className="bg-gradient-to-r from-[#58A4B0] to-[#327464] text-white text-sm font-medium px-4 py-1.5 rounded-lg hover:opacity-90 transition-opacity flex items-center gap-1.5 whitespace-nowrap"
+              >
+                Join <ArrowRight size={14} />
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -1753,6 +2530,70 @@ export default function ModernHome() {
           </a>
         </div>
       </footer>
+
+      {/* ═══ Konami code Matrix rain ═══ */}
+      {konamiActive && (
+        <div className="matrix-overlay fixed inset-0 z-[250] pointer-events-none overflow-hidden bg-black/40">
+          {Array.from({ length: 30 }, (_, i) => (
+            <div
+              key={i}
+              className="matrix-col absolute top-0 text-green-400 font-mono text-xs leading-tight select-none"
+              style={{
+                left: `${(i / 30) * 100 + Math.random() * 3}%`,
+                '--drop-dur': `${1.5 + Math.random() * 2}s`,
+                '--drop-delay': `${Math.random() * 1.2}s`,
+                opacity: 0.4 + Math.random() * 0.5,
+                fontSize: `${10 + Math.random() * 6}px`,
+              }}
+            >
+              {Array.from({ length: 20 }, () => String.fromCharCode(0x30A0 + Math.random() * 96)).join('\n')}
+            </div>
+          ))}
+          <div className="absolute inset-0 flex items-center justify-center">
+            <span className="text-green-400 font-mono text-2xl font-bold tracking-widest" style={{ textShadow: '0 0 20px rgba(0,255,0,0.5)' }}>KONAMI</span>
+          </div>
+        </div>
+      )}
+
+      {/* ═══ Back to Top ═══ */}
+      <div
+        className="fixed bottom-6 left-6 z-40 hidden md:block"
+        style={{
+          animation: scrollProgress > 50 ? 'bttFadeIn 0.3s ease-out forwards' : 'bttFadeOut 0.3s ease-in forwards',
+          pointerEvents: scrollProgress > 50 ? 'auto' : 'none',
+        }}
+      >
+        <button
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          className="group flex items-center gap-2 bg-[#141414]/80 backdrop-blur-xl border border-white/[0.08] rounded-full pl-3 pr-4 py-2 text-slate-400 hover:text-[#58A4B0] hover:border-[#58A4B0]/30 transition-all duration-300 shadow-lg"
+        >
+          <ArrowUp size={14} className="group-hover:-translate-y-0.5 transition-transform duration-200" />
+          <span className="text-xs font-medium">Top</span>
+        </button>
+      </div>
+
+      {/* ═══ Mobile Dock Nav ═══ */}
+      <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 md:hidden" style={{ animation: 'dockSlideUp 0.5s ease-out', opacity: scrollProgress > 3 ? 1 : 0, transition: 'opacity 0.3s' }}>
+        <div className="flex items-center gap-1 bg-[#131112]/80 backdrop-blur-xl border border-white/[0.08] rounded-full px-2 py-1.5 shadow-2xl">
+          {[
+            { id: 'hero', icon: Home, label: 'Home' },
+            { id: 'business', icon: DollarSign, label: 'Pricing' },
+            { id: 'features', icon: Layers, label: 'Features' },
+            { id: 'faq', icon: HelpCircle, label: 'FAQ' },
+          ].map(({ id, icon: Icon, label }) => (
+            <button
+              key={id}
+              onClick={() => scrollToSection(id)}
+              className={`flex flex-col items-center px-3 py-1.5 rounded-full transition-all duration-200 ${
+                activeSection === id ? 'bg-[#58A4B0]/15 text-[#58A4B0]' : 'text-slate-500'
+              }`}
+            >
+              <Icon size={16} />
+              <span className="text-[9px] mt-0.5 font-medium">{label}</span>
+            </button>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
