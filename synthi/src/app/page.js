@@ -170,7 +170,7 @@ export default function ModernHome() {
   const [ambientOn, setAmbientOn] = useState(false);
   const ambientRef = useRef(null);
 
-  /* Section particle bursts — track which sections already burst */
+  /* Section particle bursts - track which sections already burst */
   const [burstSections, setBurstSections] = useState(new Set());
 
   /* Konami code easter egg */
@@ -180,7 +180,10 @@ export default function ModernHome() {
   /* Tracking badge tooltip */
   const [badgeTooltip, setBadgeTooltip] = useState(false);
 
-  /* Nav dots — section list */
+  /* Sasha easter egg */
+  const [sashaEaster, setSashaEaster] = useState(false);
+
+  /* Nav dots - section list */
   const SECTIONS = useMemo(() => [
     { id: 'hero', label: 'Home' },
     { id: 'business', label: 'Pricing' },
@@ -209,7 +212,7 @@ export default function ModernHome() {
       twinkle: i % 5 === 0, // ~28 stars twinkle
       twinkleDelay: rand() * 6, twinkleDuration: rand() * 3 + 2,
     }));
-    // Star clusters — 3 dense groupings of 15 stars each
+    // Star clusters - 3 dense groupings of 15 stars each
     const clusterCenters = [{ cx: 15, cy: 25 }, { cx: 72, cy: 18 }, { cx: 55, cy: 70 }];
     const _clusters = clusterCenters.flatMap(({ cx, cy }) =>
       Array.from({ length: 15 }, () => ({
@@ -218,13 +221,13 @@ export default function ModernHome() {
         twinkle: rand() > 0.6, twinkleDelay: rand() * 8, twinkleDuration: rand() * 4 + 2,
       }))
     );
-    // Drifting particles — 60 tiny motes
+    // Drifting particles - 60 tiny motes
     const _drift = Array.from({ length: 60 }, () => ({
       x: rand() * 100, y: rand() * 100, size: rand() * 1.5 + 0.5,
       opacity: rand() * 0.06 + 0.02, duration: rand() * 30 + 25, delay: rand() * 20,
       dx: (rand() - 0.5) * 30, dy: rand() * -20 - 10, // drift up-ish
     }));
-    // Aurora ribbons — 3 ribbons
+    // Aurora ribbons - 3 ribbons
     const _aurora = Array.from({ length: 3 }, (_, i) => ({
       top: 15 + i * 25 + rand() * 10, // spread across viewport
       left: -10, width: 120, height: rand() * 80 + 60,
@@ -253,7 +256,7 @@ export default function ModernHome() {
     return () => { if (typingRef.current) clearInterval(typingRef.current); };
   }, [mounted, bootPhase]);
 
-  /* Shooting star — fires every 8-15s */
+  /* Shooting star - fires every 8-15s */
   useEffect(() => {
     if (!mounted) return;
     const fire = () => {
@@ -290,6 +293,14 @@ export default function ModernHome() {
   /* Compile sequence */
   const handleRunClick = useCallback(() => {
     if (isCompiling) return;
+
+    // Sasha easter egg
+    if (editorCode.trim().toLowerCase() === 'sasha') {
+      setSashaEaster(true);
+      setTimeout(() => setSashaEaster(false), 5000);
+      return;
+    }
+
     setRocketLaunched(true);
     setBorderPulse(true);
     setIsCompiling(true);
@@ -336,7 +347,7 @@ export default function ModernHome() {
     };
   }, []);
 
-  /* Ctrl+K Easter egg — command palette */
+  /* Ctrl+K Easter egg - command palette */
   useEffect(() => {
     const handler = (e) => {
       if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
@@ -368,7 +379,7 @@ export default function ModernHome() {
     return () => window.removeEventListener('mousemove', onMove);
   }, [mounted]);
 
-  /* Cursor trail cleanup — remove particles after 800ms */
+  /* Cursor trail cleanup - remove particles after 800ms */
   useEffect(() => {
     if (cursorTrail.length === 0) return;
     cursorTrailRef.current = setTimeout(() => {
@@ -377,7 +388,7 @@ export default function ModernHome() {
     return () => clearTimeout(cursorTrailRef.current);
   }, [cursorTrail]);
 
-  /* Comet — fires every 20-35s (separate from shooting stars) */
+  /* Comet - fires every 20-35s (separate from shooting stars) */
   const [comet, setComet] = useState(null);
   const cometRef = useRef(null);
   useEffect(() => {
@@ -396,7 +407,7 @@ export default function ModernHome() {
     return () => clearTimeout(cometRef.current);
   }, [mounted]);
 
-  /* Boot sequence — 2.5s terminal animation before revealing page */
+  /* Boot sequence - 2.5s terminal animation before revealing page */
   const BOOT_LINES = useMemo(() => [
     { text: '$ synthi init', delay: 0 },
     { text: '  → Loading cloud runtime...', delay: 300 },
@@ -476,7 +487,7 @@ export default function ModernHome() {
     return () => window.removeEventListener('keydown', handler);
   }, []);
 
-  /* Language showcase carousel — auto-rotate every 3s */
+  /* Language showcase carousel - auto-rotate every 3s */
   const LANG_SHOWCASE = useMemo(() => [
     { name: 'TypeScript', color: '#3178c6', snippet: 'const app = express();\napp.get("/", handler);' },
     { name: 'Rust', color: '#dea584', snippet: 'fn main() {\n  println!("blazing fast");\n}' },
@@ -592,7 +603,7 @@ export default function ModernHome() {
     ));
   };
 
-  /* Section particle burst — generates 12 teal particles on first visibility */
+  /* Section particle burst - generates 12 teal particles on first visibility */
   const renderBurst = (sectionId, isVisible) => {
     if (!isVisible) return null;
     if (!burstSections.has(sectionId)) {
@@ -712,7 +723,7 @@ export default function ModernHome() {
     fetchWaitlistCount();
   }, []);
 
-  /* ---------- Hero typewriter — starts after boot finishes ---------- */
+  /* ---------- Hero typewriter - starts after boot finishes ---------- */
   useEffect(() => {
     if (bootPhase !== 2) return;
     let i = 0;
@@ -958,6 +969,24 @@ export default function ModernHome() {
         .ai-suggest-line { animation: aiSuggest 0.6s ease-out both; }
         @keyframes aiIconFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
         .ai-icon-float { animation: aiIconFloat 3s ease-in-out infinite; }
+
+        /* AI bento card looping typewriter */
+        @keyframes aiLineReveal {
+          0% { opacity: 0; clip-path: inset(0 100% 0 0); }
+          15% { opacity: 1; clip-path: inset(0 0 0 0); }
+          75% { opacity: 1; clip-path: inset(0 0 0 0); }
+          100% { opacity: 0; clip-path: inset(0 100% 0 0); }
+        }
+        .ai-line-loop {
+          opacity: 0;
+          animation: aiLineReveal var(--line-dur) ease-out var(--line-delay) infinite;
+        }
+        @keyframes aiCursorBlink {
+          0%,100% { opacity: 0; } 20%,80% { opacity: 1; }
+        }
+        .ai-bento-cursor {
+          animation: aiCursorBlink 0.8s step-end infinite;
+        }
 
         /* Bug fix animation */
         @keyframes bugFixStrike { from { opacity: 1; } to { opacity: 0.35; } }
@@ -1304,6 +1333,15 @@ export default function ModernHome() {
           animation: matrixDrop var(--drop-dur) linear var(--drop-delay) infinite;
         }
 
+        /* ─── Sasha easter egg ─── */
+        @keyframes sashaFlash {
+          0% { opacity: 0; }
+          8% { opacity: 1; }
+          85% { opacity: 1; }
+          100% { opacity: 0; }
+        }
+        .sasha-bg { animation: sashaFlash 5s ease-in-out forwards; }
+
         /* ─── Back to top ─── */
         @keyframes bttFadeIn {
           from { opacity: 0; transform: translateY(8px); }
@@ -1373,16 +1411,29 @@ export default function ModernHome() {
       </div>
 
       {/* Base dark background */}
-      <div className="fixed inset-0 bg-[#131112]" />
+      <div
+        className={`fixed inset-0 transition-opacity duration-500 ${sashaEaster ? 'opacity-0' : 'opacity-100'}`}
+        style={{ backgroundColor: '#131112' }}
+      />
+      {sashaEaster && (
+        <div
+          className="sasha-bg fixed inset-0"
+          style={{
+            backgroundImage: 'url(/sasha.png)',
+            backgroundSize: '100% 100%',
+            backgroundRepeat: 'no-repeat',
+          }}
+        />
+      )}
 
-      {/* Distant planet — large blurred sphere */}
+      {/* Distant planet - large blurred sphere */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{ transform: `translateY(${scrollY * 0.02}px)` }}>
         <div className="absolute" style={{ top: '12%', right: '8%', width: 280, height: 280, borderRadius: '50%', background: 'radial-gradient(circle at 35% 35%, rgba(88,164,176,0.06), rgba(50,116,100,0.03) 50%, transparent 70%)', filter: 'blur(40px)' }} />
         {/* subtle ring */}
         <div className="absolute" style={{ top: 'calc(12% + 120px)', right: 'calc(8% - 40px)', width: 360, height: 30, borderRadius: '50%', border: '1px solid rgba(88,164,176,0.03)', transform: 'rotateX(75deg)' }} />
       </div>
 
-      {/* Deep space — static star field with twinkling */}
+      {/* Deep space - static star field with twinkling */}
       <div className="fixed inset-0 pointer-events-none" style={{ transform: `translateY(${scrollY * 0.05}px)` }}>
         {mounted && stars.map((s, i) => (
           <div key={i} className="absolute rounded-full bg-white" style={{
@@ -1394,7 +1445,7 @@ export default function ModernHome() {
         ))}
       </div>
 
-      {/* Star clusters — denser regions */}
+      {/* Star clusters - denser regions */}
       <div className="fixed inset-0 pointer-events-none" style={{ transform: `translateY(${scrollY * 0.04}px)` }}>
         {mounted && starClusters.map((s, i) => (
           <div key={`cl-${i}`} className="absolute rounded-full bg-white" style={{
@@ -1406,7 +1457,7 @@ export default function ModernHome() {
         ))}
       </div>
 
-      {/* Aurora ribbons — slow undulating gradient bands */}
+      {/* Aurora ribbons - slow undulating gradient bands */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{ transform: `translateY(${scrollY * 0.03}px)` }}>
         {mounted && auroraRibbons.map((r, i) => (
           <div key={`aurora-${i}`} className="absolute" style={{
@@ -1419,7 +1470,7 @@ export default function ModernHome() {
         ))}
       </div>
 
-      {/* Nebula dust clouds — with breathing + mouse parallax */}
+      {/* Nebula dust clouds - with breathing + mouse parallax */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none" style={{
         transform: `translateY(${scrollY * 0.08}px) translate(${(mousePos.x - 0.5) * -20}px, ${(mousePos.y - 0.5) * -15}px)`,
         transition: 'transform 0.3s ease-out',
@@ -1430,7 +1481,7 @@ export default function ModernHome() {
           style={{ '--base-o': '0.05', opacity: 0.05, animation: 'nebulaBreath 22s ease-in-out 4s infinite' }} />
       </div>
 
-      {/* Drifting particles — tiny floating motes */}
+      {/* Drifting particles - tiny floating motes */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         {mounted && driftParticles.map((p, i) => (
           <div key={`drift-${i}`} className="absolute rounded-full bg-white/80" style={{
@@ -1447,7 +1498,7 @@ export default function ModernHome() {
         <div key={shootingStar.id} className="fixed pointer-events-none z-0 shooting-star" style={{ left: `${shootingStar.x}%`, top: `${shootingStar.y}%` }} />
       )}
 
-      {/* Comet — longer, glowing, rarer */}
+      {/* Comet - longer, glowing, rarer */}
       {comet && (
         <div key={comet.id} className="fixed pointer-events-none z-0 comet" style={{ left: `${comet.x}%`, top: `${comet.y}%` }} />
       )}
@@ -1554,7 +1605,7 @@ export default function ModernHome() {
             {ghostTypingDone && !isEditorActive && !isCompiling && (
               <div className="absolute -top-10 right-4 z-20 magic-tooltip">
                 <div className="bg-[#58A4B0]/20 text-[#58A4B0] border border-[#58A4B0]/50 px-3 py-1 rounded-full text-xs font-bold animate-pulse whitespace-nowrap">
-                  ⌨ Click to edit — language auto-detects
+                  ⌨ Click to edit - language auto-detects
                 </div>
                 <div className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[6px] border-t-[#58A4B0]/50" />
               </div>
@@ -1881,7 +1932,7 @@ export default function ModernHome() {
             <p className="text-slate-300 text-base mt-4 max-w-2xl mx-auto">
               No lock-in, no proprietary traps.
               Export or self-host your work at any time.
-              Synthi strengthens your workflow — without holding it hostage.
+              Synthi strengthens your workflow - without holding it hostage.
             </p>
           </div>
         </div>
@@ -1917,11 +1968,11 @@ export default function ModernHome() {
             </p>
           </div>
 
-          {/* Bento grid — asymmetric layout with spotlight */}
+          {/* Bento grid - asymmetric layout with spotlight */}
           <div
             className={`grid grid-cols-1 md:grid-cols-3 gap-5 transition-all duration-1000 delay-300 ${featuresVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
           >
-            {/* ── AI Pair Programmer — wide hero card ── */}
+            {/* ── AI Pair Programmer - wide hero card ── */}
             <div
               className="spotlight-card md:col-span-2 group relative bg-[#141414] border border-white/[0.08] rounded-2xl overflow-hidden transition-all duration-300 hover:border-[#58A4B0]/30"
               onMouseMove={handleCardMouseMove}
@@ -1932,10 +1983,10 @@ export default function ModernHome() {
                 <div className="font-mono text-[11px] leading-[22px]" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
                   <div><span className="text-slate-700 mr-3">1</span><span className="text-[#C678DD]">const</span><span className="text-slate-500"> data = </span><span className="text-[#61AFEF]">fetchMetrics</span><span className="text-slate-500">()</span></div>
                   <div><span className="text-slate-700 mr-3">2</span><span className="text-slate-600">&nbsp;</span></div>
-                  <div className="ai-suggest-line"><span className="text-slate-700 mr-3">3</span><span className="text-[#58A4B0]/60 italic">{"// ✦ optimize: memoize expensive computation"}</span></div>
-                  <div className="ai-suggest-line" style={{ animationDelay: '0.5s' }}><span className="text-slate-700 mr-3">4</span><span className="text-[#58A4B0]/60">{"const cached = "}</span><span className="text-[#61AFEF]">useMemo</span><span className="text-[#58A4B0]/60">{"(() => calc(data), [data])"}</span></div>
-                  <div className="ai-suggest-line" style={{ animationDelay: '1s' }}><span className="text-slate-700 mr-3">5</span><span className="text-[#58A4B0]/60">&nbsp;</span></div>
-                  <div className="ai-suggest-line" style={{ animationDelay: '1.2s' }}><span className="text-slate-700 mr-3">6</span><span className="text-[#C678DD]">return</span><span className="text-[#58A4B0]/60">{" cached."}</span><span className="text-[#61AFEF]">filter</span><span className="text-[#58A4B0]/60">(isValid)</span></div>
+                  <div className="ai-line-loop" style={{ '--line-dur': '6s', '--line-delay': '0s' }}><span className="text-slate-700 mr-3">3</span><span className="text-[#58A4B0]/60 italic">{"// ✦ optimize: memoize expensive computation"}</span><span className="ai-bento-cursor text-[#58A4B0] ml-0.5">|</span></div>
+                  <div className="ai-line-loop" style={{ '--line-dur': '6s', '--line-delay': '0.4s' }}><span className="text-slate-700 mr-3">4</span><span className="text-[#58A4B0]/60">{"const cached = "}</span><span className="text-[#61AFEF]">useMemo</span><span className="text-[#58A4B0]/60">{"(() => calc(data), [data])"}</span></div>
+                  <div className="ai-line-loop" style={{ '--line-dur': '6s', '--line-delay': '0.8s' }}><span className="text-slate-700 mr-3">5</span><span className="text-[#58A4B0]/60">&nbsp;</span></div>
+                  <div className="ai-line-loop" style={{ '--line-dur': '6s', '--line-delay': '1.2s' }}><span className="text-slate-700 mr-3">6</span><span className="text-[#C678DD]">return</span><span className="text-[#58A4B0]/60">{" cached."}</span><span className="text-[#61AFEF]">filter</span><span className="text-[#58A4B0]/60">(isValid)</span></div>
                 </div>
                 <div className="absolute top-4 right-4 w-7 h-7 rounded-lg bg-[#58A4B0]/10 border border-[#58A4B0]/20 flex items-center justify-center ai-icon-float">
                   <span className="text-[#58A4B0] text-xs">✦</span>
@@ -1950,12 +2001,12 @@ export default function ModernHome() {
                   <ChevronDown className={`text-slate-500 transition-transform duration-300 ${expandedCard === 'ai' ? 'rotate-180' : ''}`} size={16} />
                 </div>
                 <div style={{ maxHeight: expandedCard === 'ai' ? '80px' : '0', opacity: expandedCard === 'ai' ? 1 : 0, overflow: 'hidden', transition: 'max-height 0.4s ease-out, opacity 0.3s ease-out' }}>
-                  <p className="text-slate-400 text-sm leading-relaxed">Integrated AI assistants help optimize, refactor, and guide your code — so your ideas come to life faster and smarter.</p>
+                  <p className="text-slate-400 text-sm leading-relaxed">Integrated AI assistants help optimize, refactor, and guide your code - so your ideas come to life faster and smarter.</p>
                 </div>
               </div>
             </div>
 
-            {/* ── Waitlist — gradient glow border card ── */}
+            {/* ── Waitlist - gradient glow border card ── */}
             <div
               className="spotlight-card group relative rounded-2xl overflow-hidden transition-all duration-300"
               onMouseMove={handleCardMouseMove}
@@ -1992,7 +2043,7 @@ export default function ModernHome() {
               </div>
             </div>
 
-            {/* ── Bugs Fixed — small card ── */}
+            {/* ── Bugs Fixed - small card ── */}
             <div
               className="spotlight-card group relative bg-[#141414] border border-white/[0.08] rounded-2xl overflow-hidden transition-all duration-300 hover:border-[#58A4B0]/30"
               onMouseMove={handleCardMouseMove}
@@ -2037,7 +2088,7 @@ export default function ModernHome() {
               </div>
             </div>
 
-            {/* ── Cloud Compile — small card ── */}
+            {/* ── Cloud Compile - small card ── */}
             <div
               className="spotlight-card group relative bg-[#141414] border border-white/[0.08] rounded-2xl overflow-hidden transition-all duration-300 hover:border-[#58A4B0]/30"
               onMouseMove={handleCardMouseMove}
@@ -2074,12 +2125,12 @@ export default function ModernHome() {
                   <ChevronDown className={`text-slate-500 transition-transform duration-300 ${expandedCard === 'cloud' ? 'rotate-180' : ''}`} size={16} />
                 </div>
                 <div style={{ maxHeight: expandedCard === 'cloud' ? '80px' : '0', opacity: expandedCard === 'cloud' ? 1 : 0, overflow: 'hidden', transition: 'max-height 0.4s ease-out, opacity 0.3s ease-out' }}>
-                  <p className="text-slate-400 text-xs leading-relaxed">Cloud compilation with instant delivery — infinitely scalable, zero local strain.</p>
+                  <p className="text-slate-400 text-xs leading-relaxed">Cloud compilation with instant delivery - infinitely scalable, zero local strain.</p>
                 </div>
               </div>
             </div>
 
-            {/* ── Collaboration — small card ── */}
+            {/* ── Collaboration - small card ── */}
             <div
               className="spotlight-card group relative bg-[#141414] border border-white/[0.08] rounded-2xl overflow-hidden transition-all duration-300 hover:border-[#58A4B0]/30"
               onMouseMove={handleCardMouseMove}
@@ -2113,7 +2164,7 @@ export default function ModernHome() {
               </div>
             </div>
 
-            {/* ── AI Tools Freedom — small card ── */}
+            {/* ── AI Tools Freedom - small card ── */}
             <div
               className="spotlight-card group relative bg-[#141414] border border-white/[0.08] rounded-2xl overflow-hidden transition-all duration-300 hover:border-[#58A4B0]/30"
               onMouseMove={handleCardMouseMove}
@@ -2141,12 +2192,12 @@ export default function ModernHome() {
                   <ChevronDown className={`text-slate-500 transition-transform duration-300 ${expandedCard === 'freedom' ? 'rotate-180' : ''}`} size={16} />
                 </div>
                 <div style={{ maxHeight: expandedCard === 'freedom' ? '80px' : '0', opacity: expandedCard === 'freedom' ? 1 : 0, overflow: 'hidden', transition: 'max-height 0.4s ease-out, opacity 0.3s ease-out' }}>
-                  <p className="text-slate-400 text-xs leading-relaxed">Synthi doesn&apos;t lock you in. Use Claude Code, Codex, or any AI tool you prefer — we integrate, not isolate.</p>
+                  <p className="text-slate-400 text-xs leading-relaxed">Synthi doesn&apos;t lock you in. Use Claude Code, Codex, or any AI tool you prefer - we integrate, not isolate.</p>
                 </div>
               </div>
             </div>
 
-            {/* ── HMR for Compiled Languages — wide card (live animation) ── */}
+            {/* ── HMR for Compiled Languages - wide card (live animation) ── */}
             <div
               className="spotlight-card md:col-span-2 group relative bg-[#141414] border border-white/[0.08] rounded-2xl overflow-hidden transition-all duration-300 hover:border-[#58A4B0]/30"
               onMouseMove={handleCardMouseMove}
@@ -2202,7 +2253,7 @@ export default function ModernHome() {
                   <ChevronDown className={`text-slate-500 transition-transform duration-300 ${expandedCard === 'hmr' ? 'rotate-180' : ''}`} size={16} />
                 </div>
                 <div style={{ maxHeight: expandedCard === 'hmr' ? '80px' : '0', opacity: expandedCard === 'hmr' ? 1 : 0, overflow: 'hidden', transition: 'max-height 0.4s ease-out, opacity 0.3s ease-out' }}>
-                  <p className="text-slate-400 text-sm leading-relaxed">See changes instantly — whether you&apos;re building an OS kernel, a game engine, or a systems server. Compiled HMR, seamless.</p>
+                  <p className="text-slate-400 text-sm leading-relaxed">See changes instantly - whether you&apos;re building an OS kernel, a game engine, or a systems server. Compiled HMR, seamless.</p>
                 </div>
               </div>
             </div>
@@ -2270,7 +2321,7 @@ export default function ModernHome() {
                   <div className="flex items-center gap-2"><Cpu size={12} className="text-orange-400" /><span className="text-slate-400">CPU usage:</span><span className="text-orange-400">98%</span></div>
                   <div className="flex items-center gap-2"><Zap size={12} className="text-red-400" /><span className="text-slate-400">Fan noise:</span><span className="text-red-400">Jet engine</span></div>
                   <div className="flex items-center gap-2"><Cloud size={12} className="text-slate-600" /><span className="text-slate-400">HMR:</span><span className="text-slate-600">Not supported</span></div>
-                  <div className="mt-4 text-xs text-red-400/60 font-mono">⚠ Out of memory — restart required</div>
+                  <div className="mt-4 text-xs text-red-400/60 font-mono">⚠ Out of memory - restart required</div>
                 </div>
               </div>
             </div>
@@ -2335,9 +2386,9 @@ export default function ModernHome() {
                 ].map(([feature, synthi, vscode, replit], i) => (
                   <tr key={i} className="border-b border-white/[0.04] hover:bg-white/[0.02] transition-colors" style={{ transitionDelay: comparisonVisible ? `${i * 80}ms` : '0ms', opacity: comparisonVisible ? 1 : 0, transform: comparisonVisible ? 'translateX(0)' : 'translateX(-20px)', transition: 'opacity 0.5s ease-out, transform 0.5s ease-out' }}>
                     <td className="px-6 py-3.5 text-slate-300">{feature}</td>
-                    <td className="px-6 py-3.5">{synthi ? <Check size={16} className="text-emerald-400" /> : <span className="text-slate-600">—</span>}</td>
-                    <td className="px-6 py-3.5">{vscode ? <Check size={16} className="text-slate-400" /> : <span className="text-slate-600">—</span>}</td>
-                    <td className="px-6 py-3.5">{replit ? <Check size={16} className="text-slate-400" /> : <span className="text-slate-600">—</span>}</td>
+                    <td className="px-6 py-3.5">{synthi ? <Check size={16} className="text-emerald-400" /> : <span className="text-slate-600">-</span>}</td>
+                    <td className="px-6 py-3.5">{vscode ? <Check size={16} className="text-slate-400" /> : <span className="text-slate-600">-</span>}</td>
+                    <td className="px-6 py-3.5">{replit ? <Check size={16} className="text-slate-400" /> : <span className="text-slate-600">-</span>}</td>
                   </tr>
                 ))}
               </tbody>
@@ -2346,7 +2397,7 @@ export default function ModernHome() {
         </div>
       </div>
 
-      {/* ═══ Merge with Synthi — Migration Roadmap ═══ */}
+      {/* ═══ Merge with Synthi - Migration Roadmap ═══ */}
       <div ref={roadmapRef} className="relative z-10 px-6 md:px-20 py-20 md:py-28">
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-16">
@@ -2356,17 +2407,17 @@ export default function ModernHome() {
                 <span key={i} style={{ animationDelay: `${i * 40}ms` }}>{c === ' ' ? '\u00A0' : c}</span>
               ))}
             </h2>
-            <p className={`text-slate-400 text-lg mt-4 transition-all duration-1000 delay-300 ${roadmapVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>Your workflow, your extensions, your settings — nothing left behind.</p>
+            <p className={`text-slate-400 text-lg mt-4 transition-all duration-1000 delay-300 ${roadmapVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>Your workflow, your extensions, your settings - nothing left behind.</p>
           </div>
           <div className={`relative transition-all duration-1000 ${roadmapVisible ? 'opacity-100' : 'opacity-0'}`}>
             {/* Vertical line */}
             <div className="absolute left-4 md:left-6 top-0 bottom-0 w-px bg-gradient-to-b from-[#58A4B0]/40 via-[#327464]/20 to-transparent" />
             {[
-              { step: '01', title: 'Sign up & open Synthi', desc: 'One click — your cloud workspace is ready in seconds. No installs, no setup.', done: true },
+              { step: '01', title: 'Sign up & open Synthi', desc: 'One click - your cloud workspace is ready in seconds. No installs, no setup.', done: true },
               { step: '02', title: 'Import your project', desc: 'Clone from Git, drag & drop a folder, or connect your existing repo. It just works.', done: true },
               { step: '03', title: 'Bring your extensions', desc: 'Install any VS Code extension via our VSIX tool. Your entire extension library carries over.', done: true },
               { step: '04', title: 'Sync settings & keybinds', desc: 'Import your settings.json and keybindings. Synthi feels exactly like home.', done: true },
-              { step: '05', title: 'Build — faster than before', desc: 'Cloud compile kicks in automatically. Same project, dramatically faster builds.', done: true },
+              { step: '05', title: 'Build - faster than before', desc: 'Cloud compile kicks in automatically. Same project, dramatically faster builds.', done: true },
             ].map((item, i) => (
               <div key={i} className="relative pl-12 md:pl-16 pb-10 last:pb-0" style={{ transitionDelay: roadmapVisible ? `${i * 150}ms` : '0ms', opacity: roadmapVisible ? 1 : 0, transform: roadmapVisible ? 'translateY(0)' : 'translateY(20px)', transition: 'opacity 0.6s ease-out, transform 0.6s ease-out' }}>
                 {/* Dot */}
@@ -2389,7 +2440,7 @@ export default function ModernHome() {
           <div className="cmd-palette-in w-[480px] bg-[#1a1a1a]/95 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-2xl overflow-hidden pointer-events-auto" style={{ boxShadow: '0 0 80px -20px rgba(88,164,176,0.3)' }}>
             <div className="flex items-center gap-3 px-5 py-4 border-b border-white/5">
               <div className="text-[#58A4B0] text-sm font-mono">✦</div>
-              <span className="text-white/40 text-sm font-mono flex-1">Synthi AI — what would you like to build?</span>
+              <span className="text-white/40 text-sm font-mono flex-1">Synthi AI - what would you like to build?</span>
               <kbd className="text-[10px] text-slate-500 bg-white/5 border border-white/10 rounded px-1.5 py-0.5 font-mono">Esc</kbd>
             </div>
             <div className="px-5 py-3 space-y-2">
@@ -2415,11 +2466,11 @@ export default function ModernHome() {
           </div>
           <div className="space-y-3">
             {[
-              { q: "Is Synthi really free?", a: "Yes. The Core plan is free forever — real-time analysis, cloud compilation, AI suggestions, collaboration, and unlimited projects. No credit card, no trials, no tricks." },
-              { q: "When does it launch?", a: "We're in closed alpha. Join the waitlist to secure early access — the first wave of invites goes out soon." },
-              { q: "Can I use my own AI tools?", a: "Absolutely. Synthi integrates with Claude Code, Codex, Cursor, and more. We're a platform, not a walled garden — use whatever makes you productive." },
-              { q: "What about my data?", a: "Your code stays yours. No training on your data, no telemetry surprises. Export or self-host at any time — zero lock-in, guaranteed." },
-              { q: "What makes this different from VS Code or Cursor?", a: "Synthi compiles in the cloud, not on your machine. That means instant builds regardless of your hardware, native HMR for compiled languages, and AI that understands your entire project context — not just the open file." },
+              { q: "Is Synthi really free?", a: "Yes. The Core plan is free forever - real-time analysis, cloud compilation, AI suggestions, collaboration, and unlimited projects. No credit card, no trials, no tricks." },
+              { q: "When does it launch?", a: "We're in closed alpha. Join the waitlist to secure early access - the first wave of invites goes out soon." },
+              { q: "Can I use my own AI tools?", a: "Absolutely. Synthi integrates with Claude Code, Codex, Cursor, and more. We're a platform, not a walled garden - use whatever makes you productive." },
+              { q: "What about my data?", a: "Your code stays yours. No training on your data, no telemetry surprises. Export or self-host at any time - zero lock-in, guaranteed." },
+              { q: "What makes this different from VS Code or Cursor?", a: "Synthi compiles in the cloud, not on your machine. That means instant builds regardless of your hardware, native HMR for compiled languages, and AI that understands your entire project context - not just the open file." },
             ].map((item, i) => (
               <div
                 key={i}
@@ -2503,7 +2554,7 @@ export default function ModernHome() {
               />
               <button
                 onClick={async () => { if (stickyEmail) { setEmail(stickyEmail); await handleSubmit(new Event('submit')); setStickyEmail(''); }}}
-                className="bg-gradient-to-r from-[#58A4B0] to-[#327464] text-white text-sm font-medium px-4 py-1.5 rounded-lg hover:opacity-90 transition-opacity flex items-center gap-1.5 whitespace-nowrap"
+                className="bg-white text-black text-sm font-medium px-4 py-1.5 rounded-lg hover:opacity-90 transition-opacity flex items-center gap-1.5 whitespace-nowrap font-mono font-semibold uppercase tracking-wider"
               >
                 Join <ArrowRight size={14} />
               </button>
