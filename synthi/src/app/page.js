@@ -91,7 +91,7 @@ export default function ModernHome() {
    */
   const [mounted, setMounted] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0); // 0..100
-  const [scrollY, setScrollY] = useState(0);
+  const scrollYRef = useRef(0);
   const [featuresVisible, setFeaturesVisible] = useState(false);
   const [businessVisible, setBusinessVisible] = useState(false);
   const [typewriterText, setTypewriterText] = useState("");
@@ -127,19 +127,20 @@ export default function ModernHome() {
   const [expandedCard, setExpandedCard] = useState(null);
   const [openFaq, setOpenFaq] = useState(null);
   const [showCommandPalette, setShowCommandPalette] = useState(false);
-  const [mousePos, setMousePos] = useState({ x: 0.5, y: 0.5 }); // normalised 0..1
-  const [cursorTrail, setCursorTrail] = useState([]);
-  const cursorTrailRef = useRef(null);
+  const mousePosRef = useRef({ x: 0.5, y: 0.5 }); // normalised 0..1
 
   /* Boot sequence */
   const [bootPhase, setBootPhase] = useState(0); // 0=booting, 1=progress, 2=done
   const [bootLines, setBootLines] = useState([]);
   const [bootProgress, setBootProgress] = useState(0);
 
-  /* Custom cursor */
-  const [cursorPos, setCursorPos] = useState({ x: -100, y: -100 });
-  const [cursorHover, setCursorHover] = useState(false);
-  const [cursorClick, setCursorClick] = useState(false);
+  /* Parallax DOM refs (direct manipulation, no re-renders) */
+  const parallaxPlanetRef = useRef(null);
+  const parallaxStarsRef = useRef(null);
+  const parallaxClustersRef = useRef(null);
+  const parallaxAuroraRef = useRef(null);
+  const parallaxNebulaRef = useRef(null);
+  const overlayRef = useRef(null);
 
   /* Shortcut sheet */
   const [showShortcuts, setShowShortcuts] = useState(false);
@@ -154,12 +155,41 @@ export default function ModernHome() {
   /* Section visibility for scroll reveals */
   const [comparisonVisible, setComparisonVisible] = useState(false);
   const [roadmapVisible, setRoadmapVisible] = useState(false);
+  const [personasVisible, setPersonasVisible] = useState(false);
   const comparisonRef = useRef(null);
   const roadmapRef = useRef(null);
+  const personasRef = useRef(null);
 
   /* Stats counter */
   const [statsVisible, setStatsVisible] = useState(false);
   const statsRef = useRef(null);
+
+  /* Animated counter values */
+  const [counterValues, setCounterValues] = useState([0, 0, 0, 0]);
+  const STAT_TARGETS = useMemo(() => [
+    { value: 200, prefix: '<', suffix: 'ms', label: 'Compile time', decimals: 0 },
+    { value: 40, prefix: '', suffix: '+', label: 'Languages', decimals: 0 },
+    { value: 0, prefix: '', suffix: '', label: 'Tracking scripts', decimals: 0 },
+    { value: 99.9, prefix: '', suffix: '%', label: 'Uptime target', decimals: 1 },
+  ], []);
+  useEffect(() => {
+    if (!statsVisible) return;
+    const duration = 1600; // ms
+    const fps = 60;
+    const totalFrames = Math.round(duration / (1000 / fps));
+    let frame = 0;
+    const ease = (t) => 1 - Math.pow(1 - t, 3); // ease-out cubic
+    const timer = setInterval(() => {
+      frame++;
+      const progress = ease(Math.min(frame / totalFrames, 1));
+      setCounterValues(STAT_TARGETS.map(s => {
+        const current = s.value * progress;
+        return s.decimals > 0 ? parseFloat(current.toFixed(s.decimals)) : Math.round(current);
+      }));
+      if (frame >= totalFrames) clearInterval(timer);
+    }, 1000 / fps);
+    return () => clearInterval(timer);
+  }, [statsVisible, STAT_TARGETS]);
 
   /* Before/after slider */
   const [sliderPos, setSliderPos] = useState(50);
@@ -207,22 +237,22 @@ export default function ModernHome() {
   const { stars, driftParticles, auroraRibbons, starClusters } = React.useMemo(() => {
     let t = 42;
     const rand = () => { t = (t + 0x6D2B79F5) | 0; let v = Math.imul(t ^ (t >>> 15), 1 | t); v ^= v + Math.imul(v ^ (v >>> 7), 61 | v); return ((v ^ (v >>> 14)) >>> 0) / 4294967296; };
-    const _stars = Array.from({ length: 140 }, (_, i) => ({
+    const _stars = Array.from({ length: 80 }, (_, i) => ({
       x: rand() * 100, y: rand() * 100, size: rand() * 1.5 + 1, opacity: rand() * 0.12 + 0.08,
-      twinkle: i % 5 === 0, // ~28 stars twinkle
+      twinkle: i % 5 === 0, // ~16 stars twinkle
       twinkleDelay: rand() * 6, twinkleDuration: rand() * 3 + 2,
     }));
     // Star clusters - 3 dense groupings of 15 stars each
     const clusterCenters = [{ cx: 15, cy: 25 }, { cx: 72, cy: 18 }, { cx: 55, cy: 70 }];
     const _clusters = clusterCenters.flatMap(({ cx, cy }) =>
-      Array.from({ length: 15 }, () => ({
+      Array.from({ length: 8 }, () => ({
         x: cx + (rand() - 0.5) * 12, y: cy + (rand() - 0.5) * 10,
         size: rand() * 1.2 + 0.5, opacity: rand() * 0.15 + 0.06,
         twinkle: rand() > 0.6, twinkleDelay: rand() * 8, twinkleDuration: rand() * 4 + 2,
       }))
     );
-    // Drifting particles - 60 tiny motes
-    const _drift = Array.from({ length: 60 }, () => ({
+    // Drifting particles - 25 tiny motes
+    const _drift = Array.from({ length: 25 }, () => ({
       x: rand() * 100, y: rand() * 100, size: rand() * 1.5 + 0.5,
       opacity: rand() * 0.06 + 0.02, duration: rand() * 30 + 25, delay: rand() * 20,
       dx: (rand() - 0.5) * 30, dy: rand() * -20 - 10, // drift up-ish
@@ -249,7 +279,10 @@ export default function ModernHome() {
         clearInterval(typingRef.current);
         typingRef.current = null;
         setGhostTypingDone(true);
-        setTimeout(() => setShowAiSuggestion(true), 600);
+        // Only auto-show AI suggestion on non-mobile screens
+        if (window.innerWidth >= 768) {
+          setTimeout(() => setShowAiSuggestion(true), 600);
+        }
       }
       setEditorCode(INITIAL_CODE.slice(0, i));
     }, 20);
@@ -342,7 +375,6 @@ export default function ModernHome() {
       if (shootingStarRef.current) clearTimeout(shootingStarRef.current);
       if (hmrTimerRef.current) clearTimeout(hmrTimerRef.current);
       if (bugFixRef.current) clearTimeout(bugFixRef.current);
-      if (cursorTrailRef.current) clearTimeout(cursorTrailRef.current);
       if (cometRef.current) clearTimeout(cometRef.current);
     };
   }, []);
@@ -360,33 +392,21 @@ export default function ModernHome() {
     return () => window.removeEventListener('keydown', handler);
   }, []);
 
-  /* Mouse tracking for nebula parallax + cursor trail */
+  /* Mouse tracking for nebula parallax (ref-based, no re-renders) */
   useEffect(() => {
     if (!mounted) return;
-    let trailId = 0;
     const onMove = (e) => {
       const nx = e.clientX / window.innerWidth;
       const ny = e.clientY / window.innerHeight;
-      setMousePos({ x: nx, y: ny });
-      // Spawn cursor trail particle every ~80ms (throttled via ID check)
-      trailId++;
-      if (trailId % 3 === 0) {
-        const p = { id: trailId, x: e.clientX, y: e.clientY + window.scrollY };
-        setCursorTrail(prev => [...prev.slice(-12), p]);
+      mousePosRef.current = { x: nx, y: ny };
+      if (parallaxNebulaRef.current) {
+        const y = scrollYRef.current;
+        parallaxNebulaRef.current.style.transform = `translateY(${y * 0.08}px) translate(${(nx - 0.5) * -20}px, ${(ny - 0.5) * -15}px)`;
       }
     };
     window.addEventListener('mousemove', onMove, { passive: true });
     return () => window.removeEventListener('mousemove', onMove);
   }, [mounted]);
-
-  /* Cursor trail cleanup - remove particles after 800ms */
-  useEffect(() => {
-    if (cursorTrail.length === 0) return;
-    cursorTrailRef.current = setTimeout(() => {
-      setCursorTrail(prev => prev.slice(1));
-    }, 800);
-    return () => clearTimeout(cursorTrailRef.current);
-  }, [cursorTrail]);
 
   /* Comet - fires every 20-35s (separate from shooting stars) */
   const [comet, setComet] = useState(null);
@@ -433,29 +453,6 @@ export default function ModernHome() {
     setTimeout(() => setBootPhase(2), 2800);
     return () => clearInterval(pInterval);
   }, [bootPhase, BOOT_LINES]);
-
-  /* Custom cursor tracking */
-  useEffect(() => {
-    const onMove = (e) => setCursorPos({ x: e.clientX, y: e.clientY });
-    const onDown = () => { setCursorClick(true); setTimeout(() => setCursorClick(false), 150); };
-    window.addEventListener('mousemove', onMove, { passive: true });
-    window.addEventListener('mousedown', onDown);
-    // Track hover on interactive elements
-    const onOver = (e) => {
-      if (e.target.closest('button, a, input, textarea, [role="button"], .cursor-pointer')) setCursorHover(true);
-    };
-    const onOut = (e) => {
-      if (e.target.closest('button, a, input, textarea, [role="button"], .cursor-pointer')) setCursorHover(false);
-    };
-    document.addEventListener('mouseover', onOver, { passive: true });
-    document.addEventListener('mouseout', onOut, { passive: true });
-    return () => {
-      window.removeEventListener('mousemove', onMove);
-      window.removeEventListener('mousedown', onDown);
-      document.removeEventListener('mouseover', onOver);
-      document.removeEventListener('mouseout', onOut);
-    };
-  }, []);
 
   /* "?" shortcut sheet */
   useEffect(() => {
@@ -586,7 +583,9 @@ export default function ModernHome() {
       if (typingRef.current) clearInterval(typingRef.current);
       setEditorCode(INITIAL_CODE);
       setGhostTypingDone(true);
-      setTimeout(() => setShowAiSuggestion(true), 400);
+      if (window.innerWidth >= 768) {
+        setTimeout(() => setShowAiSuggestion(true), 400);
+      }
     }
     setIsEditorActive(true);
   };
@@ -664,14 +663,38 @@ export default function ModernHome() {
   /* ---------- Efficient scroll handling (single rAF-driven listener) ---------- */
   useEffect(() => {
     let ticking = false;
+    let prevProgressInt = -1;
     const onScroll = () => {
       const y = window.scrollY;
       if (!ticking) {
         window.requestAnimationFrame(() => {
+          scrollYRef.current = y;
           const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
           const progress = scrollHeight > 0 ? (y / scrollHeight) * 100 : 0;
-          setScrollY(y);
-          setScrollProgress(progress);
+
+          // Direct DOM updates for parallax layers (no React re-render)
+          if (parallaxPlanetRef.current) parallaxPlanetRef.current.style.transform = `translateY(${y * 0.02}px)`;
+          if (parallaxStarsRef.current) parallaxStarsRef.current.style.transform = `translateY(${y * 0.05}px)`;
+          if (parallaxClustersRef.current) parallaxClustersRef.current.style.transform = `translateY(${y * 0.04}px)`;
+          if (parallaxAuroraRef.current) parallaxAuroraRef.current.style.transform = `translateY(${y * 0.03}px)`;
+          if (parallaxNebulaRef.current) {
+            const m = mousePosRef.current;
+            parallaxNebulaRef.current.style.transform = `translateY(${y * 0.08}px) translate(${(m.x - 0.5) * -20}px, ${(m.y - 0.5) * -15}px)`;
+          }
+
+          // Direct DOM update for scroll overlay (no re-render)
+          if (overlayRef.current) {
+            const extra = Math.min((progress / 100) * 0.7, 0.7);
+            overlayRef.current.style.background = `linear-gradient(180deg, rgba(0,0,0,${(extra * 0.35).toFixed(3)}) 0%, rgba(0,0,0,${extra.toFixed(3)}) 100%)`;
+          }
+
+          // Throttle React re-renders: only update state on integer % change
+          const progressInt = Math.round(progress);
+          if (progressInt !== prevProgressInt) {
+            prevProgressInt = progressInt;
+            setScrollProgress(progressInt);
+          }
+
           // Sticky CTA: show after scrolling past hero
           if (progress > 8 && progress < 92) setShowStickyCta(true);
           else setShowStickyCta(false);
@@ -692,6 +715,10 @@ export default function ModernHome() {
           if (roadmapRef.current) {
             const rect = roadmapRef.current.getBoundingClientRect();
             if (rect.top < window.innerHeight * 0.75 && rect.bottom > 0 && !roadmapVisible) setRoadmapVisible(true);
+          }
+          if (personasRef.current) {
+            const rect = personasRef.current.getBoundingClientRect();
+            if (rect.top < window.innerHeight * 0.75 && rect.bottom > 0 && !personasVisible) setPersonasVisible(true);
           }
           if (statsRef.current) {
             const rect = statsRef.current.getBoundingClientRect();
@@ -827,21 +854,9 @@ export default function ModernHome() {
         </div>
       )}
 
-      {/* ═══ Custom cursor ═══ */}
-      <div className="fixed pointer-events-none z-[300] hidden md:block" style={{ left: cursorPos.x, top: cursorPos.y }}>
-        <div className="absolute rounded-full bg-[#58A4B0] transition-all duration-75" style={{ width: cursorClick ? 4 : 5, height: cursorClick ? 4 : 5, transform: 'translate(-50%, -50%)' }} />
-        <div className="absolute rounded-full border transition-all duration-200" style={{
-          width: cursorHover ? 40 : 24, height: cursorHover ? 40 : 24,
-          borderColor: cursorHover ? 'rgba(88,164,176,0.5)' : 'rgba(88,164,176,0.25)',
-          transform: 'translate(-50%, -50%)',
-          ...(cursorClick ? { animation: 'cursorRingPulse 0.15s ease-out' } : {}),
-        }} />
-      </div>
-
       <style jsx global>{`
         @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
-        body { font-family: 'Space Grotesk', sans-serif; cursor: none; }
-        *, *::before, *::after { cursor: none !important; }
+        body { font-family: 'Space Grotesk', sans-serif; }
         @keyframes scroll-bounce {
           0%,100% { opacity: 0; transform: translateY(-6px); }
           50% { opacity: 1; transform: translateY(6px); }
@@ -1188,12 +1203,6 @@ export default function ModernHome() {
           filter: blur(1px);
         }
 
-        /* ─── Cursor trail particle ─── */
-        @keyframes cursorFade {
-          0% { opacity: 0.5; transform: scale(1); }
-          100% { opacity: 0; transform: scale(0.2) translateY(-15px); }
-        }
-
         /* ─── Boot sequence ─── */
         @keyframes bootFadeOut {
           0% { opacity: 1; }
@@ -1208,12 +1217,6 @@ export default function ModernHome() {
           from { width: 0%; }
         }
         .boot-fade-out { animation: bootFadeOut 0.6s ease-in forwards; }
-
-        /* ─── Custom cursor ─── */
-        @keyframes cursorRingPulse {
-          0%, 100% { transform: translate(-50%, -50%) scale(1); }
-          50% { transform: translate(-50%, -50%) scale(0.8); }
-        }
 
         /* ─── Section divider morphs ─── */
         @keyframes dividerDraw {
@@ -1415,6 +1418,17 @@ export default function ModernHome() {
         className={`fixed inset-0 transition-opacity duration-500 ${sashaEaster ? 'opacity-0' : 'opacity-100'}`}
         style={{ backgroundColor: '#131112' }}
       />
+
+      {/* Grain texture overlay (no mix-blend-mode for perf) */}
+      <div
+        className="fixed inset-0 pointer-events-none z-[1]"
+        style={{
+          backgroundImage: 'url(/noise.svg)',
+          backgroundRepeat: 'repeat',
+          backgroundSize: '200px 200px',
+          opacity: 0.025,
+        }}
+      />
       {sashaEaster && (
         <div
           className="sasha-bg fixed inset-0"
@@ -1427,14 +1441,14 @@ export default function ModernHome() {
       )}
 
       {/* Distant planet - large blurred sphere */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{ transform: `translateY(${scrollY * 0.02}px)` }}>
+      <div ref={parallaxPlanetRef} className="fixed inset-0 pointer-events-none overflow-hidden" style={{ willChange: 'transform' }}>
         <div className="absolute" style={{ top: '12%', right: '8%', width: 280, height: 280, borderRadius: '50%', background: 'radial-gradient(circle at 35% 35%, rgba(88,164,176,0.06), rgba(50,116,100,0.03) 50%, transparent 70%)', filter: 'blur(40px)' }} />
         {/* subtle ring */}
         <div className="absolute" style={{ top: 'calc(12% + 120px)', right: 'calc(8% - 40px)', width: 360, height: 30, borderRadius: '50%', border: '1px solid rgba(88,164,176,0.03)', transform: 'rotateX(75deg)' }} />
       </div>
 
       {/* Deep space - static star field with twinkling */}
-      <div className="fixed inset-0 pointer-events-none" style={{ transform: `translateY(${scrollY * 0.05}px)` }}>
+      <div ref={parallaxStarsRef} className="fixed inset-0 pointer-events-none" style={{ willChange: 'transform' }}>
         {mounted && stars.map((s, i) => (
           <div key={i} className="absolute rounded-full bg-white" style={{
             left: `${s.x}%`, top: `${s.y}%`, width: s.size, height: s.size,
@@ -1446,7 +1460,7 @@ export default function ModernHome() {
       </div>
 
       {/* Star clusters - denser regions */}
-      <div className="fixed inset-0 pointer-events-none" style={{ transform: `translateY(${scrollY * 0.04}px)` }}>
+      <div ref={parallaxClustersRef} className="fixed inset-0 pointer-events-none" style={{ willChange: 'transform' }}>
         {mounted && starClusters.map((s, i) => (
           <div key={`cl-${i}`} className="absolute rounded-full bg-white" style={{
             left: `${s.x}%`, top: `${s.y}%`, width: s.size, height: s.size,
@@ -1458,7 +1472,7 @@ export default function ModernHome() {
       </div>
 
       {/* Aurora ribbons - slow undulating gradient bands */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{ transform: `translateY(${scrollY * 0.03}px)` }}>
+      <div ref={parallaxAuroraRef} className="fixed inset-0 pointer-events-none overflow-hidden" style={{ willChange: 'transform' }}>
         {mounted && auroraRibbons.map((r, i) => (
           <div key={`aurora-${i}`} className="absolute" style={{
             top: `${r.top}%`, left: `${r.left}%`, width: `${r.width}%`, height: r.height,
@@ -1471,8 +1485,8 @@ export default function ModernHome() {
       </div>
 
       {/* Nebula dust clouds - with breathing + mouse parallax */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none" style={{
-        transform: `translateY(${scrollY * 0.08}px) translate(${(mousePos.x - 0.5) * -20}px, ${(mousePos.y - 0.5) * -15}px)`,
+      <div ref={parallaxNebulaRef} className="fixed inset-0 overflow-hidden pointer-events-none" style={{
+        willChange: 'transform',
         transition: 'transform 0.3s ease-out',
       }}>
         <div className="absolute top-[20%] left-[30%] w-[800px] h-[800px] bg-[#58A4B0] rounded-full blur-[200px]"
@@ -1481,8 +1495,8 @@ export default function ModernHome() {
           style={{ '--base-o': '0.05', opacity: 0.05, animation: 'nebulaBreath 22s ease-in-out 4s infinite' }} />
       </div>
 
-      {/* Drifting particles - tiny floating motes */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+      {/* Drifting particles - tiny floating motes (reduced on mobile) */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden hidden sm:block">
         {mounted && driftParticles.map((p, i) => (
           <div key={`drift-${i}`} className="absolute rounded-full bg-white/80" style={{
             left: `${p.x}%`, top: `${p.y}%`, width: p.size, height: p.size,
@@ -1503,23 +1517,14 @@ export default function ModernHome() {
         <div key={comet.id} className="fixed pointer-events-none z-0 comet" style={{ left: `${comet.x}%`, top: `${comet.y}%` }} />
       )}
 
-      {/* Cursor trail particles */}
-      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-        {cursorTrail.map((p) => (
-          <div key={p.id} className="absolute rounded-full bg-[#58A4B0]" style={{
-            left: p.x, top: p.y, width: 3, height: 3,
-            animation: 'cursorFade 0.8s ease-out forwards',
-          }} />
-        ))}
-      </div>
-
       {/* Subtle gradient for depth */}
       <div className="fixed inset-0 bg-gradient-to-b from-transparent via-[#131112]/50 to-[#131112] pointer-events-none" />
 
       {/* Scroll-driven darkness overlay (capped so it never becomes pure black) */}
       <div
+        ref={overlayRef}
         aria-hidden
-        className="fixed inset-0 pointer-events-none transition-opacity duration-300"
+        className="fixed inset-0 pointer-events-none"
         style={{
           background: `linear-gradient(180deg, rgba(0,0,0,${overlayOpacity * 0.35}) 0%, rgba(0,0,0,${overlayOpacity}) 100%)`,
         }}
@@ -1648,9 +1653,9 @@ export default function ModernHome() {
               </div>
 
               {/* Code editor: highlighted display + textarea overlay */}
-              <div className="relative min-h-[260px]">
+              <div className="relative min-h-[180px] sm:min-h-[260px]">
                 {/* Highlighted display layer */}
-                <div className="absolute inset-0 py-4 pl-2 pr-4 font-mono text-[13px] leading-6 overflow-hidden pointer-events-none" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                <div className="absolute inset-0 py-4 pl-2 pr-4 font-mono text-[11px] sm:text-[13px] leading-5 sm:leading-6 overflow-hidden pointer-events-none" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
                   {renderHighlightedCode()}
                   {showAiSuggestion && (
                     <div className="ai-line-reveal mt-1">
@@ -1669,7 +1674,7 @@ export default function ModernHome() {
                 {/* Editable textarea layer */}
                 <textarea
                   ref={editorRef}
-                  className="relative w-full min-h-[260px] py-4 pl-10 pr-4 font-mono text-[13px] leading-6 bg-transparent text-transparent caret-[#58A4B0] resize-none outline-none z-10"
+                  className="relative w-full min-h-[180px] sm:min-h-[260px] py-4 pl-10 pr-4 font-mono text-[11px] sm:text-[13px] leading-5 sm:leading-6 bg-transparent text-transparent caret-[#58A4B0] resize-none outline-none z-10"
                   style={{ fontFamily: "'JetBrains Mono', monospace" }}
                   value={editorCode}
                   onChange={handleEditorChange}
@@ -1746,12 +1751,7 @@ export default function ModernHome() {
       {/* ═══ Animated Stats Counter Bar ═══ */}
       <div ref={statsRef} className="relative z-10 py-16 px-6 md:px-20">
         <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
-          {[
-            { value: 200, prefix: '<', suffix: 'ms', label: 'Compile time' },
-            { value: 40, prefix: '', suffix: '+', label: 'Languages' },
-            { value: 0, prefix: '', suffix: '', label: 'Tracking scripts' },
-            { value: 99.9, prefix: '', suffix: '%', label: 'Uptime target' },
-          ].map((stat, i) => (
+          {STAT_TARGETS.map((stat, i) => (
             <div
               key={i}
               className="text-center"
@@ -1761,7 +1761,7 @@ export default function ModernHome() {
               }}
             >
               <div className="text-3xl md:text-4xl font-bold text-white font-mono">
-                {stat.prefix}{statsVisible ? (Number.isInteger(stat.value) ? stat.value : stat.value.toFixed(1)) : 0}{stat.suffix}
+                {stat.prefix}{stat.decimals > 0 ? counterValues[i].toFixed(stat.decimals) : counterValues[i]}{stat.suffix}
               </div>
               <div className="text-slate-500 text-sm mt-1">{stat.label}</div>
             </div>
@@ -1834,7 +1834,7 @@ export default function ModernHome() {
           >
             {/* Free Tier */}
             <div
-              className="pricing-card relative group bg-white/[0.03] backdrop-blur-xl border border-white/[0.08] rounded-2xl p-10 hover:border-[#58A4B0]/30 transition-all duration-300"
+              className="pricing-card relative group bg-[#141414]/95 border border-white/[0.08] rounded-2xl p-10 hover:border-[#58A4B0]/30 transition-all duration-300"
               onMouseMove={handleCardMouseMove}
             >
               <div className="pricing-spotlight" />
@@ -1876,7 +1876,7 @@ export default function ModernHome() {
 
             {/* Premium Tier */}
             <div
-              className="pricing-card pro-card-border pro-tilt relative group bg-white/[0.03] backdrop-blur-xl rounded-2xl p-10"
+              className="pricing-card pro-card-border pro-tilt relative group bg-[#141414]/95 rounded-2xl p-10"
               onMouseMove={handleProCardMouseMove}
               onMouseLeave={handleProCardMouseLeave}
               style={{ boxShadow: '0 0 80px -20px rgba(88, 164, 176, 0.25)' }}
@@ -1979,8 +1979,8 @@ export default function ModernHome() {
             >
               <div className="spotlight-overlay" />
               {/* Micro-UI: AI suggestion flow */}
-              <div className="h-44 relative overflow-hidden border-b border-white/5 bg-gradient-to-br from-[#58A4B0]/[0.03] to-transparent p-5">
-                <div className="font-mono text-[11px] leading-[22px]" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+              <div className="h-28 sm:h-44 relative overflow-hidden border-b border-white/5 bg-gradient-to-br from-[#58A4B0]/[0.03] to-transparent p-3 sm:p-5">
+                <div className="font-mono text-[10px] sm:text-[11px] leading-[18px] sm:leading-[22px]" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
                   <div><span className="text-slate-700 mr-3">1</span><span className="text-[#C678DD]">const</span><span className="text-slate-500"> data = </span><span className="text-[#61AFEF]">fetchMetrics</span><span className="text-slate-500">()</span></div>
                   <div><span className="text-slate-700 mr-3">2</span><span className="text-slate-600">&nbsp;</span></div>
                   <div className="ai-line-loop" style={{ '--line-dur': '6s', '--line-delay': '0s' }}><span className="text-slate-700 mr-3">3</span><span className="text-[#58A4B0]/60 italic">{"// ✦ optimize: memoize expensive computation"}</span><span className="ai-bento-cursor text-[#58A4B0] ml-0.5">|</span></div>
@@ -2050,8 +2050,8 @@ export default function ModernHome() {
             >
               <div className="spotlight-overlay" />
               {/* Micro-UI: bug → fix (live cycling) */}
-              <div className="h-36 relative overflow-hidden border-b border-white/5 bg-gradient-to-br from-red-500/[0.03] to-emerald-500/[0.03] p-5">
-                <div className="font-mono text-[10px] leading-[20px]" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+              <div className="h-28 sm:h-36 relative overflow-hidden border-b border-white/5 bg-gradient-to-br from-red-500/[0.03] to-emerald-500/[0.03] p-3 sm:p-5">
+                <div className="font-mono text-[9px] sm:text-[10px] leading-[18px] sm:leading-[20px]" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
                   <div><span className="text-slate-700 mr-2">7</span><span className="text-slate-500">{"  if ("}</span><span className="text-[#E06C75]">user.role</span><span className="text-slate-500">{" === "}</span><span className="text-[#98C379]">{'"admin"'}</span><span className="text-slate-500">{")"}</span></div>
                   {bugFixStep === 0 ? (
                     <div><span className="text-slate-700 mr-2">8</span><span className="text-slate-500">{"    return data.unfiltered()"}</span></div>
@@ -2095,7 +2095,7 @@ export default function ModernHome() {
             >
               <div className="spotlight-overlay" />
               {/* Micro-UI: cloud transfer */}
-              <div className="h-36 relative overflow-hidden border-b border-white/5 bg-gradient-to-br from-[#58A4B0]/[0.03] to-transparent flex items-center justify-center">
+              <div className="h-28 sm:h-36 relative overflow-hidden border-b border-white/5 bg-gradient-to-br from-[#58A4B0]/[0.03] to-transparent flex items-center justify-center">
                 <div className="flex items-center gap-4">
                   <div className="flex flex-col items-center gap-1">
                     <div className="w-8 h-8 rounded-lg bg-white/[0.04] border border-white/10 flex items-center justify-center">
@@ -2137,7 +2137,7 @@ export default function ModernHome() {
             >
               <div className="spotlight-overlay" />
               {/* Micro-UI: multiplayer cursors */}
-              <div className="h-36 relative overflow-hidden border-b border-white/5 bg-gradient-to-br from-purple-500/[0.02] to-[#58A4B0]/[0.03] p-5">
+              <div className="h-28 sm:h-36 relative overflow-hidden border-b border-white/5 bg-gradient-to-br from-purple-500/[0.02] to-[#58A4B0]/[0.03] p-3 sm:p-5">
                 <div className="font-mono text-[10px] leading-[20px]" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
                   <div className="text-slate-500"><span className="text-slate-700 mr-2">1</span>{"function "}<span className="text-[#61AFEF]">render</span>{"() {"}</div>
                   <div className="text-slate-500"><span className="text-slate-700 mr-2">2</span>{"  return <"}<span className="text-[#E06C75]">View</span>{">"}<span className="text-purple-400 ml-1 collab-blink">{"│"}</span></div>
@@ -2171,10 +2171,10 @@ export default function ModernHome() {
             >
               <div className="spotlight-overlay" />
               {/* Micro-UI: tool badges */}
-              <div className="h-36 relative overflow-hidden border-b border-white/5 bg-gradient-to-br from-purple-500/[0.02] to-[#58A4B0]/[0.03] flex items-center justify-center">
-                <div className="flex flex-wrap gap-2 justify-center px-4">
+              <div className="h-28 sm:h-36 relative overflow-hidden border-b border-white/5 bg-gradient-to-br from-purple-500/[0.02] to-[#58A4B0]/[0.03] flex items-center justify-center">
+                <div className="flex flex-wrap gap-1.5 sm:gap-2 justify-center px-3 sm:px-4">
                   {['Claude Code', 'Codex', 'Cursor', 'GPT'].map((tool, i) => (
-                    <div key={i} className="px-2.5 py-1 rounded-lg bg-white/[0.04] border border-white/10 text-[10px] font-mono text-slate-400">
+                    <div key={i} className="px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg bg-white/[0.04] border border-white/10 text-[9px] sm:text-[10px] font-mono text-slate-400">
                       {tool}
                     </div>
                   ))}
@@ -2204,8 +2204,8 @@ export default function ModernHome() {
             >
               <div className="spotlight-overlay" />
               {/* Micro-UI: live editing → HMR → preview */}
-              <div className="h-44 relative overflow-hidden border-b border-white/5 bg-gradient-to-br from-emerald-500/[0.03] to-[#58A4B0]/[0.03] p-5">
-                <div className="flex gap-4 items-start">
+              <div className="h-32 sm:h-44 relative overflow-hidden border-b border-white/5 bg-gradient-to-br from-emerald-500/[0.03] to-[#58A4B0]/[0.03] p-3 sm:p-5">
+                <div className="flex gap-2 sm:gap-4 items-start">
                   {/* Code change side */}
                   <div className="flex-1 font-mono text-[10px] leading-[20px]" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
                     <div className="text-[9px] text-slate-600 mb-1.5 font-sans font-medium">kernel/render.rs</div>
@@ -2365,8 +2365,8 @@ export default function ModernHome() {
               ))}
             </h2>
           </div>
-          <div className={`overflow-hidden rounded-2xl border border-white/[0.06] transition-all duration-1000 ${comparisonVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
-            <table className="w-full text-left text-sm">
+          <div className={`overflow-x-auto rounded-2xl border border-white/[0.06] transition-all duration-1000 ${comparisonVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
+            <table className="w-full text-left text-xs sm:text-sm min-w-[480px]">
               <thead>
                 <tr className="border-b border-white/[0.06] bg-white/[0.02]">
                   <th className="px-6 py-4 text-slate-400 font-medium">Feature</th>
@@ -2433,6 +2433,127 @@ export default function ModernHome() {
         </div>
       </div>
 
+
+      {/* ═══ Who Is This For? — Persona Cards ═══ */}
+      <div ref={personasRef} className="relative z-10 px-6 md:px-20 py-20 md:py-28">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-14">
+            <span className="text-[#58A4B0] font-mono text-xs tracking-widest uppercase mb-3 block">Built for every builder</span>
+            <h2 className={`text-3xl md:text-5xl font-bold text-white tracking-tight transition-all duration-1000 ${personasVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
+              Who is Synthi for?
+            </h2>
+            <p className={`text-slate-400 text-lg mt-4 max-w-2xl mx-auto transition-all duration-1000 delay-200 ${personasVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+              Whether you&apos;re shipping side projects or scaling to millions of users.
+            </p>
+          </div>
+          <div className={`grid grid-cols-1 md:grid-cols-3 gap-6 transition-all duration-1000 delay-300 ${personasVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
+            {/* Solo Devs */}
+            <div
+              className="pricing-card group relative bg-white/[0.03] rounded-2xl p-8"
+              onMouseMove={handleCardMouseMove}
+            >
+              <div className="pricing-spotlight" />
+              <div className="pricing-grid" />
+              <div className="relative z-[3] space-y-5">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#58A4B0]/20 to-[#327464]/10 border border-[#58A4B0]/20 flex items-center justify-center">
+                  <Code className="text-[#58A4B0]" size={22} />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold text-[#E5E5E5] mb-1">Solo Devs</h3>
+                  <p className="text-slate-400 text-sm">Side projects & freelance</p>
+                </div>
+                <p className="text-slate-400 text-sm leading-relaxed">
+                  Stop waiting for builds on your laptop. Synthi compiles in the cloud so your hardware doesn&apos;t matter — ship side projects, freelance gigs, and experiments at full speed.
+                </p>
+                <div className="space-y-3 pt-2">
+                  {['Free forever tier', 'Instant cloud builds', 'AI pair programmer'].map((f, i) => (
+                    <div key={i} className="cascade-item flex items-start gap-3">
+                      <div className="cascade-check w-5 h-5 rounded-full bg-[#58A4B0]/20 flex items-center justify-center mt-0.5 flex-shrink-0">
+                        <svg className="w-3 h-3 text-[#58A4B0]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                      </div>
+                      <span className="cascade-text text-[#E5E5E5] font-medium text-sm">{f}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Startup Teams — featured card with animated border + 3D tilt */}
+            <div
+              className="pricing-card pro-card-border group relative bg-white/[0.03] rounded-2xl p-8"
+              onMouseMove={handleProCardMouseMove}
+              onMouseLeave={handleProCardMouseLeave}
+              style={{ boxShadow: '0 0 80px -20px rgba(88, 164, 176, 0.2)', transitionDelay: personasVisible ? '100ms' : '0ms' }}
+            >
+              <div className="pricing-spotlight" />
+              <div className="pricing-grid" />
+              <div className="absolute -top-3 left-6 z-[3]">
+                <span className="bg-gradient-to-r from-[#58A4B0] to-[#327464] text-white px-4 py-1 rounded-full text-xs font-bold tracking-wide">MOST POPULAR</span>
+              </div>
+              <div className="relative z-[3] space-y-5 mt-3">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500/20 to-[#58A4B0]/10 border border-purple-500/20 flex items-center justify-center">
+                  <Users className="text-purple-400" size={22} />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold text-[#E5E5E5] mb-1">Startup Teams</h3>
+                  <p className="text-slate-400 text-sm">Move fast, ship faster</p>
+                </div>
+                <p className="text-slate-400 text-sm leading-relaxed">
+                  Real-time collaboration with AI insights across your entire codebase. Onboard new devs instantly — no local environment setup, no &quot;works on my machine&quot; problems.
+                </p>
+                <div className="space-y-3 pt-2">
+                  {['Real-time multiplayer', 'Shared cloud workspace', 'Hot reload for any language'].map((f, i) => (
+                    <div key={i} className="cascade-item flex items-start gap-3">
+                      <div className="cascade-check w-5 h-5 rounded-full bg-purple-500/20 flex items-center justify-center mt-0.5 flex-shrink-0">
+                        <svg className="w-3 h-3 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                      </div>
+                      <span className="cascade-text text-[#E5E5E5] font-medium text-sm">{f}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Enterprise */}
+            <div
+              className="pricing-card group relative bg-white/[0.03] rounded-2xl p-8"
+              onMouseMove={handleCardMouseMove}
+              style={{ transitionDelay: personasVisible ? '200ms' : '0ms' }}
+            >
+              <div className="pricing-spotlight" />
+              <div className="pricing-grid" />
+              <div className="relative z-[3] space-y-5">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500/20 to-orange-500/10 border border-amber-500/20 flex items-center justify-center">
+                  <Globe className="text-amber-400" size={22} />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold text-[#E5E5E5] mb-1">Enterprise</h3>
+                  <p className="text-slate-400 text-sm">Scale with confidence</p>
+                </div>
+                <p className="text-slate-400 text-sm leading-relaxed">
+                  Zero tracking, no data training, full export anytime. Synthi gives your org cloud-native development infrastructure without vendor lock-in or compliance headaches.
+                </p>
+                <div className="space-y-3 pt-2">
+                  {['Self-host option', 'Priority compilation', 'Advanced AI reasoning'].map((f, i) => (
+                    <div key={i} className="cascade-item flex items-start gap-3">
+                      <div className="cascade-check w-5 h-5 rounded-full bg-amber-500/20 flex items-center justify-center mt-0.5 flex-shrink-0">
+                        <svg className="w-3 h-3 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                      </div>
+                      <span className="cascade-text text-[#E5E5E5] font-medium text-sm">{f}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* Command Palette Easter Egg (Ctrl+K) */}
       {showCommandPalette && (
@@ -2540,8 +2661,8 @@ export default function ModernHome() {
       )}
 
       {/* ═══ Sticky Bottom CTA Bar ═══ */}
-      <div className={`fixed bottom-0 left-0 right-0 z-40 transition-all duration-500 ${showStickyCta ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'}`} style={{ animation: showStickyCta ? 'stickySlideUp 0.5s ease-out' : 'none' }}>
-        <div className="bg-[#0a0a0a]/90 backdrop-blur-xl border-t border-white/[0.06]">
+      <div className={`fixed bottom-0 left-0 right-0 z-40 transition-all duration-500 hidden md:block ${showStickyCta ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'}`} style={{ animation: showStickyCta ? 'stickySlideUp 0.5s ease-out' : 'none' }}>
+        <div className="bg-[#0a0a0a]/95 backdrop-blur-sm border-t border-white/[0.06]">
           <div className="max-w-4xl mx-auto px-6 py-3 flex items-center justify-between gap-4">
             <span className="text-white text-sm font-medium hidden md:block">Ready to build the future?</span>
             <div className="flex-1 md:flex-none flex items-center gap-2">
@@ -2564,7 +2685,7 @@ export default function ModernHome() {
       </div>
 
       {/* Footer */}
-      <footer className="relative z-10 py-8 border-t border-[#E5E5E5]/10">
+      <footer className="relative z-10 py-8 pb-20 md:pb-8 border-t border-[#E5E5E5]/10">
         <div className="px-8 flex flex-col md:flex-row justify-between items-center text-center md:text-left gap-4">
           <p className="text-slate-400 text-sm">
             <span className="text-white font-semibold">Expect soon.</span> Inquiries: dev@synthi.app
@@ -2624,8 +2745,8 @@ export default function ModernHome() {
       </div>
 
       {/* ═══ Mobile Dock Nav ═══ */}
-      <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 md:hidden" style={{ animation: 'dockSlideUp 0.5s ease-out', opacity: scrollProgress > 3 ? 1 : 0, transition: 'opacity 0.3s' }}>
-        <div className="flex items-center gap-1 bg-[#131112]/80 backdrop-blur-xl border border-white/[0.08] rounded-full px-2 py-1.5 shadow-2xl">
+      <div className="fixed bottom-3 left-1/2 -translate-x-1/2 z-50 md:hidden" style={{ animation: 'dockSlideUp 0.5s ease-out', opacity: scrollProgress > 3 ? 1 : 0, transition: 'opacity 0.3s' }}>
+        <div className="flex items-center gap-1 bg-[#131112]/95 backdrop-blur-sm border border-white/[0.08] rounded-full px-2 py-1.5 shadow-2xl">
           {[
             { id: 'hero', icon: Home, label: 'Home' },
             { id: 'business', icon: DollarSign, label: 'Pricing' },

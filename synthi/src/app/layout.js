@@ -18,7 +18,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Synthi - The IDE That Undestands You.",
+  title: "Synthi - World's first ADE.",
 }
 
 export default function RootLayout({ children }) {
