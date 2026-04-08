@@ -17,6 +17,24 @@ const BUILD_LOGS = [
   { text: "Building project...", delay: 900 },
 ];
 
+/* ---------- Crate modifier definitions ---------- */
+const CRATE_MODIFIERS = [
+  { id: 'zero_friction',  label: 'ZERO FRICTION',   desc: 'everything slides like ice',       color: '#38bdf8', icon: '🧊', duration: 12000 },
+  { id: 'mega_bounce',    label: 'MEGA BOUNCE',     desc: '3x restitution on impacts',        color: '#f472b6', icon: '🔴', duration: 12000 },
+  { id: 'gravity_flip',   label: 'GRAVITY FLIP',    desc: 'what goes down must come up',       color: '#a78bfa', icon: '🔄', duration: 10000 },
+  { id: 'clone_storm',    label: 'CLONE STORM',     desc: 'collisions spawn new toys',         color: '#34d399', icon: '🧬', duration: 10000 },
+  { id: 'phantom_mode',   label: 'PHANTOM MODE',    desc: 'objects phase through each other',  color: '#94a3b8', icon: '👻', duration: 10000 },
+  { id: 'score_surge',    label: 'SCORE SURGE',     desc: '5x score multiplier',               color: '#fbbf24', icon: '⚡', duration: 15000 },
+  { id: 'magnet_pulse',   label: 'MAGNET PULSE',    desc: 'everything pulls toward cursor',    color: '#fb923c', icon: '🧲', duration: 12000 },
+  { id: 'hyper_spin',     label: 'HYPER SPIN',      desc: 'all objects spin like crazy',        color: '#e879f9', icon: '🌀', duration: 10000 },
+  { id: 'time_warp',      label: 'TIME WARP',       desc: 'physics run at 2x speed',           color: '#2dd4bf', icon: '⏩', duration: 10000 },
+  { id: 'explosive_touch',label: 'EXPLOSIVE TOUCH', desc: 'collisions blast objects apart',     color: '#ef4444', icon: '💥', duration: 10000 },
+];
+
+const PLAYGROUND_HUD_STORAGE_KEY = 'synthi_playground_hud_position';
+const PLAYGROUND_HUD_MARGIN = 16;
+const PLAYGROUND_HUD_TOP_CLEARANCE = 76;
+
 /* ---------- Language detection + syntax highlighting ---------- */
 const INITIAL_CODE = `Write here!`;
 
@@ -142,11 +160,16 @@ export default function ModernHome() {
   const [playgroundCollectibles, setPlaygroundCollectibles] = useState(0);
   const [playgroundSfxOn, setPlaygroundSfxOn] = useState(true);
   const [playgroundHudMin, setPlaygroundHudMin] = useState(false);
+  const [playgroundHudPosition, setPlaygroundHudPosition] = useState(null);
+  const [playgroundHudDragging, setPlaygroundHudDragging] = useState(false);
   const logoClickCount = useRef(0);
   const logoClickTimer = useRef(null);
   const playgroundNodesRef = useRef({});
   const playgroundBodiesRef = useRef({});
   const playgroundDragRef = useRef(null);
+  const playgroundHudRef = useRef(null);
+  const playgroundHudDragStateRef = useRef(null);
+  const playgroundHudPositionRef = useRef(null);
   const playgroundRafRef = useRef(null);
   const playgroundSpawnIdRef = useRef(0);
   const playgroundBurstIdRef = useRef(0);
@@ -157,6 +180,14 @@ export default function ModernHome() {
   const playgroundLastCollectRef = useRef(0);
   const playgroundComboResetRef = useRef(null);
   const playgroundForceTimeoutRef = useRef(null);
+
+  /* Crate / Modifier system */
+  const [playgroundCrates, setPlaygroundCrates] = useState([]); // active crates on screen
+  const [activeModifiers, setActiveModifiers] = useState([]); // max 2 active { ...modifier, expiresAt, startedAt }
+  const crateSpawnTimerRef = useRef(null);
+  const crateIdRef = useRef(0);
+  const activeModifiersRef = useRef([]); // mirror for RAF access without re-renders
+  const playgroundCratesRef = useRef([]); // mirror for RAF access
 
   /* Collection / Journal */
   const [journalOpen, setJournalOpen] = useState(false);
@@ -172,6 +203,8 @@ export default function ModernHome() {
   const bootTimerRef = useRef(null);
   const ghostTimerRef = useRef(null);
   const [editorHelpOutput, setEditorHelpOutput] = useState(null); // man synthi output
+
+  playgroundHudPositionRef.current = playgroundHudPosition;
 
   const handleCollectionUnlock = useCallback((item) => {
     const r = RARITY[item.rarity];
@@ -777,6 +810,12 @@ export default function ModernHome() {
     }
     playgroundNodesRef.current[id] = node;
     node.dataset.playgroundItem = id;
+    if (playgroundMode) {
+      // Physics-driven items need transform updates to apply immediately.
+      node.style.transition = 'opacity 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease, background-color 0.2s ease, color 0.2s ease';
+    } else {
+      node.style.transition = '';
+    }
     if (!playgroundBodiesRef.current[id]) {
       playgroundBodiesRef.current[id] = {
         x: 0,
@@ -791,7 +830,7 @@ export default function ModernHome() {
         orbitRadius: 90 + Math.random() * 110,
       };
     }
-  }, []);
+  }, [playgroundMode]);
 
   const syncPlaygroundMeta = useCallback(() => {
     const bodies = Object.entries(playgroundBodiesRef.current).filter(([id]) => isPlaygroundItemId(id));
@@ -825,6 +864,7 @@ export default function ModernHome() {
     Object.values(playgroundNodesRef.current).forEach((node) => {
       if (!node) return;
       node.style.transform = '';
+      node.style.transition = '';
       node.style.zIndex = '';
       node.style.boxShadow = '';
       node.style.filter = '';
@@ -840,6 +880,8 @@ export default function ModernHome() {
 
   const deactivatePlayground = useCallback(() => {
     resetPlaygroundLayout({ clearSpawns: true });
+    playgroundHudDragStateRef.current = null;
+    setPlaygroundHudDragging(false);
     setPlaygroundMode(false);
     setPlaygroundForceMode('none');
     setPlaygroundGravityMode('zero');
@@ -858,6 +900,11 @@ export default function ModernHome() {
     playgroundLastCollectRef.current = 0;
     if (playgroundComboResetRef.current) clearTimeout(playgroundComboResetRef.current);
     if (playgroundForceTimeoutRef.current) clearTimeout(playgroundForceTimeoutRef.current);
+    // Clear crates/modifiers
+    setPlaygroundCrates([]);
+    setActiveModifiers([]);
+    activeModifiersRef.current = [];
+    if (crateSpawnTimerRef.current) clearTimeout(crateSpawnTimerRef.current);
   }, [resetPlaygroundLayout]);
 
   const playPlaygroundSound = useCallback((kind = 'impact') => {
@@ -881,6 +928,8 @@ export default function ModernHome() {
         unlock_mythic: { start: 220, end: 1760, duration: 0.5, type: 'sine', volume: 0.05 },
         unlock_transcendent: { start: 110, end: 2200, duration: 0.7, type: 'sine', volume: 0.055 },
         unlock_secret: { start: 330, end: 660, duration: 0.4, type: 'triangle', volume: 0.04 },
+        crate_open: { start: 300, end: 900, duration: 0.2, type: 'sawtooth', volume: 0.035 },
+        crate_spawn: { start: 150, end: 300, duration: 0.12, type: 'triangle', volume: 0.02 },
       }[kind] || { start: 260, end: 180, duration: 0.05, type: 'triangle', volume: 0.02 };
       const oscillator = ctx.createOscillator();
       const gain = ctx.createGain();
@@ -899,6 +948,128 @@ export default function ModernHome() {
     }
   }, [playgroundSfxOn]);
   playPlaygroundSoundRef.current = playPlaygroundSound;
+
+  const getPlaygroundHudBounds = useCallback(() => {
+    const rect = playgroundHudRef.current?.getBoundingClientRect();
+    return {
+      width: rect?.width ?? (playgroundHudMin ? 180 : 320),
+      height: rect?.height ?? 120,
+    };
+  }, [playgroundHudMin]);
+
+  const clampPlaygroundHudPosition = useCallback((position, bounds = getPlaygroundHudBounds()) => {
+    if (!position || typeof window === 'undefined') return position;
+    const maxX = Math.max(PLAYGROUND_HUD_MARGIN, window.innerWidth - bounds.width - PLAYGROUND_HUD_MARGIN);
+    const maxY = Math.max(PLAYGROUND_HUD_TOP_CLEARANCE, window.innerHeight - bounds.height - PLAYGROUND_HUD_MARGIN);
+    return {
+      x: Math.min(Math.max(position.x, PLAYGROUND_HUD_MARGIN), maxX),
+      y: Math.min(Math.max(position.y, PLAYGROUND_HUD_TOP_CLEARANCE), maxY),
+    };
+  }, [getPlaygroundHudBounds]);
+
+  const getDefaultPlaygroundHudPosition = useCallback((bounds = getPlaygroundHudBounds()) => {
+    if (typeof window === 'undefined') {
+      return { x: PLAYGROUND_HUD_MARGIN, y: PLAYGROUND_HUD_TOP_CLEARANCE };
+    }
+    return clampPlaygroundHudPosition({
+      x: window.innerWidth - bounds.width - PLAYGROUND_HUD_MARGIN,
+      y: PLAYGROUND_HUD_TOP_CLEARANCE,
+    }, bounds);
+  }, [clampPlaygroundHudPosition, getPlaygroundHudBounds]);
+
+  const startPlaygroundHudDrag = useCallback((event) => {
+    if (!playgroundMode || !playgroundHudPositionRef.current) return;
+    const point = event.touches ? event.touches[0] : event;
+    if (!point) return;
+    const bounds = getPlaygroundHudBounds();
+    playgroundHudDragStateRef.current = {
+      startX: point.clientX,
+      startY: point.clientY,
+      originX: playgroundHudPositionRef.current.x,
+      originY: playgroundHudPositionRef.current.y,
+      width: bounds.width,
+      height: bounds.height,
+    };
+    setPlaygroundHudDragging(true);
+    if (event.cancelable) event.preventDefault();
+    event.stopPropagation();
+  }, [getPlaygroundHudBounds, playgroundMode]);
+
+  useEffect(() => {
+    if (!mounted || !playgroundMode) return;
+    const frame = window.requestAnimationFrame(() => {
+      let nextPosition = playgroundHudPositionRef.current;
+      if (!nextPosition) {
+        try {
+          const saved = window.localStorage.getItem(PLAYGROUND_HUD_STORAGE_KEY);
+          nextPosition = saved ? JSON.parse(saved) : null;
+        } catch {
+          nextPosition = null;
+        }
+      }
+      nextPosition = nextPosition
+        ? clampPlaygroundHudPosition(nextPosition)
+        : getDefaultPlaygroundHudPosition();
+      setPlaygroundHudPosition((prev) => (
+        prev && prev.x === nextPosition.x && prev.y === nextPosition.y ? prev : nextPosition
+      ));
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [clampPlaygroundHudPosition, getDefaultPlaygroundHudPosition, mounted, playgroundHudMin, playgroundMode]);
+
+  useEffect(() => {
+    if (!playgroundMode) return;
+    const handleResize = () => {
+      const current = playgroundHudPositionRef.current;
+      if (!current) return;
+      setPlaygroundHudPosition(clampPlaygroundHudPosition(current));
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [clampPlaygroundHudPosition, playgroundMode]);
+
+  useEffect(() => {
+    if (!mounted || !playgroundMode || !playgroundHudPosition || playgroundHudDragging) return;
+    try {
+      window.localStorage.setItem(PLAYGROUND_HUD_STORAGE_KEY, JSON.stringify(playgroundHudPosition));
+    } catch {
+      // Ignore localStorage persistence failures.
+    }
+  }, [mounted, playgroundHudDragging, playgroundHudPosition, playgroundMode]);
+
+  useEffect(() => {
+    if (!playgroundHudDragging) return;
+    const handleMove = (event) => {
+      const drag = playgroundHudDragStateRef.current;
+      if (!drag) return;
+      const point = event.touches ? event.touches[0] : event;
+      if (!point) return;
+      const nextPosition = clampPlaygroundHudPosition({
+        x: drag.originX + (point.clientX - drag.startX),
+        y: drag.originY + (point.clientY - drag.startY),
+      }, { width: drag.width, height: drag.height });
+      setPlaygroundHudPosition((prev) => (
+        prev && prev.x === nextPosition.x && prev.y === nextPosition.y ? prev : nextPosition
+      ));
+      if (event.cancelable) event.preventDefault();
+    };
+    const stopDrag = () => {
+      playgroundHudDragStateRef.current = null;
+      setPlaygroundHudDragging(false);
+    };
+    window.addEventListener('mousemove', handleMove);
+    window.addEventListener('mouseup', stopDrag);
+    window.addEventListener('touchmove', handleMove, { passive: false });
+    window.addEventListener('touchend', stopDrag);
+    window.addEventListener('touchcancel', stopDrag);
+    return () => {
+      window.removeEventListener('mousemove', handleMove);
+      window.removeEventListener('mouseup', stopDrag);
+      window.removeEventListener('touchmove', handleMove);
+      window.removeEventListener('touchend', stopDrag);
+      window.removeEventListener('touchcancel', stopDrag);
+    };
+  }, [clampPlaygroundHudPosition, playgroundHudDragging]);
 
   const spawnImpactBurst = useCallback((x, y, scale = 1) => {
     const id = ++playgroundBurstIdRef.current;
@@ -941,6 +1112,121 @@ export default function ModernHome() {
     spawnImpactBurst(x, y, 1.1);
     playPlaygroundSound('spawn');
   }, [collection, playPlaygroundSound, spawnImpactBurst]);
+
+  /* ─── Crate system ─── */
+  const spawnCrate = useCallback(() => {
+    const id = `crate-${crateIdRef.current++}`;
+    // Pick a random modifier not currently active
+    const activeIds = activeModifiersRef.current.map(m => m.id);
+    const available = CRATE_MODIFIERS.filter(m => !activeIds.includes(m.id));
+    const modifier = available[Math.floor(Math.random() * available.length)] || CRATE_MODIFIERS[Math.floor(Math.random() * CRATE_MODIFIERS.length)];
+    const x = 80 + Math.random() * (window.innerWidth - 160);
+    const y = 80 + Math.random() * (window.innerHeight * 0.6);
+    // Register physics body for the crate
+    playgroundBodiesRef.current[id] = {
+      x: 0, y: 0,
+      vx: (Math.random() - 0.5) * 2,
+      vy: 0.3 + Math.random() * 0.5,
+      angle: 0,
+      spin: (Math.random() - 0.5) * 0.04,
+      pinned: false, orbit: false,
+      orbitAngle: 0, orbitRadius: 0,
+    };
+    setPlaygroundCrates(prev => {
+      const next = [...prev, { id, x, y, modifier, spawnedAt: Date.now() }];
+      // Max 3 crates at a time
+      if (next.length > 3) {
+        const oldest = next[0];
+        delete playgroundBodiesRef.current[oldest.id];
+        return next.slice(1);
+      }
+      return next;
+    });
+    playPlaygroundSound('crate_spawn');
+  }, [playPlaygroundSound]);
+
+  const activateModifier = useCallback((modifier, crateId) => {
+    // Remove the crate
+    setPlaygroundCrates(prev => prev.filter(c => c.id !== crateId));
+    delete playgroundBodiesRef.current[crateId];
+    if (playgroundNodesRef.current[crateId]) delete playgroundNodesRef.current[crateId];
+
+    const now = Date.now();
+    setActiveModifiers(prev => {
+      // If already active, refresh duration
+      const existing = prev.find(m => m.id === modifier.id);
+      if (existing) {
+        const refreshed = prev.map(m => m.id === modifier.id ? { ...m, expiresAt: now + modifier.duration, startedAt: now } : m);
+        activeModifiersRef.current = refreshed;
+        return refreshed;
+      }
+      // Max 2: drop the oldest if full
+      let next = [...prev];
+      if (next.length >= 2) {
+        next = next.slice(1);
+      }
+      next = [...next, { ...modifier, startedAt: now, expiresAt: now + modifier.duration }];
+      activeModifiersRef.current = next;
+      return next;
+    });
+    spawnImpactBurst(window.innerWidth / 2, window.innerHeight / 2, 2);
+    playPlaygroundSound('crate_open');
+  }, [playPlaygroundSound, spawnImpactBurst]);
+
+  // Helper: check if a modifier is active (for physics loop via ref)
+  const hasModifier = useCallback((modId) => {
+    return activeModifiersRef.current.some(m => m.id === modId && Date.now() < m.expiresAt);
+  }, []);
+
+  // Crate spawn timer
+  useEffect(() => {
+    if (!playgroundMode) return;
+    const scheduleNext = () => {
+      const delay = 25000 + Math.random() * 35000; // 25-60s
+      crateSpawnTimerRef.current = setTimeout(() => {
+        spawnCrate();
+        scheduleNext();
+      }, delay);
+    };
+    // First crate after 15-25s
+    crateSpawnTimerRef.current = setTimeout(() => {
+      spawnCrate();
+      scheduleNext();
+    }, 15000 + Math.random() * 10000);
+    return () => { if (crateSpawnTimerRef.current) clearTimeout(crateSpawnTimerRef.current); };
+  }, [playgroundMode, spawnCrate]);
+
+  // Expire modifiers
+  useEffect(() => {
+    if (activeModifiers.length === 0) return;
+    const soonest = Math.min(...activeModifiers.map(m => m.expiresAt));
+    const remaining = soonest - Date.now();
+    if (remaining <= 0) {
+      const now = Date.now();
+      const alive = activeModifiers.filter(m => m.expiresAt > now);
+      setActiveModifiers(alive);
+      activeModifiersRef.current = alive;
+      return;
+    }
+    const timer = setTimeout(() => {
+      const now = Date.now();
+      const alive = activeModifiers.filter(m => m.expiresAt > now);
+      setActiveModifiers(alive);
+      activeModifiersRef.current = alive;
+    }, remaining + 50);
+    return () => clearTimeout(timer);
+  }, [activeModifiers]);
+
+  // Tick for modifier HUD countdown bars
+  const [modifierTick, setModifierTick] = useState(0);
+  useEffect(() => {
+    if (activeModifiers.length === 0) return;
+    const iv = setInterval(() => setModifierTick(t => t + 1), 200);
+    return () => clearInterval(iv);
+  }, [activeModifiers.length]);
+
+  // Keep crates ref in sync for RAF (physics loop) access
+  useEffect(() => { playgroundCratesRef.current = playgroundCrates; }, [playgroundCrates]);
 
   const sendNearestItemToOrbit = useCallback((x, y) => {
     let nearest = null;
@@ -1177,6 +1463,7 @@ export default function ModernHome() {
     body.vx = 0;
     body.vy = 0;
     body.spin = 0;
+    event.currentTarget.style.transition = 'none';
     playgroundDragRef.current = { id, lastX: point.clientX, lastY: point.clientY, lastT: performance.now(), startX: point.clientX, startY: point.clientY, engaged: false };
     // Disable touch scrolling only on the actively dragged element
     event.currentTarget.style.touchAction = 'none';
@@ -1226,9 +1513,14 @@ export default function ModernHome() {
       if (!event.touches && event.buttons === 0 && playgroundDragRef.current) {
         const staleDrag = playgroundDragRef.current;
         const staleBody = playgroundBodiesRef.current[staleDrag.id];
+        const staleNode = playgroundNodesRef.current[staleDrag.id];
         if (staleBody) {
           const flingSpeed = Math.hypot(staleBody.vx, staleBody.vy);
           if (flingSpeed > 18) { staleBody.vx *= 18 / flingSpeed; staleBody.vy *= 18 / flingSpeed; }
+        }
+        if (staleNode) {
+          staleNode.style.touchAction = '';
+          staleNode.style.transition = 'opacity 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease, background-color 0.2s ease, color 0.2s ease';
         }
         playgroundDragRef.current = null;
       }
@@ -1252,12 +1544,9 @@ export default function ModernHome() {
       if (!drag.engaged) {
         if (Math.hypot(point.clientX - drag.startX, point.clientY - drag.startY) < 4) return;
         drag.engaged = true;
-        drag.lastX = point.clientX;
-        drag.lastY = point.clientY;
-        drag.lastT = now;
-        return;
       }
       const body = playgroundBodiesRef.current[drag.id];
+      const dragNode = playgroundNodesRef.current[drag.id];
       if (!body) return;
       const dragDt = Math.max((now - drag.lastT) / 16.67, 0.5);
       const dx = point.clientX - drag.lastX;
@@ -1268,6 +1557,13 @@ export default function ModernHome() {
       body.vy = dy / dragDt;
       body.angle += dx * 0.002;
       body.spin = dx * 0.0008;
+      if (dragNode) {
+        dragNode.style.transform = `translate3d(${body.x}px, ${body.y}px, 0) rotate(${body.angle}rad) scale(1.03)`;
+        dragNode.style.zIndex = '90';
+        dragNode.style.cursor = 'grabbing';
+        dragNode.style.boxShadow = '';
+        dragNode.style.filter = '';
+      }
       drag.lastX = point.clientX;
       drag.lastY = point.clientY;
       drag.lastT = now;
@@ -1294,7 +1590,10 @@ export default function ModernHome() {
       }
       // Restore touch scrolling on the released element
       const dragNode = playgroundNodesRef.current[drag.id];
-      if (dragNode) dragNode.style.touchAction = '';
+      if (dragNode) {
+        dragNode.style.touchAction = '';
+        dragNode.style.transition = 'opacity 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease, background-color 0.2s ease, color 0.2s ease';
+      }
       playgroundDragRef.current = null;
     };
     const onKeyDown = (event) => {
@@ -1345,12 +1644,15 @@ export default function ModernHome() {
     const step = (now) => {
       const rawDt = Math.min((now - last) / 16.67, 2.25);
       last = now;
-      const dt = playgroundPaused ? 0 : rawDt * (playgroundSlowMo ? 0.22 : 1);
+      const dt = playgroundPaused ? 0 : rawDt * (playgroundSlowMo ? 0.22 : 1) * (hasModifier('time_warp') ? 2 : 1);
       const weatherMods = weather.getPhysicsMods();
+      const mods = activeModifiersRef.current.filter(m => Date.now() < m.expiresAt);
+      const hasMod = (id) => mods.some(m => m.id === id);
+      const draggedId = playgroundDragRef.current?.id;
       const coreX = window.innerWidth / 2;
       const coreY = window.innerHeight * 0.35;
       const bodies = Object.entries(playgroundNodesRef.current)
-        .filter(([id, node]) => node && node.isConnected && isPlaygroundItemId(id))
+        .filter(([id, node]) => node && node.isConnected && (isPlaygroundItemId(id) || id.startsWith('crate-')))
         .map(([id, node]) => ({
           id,
           node,
@@ -1372,7 +1674,7 @@ export default function ModernHome() {
       if (dt > 0) {
         bodies.forEach((item) => {
           const { id, rect, body } = item;
-          const dragging = playgroundDragRef.current?.id === id;
+          const dragging = draggedId === id;
           const inViewport = rect.bottom > -180 && rect.top < window.innerHeight + 180 && rect.right > -180 && rect.left < window.innerWidth + 180;
           const activeBody = dragging || body.orbit || body.pinned || id.startsWith('spawn-') || Math.abs(body.x) > 0.5 || Math.abs(body.y) > 0.5 || Math.abs(body.vx) > 0.05 || Math.abs(body.vy) > 0.05 || Math.abs(body.angle) > 0.01 || Math.abs(body.spin) > 0.001;
           item.deltaX = 0;
@@ -1403,24 +1705,29 @@ export default function ModernHome() {
 
           if (playgroundGravityMode === 'down') body.vy += 0.16 * dt;
           if (playgroundGravityMode === 'reverse') body.vy -= 0.16 * dt;
+          // Crate modifier: gravity flip
+          if (hasMod('gravity_flip')) body.vy -= 0.32 * dt;
 
-          if (playgroundForceMode !== 'none') {
+          if (playgroundForceMode !== 'none' || hasMod('magnet_pulse')) {
             const forceOriginX = playgroundPointerRef.current.x || coreX;
             const forceOriginY = playgroundPointerRef.current.y || coreY;
             const dx = forceOriginX - (rect.left + rect.width / 2);
             const dy = forceOriginY - (rect.top + rect.height / 2);
             const dist = Math.max(Math.hypot(dx, dy), 1);
             if (dist < 600) {
-              const direction = playgroundForceMode === 'magnet' ? 1 : -1;
-              const force = (1 - dist / 600) * 0.65 * dt;
+              const direction = (playgroundForceMode === 'magnet' || hasMod('magnet_pulse')) ? 1 : -1;
+              const force = (1 - dist / 600) * 0.65 * dt * (hasMod('magnet_pulse') ? 1.6 : 1);
               body.vx += direction * (dx / dist) * force;
               body.vy += direction * (dy / dist) * force;
             }
           }
 
-          body.vx *= Math.pow(0.97 * (weatherMods?.frictionMul ?? 1), dt);
-          body.vy *= Math.pow(0.97 * (weatherMods?.frictionMul ?? 1), dt);
+          const frictionBase = hasMod('zero_friction') ? 0.998 : 0.97;
+          body.vx *= Math.pow(frictionBase * (weatherMods?.frictionMul ?? 1), dt);
+          body.vy *= Math.pow(frictionBase * (weatherMods?.frictionMul ?? 1), dt);
           body.spin *= Math.pow(0.96, dt);
+          // Crate modifier: hyper spin
+          if (hasMod('hyper_spin')) body.spin += (Math.random() - 0.5) * 0.04 * dt;
 
           // Weather gravity pulse + solar drift
           if (weatherMods?.gravityPulse) body.vy += weatherMods.gravityPulse * dt;
@@ -1443,7 +1750,7 @@ export default function ModernHome() {
 
           // Wall-bounce ONLY for spawns (position:fixed). Page-flow items scroll
           // naturally; bounding them to viewport causes teleporting on scroll.
-          const isSpawn = id.startsWith('spawn-');
+          const isSpawn = id.startsWith('spawn-') || id.startsWith('crate-');
           if (isSpawn) {
             const nextLeft = rect.left + item.deltaX;
             const nextTop = rect.top + item.deltaY;
@@ -1490,14 +1797,15 @@ export default function ModernHome() {
           for (let j = i + 1; j < bodies.length; j++) {
             const a = bodies[i];
             const b = bodies[j];
-            if (playgroundDragRef.current?.id === a.id || playgroundDragRef.current?.id === b.id) continue;
             if ((!a.inViewport && !a.activeBody) || (!b.inViewport && !b.activeBody)) continue;
 
-            // Skip collisions between two dormant page-flow items (prevents
-            // false collisions when items from different page sections overlap
-            // in viewport coordinates during scroll)
-            const aIsActive = a.id.startsWith('spawn-') || Math.abs(a.body.vx) > 0.3 || Math.abs(a.body.vy) > 0.3;
-            const bIsActive = b.id.startsWith('spawn-') || Math.abs(b.body.vx) > 0.3 || Math.abs(b.body.vy) > 0.3;
+            const aDragged = draggedId === a.id;
+            const bDragged = draggedId === b.id;
+
+            // Skip collisions between two fully dormant items so the page
+            // layout does not self-resolve while nothing is interacting.
+            const aIsActive = aDragged || a.id.startsWith('spawn-') || Math.abs(a.body.vx) > 0.3 || Math.abs(a.body.vy) > 0.3;
+            const bIsActive = bDragged || b.id.startsWith('spawn-') || Math.abs(b.body.vx) > 0.3 || Math.abs(b.body.vy) > 0.3;
             if (!aIsActive && !bIsActive) continue;
 
             const aLeft = a.rect.left + (a.deltaX || 0);
@@ -1508,21 +1816,37 @@ export default function ModernHome() {
             const overlapY = Math.min(aTop + a.rect.height, bTop + b.rect.height) - Math.max(aTop, bTop);
 
             if (overlapX > 0 && overlapY > 0) {
+              // ── Crate collision: activate modifier ──
+              const aIsCrate = a.id.startsWith('crate-');
+              const bIsCrate = b.id.startsWith('crate-');
+              if (aIsCrate || bIsCrate) {
+                const crateItem = aIsCrate ? a : b;
+                const crateData = playgroundCratesRef.current.find(c => c.id === crateItem.id);
+                if (crateData && now - (crateData._lastHit || 0) > 300) {
+                  crateData._lastHit = now;
+                  activateModifier(crateData.modifier, crateItem.id);
+                }
+                continue; // skip normal collision physics for crate hits
+              }
+
+              // ── Phantom mode: objects pass through each other ──
+              if (hasMod('phantom_mode')) continue;
+
               const directionX = (aLeft + a.rect.width / 2) < (bLeft + b.rect.width / 2) ? -1 : 1;
               const directionY = (aTop + a.rect.height / 2) < (bTop + b.rect.height / 2) ? -1 : 1;
               const pushX = (overlapX / 2) * directionX;
               const pushY = (overlapY / 2) * directionY;
 
-              // Determine if each item is dormant (page-flow card at rest).
-              // Dormant items act as immovable walls — only the active item bounces.
-              const aDormant = !aIsActive && !a.id.startsWith('spawn-');
-              const bDormant = !bIsActive && !b.id.startsWith('spawn-');
+              // The actively dragged item stays locked to the pointer, but
+              // untouched cards should still be displaced when hit.
+              const aImmovable = aDragged;
+              const bImmovable = bDragged;
 
-              if (!a.body.pinned && !aDormant) {
+              if (!a.body.pinned && !aImmovable) {
                 a.body.x += pushX;
                 a.body.y += pushY;
               }
-              if (!b.body.pinned && !bDormant) {
+              if (!b.body.pinned && !bImmovable) {
                 b.body.x -= pushX;
                 b.body.y -= pushY;
               }
@@ -1532,18 +1856,19 @@ export default function ModernHome() {
               const aVy = a.body.vy;
               const bVx = b.body.vx;
               const bVy = b.body.vy;
-              const restitution = 0.75;
-              if (!aDormant) {
-                a.body.vx = aVx * 0.15 + bVx * 0.6 + pushX * 0.12;
-                a.body.vy = aVy * 0.15 + bVy * 0.6 + pushY * 0.12;
+              const restitution = 0.75 * (hasMod('mega_bounce') ? 3 : 1);
+              const explosiveMul = hasMod('explosive_touch') ? 3.5 : 1;
+              if (!aImmovable) {
+                a.body.vx = (aVx * 0.15 + bVx * 0.6 + pushX * 0.12) * explosiveMul;
+                a.body.vy = (aVy * 0.15 + bVy * 0.6 + pushY * 0.12) * explosiveMul;
                 // Scale resulting velocity by restitution
                 a.body.vx *= restitution;
                 a.body.vy *= restitution;
                 a.body.spin += (pushX + (bVy - aVy) * 0.3) * 0.0012;
               }
-              if (!bDormant) {
-                b.body.vx = bVx * 0.15 + aVx * 0.6 - pushX * 0.12;
-                b.body.vy = bVy * 0.15 + aVy * 0.6 - pushY * 0.12;
+              if (!bImmovable) {
+                b.body.vx = (bVx * 0.15 + aVx * 0.6 - pushX * 0.12) * explosiveMul;
+                b.body.vy = (bVy * 0.15 + aVy * 0.6 - pushY * 0.12) * explosiveMul;
                 b.body.vx *= restitution;
                 b.body.vy *= restitution;
                 b.body.spin -= (pushX + (aVy - bVy) * 0.3) * 0.0012;
@@ -1553,14 +1878,20 @@ export default function ModernHome() {
                 playgroundCollisionGateRef.current = now;
                 const mx = (aLeft + bLeft + b.rect.width / 2) / 2;
                 const my = (aTop + bTop + b.rect.height / 2) / 2;
-                spawnImpactBurst(mx, my, 1.15);
+                spawnImpactBurst(mx, my, hasMod('explosive_touch') ? 2.5 : 1.15);
                 playPlaygroundSound('impact');
-                setPlaygroundStats(prev => ({ ...prev, collisions: prev.collisions + 1 }));
+                const scoreAdd = hasMod('score_surge') ? 5 : 1;
+                setPlaygroundStats(prev => ({ ...prev, collisions: prev.collisions + scoreAdd }));
                 collection.onCollision(a.id, b.id, playgroundBodiesRef.current);
                 collection.onLifetimeCollision();
                 // Boss hit detection
                 const bossHit = bosses.hitBoss(mx, my);
                 if (bossHit && bossHit !== 'hit') { collection.onBossDefeated(bossHit); collection.onLifetimeBossDefeat(); }
+                // Clone storm: spawn a toy at collision point
+                if (hasMod('clone_storm') && Math.random() < 0.35) {
+                  const toyCount = Object.keys(playgroundBodiesRef.current).filter(k => k.startsWith('spawn-')).length;
+                  if (toyCount < 8) spawnPlaygroundToy(mx, my);
+                }
               }
             }
           }
@@ -1570,7 +1901,7 @@ export default function ModernHome() {
       bodies.forEach(({ id, node, body }) => {
         const dragging = playgroundDragRef.current?.id === id;
         node.style.transform = `translate3d(${body.x}px, ${body.y}px, 0) rotate(${body.angle}rad) scale(${dragging ? 1.03 : body.pinned ? 1.02 : 1})`;
-        node.style.zIndex = dragging ? '90' : body.orbit ? '80' : body.pinned ? '70' : id.startsWith('spawn-') ? '65' : '40';
+        node.style.zIndex = dragging ? '90' : body.orbit ? '80' : body.pinned ? '70' : (id.startsWith('spawn-') || id.startsWith('crate-')) ? '66' : '40';
         node.style.cursor = dragging ? 'grabbing' : 'grab';
         node.style.boxShadow = body.orbit ? '0 0 36px rgba(88,164,176,0.16)' : body.pinned ? '0 0 0 1px rgba(52,211,153,0.55)' : '';
         node.style.filter = body.orbit ? 'drop-shadow(0 0 20px rgba(88,164,176,0.35))' : body.pinned ? 'drop-shadow(0 0 12px rgba(52,211,153,0.18))' : '';
@@ -1586,7 +1917,7 @@ export default function ModernHome() {
     return () => {
       if (playgroundRafRef.current) cancelAnimationFrame(playgroundRafRef.current);
     };
-  }, [bosses, isPlaygroundItemId, playgroundForceMode, playgroundGravityMode, playgroundMode, playgroundPaused, playgroundSlowMo, spawnImpactBurst, weather]);
+  }, [activateModifier, bosses, hasModifier, isPlaygroundItemId, playgroundForceMode, playgroundGravityMode, playgroundMode, playgroundPaused, playgroundSlowMo, spawnImpactBurst, spawnPlaygroundToy, weather]);
 
   const explodePlaygroundItems = useCallback(() => {
     const centerX = window.innerWidth / 2;
@@ -2115,7 +2446,17 @@ export default function ModernHome() {
     <div className="relative min-h-screen" onClickCapture={handlePlaygroundSurfaceClick} style={playgroundMode ? { outline: '2px dashed rgba(88,164,176,0.3)', animation: 'playgroundBorder 3s linear infinite' } : undefined}>
       {playgroundMode && (
         <>
-          <div className={`fixed top-4 right-4 z-[120] rounded-2xl border border-[#58A4B0]/20 bg-[#0d1114]/90 backdrop-blur-xl shadow-2xl p-4 transition-all duration-300 ease-out ${playgroundHudMin ? 'w-auto' : 'w-[320px] space-y-4'}`} data-playground-control style={{ animation: 'playgroundHudIn 0.35s ease-out both' }}>
+          <div
+            ref={playgroundHudRef}
+            className={`fixed z-[120] rounded-2xl border border-[#58A4B0]/20 bg-[#0d1114]/90 backdrop-blur-xl shadow-2xl p-4 ease-out ${playgroundHudDragging ? 'transition-none' : 'transition-all duration-300'} ${playgroundHudMin ? 'w-auto' : 'w-[320px] space-y-4'}`}
+            data-playground-control
+            style={{
+              animation: 'playgroundHudIn 0.35s ease-out both',
+              top: playgroundHudPosition?.y ?? PLAYGROUND_HUD_TOP_CLEARANCE,
+              left: playgroundHudPosition?.x,
+              right: playgroundHudPosition ? 'auto' : PLAYGROUND_HUD_MARGIN,
+            }}
+          >
             <div className="flex items-center justify-between gap-3" data-playground-control>
               <div className="flex items-center gap-2" data-playground-control>
                 <div className="w-2 h-2 rounded-full bg-[#58A4B0] shrink-0" style={{ animation: 'deployLivePulse 2s ease-in-out infinite' }} />
@@ -2125,6 +2466,18 @@ export default function ModernHome() {
                 )}
               </div>
               <div className="flex items-center gap-1.5" data-playground-control>
+                <div
+                  className={`flex items-center gap-1 rounded-lg border px-2 py-0.5 text-[10px] font-mono select-none ${playgroundHudDragging ? 'cursor-grabbing border-[#58A4B0]/40 text-[#58A4B0]' : 'cursor-grab border-white/10 text-slate-500 hover:text-white hover:border-white/20 transition-colors'}`}
+                  onMouseDown={startPlaygroundHudDrag}
+                  onTouchStart={startPlaygroundHudDrag}
+                  data-playground-control
+                  style={{ touchAction: 'none' }}
+                  title="Drag to reposition"
+                  aria-label="Drag playground panel"
+                >
+                  <GripVertical size={10} />
+                  <span>move</span>
+                </div>
                 <button className="px-2 py-0.5 rounded-lg border border-white/10 text-[10px] font-mono text-slate-400 hover:text-white hover:border-white/20 transition-colors" onClick={() => setPlaygroundHudMin(prev => !prev)} data-playground-control>
                   {playgroundHudMin ? '▲' : '▼'}
                 </button>
@@ -2282,6 +2635,65 @@ export default function ModernHome() {
               <p className="mt-1 text-[11px] leading-relaxed text-slate-400">{spawn.body}</p>
             </div>
           ))}
+
+          {/* ─── Crates ─── */}
+          {playgroundCrates.map((crate) => (
+            <div
+              key={crate.id}
+              ref={el => { if (el) playgroundNodesRef.current[crate.id] = el; }}
+              className="fixed left-0 top-0 z-[66] w-[100px] select-none pointer-events-none"
+              style={{
+                left: crate.x,
+                top: crate.y,
+                animation: 'crateGlitchIn 0.4s ease-out both',
+              }}
+            >
+              <div className="relative rounded-xl border-2 p-3 backdrop-blur-md" style={{
+                borderColor: crate.modifier.color + '80',
+                background: `linear-gradient(135deg, ${crate.modifier.color}15, rgba(15,18,22,0.92))`,
+                boxShadow: `0 0 20px ${crate.modifier.color}30, inset 0 0 12px ${crate.modifier.color}10`,
+              }}>
+                <div className="text-center font-mono text-lg" style={{ color: crate.modifier.color, textShadow: `0 0 8px ${crate.modifier.color}60` }}>
+                  {crate.modifier.icon}
+                </div>
+                <div className="mt-1 text-center text-[8px] font-mono uppercase tracking-[0.3em] text-slate-400" style={{ animation: 'crateTextFlicker 2s infinite' }}>
+                  [PAYLOAD]
+                </div>
+                <div className="absolute inset-0 rounded-xl pointer-events-none" style={{
+                  background: `repeating-linear-gradient(0deg, transparent, transparent 3px, ${crate.modifier.color}08 3px, ${crate.modifier.color}08 4px)`,
+                }} />
+              </div>
+            </div>
+          ))}
+
+          {/* ─── Active modifier HUD ─── */}
+          {activeModifiers.length > 0 && (
+            <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[130] flex gap-3 pointer-events-none" style={{ animation: 'playgroundHudIn 0.3s ease-out both' }}>
+              {activeModifiers.map((mod) => {
+                void modifierTick; // force re-render for countdown
+                const total = mod.duration || 12000;
+                const remaining = Math.max(0, mod.expiresAt - Date.now());
+                const pct = (remaining / total) * 100;
+                return (
+                  <div key={mod.id} className="flex flex-col items-center gap-1 px-3 py-2 rounded-xl border backdrop-blur-xl" style={{
+                    borderColor: mod.color + '40',
+                    background: `linear-gradient(180deg, ${mod.color}18, rgba(13,17,20,0.92))`,
+                    boxShadow: `0 0 18px ${mod.color}25`,
+                    minWidth: 120,
+                  }}>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm">{mod.icon}</span>
+                      <span className="text-[10px] font-mono uppercase tracking-widest" style={{ color: mod.color }}>{mod.label}</span>
+                    </div>
+                    <div className="text-[8px] font-mono text-slate-500 text-center leading-tight">{mod.desc}</div>
+                    <div className="w-full h-[2px] rounded-full mt-1" style={{ background: mod.color + '20' }}>
+                      <div className="h-full rounded-full transition-all duration-500" style={{ width: `${pct}%`, background: mod.color }} />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
 
           {playgroundBursts.map((burst) => (
             <div key={burst.id} className="fixed pointer-events-none z-[110]" style={{ left: burst.x, top: burst.y, transform: 'translate(-50%, -50%)', animation: 'playgroundSpark 0.45s ease-out forwards' }}>
@@ -3243,6 +3655,26 @@ export default function ModernHome() {
         @keyframes playgroundSpark {
           0% { opacity: 1; transform: translate(-50%, -50%) scale(0.6); }
           100% { opacity: 0; transform: translate(-50%, -50%) scale(1.3); }
+        }
+
+        /* ─── Crate animations ─── */
+        @keyframes crateGlitchIn {
+          0% { opacity: 0; transform: scale(0.3) rotate(-15deg); filter: blur(6px) hue-rotate(90deg); }
+          30% { opacity: 1; transform: scale(1.15) rotate(3deg); filter: blur(0) hue-rotate(0deg); }
+          50% { transform: scale(0.95) rotate(-1deg) skewX(2deg); }
+          70% { transform: scale(1.04) rotate(0.5deg) skewX(-1deg); }
+          100% { opacity: 1; transform: scale(1) rotate(0deg) skewX(0deg); filter: none; }
+        }
+        @keyframes crateTextFlicker {
+          0%, 100% { opacity: 0.6; }
+          5% { opacity: 0.1; }
+          6% { opacity: 0.7; }
+          48% { opacity: 0.6; }
+          50% { opacity: 0.15; }
+          52% { opacity: 0.6; }
+          80% { opacity: 0.6; }
+          82% { opacity: 0.2; }
+          84% { opacity: 0.7; }
         }
 
         /* ─── Milestone counter ─── */
