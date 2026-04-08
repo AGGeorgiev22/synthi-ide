@@ -38,6 +38,128 @@ const PLAYGROUND_MAX_FLING_SPEED = 30;
 const PLAYGROUND_MAX_TRAVEL_SPEED = 28;
 const PLAYGROUND_THROWAWAY_SPEED = 14;
 const PLAYGROUND_THROWAWAY_SPIN = 0.12;
+const PLAYGROUND_MAX_ANGULAR_SPEED = 0.26;
+const PLAYGROUND_DRAG_STIFFNESS = 0.22;
+const PLAYGROUND_DRAG_DAMPING = 0.18;
+const PLAYGROUND_DRAG_TORQUE = 0.0011;
+const PLAYGROUND_POSITIONAL_SLOP = 0.6;
+const PLAYGROUND_POSITIONAL_CORRECTION = 0.82;
+const PLAYGROUND_SLEEP_LINEAR_THRESHOLD = 0.035;
+const PLAYGROUND_SLEEP_ANGULAR_THRESHOLD = 0.0008;
+const PLAYGROUND_SLEEP_FRAMES = 18;
+const PLAYGROUND_BROADPHASE_CELL_SIZE = 220;
+const PLAYGROUND_CONTACT_CACHE_TTL = 220;
+const PLAYGROUND_WARM_START_SCALE = 0.72;
+const PLAYGROUND_POINTER_FLING_BLEND = 1.04;
+
+const clampNumber = (value, min, max) => Math.min(Math.max(value, min), max);
+
+const rotateVector = (x, y, angle) => {
+  const cos = Math.cos(angle);
+  const sin = Math.sin(angle);
+  return {
+    x: x * cos - y * sin,
+    y: x * sin + y * cos,
+  };
+};
+
+const dotProduct = (ax, ay, bx, by) => (ax * bx) + (ay * by);
+const crossProduct = (ax, ay, bx, by) => (ax * by) - (ay * bx);
+
+const normalizeVector = (x, y) => {
+  const length = Math.hypot(x, y);
+  if (length <= 0.00001) return { x: 0, y: 0, length: 0 };
+  return { x: x / length, y: y / length, length };
+};
+
+const getObbVertices = (centerX, centerY, width, height, angle) => {
+  const halfW = width / 2;
+  const halfH = height / 2;
+  const corners = [
+    { x: -halfW, y: -halfH },
+    { x: halfW, y: -halfH },
+    { x: halfW, y: halfH },
+    { x: -halfW, y: halfH },
+  ];
+  return corners.map((corner) => {
+    const rotated = rotateVector(corner.x, corner.y, angle);
+    return {
+      x: centerX + rotated.x,
+      y: centerY + rotated.y,
+    };
+  });
+};
+
+const projectVerticesOntoAxis = (vertices, axisX, axisY) => {
+  let min = Number.POSITIVE_INFINITY;
+  let max = Number.NEGATIVE_INFINITY;
+  vertices.forEach((vertex) => {
+    const projection = dotProduct(vertex.x, vertex.y, axisX, axisY);
+    if (projection < min) min = projection;
+    if (projection > max) max = projection;
+  });
+  return { min, max };
+};
+
+const getSupportPoint = (vertices, dirX, dirY) => {
+  let bestVertex = vertices[0];
+  let bestProjection = Number.NEGATIVE_INFINITY;
+  vertices.forEach((vertex) => {
+    const projection = dotProduct(vertex.x, vertex.y, dirX, dirY);
+    if (projection > bestProjection) {
+      bestProjection = projection;
+      bestVertex = vertex;
+    }
+  });
+  return bestVertex;
+};
+
+const getObbCollisionData = (a, b) => {
+  const aVertices = getObbVertices(a.centerX, a.centerY, a.width, a.height, a.angle);
+  const bVertices = getObbVertices(b.centerX, b.centerY, b.width, b.height, b.angle);
+  const aAxisX = rotateVector(1, 0, a.angle);
+  const aAxisY = rotateVector(0, 1, a.angle);
+  const bAxisX = rotateVector(1, 0, b.angle);
+  const bAxisY = rotateVector(0, 1, b.angle);
+  const axes = [aAxisX, aAxisY, bAxisX, bAxisY];
+
+  let minOverlap = Number.POSITIVE_INFINITY;
+  let normalX = 0;
+  let normalY = 0;
+
+  for (const axis of axes) {
+    const normal = normalizeVector(axis.x, axis.y);
+    const aProjection = projectVerticesOntoAxis(aVertices, normal.x, normal.y);
+    const bProjection = projectVerticesOntoAxis(bVertices, normal.x, normal.y);
+    const overlap = Math.min(aProjection.max, bProjection.max) - Math.max(aProjection.min, bProjection.min);
+    if (overlap <= 0) return null;
+    if (overlap < minOverlap) {
+      minOverlap = overlap;
+      normalX = normal.x;
+      normalY = normal.y;
+    }
+  }
+
+  const deltaX = b.centerX - a.centerX;
+  const deltaY = b.centerY - a.centerY;
+  if (dotProduct(deltaX, deltaY, normalX, normalY) < 0) {
+    normalX *= -1;
+    normalY *= -1;
+  }
+
+  const supportA = getSupportPoint(aVertices, normalX, normalY);
+  const supportB = getSupportPoint(bVertices, -normalX, -normalY);
+
+  return {
+    depth: minOverlap,
+    normalX,
+    normalY,
+    contactX: (supportA.x + supportB.x) / 2,
+    contactY: (supportA.y + supportB.y) / 2,
+  };
+};
+
+const getPlaygroundPairKey = (a, b) => (a < b ? `${a}::${b}` : `${b}::${a}`);
 
 /* ---------- Language detection + syntax highlighting ---------- */
 const INITIAL_CODE = `Write here!`;
@@ -170,7 +292,9 @@ export default function ModernHome() {
   const logoClickTimer = useRef(null);
   const playgroundNodesRef = useRef({});
   const playgroundBodiesRef = useRef({});
+  const playgroundContactCacheRef = useRef(new Map());
   const playgroundDragRef = useRef(null);
+  const playgroundSuppressedClickRef = useRef({});
   const playgroundHudRef = useRef(null);
   const playgroundHudDragStateRef = useRef(null);
   const playgroundHudPositionRef = useRef(null);
@@ -806,6 +930,110 @@ export default function ModernHome() {
       ].includes(id);
   }, []);
 
+  const applyPlaygroundBodyMaterial = useCallback((id, body) => {
+    if (!body) return body;
+    const isSpawn = id?.startsWith('spawn-');
+    const isCrate = id?.startsWith('crate-');
+    const defaultWidth = isSpawn ? 132 : isCrate ? 100 : 220;
+    const defaultHeight = isSpawn ? 78 : isCrate ? 92 : 140;
+    body.width = body.width || defaultWidth;
+    body.height = body.height || defaultHeight;
+    body.materialType = body.materialType || (isSpawn ? 'toy' : isCrate ? 'crate' : 'card');
+    body.density = body.density ?? (isSpawn ? 0.62 : isCrate ? 2.4 : 1.28);
+    body.restitution = body.restitution ?? (isSpawn ? 0.62 : isCrate ? 0.1 : 0.24);
+    body.surfaceFriction = body.surfaceFriction ?? (isSpawn ? 0.18 : isCrate ? 0.82 : 0.46);
+    body.linearDamping = body.linearDamping ?? (isSpawn ? 0.996 : isCrate ? 0.988 : 0.993);
+    body.angularDamping = body.angularDamping ?? (isSpawn ? 0.992 : isCrate ? 0.976 : 0.985);
+    body.maxSpeed = body.maxSpeed ?? (isSpawn ? 46 : isCrate ? 18 : 30);
+    body.throwBoost = body.throwBoost ?? (isSpawn ? 1.28 : isCrate ? 0.72 : 1.06);
+    body.impactBoost = body.impactBoost ?? (isSpawn ? 1.22 : isCrate ? 0.84 : 1.02);
+    body.impactSpinBoost = body.impactSpinBoost ?? (isSpawn ? 1.35 : isCrate ? 0.55 : 0.94);
+    body.impactBurstScale = body.impactBurstScale ?? (isSpawn ? 1.2 : isCrate ? 1.45 : 1.05);
+    body.fixed = body.fixed ?? (isSpawn || isCrate);
+    body.baseX = body.baseX ?? 0;
+    body.baseY = body.baseY ?? 0;
+    body.sleepFrames = body.sleepFrames ?? 0;
+    body.sleeping = body.sleeping ?? false;
+    const area = Math.max(body.width * body.height, 1);
+    const computedMass = (area / 20000) * body.density;
+    body.mass = isSpawn
+      ? clampNumber(computedMass, 0.42, 1.12)
+      : isCrate
+        ? clampNumber(computedMass, 3.8, 7.2)
+        : clampNumber(computedMass, 1.8, 4.4);
+    body.invMass = body.mass > 0 ? 1 / body.mass : 0;
+    body.inertia = Math.max((body.mass * ((body.width * body.width) + (body.height * body.height))) / 120000, 0.02);
+    body.invInertia = body.inertia > 0 ? 1 / body.inertia : 0;
+    return body;
+  }, []);
+
+  const createPlaygroundBody = useCallback((id, overrides = {}) => {
+    const body = {
+      x: 0,
+      y: 0,
+      vx: 0,
+      vy: 0,
+      angle: 0,
+      spin: 0,
+      pinned: false,
+      orbit: false,
+      orbitAngle: Math.random() * Math.PI * 2,
+      orbitRadius: 90 + Math.random() * 110,
+      escapeArmed: false,
+      ...overrides,
+    };
+    return applyPlaygroundBodyMaterial(id, body);
+  }, [applyPlaygroundBodyMaterial]);
+
+  const syncPlaygroundBodyNodeMetrics = useCallback((id, node, body = playgroundBodiesRef.current[id]) => {
+    if (!body || !node || typeof window === 'undefined') return body;
+    const rect = node.getBoundingClientRect();
+    body.width = node.offsetWidth || rect.width || body.width || 1;
+    body.height = node.offsetHeight || rect.height || body.height || 1;
+    if (id.startsWith('spawn-')) {
+      body.fixed = true;
+      body.baseX = 0;
+      body.baseY = 0;
+    } else if (id.startsWith('crate-')) {
+      body.fixed = true;
+      body.baseX = rect.left - body.x;
+      body.baseY = rect.top - body.y;
+    } else {
+      body.fixed = false;
+      body.baseX = rect.left + window.scrollX - body.x;
+      body.baseY = rect.top + window.scrollY - body.y;
+    }
+    body.sleeping = false;
+    body.sleepFrames = 0;
+    return applyPlaygroundBodyMaterial(id, body);
+  }, [applyPlaygroundBodyMaterial]);
+
+  const getPlaygroundBodyViewportRect = useCallback((body) => {
+    const scrollX = typeof window === 'undefined' ? 0 : window.scrollX;
+    const scrollY = typeof window === 'undefined' ? 0 : window.scrollY;
+    const baseLeft = body.fixed ? body.baseX : body.baseX - scrollX;
+    const baseTop = body.fixed ? body.baseY : body.baseY - scrollY;
+    const left = baseLeft + body.x;
+    const top = baseTop + body.y;
+    return {
+      left,
+      top,
+      width: body.width,
+      height: body.height,
+      centerX: left + body.width / 2,
+      centerY: top + body.height / 2,
+    };
+  }, []);
+
+  const getPlaygroundBodyViewportPoint = useCallback((body, localX = 0, localY = 0) => {
+    const rect = getPlaygroundBodyViewportRect(body);
+    const rotated = rotateVector(localX, localY, body.angle);
+    return {
+      x: rect.centerX + rotated.x,
+      y: rect.centerY + rotated.y,
+    };
+  }, [getPlaygroundBodyViewportRect]);
+
   const registerPlaygroundNode = useCallback((id, node) => {
     if (!id) return;
     if (!node) {
@@ -821,20 +1049,10 @@ export default function ModernHome() {
       node.style.transition = '';
     }
     if (!playgroundBodiesRef.current[id]) {
-      playgroundBodiesRef.current[id] = {
-        x: 0,
-        y: 0,
-        vx: 0,
-        vy: 0,
-        angle: 0,
-        spin: 0,
-        pinned: false,
-        orbit: false,
-        orbitAngle: Math.random() * Math.PI * 2,
-        orbitRadius: 90 + Math.random() * 110,
-      };
+      playgroundBodiesRef.current[id] = createPlaygroundBody(id);
     }
-  }, [playgroundMode]);
+    syncPlaygroundBodyNodeMetrics(id, node, playgroundBodiesRef.current[id]);
+  }, [createPlaygroundBody, playgroundMode, syncPlaygroundBodyNodeMetrics]);
 
   const syncPlaygroundMeta = useCallback(() => {
     const bodies = Object.entries(playgroundBodiesRef.current).filter(([id]) => isPlaygroundItemId(id));
@@ -850,6 +1068,8 @@ export default function ModernHome() {
 
   const resetPlaygroundLayout = useCallback(({ clearSpawns = false } = {}) => {
     playgroundDragRef.current = null;
+    playgroundSuppressedClickRef.current = {};
+    playgroundContactCacheRef.current.clear();
     Object.entries(playgroundBodiesRef.current).forEach(([id, body]) => {
       if (!body) return;
       if (clearSpawns && id.startsWith('spawn-')) {
@@ -864,6 +1084,9 @@ export default function ModernHome() {
       body.spin = 0;
       body.pinned = false;
       body.orbit = false;
+      body.escapeArmed = false;
+      body.sleeping = false;
+      body.sleepFrames = 0;
     });
     Object.values(playgroundNodesRef.current).forEach((node) => {
       if (!node) return;
@@ -901,6 +1124,7 @@ export default function ModernHome() {
     playgroundSpawnIdRef.current = 0;
     playgroundBurstIdRef.current = 0;
     playgroundCollisionGateRef.current = 0;
+    playgroundContactCacheRef.current.clear();
     playgroundLastCollectRef.current = 0;
     if (playgroundComboResetRef.current) clearTimeout(playgroundComboResetRef.current);
     if (playgroundForceTimeoutRef.current) clearTimeout(playgroundForceTimeoutRef.current);
@@ -1086,6 +1310,7 @@ export default function ModernHome() {
   const despawnPlaygroundToy = useCallback((id) => {
     delete playgroundBodiesRef.current[id];
     delete playgroundNodesRef.current[id];
+    delete playgroundSuppressedClickRef.current[id];
     setPlaygroundSpawns(prev => prev.filter((item) => item.id !== id));
   }, []);
 
@@ -1108,6 +1333,11 @@ export default function ModernHome() {
       orbit: false,
       orbitAngle: Math.random() * Math.PI * 2,
       orbitRadius: 90 + Math.random() * 110,
+      fixed: true,
+      baseX: 0,
+      baseY: 0,
+      width: 132,
+      height: 78,
       escapeArmed: false,
     };
     setPlaygroundSpawns(prev => {
@@ -1122,7 +1352,8 @@ export default function ModernHome() {
     setPlaygroundStats(prev => ({ ...prev, spawns: prev.spawns + 1 }));
     spawnImpactBurst(x, y, 1.1);
     playPlaygroundSound('spawn');
-  }, [collection, playPlaygroundSound, spawnImpactBurst]);
+    applyPlaygroundBodyMaterial(id, playgroundBodiesRef.current[id]);
+  }, [applyPlaygroundBodyMaterial, collection, playPlaygroundSound, spawnImpactBurst]);
 
   /* ─── Crate system ─── */
   const spawnCrate = useCallback(() => {
@@ -1134,15 +1365,23 @@ export default function ModernHome() {
     const x = 80 + Math.random() * (window.innerWidth - 160);
     const y = 80 + Math.random() * (window.innerHeight * 0.6);
     // Register physics body for the crate
-    playgroundBodiesRef.current[id] = {
-      x: 0, y: 0,
+    playgroundBodiesRef.current[id] = createPlaygroundBody(id, {
+      x: 0,
+      y: 0,
       vx: (Math.random() - 0.5) * 2,
       vy: 0.3 + Math.random() * 0.5,
       angle: 0,
       spin: (Math.random() - 0.5) * 0.04,
-      pinned: false, orbit: false,
-      orbitAngle: 0, orbitRadius: 0,
-    };
+      pinned: false,
+      orbit: false,
+      orbitAngle: 0,
+      orbitRadius: 0,
+      fixed: true,
+      baseX: x,
+      baseY: y,
+      width: 100,
+      height: 92,
+    });
     setPlaygroundCrates(prev => {
       const next = [...prev, { id, x, y, modifier, spawnedAt: Date.now() }];
       // Max 3 crates at a time
@@ -1154,7 +1393,7 @@ export default function ModernHome() {
       return next;
     });
     playPlaygroundSound('crate_spawn');
-  }, [playPlaygroundSound]);
+  }, [createPlaygroundBody, playPlaygroundSound]);
 
   const activateModifier = useCallback((modifier, crateId) => {
     // Remove the crate
@@ -1242,14 +1481,12 @@ export default function ModernHome() {
   const sendNearestItemToOrbit = useCallback((x, y) => {
     let nearest = null;
     let nearestDist = Number.POSITIVE_INFINITY;
-    Object.entries(playgroundNodesRef.current).forEach(([id, node]) => {
-      if (!node || !node.isConnected || id.startsWith('spawn-') || !isPlaygroundItemId(id)) return;
-      const rect = node.getBoundingClientRect();
-      const cx = rect.left + rect.width / 2;
-      const cy = rect.top + rect.height / 2;
-      const distance = Math.hypot(cx - x, cy - y);
+    Object.entries(playgroundBodiesRef.current).forEach(([id, body]) => {
+      if (!body || id.startsWith('spawn-') || !isPlaygroundItemId(id)) return;
+      const center = getPlaygroundBodyViewportRect(body);
+      const distance = Math.hypot(center.centerX - x, center.centerY - y);
       if (distance < nearestDist) {
-        nearest = { id, cx, cy };
+        nearest = { id, cx: center.centerX, cy: center.centerY };
         nearestDist = distance;
       }
     });
@@ -1265,11 +1502,31 @@ export default function ModernHome() {
     body.orbitRadius = Math.max(110, Math.min(230, Math.hypot(nearest.cx - coreX, nearest.cy - coreY)));
     body.orbitAngle = Math.atan2(nearest.cy - coreY, nearest.cx - coreX);
     body.spin = 0.03;
+    body.sleeping = false;
+    body.sleepFrames = 0;
     syncPlaygroundMeta();
-  }, [isPlaygroundItemId, syncPlaygroundMeta]);
+  }, [getPlaygroundBodyViewportRect, isPlaygroundItemId, syncPlaygroundMeta]);
+
+  const suppressPlaygroundClick = useCallback((id) => {
+    playgroundSuppressedClickRef.current[id] = Date.now() + 320;
+  }, []);
+
+  const consumeSuppressedPlaygroundClick = useCallback((id) => {
+    const suppressedUntil = playgroundSuppressedClickRef.current[id];
+    if (!suppressedUntil) return false;
+    delete playgroundSuppressedClickRef.current[id];
+    return suppressedUntil > Date.now();
+  }, []);
 
   const collectPlaygroundToy = useCallback((id, event) => {
     if (!playgroundMode || playgroundOrbitMode) return;
+    if (consumeSuppressedPlaygroundClick(id)) {
+      if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+      return;
+    }
     const spawn = playgroundSpawns.find((item) => item.id === id);
     if (!spawn) return;
     if (event) {
@@ -1277,13 +1534,12 @@ export default function ModernHome() {
       event.stopPropagation();
     }
     const node = playgroundNodesRef.current[id];
-    const rect = node?.getBoundingClientRect();
-    const centerX = rect ? rect.left + rect.width / 2 : window.innerWidth / 2;
-    const centerY = rect ? rect.top + rect.height / 2 : window.innerHeight / 2;
+    const body = playgroundBodiesRef.current[id];
+    const rect = body ? getPlaygroundBodyViewportRect(body) : null;
+    const centerX = rect ? rect.centerX : window.innerWidth / 2;
+    const centerY = rect ? rect.centerY : window.innerHeight / 2;
 
-    delete playgroundBodiesRef.current[id];
-    delete playgroundNodesRef.current[id];
-    setPlaygroundSpawns(prev => prev.filter((item) => item.id !== id));
+    despawnPlaygroundToy(id);
 
     const now = Date.now();
     const nextCombo = now - playgroundLastCollectRef.current < 2200 ? playgroundCombo + 1 : 1;
@@ -1342,7 +1598,7 @@ export default function ModernHome() {
       setMythicCinematic(mythicResult);
       setTimeout(() => setMythicCinematic(false), mythicResult === 'transcendent' ? 5000 : 3500);
     }
-  }, [collection, playPlaygroundSound, playgroundCombo, playgroundMode, playgroundOrbitMode, playgroundScore, playgroundSpawns, sendNearestItemToOrbit, spawnImpactBurst, spawnPlaygroundToy, speedrun, voidDim]);
+  }, [collection, consumeSuppressedPlaygroundClick, despawnPlaygroundToy, getPlaygroundBodyViewportRect, playPlaygroundSound, playgroundCombo, playgroundMode, playgroundOrbitMode, playgroundScore, playgroundSpawns, sendNearestItemToOrbit, spawnImpactBurst, spawnPlaygroundToy, speedrun, voidDim]);
 
   const togglePlaygroundPin = useCallback((id, event) => {
     if (!playgroundMode || !isPlaygroundItemId(id)) return;
@@ -1362,6 +1618,8 @@ export default function ModernHome() {
       body.vx += (Math.random() - 0.5) * 1;
       body.vy -= 0.5;
     }
+    body.sleeping = false;
+    body.sleepFrames = 0;
     collection.onPinToggle(id);
     if (body.pinned) speedrun.updateProgress('pins', 1);
     syncPlaygroundMeta();
@@ -1374,28 +1632,34 @@ export default function ModernHome() {
       event.stopPropagation();
     }
     const body = playgroundBodiesRef.current[id];
-    const node = playgroundNodesRef.current[id];
-    if (!body || !node) return false;
-    const rect = node.getBoundingClientRect();
+    if (!body) return false;
+    const rect = getPlaygroundBodyViewportRect(body);
     const coreX = window.innerWidth / 2;
     const coreY = window.innerHeight * 0.35;
     body.orbit = !body.orbit;
     body.pinned = false;
     if (body.orbit) {
-      body.orbitRadius = Math.max(100, Math.min(220, Math.hypot((rect.left + rect.width / 2) - coreX, (rect.top + rect.height / 2) - coreY)));
-      body.orbitAngle = Math.atan2((rect.top + rect.height / 2) - coreY, (rect.left + rect.width / 2) - coreX);
+      body.orbitRadius = Math.max(100, Math.min(220, Math.hypot(rect.centerX - coreX, rect.centerY - coreY)));
+      body.orbitAngle = Math.atan2(rect.centerY - coreY, rect.centerX - coreX);
       body.vx = 0;
       body.vy = 0;
       body.spin = 0.008 + Math.random() * 0.012;
     }
+    body.sleeping = false;
+    body.sleepFrames = 0;
     syncPlaygroundMeta();
     return true;
-  }, [isPlaygroundItemId, playgroundMode, syncPlaygroundMeta]);
+  }, [getPlaygroundBodyViewportRect, isPlaygroundItemId, playgroundMode, syncPlaygroundMeta]);
 
   const handlePlaygroundItemCapture = useCallback((id, event) => {
+    if (consumeSuppressedPlaygroundClick(id)) {
+      event.preventDefault();
+      event.stopPropagation();
+      return;
+    }
     if (!playgroundMode || !playgroundOrbitMode) return;
     togglePlaygroundOrbit(id, event);
-  }, [playgroundMode, playgroundOrbitMode, togglePlaygroundOrbit]);
+  }, [consumeSuppressedPlaygroundClick, playgroundMode, playgroundOrbitMode, togglePlaygroundOrbit]);
 
   /* Playground mode - triple-click logo */
   const handleLogoClick = useCallback(() => {
@@ -1472,32 +1736,34 @@ export default function ModernHome() {
     body.pinned = false;
     body.orbit = false;
     body.escapeArmed = false;
+    body.sleeping = false;
+    body.sleepFrames = 0;
     body.vx = 0;
     body.vy = 0;
     body.spin = 0;
     event.currentTarget.style.transition = 'none';
-    const rect = event.currentTarget.getBoundingClientRect();
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
-    const offsetX = point.clientX - centerX;
-    const offsetY = point.clientY - centerY;
+    const rect = getPlaygroundBodyViewportRect(body);
+    const offsetX = point.clientX - rect.centerX;
+    const offsetY = point.clientY - rect.centerY;
+    const localOffset = rotateVector(offsetX, offsetY, -body.angle);
     playgroundDragRef.current = {
       id,
-      lastX: point.clientX,
-      lastY: point.clientY,
-      lastT: performance.now(),
       startX: point.clientX,
       startY: point.clientY,
       engaged: false,
       grabRadius: Math.max(Math.hypot(offsetX, offsetY), 18),
-      grabLocalAngle: Math.atan2(offsetY, offsetX) - body.angle,
+      grabLocalX: localOffset.x,
+      grabLocalY: localOffset.y,
       lastAngularVelocity: 0,
+      releaseVx: 0,
+      releaseVy: 0,
+      releaseSpin: 0,
     };
     // Disable touch scrolling only on the actively dragged element
     event.currentTarget.style.touchAction = 'none';
     syncPlaygroundMeta();
     event.preventDefault();
-  }, [isPlaygroundItemId, playgroundMode, playgroundOrbitMode, registerPlaygroundNode, syncPlaygroundMeta]);
+  }, [getPlaygroundBodyViewportRect, isPlaygroundItemId, playgroundMode, playgroundOrbitMode, registerPlaygroundNode, syncPlaygroundMeta]);
 
   // Ghost hint progression — advance contextual hints based on actions
   useEffect(() => {
@@ -1536,27 +1802,8 @@ export default function ModernHome() {
 
   useEffect(() => {
     if (!playgroundMode) return;
-    const onMove = (event) => {
-      // Safety: if no mouse button is held, clear any stale drag
-      if (!event.touches && event.buttons === 0 && playgroundDragRef.current) {
-        const staleDrag = playgroundDragRef.current;
-        const staleBody = playgroundBodiesRef.current[staleDrag.id];
-        const staleNode = playgroundNodesRef.current[staleDrag.id];
-        if (staleBody) {
-          const flingSpeed = Math.hypot(staleBody.vx, staleBody.vy);
-          if (flingSpeed > PLAYGROUND_MAX_FLING_SPEED) {
-            staleBody.vx *= PLAYGROUND_MAX_FLING_SPEED / flingSpeed;
-            staleBody.vy *= PLAYGROUND_MAX_FLING_SPEED / flingSpeed;
-          }
-        }
-        if (staleNode) {
-          staleNode.style.touchAction = '';
-          staleNode.style.transition = 'opacity 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease, background-color 0.2s ease, color 0.2s ease';
-        }
-        playgroundDragRef.current = null;
-      }
-      const point = event.touches ? event.touches[0] : event;
-      const now = performance.now();
+    const updatePointerFromEvent = (point, now) => {
+      if (!point) return;
       const pointer = playgroundPointerRef.current;
       if (pointer.lastT) {
         const pointerDt = Math.max((now - pointer.lastT) / 16.67, 0.5);
@@ -1568,83 +1815,91 @@ export default function ModernHome() {
       pointer.lastX = point.clientX;
       pointer.lastY = point.clientY;
       pointer.lastT = now;
+    };
+
+    const finishDrag = (dragState = playgroundDragRef.current) => {
+      if (!dragState) return;
+      const body = playgroundBodiesRef.current[dragState.id];
+      const dragNode = playgroundNodesRef.current[dragState.id];
+      if (body) {
+        body.sleeping = false;
+        body.sleepFrames = 0;
+        if (!dragState.engaged) {
+          body.vx = 0;
+          body.vy = 0;
+          body.spin = 0;
+        } else {
+          const throwBoost = body.throwBoost ?? 1;
+          body.vx = (body.vx * 0.28) + (dragState.releaseVx * PLAYGROUND_POINTER_FLING_BLEND * throwBoost);
+          body.vy = (body.vy * 0.28) + (dragState.releaseVy * PLAYGROUND_POINTER_FLING_BLEND * throwBoost);
+          const maxReleaseSpeed = Math.max(PLAYGROUND_MAX_FLING_SPEED, (body.maxSpeed ?? PLAYGROUND_MAX_TRAVEL_SPEED) * 1.08);
+          const flingSpeed = Math.hypot(body.vx, body.vy);
+          if (flingSpeed > maxReleaseSpeed) {
+            body.vx *= maxReleaseSpeed / flingSpeed;
+            body.vy *= maxReleaseSpeed / flingSpeed;
+          }
+          body.spin = clampNumber(
+            (dragState.lastAngularVelocity || body.spin) * 0.42 + (dragState.releaseSpin || 0) * (0.95 * (body.impactSpinBoost ?? 1)),
+            -PLAYGROUND_MAX_ANGULAR_SPEED,
+            PLAYGROUND_MAX_ANGULAR_SPEED,
+          );
+          body.escapeArmed = dragState.id.startsWith('spawn-')
+            && (Math.hypot(body.vx, body.vy) >= PLAYGROUND_THROWAWAY_SPEED || Math.abs(body.spin) >= PLAYGROUND_THROWAWAY_SPIN);
+          if (flingSpeed > 5) {
+            setPlaygroundStats(prev => ({ ...prev, launches: prev.launches + 1 }));
+          }
+          suppressPlaygroundClick(dragState.id);
+        }
+      }
+      if (dragNode) {
+        dragNode.style.touchAction = '';
+        dragNode.style.transition = 'opacity 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease, background-color 0.2s ease, color 0.2s ease';
+      }
+      playgroundDragRef.current = null;
+    };
+
+    const onMove = (event) => {
+      const point = event.touches ? event.touches[0] : event;
+      if (!point) return;
+      const now = performance.now();
+      updatePointerFromEvent(point, now);
 
       const drag = playgroundDragRef.current;
       if (!drag) return;
+      if (!event.touches && event.buttons === 0) {
+        finishDrag(drag);
+        return;
+      }
       // Require minimum 4px movement before engaging drag (prevents click-fling)
       if (!drag.engaged) {
         if (Math.hypot(point.clientX - drag.startX, point.clientY - drag.startY) < 4) return;
         drag.engaged = true;
       }
       const body = playgroundBodiesRef.current[drag.id];
-      const dragNode = playgroundNodesRef.current[drag.id];
       if (!body) return;
-      const dragDt = Math.max((now - drag.lastT) / 16.67, 0.5);
-      const dx = point.clientX - drag.lastX;
-      const dy = point.clientY - drag.lastY;
-      const rect = dragNode?.getBoundingClientRect();
-      const centerX = rect ? rect.left + rect.width / 2 : point.clientX;
-      const centerY = rect ? rect.top + rect.height / 2 : point.clientY;
-      const radialX = point.clientX - centerX;
-      const radialY = point.clientY - centerY;
+      body.sleeping = false;
+      body.sleepFrames = 0;
+      drag.lastAngularVelocity = body.spin;
+      drag.releaseVx = playgroundPointerRef.current.vx;
+      drag.releaseVy = playgroundPointerRef.current.vy;
+      const rect = getPlaygroundBodyViewportRect(body);
+      const radialX = point.clientX - rect.centerX;
+      const radialY = point.clientY - rect.centerY;
       const radialDist = Math.max(Math.hypot(radialX, radialY), 1);
       const tangentX = -radialY / radialDist;
       const tangentY = radialX / radialDist;
-      const tangentialMove = (dx * tangentX) + (dy * tangentY);
-      const angularVelocity = tangentialMove / Math.max(drag.grabRadius, 18);
-      body.angle += angularVelocity;
-      body.spin = angularVelocity / dragDt;
-      drag.lastAngularVelocity = body.spin;
-      const worldGrabAngle = body.angle + drag.grabLocalAngle;
-      const desiredCenterX = point.clientX - Math.cos(worldGrabAngle) * drag.grabRadius;
-      const desiredCenterY = point.clientY - Math.sin(worldGrabAngle) * drag.grabRadius;
-      body.x += desiredCenterX - centerX;
-      body.y += desiredCenterY - centerY;
-      body.vx = dx / dragDt;
-      body.vy = dy / dragDt;
-      if (dragNode) {
-        dragNode.style.transform = `translate3d(${body.x}px, ${body.y}px, 0) rotate(${body.angle}rad) scale(1.03)`;
-        dragNode.style.zIndex = '90';
-        dragNode.style.cursor = 'grabbing';
-        dragNode.style.boxShadow = '';
-        dragNode.style.filter = '';
-      }
-      drag.lastX = point.clientX;
-      drag.lastY = point.clientY;
-      drag.lastT = now;
+      drag.releaseSpin = ((playgroundPointerRef.current.vx * tangentX) + (playgroundPointerRef.current.vy * tangentY)) / Math.max(drag.grabRadius, 18);
       if (event.cancelable) event.preventDefault();
     };
-    const onUp = () => {
+    const onUp = (event) => {
+      const point = event.changedTouches ? event.changedTouches[0] : event;
+      if (point) updatePointerFromEvent(point, performance.now());
       const drag = playgroundDragRef.current;
-      if (!drag) return;
-      const body = playgroundBodiesRef.current[drag.id];
-      if (body) {
-        if (!drag.engaged) {
-          // Click without drag — don't fling
-          body.vx = 0;
-          body.vy = 0;
-          body.spin = 0;
-        } else {
-          // Cap fling velocity so items don't fly uncontrollably
-          const flingSpeed = Math.hypot(body.vx, body.vy);
-          if (flingSpeed > PLAYGROUND_MAX_FLING_SPEED) {
-            body.vx *= PLAYGROUND_MAX_FLING_SPEED / flingSpeed;
-            body.vy *= PLAYGROUND_MAX_FLING_SPEED / flingSpeed;
-          }
-          body.spin = Math.max(-0.35, Math.min(0.35, drag.lastAngularVelocity || body.spin));
-          body.escapeArmed = drag.id.startsWith('spawn-') && (Math.hypot(body.vx, body.vy) >= PLAYGROUND_THROWAWAY_SPEED || Math.abs(body.spin) >= PLAYGROUND_THROWAWAY_SPIN);
-          if (flingSpeed > 5) {
-            setPlaygroundStats(prev => ({ ...prev, launches: prev.launches + 1 }));
-          }
-        }
+      if (drag) {
+        drag.releaseVx = playgroundPointerRef.current.vx;
+        drag.releaseVy = playgroundPointerRef.current.vy;
       }
-      // Restore touch scrolling on the released element
-      const dragNode = playgroundNodesRef.current[drag.id];
-      if (dragNode) {
-        dragNode.style.touchAction = '';
-        dragNode.style.transition = 'opacity 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease, background-color 0.2s ease, color 0.2s ease';
-      }
-      playgroundDragRef.current = null;
+      finishDrag();
     };
     const onKeyDown = (event) => {
       const tag = document.activeElement?.tagName;
@@ -1683,7 +1938,7 @@ export default function ModernHome() {
       window.removeEventListener('keydown', onKeyDown);
       window.removeEventListener('keyup', onKeyUp);
     };
-  }, [playgroundMode]);
+  }, [getPlaygroundBodyViewportRect, playgroundMode, suppressPlaygroundClick]);
 
   useEffect(() => {
     if (!playgroundMode) {
@@ -1703,116 +1958,116 @@ export default function ModernHome() {
       const coreY = window.innerHeight * 0.35;
       const bodies = Object.entries(playgroundNodesRef.current)
         .filter(([id, node]) => node && node.isConnected && (isPlaygroundItemId(id) || id.startsWith('crate-')))
-        .map(([id, node]) => ({
-          id,
-          node,
-          rect: node.getBoundingClientRect(),
-          body: playgroundBodiesRef.current[id] ?? (playgroundBodiesRef.current[id] = {
-            x: 0,
-            y: 0,
-            vx: 0,
-            vy: 0,
-            angle: 0,
-            spin: 0,
-            pinned: false,
-            orbit: false,
-            orbitAngle: Math.random() * Math.PI * 2,
-            orbitRadius: 90 + Math.random() * 110,
-          }),
-        }));
+        .map(([id, node]) => {
+          const body = playgroundBodiesRef.current[id] ?? (playgroundBodiesRef.current[id] = createPlaygroundBody(id));
+          if (!body.width || !body.height || (!body.fixed && (body.baseX === undefined || body.baseY === undefined))) {
+            syncPlaygroundBodyNodeMetrics(id, node, body);
+          }
+          return { id, node, body };
+        });
 
       if (dt > 0) {
         bodies.forEach((item) => {
-          const { id, rect, body } = item;
+          const { id, body } = item;
           const dragging = draggedId === id;
-          const inViewport = rect.bottom > -180 && rect.top < window.innerHeight + 180 && rect.right > -180 && rect.left < window.innerWidth + 180;
-          const activeBody = dragging || body.orbit || body.pinned || id.startsWith('spawn-') || Math.abs(body.x) > 0.5 || Math.abs(body.y) > 0.5 || Math.abs(body.vx) > 0.05 || Math.abs(body.vy) > 0.05 || Math.abs(body.angle) > 0.01 || Math.abs(body.spin) > 0.001;
-          item.deltaX = 0;
-          item.deltaY = 0;
-          item.inViewport = inViewport;
-          item.activeBody = activeBody;
+          const rect = getPlaygroundBodyViewportRect(body);
+          const radius = Math.hypot(body.width, body.height) / 2;
+          const inViewport = rect.centerX + radius > -220
+            && rect.centerX - radius < window.innerWidth + 220
+            && rect.centerY + radius > -220
+            && rect.centerY - radius < window.innerHeight + 220;
 
-          if (dragging) return;
-          if (!inViewport && !activeBody) return;
+          if (!inViewport && body.sleeping && !dragging && !body.orbit && !body.pinned) return;
 
           if (body.orbit) {
             body.orbitAngle += 0.012 * dt;
-            const cx = rect.left + rect.width / 2;
-            const cy = rect.top + rect.height / 2;
             const targetX = coreX + Math.cos(body.orbitAngle) * body.orbitRadius;
             const targetY = coreY + Math.sin(body.orbitAngle) * (body.orbitRadius * 0.55);
-            body.vx = (targetX - cx) * 0.16;
-            body.vy = (targetY - cy) * 0.16;
-            item.deltaX = body.vx * dt;
-            item.deltaY = body.vy * dt;
-            body.x += item.deltaX;
-            body.y += item.deltaY;
+            body.vx = (targetX - rect.centerX) * 0.16;
+            body.vy = (targetY - rect.centerY) * 0.16;
+            body.x += body.vx * dt;
+            body.y += body.vy * dt;
             body.angle += 0.012 * dt;
+            body.sleeping = false;
+            body.sleepFrames = 0;
             return;
           }
 
-          if (body.pinned) return;
+          if (!body.pinned) {
+            if (playgroundGravityMode === 'down') body.vy += 0.16 * dt;
+            if (playgroundGravityMode === 'reverse') body.vy -= 0.16 * dt;
+            if (hasMod('gravity_flip')) body.vy -= 0.32 * dt;
 
-          if (playgroundGravityMode === 'down') body.vy += 0.16 * dt;
-          if (playgroundGravityMode === 'reverse') body.vy -= 0.16 * dt;
-          // Crate modifier: gravity flip
-          if (hasMod('gravity_flip')) body.vy -= 0.32 * dt;
-
-          if (playgroundForceMode !== 'none' || hasMod('magnet_pulse')) {
-            const forceOriginX = playgroundPointerRef.current.x || coreX;
-            const forceOriginY = playgroundPointerRef.current.y || coreY;
-            const dx = forceOriginX - (rect.left + rect.width / 2);
-            const dy = forceOriginY - (rect.top + rect.height / 2);
-            const dist = Math.max(Math.hypot(dx, dy), 1);
-            if (dist < 600) {
-              const direction = (playgroundForceMode === 'magnet' || hasMod('magnet_pulse')) ? 1 : -1;
-              const force = (1 - dist / 600) * 0.65 * dt * (hasMod('magnet_pulse') ? 1.6 : 1);
-              body.vx += direction * (dx / dist) * force;
-              body.vy += direction * (dy / dist) * force;
+            if (playgroundForceMode !== 'none' || hasMod('magnet_pulse')) {
+              const forceOriginX = playgroundPointerRef.current.x || coreX;
+              const forceOriginY = playgroundPointerRef.current.y || coreY;
+              const dx = forceOriginX - rect.centerX;
+              const dy = forceOriginY - rect.centerY;
+              const dist = Math.max(Math.hypot(dx, dy), 1);
+              if (dist < 600) {
+                const direction = (playgroundForceMode === 'magnet' || hasMod('magnet_pulse')) ? 1 : -1;
+                const force = (1 - dist / 600) * 0.65 * dt * (hasMod('magnet_pulse') ? 1.6 : 1);
+                body.vx += direction * (dx / dist) * force;
+                body.vy += direction * (dy / dist) * force;
+              }
             }
+
+            if (weatherMods?.gravityPulse) body.vy += weatherMods.gravityPulse * dt;
+            if (weatherMods?.solarDrift) body.vy += weatherMods.solarDrift * dt;
+
+            if (dragging && playgroundDragRef.current?.engaged) {
+              const drag = playgroundDragRef.current;
+              const grabPoint = getPlaygroundBodyViewportPoint(body, drag.grabLocalX, drag.grabLocalY);
+              const rX = grabPoint.x - rect.centerX;
+              const rY = grabPoint.y - rect.centerY;
+              const pointVelX = body.vx - body.spin * rY;
+              const pointVelY = body.vy + body.spin * rX;
+              const errorX = playgroundPointerRef.current.x - grabPoint.x;
+              const errorY = playgroundPointerRef.current.y - grabPoint.y;
+              const targetVelX = playgroundPointerRef.current.vx + errorX * PLAYGROUND_DRAG_STIFFNESS;
+              const targetVelY = playgroundPointerRef.current.vy + errorY * PLAYGROUND_DRAG_STIFFNESS;
+              const correctionX = (targetVelX - pointVelX) * PLAYGROUND_DRAG_DAMPING * dt;
+              const correctionY = (targetVelY - pointVelY) * PLAYGROUND_DRAG_DAMPING * dt;
+              body.vx += correctionX;
+              body.vy += correctionY;
+              body.spin += crossProduct(rX, rY, correctionX, correctionY) * body.invInertia * PLAYGROUND_DRAG_TORQUE;
+              body.sleeping = false;
+              body.sleepFrames = 0;
+            }
+
+            const damping = (hasMod('zero_friction') ? Math.min(body.linearDamping + 0.006, 0.9985) : body.linearDamping) * (weatherMods?.frictionMul ?? 1);
+            body.vx *= Math.pow(damping, dt);
+            body.vy *= Math.pow(damping, dt);
+            body.spin *= Math.pow(body.angularDamping, dt);
+            if (hasMod('hyper_spin')) body.spin += (Math.random() - 0.5) * 0.04 * dt;
+
+            const speed = Math.hypot(body.vx, body.vy);
+            const maxSpeed = body.maxSpeed ?? PLAYGROUND_MAX_TRAVEL_SPEED;
+            if (speed > maxSpeed) {
+              body.vx *= maxSpeed / speed;
+              body.vy *= maxSpeed / speed;
+            }
+            body.spin = clampNumber(body.spin, -PLAYGROUND_MAX_ANGULAR_SPEED, PLAYGROUND_MAX_ANGULAR_SPEED);
+
+            if (Math.abs(body.vx) < 0.01) body.vx = 0;
+            if (Math.abs(body.vy) < 0.01) body.vy = 0;
+            if (Math.abs(body.spin) < 0.00015) body.spin = 0;
+
+            body.x += body.vx * dt;
+            body.y += body.vy * dt;
+            body.angle += body.spin * dt;
           }
 
-          const frictionBase = hasMod('zero_friction') ? 0.998 : 0.97;
-          body.vx *= Math.pow(frictionBase * (weatherMods?.frictionMul ?? 1), dt);
-          body.vy *= Math.pow(frictionBase * (weatherMods?.frictionMul ?? 1), dt);
-          body.spin *= Math.pow(0.96, dt);
-          // Crate modifier: hyper spin
-          if (hasMod('hyper_spin')) body.spin += (Math.random() - 0.5) * 0.04 * dt;
-
-          // Weather gravity pulse + solar drift
-          if (weatherMods?.gravityPulse) body.vy += weatherMods.gravityPulse * dt;
-          if (weatherMods?.solarDrift) body.vy += weatherMods.solarDrift * dt;
-
-          // Velocity cap
-          const speed = Math.hypot(body.vx, body.vy);
-          if (speed > PLAYGROUND_MAX_TRAVEL_SPEED) {
-            body.vx *= PLAYGROUND_MAX_TRAVEL_SPEED / speed;
-            body.vy *= PLAYGROUND_MAX_TRAVEL_SPEED / speed;
-          }
-
-          // Settle threshold - snap to zero when nearly stopped
-          if (Math.abs(body.vx) < 0.02) body.vx = 0;
-          if (Math.abs(body.vy) < 0.02) body.vy = 0;
-          if (Math.abs(body.spin) < 0.0003) body.spin = 0;
-
-          item.deltaX = body.vx * dt;
-          item.deltaY = body.vy * dt;
-          body.x += item.deltaX;
-          body.y += item.deltaY;
-          body.angle += body.spin * dt;
-
-          // Wall-bounce ONLY for spawns (position:fixed). Page-flow items scroll
-          // naturally; bounding them to viewport causes teleporting on scroll.
-          const isSpawn = id.startsWith('spawn-') || id.startsWith('crate-');
-          if (isSpawn) {
-            const nextLeft = rect.left + item.deltaX;
-            const nextTop = rect.top + item.deltaY;
+          if (body.fixed) {
+            const nextRect = getPlaygroundBodyViewportRect(body);
+            const nextLeft = nextRect.left;
+            const nextTop = nextRect.top;
             const canEscape = id.startsWith('spawn-') && body.escapeArmed;
-            const escapePaddingX = rect.width * 0.75;
-            const escapePaddingY = rect.height * 0.75;
-            const fullyOutside = nextLeft + rect.width < -escapePaddingX
+            const escapePaddingX = body.width * 0.75;
+            const escapePaddingY = body.height * 0.75;
+            const fullyOutside = nextLeft + body.width < -escapePaddingX
               || nextLeft > window.innerWidth + escapePaddingX
-              || nextTop + rect.height < -escapePaddingY
+              || nextTop + body.height < -escapePaddingY
               || nextTop > window.innerHeight + escapePaddingY;
             if (canEscape && fullyOutside) {
               despawnPlaygroundToy(id);
@@ -1824,13 +2079,17 @@ export default function ModernHome() {
               body.vx = Math.abs(body.vx) * 0.65;
               body.spin += body.vy * 0.003;
               body.escapeArmed = false;
+              body.sleeping = false;
+              body.sleepFrames = 0;
               impacted = true;
             }
-            if (!(canEscape && nextLeft + rect.width > window.innerWidth - 12 && body.vx > 0) && nextLeft + rect.width > window.innerWidth - 12) {
-              body.x -= (nextLeft + rect.width) - (window.innerWidth - 12);
+            if (!(canEscape && nextLeft + body.width > window.innerWidth - 12 && body.vx > 0) && nextLeft + body.width > window.innerWidth - 12) {
+              body.x -= (nextLeft + body.width) - (window.innerWidth - 12);
               body.vx = -Math.abs(body.vx) * 0.65;
               body.spin -= body.vy * 0.003;
               body.escapeArmed = false;
+              body.sleeping = false;
+              body.sleepFrames = 0;
               impacted = true;
             }
             if (!(canEscape && nextTop < 12 && body.vy < 0) && nextTop < 12) {
@@ -1838,132 +2097,268 @@ export default function ModernHome() {
               body.vy = Math.abs(body.vy) * 0.65;
               body.spin += body.vx * 0.003;
               body.escapeArmed = false;
+              body.sleeping = false;
+              body.sleepFrames = 0;
               impacted = true;
             }
-            if (!(canEscape && nextTop + rect.height > window.innerHeight - 12 && body.vy > 0) && nextTop + rect.height > window.innerHeight - 12) {
-              body.y -= (nextTop + rect.height) - (window.innerHeight - 12);
+            if (!(canEscape && nextTop + body.height > window.innerHeight - 12 && body.vy > 0) && nextTop + body.height > window.innerHeight - 12) {
+              body.y -= (nextTop + body.height) - (window.innerHeight - 12);
               body.vy = -Math.abs(body.vy) * 0.65;
               body.spin += body.vx * 0.003;
               body.escapeArmed = false;
+              body.sleeping = false;
+              body.sleepFrames = 0;
               impacted = true;
             }
 
             if (impacted && now - playgroundCollisionGateRef.current > 90) {
               playgroundCollisionGateRef.current = now;
               spawnImpactBurst(
-                Math.min(Math.max(rect.left + rect.width / 2, 24), window.innerWidth - 24),
-                Math.min(Math.max(rect.top + rect.height / 2, 24), window.innerHeight - 24),
+                Math.min(Math.max(nextRect.centerX, 24), window.innerWidth - 24),
+                Math.min(Math.max(nextRect.centerY, 24), window.innerHeight - 24),
                 1,
               );
               playPlaygroundSound('impact');
               setPlaygroundStats(prev => ({ ...prev, collisions: prev.collisions + 1 }));
             }
           }
+
+          if (dragging || body.orbit || body.pinned) {
+            body.sleeping = false;
+            body.sleepFrames = 0;
+          } else if (Math.hypot(body.vx, body.vy) < PLAYGROUND_SLEEP_LINEAR_THRESHOLD && Math.abs(body.spin) < PLAYGROUND_SLEEP_ANGULAR_THRESHOLD) {
+            body.sleepFrames += 1;
+            if (body.sleepFrames >= PLAYGROUND_SLEEP_FRAMES) {
+              body.sleeping = true;
+              body.vx = 0;
+              body.vy = 0;
+              body.spin = 0;
+            }
+          } else {
+            body.sleeping = false;
+            body.sleepFrames = 0;
+          }
         });
 
-        for (let i = 0; i < bodies.length; i++) {
-          for (let j = i + 1; j < bodies.length; j++) {
-            const a = bodies[i];
-            const b = bodies[j];
-            if ((!a.inViewport && !a.activeBody) || (!b.inViewport && !b.activeBody)) continue;
+        const bodyById = new Map();
+        const broadphaseGrid = new Map();
+        const candidatePairs = new Set();
+        const contactCache = playgroundContactCacheRef.current;
+        const touchedContacts = new Set();
 
-            const aDragged = draggedId === a.id;
-            const bDragged = draggedId === b.id;
+        bodies.forEach((item) => {
+          const rect = getPlaygroundBodyViewportRect(item.body);
+          const halfExtent = Math.hypot(item.body.width, item.body.height) * 0.5;
+          item.currentRect = rect;
+          bodyById.set(item.id, item);
 
-            // Skip collisions between two fully dormant items so the page
-            // layout does not self-resolve while nothing is interacting.
-            const aIsActive = aDragged || a.id.startsWith('spawn-') || Math.abs(a.body.vx) > 0.3 || Math.abs(a.body.vy) > 0.3;
-            const bIsActive = bDragged || b.id.startsWith('spawn-') || Math.abs(b.body.vx) > 0.3 || Math.abs(b.body.vy) > 0.3;
-            if (!aIsActive && !bIsActive) continue;
+          const minCellX = Math.floor((rect.centerX - halfExtent) / PLAYGROUND_BROADPHASE_CELL_SIZE);
+          const maxCellX = Math.floor((rect.centerX + halfExtent) / PLAYGROUND_BROADPHASE_CELL_SIZE);
+          const minCellY = Math.floor((rect.centerY - halfExtent) / PLAYGROUND_BROADPHASE_CELL_SIZE);
+          const maxCellY = Math.floor((rect.centerY + halfExtent) / PLAYGROUND_BROADPHASE_CELL_SIZE);
 
-            const aLeft = a.rect.left + (a.deltaX || 0);
-            const aTop = a.rect.top + (a.deltaY || 0);
-            const bLeft = b.rect.left + (b.deltaX || 0);
-            const bTop = b.rect.top + (b.deltaY || 0);
-            const overlapX = Math.min(aLeft + a.rect.width, bLeft + b.rect.width) - Math.max(aLeft, bLeft);
-            const overlapY = Math.min(aTop + a.rect.height, bTop + b.rect.height) - Math.max(aTop, bTop);
+          for (let cellX = minCellX; cellX <= maxCellX; cellX++) {
+            for (let cellY = minCellY; cellY <= maxCellY; cellY++) {
+              const cellKey = `${cellX}:${cellY}`;
+              const occupants = broadphaseGrid.get(cellKey) ?? [];
+              occupants.forEach((otherId) => candidatePairs.add(getPlaygroundPairKey(item.id, otherId)));
+              occupants.push(item.id);
+              broadphaseGrid.set(cellKey, occupants);
+            }
+          }
+        });
 
-            if (overlapX > 0 && overlapY > 0) {
-              // ── Crate collision: activate modifier ──
-              const aIsCrate = a.id.startsWith('crate-');
-              const bIsCrate = b.id.startsWith('crate-');
-              if (aIsCrate || bIsCrate) {
-                const crateItem = aIsCrate ? a : b;
-                const crateData = playgroundCratesRef.current.find(c => c.id === crateItem.id);
-                if (crateData && now - (crateData._lastHit || 0) > 300) {
-                  crateData._lastHit = now;
-                  activateModifier(crateData.modifier, crateItem.id);
-                }
-                continue; // skip normal collision physics for crate hits
+        candidatePairs.forEach((pairKey) => {
+          const [aId, bId] = pairKey.split('::');
+          const a = bodyById.get(aId);
+          const b = bodyById.get(bId);
+          if (!a || !b) return;
+
+          const aRect = a.currentRect ?? getPlaygroundBodyViewportRect(a.body);
+          const bRect = b.currentRect ?? getPlaygroundBodyViewportRect(b.body);
+          const dx = bRect.centerX - aRect.centerX;
+          const dy = bRect.centerY - aRect.centerY;
+          const radiusLimit = (Math.hypot(a.body.width, a.body.height) + Math.hypot(b.body.width, b.body.height)) * 0.55;
+          if ((dx * dx) + (dy * dy) > radiusLimit * radiusLimit) return;
+
+          const collision = getObbCollisionData(
+            { centerX: aRect.centerX, centerY: aRect.centerY, width: a.body.width, height: a.body.height, angle: a.body.angle },
+            { centerX: bRect.centerX, centerY: bRect.centerY, width: b.body.width, height: b.body.height, angle: b.body.angle },
+          );
+          if (!collision) return;
+
+          const aIsCrate = a.id.startsWith('crate-');
+          const bIsCrate = b.id.startsWith('crate-');
+          if (aIsCrate || bIsCrate) {
+            const crateItem = aIsCrate ? a : b;
+            const crateData = playgroundCratesRef.current.find(c => c.id === crateItem.id);
+            if (crateData && now - (crateData._lastHit || 0) > 300) {
+              crateData._lastHit = now;
+              activateModifier(crateData.modifier, crateItem.id);
+            }
+            return;
+          }
+
+          if (hasMod('phantom_mode')) return;
+
+          const invMassA = a.body.pinned ? 0 : a.body.invMass;
+          const invMassB = b.body.pinned ? 0 : b.body.invMass;
+          const invInertiaA = a.body.pinned ? 0 : a.body.invInertia;
+          const invInertiaB = b.body.pinned ? 0 : b.body.invInertia;
+          const invMassSum = invMassA + invMassB;
+          if (invMassSum <= 0) return;
+
+          const correctionMagnitude = Math.max(collision.depth - PLAYGROUND_POSITIONAL_SLOP, 0) / invMassSum * PLAYGROUND_POSITIONAL_CORRECTION;
+          const correctionX = collision.normalX * correctionMagnitude;
+          const correctionY = collision.normalY * correctionMagnitude;
+
+          if (!a.body.pinned) {
+            a.body.x -= correctionX * invMassA;
+            a.body.y -= correctionY * invMassA;
+          }
+          if (!b.body.pinned) {
+            b.body.x += correctionX * invMassB;
+            b.body.y += correctionY * invMassB;
+          }
+
+          const updatedARect = getPlaygroundBodyViewportRect(a.body);
+          const updatedBRect = getPlaygroundBodyViewportRect(b.body);
+          const rAx = collision.contactX - updatedARect.centerX;
+          const rAy = collision.contactY - updatedARect.centerY;
+          const rBx = collision.contactX - updatedBRect.centerX;
+          const rBy = collision.contactY - updatedBRect.centerY;
+
+          const cachedContact = contactCache.get(pairKey);
+          if (cachedContact && now - cachedContact.updatedAt <= PLAYGROUND_CONTACT_CACHE_TTL) {
+            const normalAlignment = dotProduct(cachedContact.normalX, cachedContact.normalY, collision.normalX, collision.normalY);
+            if (normalAlignment > 0.55) {
+              const warmImpulseX = (cachedContact.normalImpulseX + cachedContact.frictionImpulseX) * PLAYGROUND_WARM_START_SCALE;
+              const warmImpulseY = (cachedContact.normalImpulseY + cachedContact.frictionImpulseY) * PLAYGROUND_WARM_START_SCALE;
+              if (!a.body.pinned) {
+                a.body.vx -= warmImpulseX * invMassA;
+                a.body.vy -= warmImpulseY * invMassA;
+                a.body.spin -= crossProduct(rAx, rAy, warmImpulseX, warmImpulseY) * invInertiaA;
+              }
+              if (!b.body.pinned) {
+                b.body.vx += warmImpulseX * invMassB;
+                b.body.vy += warmImpulseY * invMassB;
+                b.body.spin += crossProduct(rBx, rBy, warmImpulseX, warmImpulseY) * invInertiaB;
+              }
+            }
+          }
+
+          const velAX = a.body.vx - a.body.spin * rAy;
+          const velAY = a.body.vy + a.body.spin * rAx;
+          const velBX = b.body.vx - b.body.spin * rBy;
+          const velBY = b.body.vy + b.body.spin * rBx;
+          const relVelX = velBX - velAX;
+          const relVelY = velBY - velAY;
+          const velAlongNormal = dotProduct(relVelX, relVelY, collision.normalX, collision.normalY);
+
+          let normalImpulseX = 0;
+          let normalImpulseY = 0;
+          let frictionImpulseX = 0;
+          let frictionImpulseY = 0;
+
+            const pairImpactBoost = ((a.body.impactBoost ?? 1) + (b.body.impactBoost ?? 1)) * 0.5;
+            const pairSpinBoost = ((a.body.impactSpinBoost ?? 1) + (b.body.impactSpinBoost ?? 1)) * 0.5;
+            const burstScale = hasMod('explosive_touch') ? 2.5 : Math.max(a.body.impactBurstScale ?? 1, b.body.impactBurstScale ?? 1);
+
+            if (velAlongNormal < 0) {
+            const normalCrossA = crossProduct(rAx, rAy, collision.normalX, collision.normalY);
+            const normalCrossB = crossProduct(rBx, rBy, collision.normalX, collision.normalY);
+            const denom = invMassSum + (normalCrossA * normalCrossA * invInertiaA) + (normalCrossB * normalCrossB * invInertiaB);
+            if (denom > 0.00001) {
+                const baseRestitution = ((a.body.restitution ?? 0.2) + (b.body.restitution ?? 0.2)) * 0.5;
+                const restitution = clampNumber(baseRestitution * pairImpactBoost * (hasMod('mega_bounce') ? 2.35 : 1), 0.06, 0.96);
+                const explosiveMul = (hasMod('explosive_touch') ? 1.85 : 1) * pairImpactBoost;
+              const impulseScalar = (-(1 + restitution) * velAlongNormal / denom) * explosiveMul;
+              normalImpulseX = collision.normalX * impulseScalar;
+              normalImpulseY = collision.normalY * impulseScalar;
+
+              if (!a.body.pinned) {
+                a.body.vx -= normalImpulseX * invMassA;
+                a.body.vy -= normalImpulseY * invMassA;
+                  a.body.spin -= crossProduct(rAx, rAy, normalImpulseX, normalImpulseY) * invInertiaA * pairSpinBoost;
+              }
+              if (!b.body.pinned) {
+                b.body.vx += normalImpulseX * invMassB;
+                b.body.vy += normalImpulseY * invMassB;
+                  b.body.spin += crossProduct(rBx, rBy, normalImpulseX, normalImpulseY) * invInertiaB * pairSpinBoost;
               }
 
-              // ── Phantom mode: objects pass through each other ──
-              if (hasMod('phantom_mode')) continue;
+              const tangentRawX = relVelX - (collision.normalX * velAlongNormal);
+              const tangentRawY = relVelY - (collision.normalY * velAlongNormal);
+              const tangent = normalizeVector(tangentRawX, tangentRawY);
+              if (tangent.length > 0.0001) {
+                const tangentCrossA = crossProduct(rAx, rAy, tangent.x, tangent.y);
+                const tangentCrossB = crossProduct(rBx, rBy, tangent.x, tangent.y);
+                const tangentDenom = invMassSum + (tangentCrossA * tangentCrossA * invInertiaA) + (tangentCrossB * tangentCrossB * invInertiaB);
+                if (tangentDenom > 0.00001) {
+                  let frictionScalar = -dotProduct(relVelX, relVelY, tangent.x, tangent.y) / tangentDenom;
+                  const frictionLimit = impulseScalar * Math.sqrt(a.body.surfaceFriction * b.body.surfaceFriction);
+                  frictionScalar = clampNumber(frictionScalar, -frictionLimit, frictionLimit);
+                  frictionImpulseX = tangent.x * frictionScalar;
+                  frictionImpulseY = tangent.y * frictionScalar;
 
-              const directionX = (aLeft + a.rect.width / 2) < (bLeft + b.rect.width / 2) ? -1 : 1;
-              const directionY = (aTop + a.rect.height / 2) < (bTop + b.rect.height / 2) ? -1 : 1;
-              const pushX = (overlapX / 2) * directionX;
-              const pushY = (overlapY / 2) * directionY;
-
-              // The actively dragged item stays locked to the pointer, but
-              // untouched cards should still be displaced when hit.
-              const aImmovable = aDragged;
-              const bImmovable = bDragged;
-
-              if (!a.body.pinned && !aImmovable) {
-                a.body.x += pushX;
-                a.body.y += pushY;
-              }
-              if (!b.body.pinned && !bImmovable) {
-                b.body.x -= pushX;
-                b.body.y -= pushY;
-              }
-
-              // Semi-elastic collision: swap velocity components along collision axis
-              const aVx = a.body.vx;
-              const aVy = a.body.vy;
-              const bVx = b.body.vx;
-              const bVy = b.body.vy;
-              const restitution = 0.75 * (hasMod('mega_bounce') ? 3 : 1);
-              const explosiveMul = hasMod('explosive_touch') ? 3.5 : 1;
-              if (!aImmovable) {
-                a.body.vx = (aVx * 0.15 + bVx * 0.6 + pushX * 0.12) * explosiveMul;
-                a.body.vy = (aVy * 0.15 + bVy * 0.6 + pushY * 0.12) * explosiveMul;
-                // Scale resulting velocity by restitution
-                a.body.vx *= restitution;
-                a.body.vy *= restitution;
-                a.body.spin += (pushX + (bVy - aVy) * 0.3) * 0.0012;
-              }
-              if (!bImmovable) {
-                b.body.vx = (bVx * 0.15 + aVx * 0.6 - pushX * 0.12) * explosiveMul;
-                b.body.vy = (bVy * 0.15 + aVy * 0.6 - pushY * 0.12) * explosiveMul;
-                b.body.vx *= restitution;
-                b.body.vy *= restitution;
-                b.body.spin -= (pushX + (aVy - bVy) * 0.3) * 0.0012;
-              }
-
-              if (now - playgroundCollisionGateRef.current > 90) {
-                playgroundCollisionGateRef.current = now;
-                const mx = (aLeft + bLeft + b.rect.width / 2) / 2;
-                const my = (aTop + bTop + b.rect.height / 2) / 2;
-                spawnImpactBurst(mx, my, hasMod('explosive_touch') ? 2.5 : 1.15);
-                playPlaygroundSound('impact');
-                const scoreAdd = hasMod('score_surge') ? 5 : 1;
-                setPlaygroundStats(prev => ({ ...prev, collisions: prev.collisions + scoreAdd }));
-                collection.onCollision(a.id, b.id, playgroundBodiesRef.current);
-                collection.onLifetimeCollision();
-                // Boss hit detection
-                const bossHit = bosses.hitBoss(mx, my);
-                if (bossHit && bossHit !== 'hit') { collection.onBossDefeated(bossHit); collection.onLifetimeBossDefeat(); }
-                // Clone storm: spawn a toy at collision point
-                if (hasMod('clone_storm') && Math.random() < 0.35) {
-                  const toyCount = Object.keys(playgroundBodiesRef.current).filter(k => k.startsWith('spawn-')).length;
-                  if (toyCount < 8) spawnPlaygroundToy(mx, my);
+                  if (!a.body.pinned) {
+                    a.body.vx -= frictionImpulseX * invMassA;
+                    a.body.vy -= frictionImpulseY * invMassA;
+                      a.body.spin -= crossProduct(rAx, rAy, frictionImpulseX, frictionImpulseY) * invInertiaA * pairSpinBoost;
+                  }
+                  if (!b.body.pinned) {
+                    b.body.vx += frictionImpulseX * invMassB;
+                    b.body.vy += frictionImpulseY * invMassB;
+                      b.body.spin += crossProduct(rBx, rBy, frictionImpulseX, frictionImpulseY) * invInertiaB * pairSpinBoost;
+                  }
                 }
               }
             }
           }
-        }
+
+          contactCache.set(pairKey, {
+            updatedAt: now,
+            normalX: collision.normalX,
+            normalY: collision.normalY,
+            normalImpulseX,
+            normalImpulseY,
+            frictionImpulseX,
+            frictionImpulseY,
+          });
+          touchedContacts.add(pairKey);
+
+          a.body.sleeping = false;
+          a.body.sleepFrames = 0;
+          b.body.sleeping = false;
+          b.body.sleepFrames = 0;
+
+            if (now - playgroundCollisionGateRef.current > 90) {
+            playgroundCollisionGateRef.current = now;
+            const mx = collision.contactX;
+            const my = collision.contactY;
+              spawnImpactBurst(mx, my, burstScale);
+            playPlaygroundSound('impact');
+            const scoreAdd = hasMod('score_surge') ? 5 : 1;
+            setPlaygroundStats(prev => ({ ...prev, collisions: prev.collisions + scoreAdd }));
+            collection.onCollision(a.id, b.id, playgroundBodiesRef.current);
+            collection.onLifetimeCollision();
+            const bossHit = bosses.hitBoss(mx, my);
+            if (bossHit && bossHit !== 'hit') {
+              collection.onBossDefeated(bossHit);
+              collection.onLifetimeBossDefeat();
+            }
+            if (hasMod('clone_storm') && Math.random() < 0.35) {
+              const toyCount = Object.keys(playgroundBodiesRef.current).filter(k => k.startsWith('spawn-')).length;
+              if (toyCount < 8) spawnPlaygroundToy(mx, my);
+            }
+          }
+        });
+
+        contactCache.forEach((entry, key) => {
+          if (!touchedContacts.has(key) && now - entry.updatedAt > PLAYGROUND_CONTACT_CACHE_TTL) {
+            contactCache.delete(key);
+          }
+        });
       }
 
       bodies.forEach(({ id, node, body }) => {
@@ -1985,35 +2380,37 @@ export default function ModernHome() {
     return () => {
       if (playgroundRafRef.current) cancelAnimationFrame(playgroundRafRef.current);
     };
-  }, [activateModifier, bosses, despawnPlaygroundToy, hasModifier, isPlaygroundItemId, playgroundForceMode, playgroundGravityMode, playgroundMode, playgroundPaused, playgroundSlowMo, spawnImpactBurst, spawnPlaygroundToy, weather]);
+  }, [activateModifier, bosses, collection, createPlaygroundBody, despawnPlaygroundToy, getPlaygroundBodyViewportPoint, getPlaygroundBodyViewportRect, hasModifier, isPlaygroundItemId, playgroundForceMode, playgroundGravityMode, playgroundMode, playgroundPaused, playgroundSlowMo, playPlaygroundSound, spawnImpactBurst, spawnPlaygroundToy, syncPlaygroundBodyNodeMetrics, weather]);
 
   const explodePlaygroundItems = useCallback(() => {
     const centerX = window.innerWidth / 2;
     const centerY = window.innerHeight * 0.45;
-    Object.entries(playgroundNodesRef.current).forEach(([id, node]) => {
-      if (!node || !node.isConnected || !isPlaygroundItemId(id)) return;
-      const body = playgroundBodiesRef.current[id];
-      if (!body) return;
-      const rect = node.getBoundingClientRect();
-      const dx = (rect.left + rect.width / 2) - centerX;
-      const dy = (rect.top + rect.height / 2) - centerY;
+    Object.entries(playgroundBodiesRef.current).forEach(([id, physicsBody]) => {
+      if (!physicsBody || !isPlaygroundItemId(id)) return;
+      const rect = getPlaygroundBodyViewportRect(physicsBody);
+      const dx = rect.centerX - centerX;
+      const dy = rect.centerY - centerY;
       const dist = Math.max(Math.hypot(dx, dy), 1);
-      body.pinned = false;
-      body.orbit = false;
-      body.vx = (dx / dist) * (4 + Math.random() * 5);
-      body.vy = (dy / dist) * (3.5 + Math.random() * 4.5);
-      body.spin = (Math.random() - 0.5) * 0.1;
+      physicsBody.pinned = false;
+      physicsBody.orbit = false;
+      physicsBody.sleeping = false;
+      physicsBody.sleepFrames = 0;
+      physicsBody.vx = (dx / dist) * (4 + Math.random() * 5);
+      physicsBody.vy = (dy / dist) * (3.5 + Math.random() * 4.5);
+      physicsBody.spin = (Math.random() - 0.5) * 0.1;
     });
     syncPlaygroundMeta();
     spawnImpactBurst(centerX, centerY, 1.6);
     playPlaygroundSound('explode');
-  }, [isPlaygroundItemId, playPlaygroundSound, spawnImpactBurst, syncPlaygroundMeta]);
+  }, [getPlaygroundBodyViewportRect, isPlaygroundItemId, playPlaygroundSound, spawnImpactBurst, syncPlaygroundMeta]);
 
   const shufflePlaygroundItems = useCallback(() => {
     Object.entries(playgroundBodiesRef.current).forEach(([id, body]) => {
       if (!isPlaygroundItemId(id) || !body) return;
       body.pinned = false;
       body.orbit = false;
+      body.sleeping = false;
+      body.sleepFrames = 0;
       body.x += (Math.random() - 0.5) * 180;
       body.y += (Math.random() - 0.5) * 120;
       body.vx = (Math.random() - 0.5) * 3;
@@ -2024,29 +2421,29 @@ export default function ModernHome() {
   }, [isPlaygroundItemId, syncPlaygroundMeta]);
 
   const stackPlaygroundItems = useCallback(() => {
-    const entries = Object.entries(playgroundNodesRef.current).filter(([id, node]) => node && node.isConnected && isPlaygroundItemId(id));
+    const entries = Object.entries(playgroundBodiesRef.current).filter(([id, body]) => body && isPlaygroundItemId(id));
     const cols = window.innerWidth < 900 ? 2 : 4;
-    entries.forEach(([id, node], index) => {
-      const body = playgroundBodiesRef.current[id];
-      if (!body) return;
-      const rect = node.getBoundingClientRect();
+    entries.forEach(([, physicsBody], index) => {
+      const rect = getPlaygroundBodyViewportRect(physicsBody);
       const row = Math.floor(index / cols);
       const col = index % cols;
       const targetX = 120 + (col * 190);
       const targetY = 120 + (row * 132);
-      const currentX = rect.left + rect.width / 2;
-      const currentY = rect.top + rect.height / 2;
-      body.pinned = false;
-      body.orbit = false;
-      body.vx = 0;
-      body.vy = 0;
-      body.spin = 0;
-      body.angle = 0;
-      body.x += targetX - currentX;
-      body.y += targetY - currentY;
+      const currentX = rect.centerX;
+      const currentY = rect.centerY;
+      physicsBody.pinned = false;
+      physicsBody.orbit = false;
+      physicsBody.sleeping = false;
+      physicsBody.sleepFrames = 0;
+      physicsBody.vx = 0;
+      physicsBody.vy = 0;
+      physicsBody.spin = 0;
+      physicsBody.angle = 0;
+      physicsBody.x += targetX - currentX;
+      physicsBody.y += targetY - currentY;
     });
     syncPlaygroundMeta();
-  }, [isPlaygroundItemId, syncPlaygroundMeta]);
+  }, [getPlaygroundBodyViewportRect, isPlaygroundItemId, syncPlaygroundMeta]);
 
   const chaosRain = useCallback(() => {
     const centerX = window.innerWidth / 2;
@@ -2708,7 +3105,7 @@ export default function ModernHome() {
           {playgroundCrates.map((crate) => (
             <div
               key={crate.id}
-              ref={el => { if (el) playgroundNodesRef.current[crate.id] = el; }}
+              ref={(el) => registerPlaygroundNode(crate.id, el)}
               className="fixed left-0 top-0 z-[66] w-[100px] select-none pointer-events-none"
               style={{
                 left: crate.x,
