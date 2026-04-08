@@ -2486,6 +2486,7 @@ export default function ModernHome() {
     return {
       cursor: 'grab',
       userSelect: 'none',
+      touchAction: 'none',
       outline: '1px dashed rgba(88,164,176,0.28)',
       outlineOffset: '4px',
       borderRadius: '16px',
