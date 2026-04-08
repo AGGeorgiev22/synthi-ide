@@ -34,6 +34,10 @@ const CRATE_MODIFIERS = [
 const PLAYGROUND_HUD_STORAGE_KEY = 'synthi_playground_hud_position';
 const PLAYGROUND_HUD_MARGIN = 16;
 const PLAYGROUND_HUD_TOP_CLEARANCE = 76;
+const PLAYGROUND_MAX_FLING_SPEED = 30;
+const PLAYGROUND_MAX_TRAVEL_SPEED = 28;
+const PLAYGROUND_THROWAWAY_SPEED = 14;
+const PLAYGROUND_THROWAWAY_SPIN = 0.12;
 
 /* ---------- Language detection + syntax highlighting ---------- */
 const INITIAL_CODE = `Write here!`;
@@ -1079,6 +1083,12 @@ export default function ModernHome() {
     }, 420);
   }, []);
 
+  const despawnPlaygroundToy = useCallback((id) => {
+    delete playgroundBodiesRef.current[id];
+    delete playgroundNodesRef.current[id];
+    setPlaygroundSpawns(prev => prev.filter((item) => item.id !== id));
+  }, []);
+
   const spawnPlaygroundToy = useCallback((x, y) => {
     const id = `spawn-${++playgroundSpawnIdRef.current}`;
     // Memory Leak: occasionally spawn a letter instead of a regular toy
@@ -1098,6 +1108,7 @@ export default function ModernHome() {
       orbit: false,
       orbitAngle: Math.random() * Math.PI * 2,
       orbitRadius: 90 + Math.random() * 110,
+      escapeArmed: false,
     };
     setPlaygroundSpawns(prev => {
       const next = [...prev, { id, ...template, _spawnTime: Date.now() }];
@@ -1460,11 +1471,28 @@ export default function ModernHome() {
     if (!body) return;
     body.pinned = false;
     body.orbit = false;
+    body.escapeArmed = false;
     body.vx = 0;
     body.vy = 0;
     body.spin = 0;
     event.currentTarget.style.transition = 'none';
-    playgroundDragRef.current = { id, lastX: point.clientX, lastY: point.clientY, lastT: performance.now(), startX: point.clientX, startY: point.clientY, engaged: false };
+    const rect = event.currentTarget.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    const offsetX = point.clientX - centerX;
+    const offsetY = point.clientY - centerY;
+    playgroundDragRef.current = {
+      id,
+      lastX: point.clientX,
+      lastY: point.clientY,
+      lastT: performance.now(),
+      startX: point.clientX,
+      startY: point.clientY,
+      engaged: false,
+      grabRadius: Math.max(Math.hypot(offsetX, offsetY), 18),
+      grabLocalAngle: Math.atan2(offsetY, offsetX) - body.angle,
+      lastAngularVelocity: 0,
+    };
     // Disable touch scrolling only on the actively dragged element
     event.currentTarget.style.touchAction = 'none';
     syncPlaygroundMeta();
@@ -1516,7 +1544,10 @@ export default function ModernHome() {
         const staleNode = playgroundNodesRef.current[staleDrag.id];
         if (staleBody) {
           const flingSpeed = Math.hypot(staleBody.vx, staleBody.vy);
-          if (flingSpeed > 18) { staleBody.vx *= 18 / flingSpeed; staleBody.vy *= 18 / flingSpeed; }
+          if (flingSpeed > PLAYGROUND_MAX_FLING_SPEED) {
+            staleBody.vx *= PLAYGROUND_MAX_FLING_SPEED / flingSpeed;
+            staleBody.vy *= PLAYGROUND_MAX_FLING_SPEED / flingSpeed;
+          }
         }
         if (staleNode) {
           staleNode.style.touchAction = '';
@@ -1551,12 +1582,26 @@ export default function ModernHome() {
       const dragDt = Math.max((now - drag.lastT) / 16.67, 0.5);
       const dx = point.clientX - drag.lastX;
       const dy = point.clientY - drag.lastY;
-      body.x += dx;
-      body.y += dy;
+      const rect = dragNode?.getBoundingClientRect();
+      const centerX = rect ? rect.left + rect.width / 2 : point.clientX;
+      const centerY = rect ? rect.top + rect.height / 2 : point.clientY;
+      const radialX = point.clientX - centerX;
+      const radialY = point.clientY - centerY;
+      const radialDist = Math.max(Math.hypot(radialX, radialY), 1);
+      const tangentX = -radialY / radialDist;
+      const tangentY = radialX / radialDist;
+      const tangentialMove = (dx * tangentX) + (dy * tangentY);
+      const angularVelocity = tangentialMove / Math.max(drag.grabRadius, 18);
+      body.angle += angularVelocity;
+      body.spin = angularVelocity / dragDt;
+      drag.lastAngularVelocity = body.spin;
+      const worldGrabAngle = body.angle + drag.grabLocalAngle;
+      const desiredCenterX = point.clientX - Math.cos(worldGrabAngle) * drag.grabRadius;
+      const desiredCenterY = point.clientY - Math.sin(worldGrabAngle) * drag.grabRadius;
+      body.x += desiredCenterX - centerX;
+      body.y += desiredCenterY - centerY;
       body.vx = dx / dragDt;
       body.vy = dy / dragDt;
-      body.angle += dx * 0.002;
-      body.spin = dx * 0.0008;
       if (dragNode) {
         dragNode.style.transform = `translate3d(${body.x}px, ${body.y}px, 0) rotate(${body.angle}rad) scale(1.03)`;
         dragNode.style.zIndex = '90';
@@ -1582,7 +1627,12 @@ export default function ModernHome() {
         } else {
           // Cap fling velocity so items don't fly uncontrollably
           const flingSpeed = Math.hypot(body.vx, body.vy);
-          if (flingSpeed > 18) { body.vx *= 18 / flingSpeed; body.vy *= 18 / flingSpeed; }
+          if (flingSpeed > PLAYGROUND_MAX_FLING_SPEED) {
+            body.vx *= PLAYGROUND_MAX_FLING_SPEED / flingSpeed;
+            body.vy *= PLAYGROUND_MAX_FLING_SPEED / flingSpeed;
+          }
+          body.spin = Math.max(-0.35, Math.min(0.35, drag.lastAngularVelocity || body.spin));
+          body.escapeArmed = drag.id.startsWith('spawn-') && (Math.hypot(body.vx, body.vy) >= PLAYGROUND_THROWAWAY_SPEED || Math.abs(body.spin) >= PLAYGROUND_THROWAWAY_SPIN);
           if (flingSpeed > 5) {
             setPlaygroundStats(prev => ({ ...prev, launches: prev.launches + 1 }));
           }
@@ -1735,7 +1785,10 @@ export default function ModernHome() {
 
           // Velocity cap
           const speed = Math.hypot(body.vx, body.vy);
-          if (speed > 22) { body.vx *= 22 / speed; body.vy *= 22 / speed; }
+          if (speed > PLAYGROUND_MAX_TRAVEL_SPEED) {
+            body.vx *= PLAYGROUND_MAX_TRAVEL_SPEED / speed;
+            body.vy *= PLAYGROUND_MAX_TRAVEL_SPEED / speed;
+          }
 
           // Settle threshold - snap to zero when nearly stopped
           if (Math.abs(body.vx) < 0.02) body.vx = 0;
@@ -1754,29 +1807,44 @@ export default function ModernHome() {
           if (isSpawn) {
             const nextLeft = rect.left + item.deltaX;
             const nextTop = rect.top + item.deltaY;
+            const canEscape = id.startsWith('spawn-') && body.escapeArmed;
+            const escapePaddingX = rect.width * 0.75;
+            const escapePaddingY = rect.height * 0.75;
+            const fullyOutside = nextLeft + rect.width < -escapePaddingX
+              || nextLeft > window.innerWidth + escapePaddingX
+              || nextTop + rect.height < -escapePaddingY
+              || nextTop > window.innerHeight + escapePaddingY;
+            if (canEscape && fullyOutside) {
+              despawnPlaygroundToy(id);
+              return;
+            }
             let impacted = false;
-            if (nextLeft < 12) {
+            if (!(canEscape && nextLeft < 12 && body.vx < 0) && nextLeft < 12) {
               body.x += 12 - nextLeft;
               body.vx = Math.abs(body.vx) * 0.65;
               body.spin += body.vy * 0.003;
+              body.escapeArmed = false;
               impacted = true;
             }
-            if (nextLeft + rect.width > window.innerWidth - 12) {
+            if (!(canEscape && nextLeft + rect.width > window.innerWidth - 12 && body.vx > 0) && nextLeft + rect.width > window.innerWidth - 12) {
               body.x -= (nextLeft + rect.width) - (window.innerWidth - 12);
               body.vx = -Math.abs(body.vx) * 0.65;
               body.spin -= body.vy * 0.003;
+              body.escapeArmed = false;
               impacted = true;
             }
-            if (nextTop < 12) {
+            if (!(canEscape && nextTop < 12 && body.vy < 0) && nextTop < 12) {
               body.y += 12 - nextTop;
               body.vy = Math.abs(body.vy) * 0.65;
               body.spin += body.vx * 0.003;
+              body.escapeArmed = false;
               impacted = true;
             }
-            if (nextTop + rect.height > window.innerHeight - 12) {
+            if (!(canEscape && nextTop + rect.height > window.innerHeight - 12 && body.vy > 0) && nextTop + rect.height > window.innerHeight - 12) {
               body.y -= (nextTop + rect.height) - (window.innerHeight - 12);
               body.vy = -Math.abs(body.vy) * 0.65;
               body.spin += body.vx * 0.003;
+              body.escapeArmed = false;
               impacted = true;
             }
 
@@ -1917,7 +1985,7 @@ export default function ModernHome() {
     return () => {
       if (playgroundRafRef.current) cancelAnimationFrame(playgroundRafRef.current);
     };
-  }, [activateModifier, bosses, hasModifier, isPlaygroundItemId, playgroundForceMode, playgroundGravityMode, playgroundMode, playgroundPaused, playgroundSlowMo, spawnImpactBurst, spawnPlaygroundToy, weather]);
+  }, [activateModifier, bosses, despawnPlaygroundToy, hasModifier, isPlaygroundItemId, playgroundForceMode, playgroundGravityMode, playgroundMode, playgroundPaused, playgroundSlowMo, spawnImpactBurst, spawnPlaygroundToy, weather]);
 
   const explodePlaygroundItems = useCallback(() => {
     const centerX = window.innerWidth / 2;
