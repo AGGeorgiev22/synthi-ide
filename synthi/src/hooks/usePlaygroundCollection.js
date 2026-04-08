@@ -73,6 +73,28 @@ export const COLLECTIBLE_ITEMS = [
   // ── Transcendent (1) — the true ultimate ──
   { id: 'the_deep_end', name: 'The Deep End', rarity: 'transcendent', icon: '🌊', hint: 'All 34 fragments. The abyss stares back.' },
 
+  // ══════════════ Wave 4 — "Phase 2 Mechanics" ══════════════
+
+  // ── Rare (1) — arena mutations ──
+  { id: 'chaos_surfer', name: 'Chaos Surfer', rarity: 'rare', icon: '🏄', hint: 'Survive three arena mutations in a single session.' },
+
+  // ── Epic (1) — portals ──
+  { id: 'wormhole_weaver', name: 'Wormhole Weaver', rarity: 'epic', icon: '🌀', hint: 'Send five objects through a portal pair.' },
+
+  // ── Legendary (1) — gravity wells ──
+  { id: 'singularity', name: 'Singularity', rarity: 'legendary', icon: '⚫', hint: 'Three wells active, eight objects caught in their pull.' },
+
+  // ══════════════ Wave 5 — "Phase 3 Progression" ══════════════
+
+  // ── Epic (1) — toy fusion ──
+  { id: 'alchemist', name: 'Alchemist', rarity: 'epic', icon: '⚗️', hint: 'Discover a named fusion recipe.' },
+
+  // ── Legendary (1) — fusion mastery ──
+  { id: 'philosophers_stone', name: "Philosopher's Stone", rarity: 'legendary', icon: '🪨', hint: 'Perform five fusions in a single session.' },
+
+  // ── Transcendent (1) — prestige ──
+  { id: 'eternal_return', name: 'Eternal Return', rarity: 'transcendent', icon: '♾️', hint: 'Reset everything to grow stronger.' },
+
   // ── ???? (5) — secret ──
   { id: 'sasha',          name: '???',            rarity: 'secret', icon: '🐱', hint: 'Type something special in the editor...' },
   { id: 'rubber_duck',    name: 'Rubber Duck',    rarity: 'secret', icon: '🦆', hint: 'Talk it out. Click the lone duck where pricing lives.' },
@@ -309,6 +331,35 @@ export function usePlaygroundCollection(onUnlock) {
     s.collectsSinceRepel = 0;
   }, [s]);
 
+  /** Phase 2: Called when a body teleports through a portal. */
+  const onPortalTraversal = useCallback(() => {
+    s.portalTraversals = (s.portalTraversals || 0) + 1;
+    if (s.portalTraversals >= 5) unlock('wormhole_weaver');
+  }, [s, unlock]);
+
+  /** Phase 2: Called to check gravity well collectible (3 wells, 8+ objects in pull). */
+  const onGravityWellCheck = useCallback((wellCount, caughtCount) => {
+    if (wellCount >= 3 && caughtCount >= 8) unlock('singularity');
+  }, [unlock]);
+
+  /** Phase 2: Called when an arena mutation completes. */
+  const onArenaMutationSurvived = useCallback(() => {
+    s.mutationsSurvived = (s.mutationsSurvived || 0) + 1;
+    if (s.mutationsSurvived >= 3) unlock('chaos_surfer');
+  }, [s, unlock]);
+
+  /** Phase 3: Called when a toy fusion is performed. */
+  const onToyFusion = useCallback((recipeName) => {
+    s.fusionCount = (s.fusionCount || 0) + 1;
+    if (recipeName !== 'Alloy') unlock('alchemist'); // named recipe = alchemist
+    if (s.fusionCount >= 5) unlock('philosophers_stone');
+  }, [s, unlock]);
+
+  /** Phase 3: Called when player prestiges. */
+  const onPrestige = useCallback(() => {
+    unlock('eternal_return');
+  }, [unlock]);
+
   /* ─── Epic triggers (called from page-wide interactions) ──────────── */
 
   const onEditorCollectSemicolon = useCallback(() => unlock('golden_semicolon'), [unlock]);
@@ -533,6 +584,8 @@ export function usePlaygroundCollection(onUnlock) {
     s.voidVisits = 0;
     s.voidBestScore = 0;
     s.chaosRainCount = 0;
+    s.fusionCount = 0;
+    s.mutationsSurvived = 0;
     s.lifetimeStats = {
       totalScore: 0, bestScore: 0, totalCollisions: 0, totalLaunches: 0,
       totalToys: 0, bossesDefeated: 0, sessionsPlayed: 0, totalPlaytimeMs: 0,
@@ -560,6 +613,10 @@ export function usePlaygroundCollection(onUnlock) {
     // wave 2
     onWeatherChange, onBossDefeated, onConstellationFormed,
     onSpeedrunCompleted, onVoidExit,
+    // wave 4 (phase 2)
+    onPortalTraversal, onGravityWellCheck, onArenaMutationSurvived,
+    // wave 5 (phase 3)
+    onToyFusion, onPrestige,
     // constants
     MEMORY_LETTERS,
     // new secret triggers

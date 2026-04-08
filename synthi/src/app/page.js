@@ -10,6 +10,8 @@ import { useConstellationSystem } from "@/hooks/useConstellationSystem";
 import { useSpeedrunChallenge } from "@/hooks/useSpeedrunChallenge";
 import { useAmbientDrone } from "@/hooks/useAmbientDrone";
 import { useVoidDimension } from "@/hooks/useVoidDimension";
+import useDailySeedChallenge from "@/hooks/useDailySeedChallenge";
+import useGhostReplay from "@/hooks/useGhostReplay";
 
 const BUILD_LOGS = [
   { text: "Allocating cloud node...", delay: 0 },
@@ -198,6 +200,52 @@ const PLAYGROUND_TOYS = [
   { kind: 'relay', label: 'EDGE', body: 'Signal relay attached', accent: '#F472B6' },
 ];
 
+/* Phase 3: Fusion recipes — [kindA, kindB] => result */
+const FUSION_RECIPES = {
+  'code+satellite': { kind: 'fused', label: 'NULL PTR', body: 'Core Dump', accent: '#ef4444', gradient: 'linear-gradient(135deg, #ef4444, #60A5FA)' },
+  'satellite+toast': { kind: 'fused', label: 'ORBITAL', body: 'Deploy Orbit', accent: '#2dd4bf', gradient: 'linear-gradient(135deg, #58A4B0, #34D399)' },
+  'code+relay': { kind: 'fused', label: 'SIGNAL', body: 'Data Stream', accent: '#a78bfa', gradient: 'linear-gradient(135deg, #60A5FA, #F472B6)' },
+  'relay+toast': { kind: 'fused', label: 'MESH', body: 'Edge Mesh', accent: '#fbbf24', gradient: 'linear-gradient(135deg, #F472B6, #34D399)' },
+  'code+toast': { kind: 'fused', label: 'CI/CD', body: 'Pipeline Shard', accent: '#34d399', gradient: 'linear-gradient(135deg, #60A5FA, #34D399)' },
+  'satellite+relay': { kind: 'fused', label: 'ARRAY', body: 'Satellite Array', accent: '#f472b6', gradient: 'linear-gradient(135deg, #58A4B0, #F472B6)' },
+};
+function getFusionKey(kindA, kindB) {
+  return [kindA, kindB].sort().join('+');
+}
+
+/* Phase 3: Achievement Chains — multi-step in-session achievements */
+const ACHIEVEMENT_CHAINS = [
+  {
+    id: 'chaos_theory',
+    name: 'Chaos Theory',
+    steps: [
+      { label: 'Activate Clone Storm', check: 'clone_storm_active' },
+      { label: '10 collisions in 5s', check: 'ten_collisions_5s' },
+      { label: 'Defeat a boss', check: 'boss_defeated' },
+      { label: 'Score 500+', check: 'score_500' },
+    ],
+  },
+  {
+    id: 'architects_dream',
+    name: "Architect's Dream",
+    steps: [
+      { label: 'Pin 6 items', check: 'pin_6' },
+      { label: 'Form a constellation', check: 'constellation_formed' },
+      { label: 'Place a gravity well', check: 'gravity_well_placed' },
+      { label: 'Attract 3 items to well', check: 'well_attract_3' },
+    ],
+  },
+  {
+    id: 'speed_demon',
+    name: 'Speed Demon',
+    steps: [
+      { label: 'Activate Time Warp', check: 'time_warp_active' },
+      { label: 'Build 5x combo', check: 'combo_5' },
+      { label: 'Complete a speedrun', check: 'speedrun_done' },
+    ],
+  },
+];
+
 function detectLanguage(code) {
   if (/\b(fn\s|let\s+mut|impl\s|struct\s|pub\s+fn|->|::)/.test(code)) return 'Rust';
   if (/\b(def\s|from\s+\w+\s+import|class\s+\w+.*:|print\s*\(|self\.)/.test(code)) return 'Python';
@@ -309,6 +357,44 @@ export default function ModernHome() {
   const playgroundComboResetRef = useRef(null);
   const playgroundForceTimeoutRef = useRef(null);
 
+  /* Phase 2: Portal Pairs */
+  const [portalPlacementMode, setPortalPlacementMode] = useState(false); // P key toggles
+  const [portalPairs, setPortalPairs] = useState([]); // [{id, a:{x,y}, b:{x,y}}] max 2 pairs
+  const portalPairsRef = useRef([]); // mirror for RAF
+  const portalPendingRef = useRef(null); // first click position while placing
+  const portalCooldownRef = useRef({}); // {bodyId: timestamp} 200ms re-entry cooldown
+  const portalIdRef = useRef(0);
+
+  /* Phase 2: Gravity Wells */
+  const [gravityWells, setGravityWells] = useState([]); // [{id, x, y, strength}] max 3
+  const gravityWellsRef = useRef([]); // mirror for RAF
+  const [gravityWellPlacementMode, setGravityWellPlacementMode] = useState(false); // G key toggles
+  const gravityWellIdRef = useRef(0);
+
+  /* Phase 2: Arena Mutations */
+  const [arenaMutation, setArenaMutation] = useState(null); // { type, name, startTime, duration } or null
+  const arenaMutationRef = useRef(null); // mirror for RAF
+  const arenaMutationTimerRef = useRef(null); // next mutation scheduled
+  const arenaMutationCooldownRef = useRef(0); // timestamp of last mutation end
+
+  /* Phase 3: Toy Fusion */
+  const fusionOverlapRef = useRef({}); // { "idA|idB": startTime } tracking orbit overlap
+  const fusionCountRef = useRef(0); // total fusions this session
+
+  /* Phase 3: Achievement Chains */
+  const [achievementProgress, setAchievementProgress] = useState({}); // { chainId: stepIndex }
+  const achievementDataRef = useRef({ collisionsIn5s: [], cloneStormActive: false, pinnedCount: 0 });
+
+  /* Phase 3: Prestige System */
+  const [prestigeLevel, setPrestigeLevel] = useState(() => {
+    if (typeof window === 'undefined') return 0;
+    try { return parseInt(localStorage.getItem('synthi_prestige_level') || '0', 10); } catch { return 0; }
+  });
+  const [prestigeAvailable, setPrestigeAvailable] = useState(false);
+
+  /* Phase 4: Sandbox Presets */
+  const [presetMenuOpen, setPresetMenuOpen] = useState(false);
+
   /* Crate / Modifier system */
   const [playgroundCrates, setPlaygroundCrates] = useState([]); // active crates on screen
   const [activeModifiers, setActiveModifiers] = useState([]); // max 2 active { ...modifier, expiresAt, startedAt }
@@ -351,10 +437,17 @@ export default function ModernHome() {
   /* ─── Wave 2 systems ─── */
   const weather = useWeatherSystem(playgroundMode, collection.onWeatherChange);
   const bosses = useBossSystem(playgroundMode, playgroundScore, playPlaygroundSoundRef.current);
-  const constellations = useConstellationSystem(playgroundMode, playgroundBodiesRef, playgroundNodesRef, collection.onConstellationFormed);
+  const advanceAchievementRef = useRef(null);
+  const constellationCallback = useCallback((...args) => {
+    collection.onConstellationFormed(...args);
+    if (advanceAchievementRef.current) advanceAchievementRef.current('constellation_formed');
+  }, [collection]);
+  const constellations = useConstellationSystem(playgroundMode, playgroundBodiesRef, playgroundNodesRef, constellationCallback);
   const speedrun = useSpeedrunChallenge(playgroundMode, playPlaygroundSoundRef.current);
   const ambient = useAmbientDrone(playgroundMode, playgroundSfxOn, weather.stage);
   const voidDim = useVoidDimension(playgroundMode, playPlaygroundSoundRef.current);
+  const dailySeed = useDailySeedChallenge(playgroundMode);
+  const ghostReplay = useGhostReplay(playgroundMode);
 
   const featuresRef = useRef(null);
   const businessRef = useRef(null);
@@ -1133,6 +1226,18 @@ export default function ModernHome() {
     setActiveModifiers([]);
     activeModifiersRef.current = [];
     if (crateSpawnTimerRef.current) clearTimeout(crateSpawnTimerRef.current);
+    // Phase 2: Clear portals, gravity wells, arena mutations
+    setPortalPairs([]);
+    portalPairsRef.current = [];
+    portalPendingRef.current = null;
+    portalCooldownRef.current = {};
+    setPortalPlacementMode(false);
+    setGravityWells([]);
+    gravityWellsRef.current = [];
+    setGravityWellPlacementMode(false);
+    arenaMutationRef.current = null;
+    setArenaMutation(null);
+    if (arenaMutationTimerRef.current) clearTimeout(arenaMutationTimerRef.current);
   }, [resetPlaygroundLayout]);
 
   const playPlaygroundSound = useCallback((kind = 'impact') => {
@@ -1307,6 +1412,158 @@ export default function ModernHome() {
     }, 420);
   }, []);
 
+  /* ─── Phase 3: Achievement chain advancement ─── */
+  const advanceAchievement = useCallback((checkId) => {
+    setAchievementProgress(prev => {
+      const next = { ...prev };
+      let changed = false;
+      for (const chain of ACHIEVEMENT_CHAINS) {
+        const currentStep = next[chain.id] || 0;
+        if (currentStep >= chain.steps.length) continue; // already complete
+        if (chain.steps[currentStep].check === checkId) {
+          next[chain.id] = currentStep + 1;
+          changed = true;
+          if (currentStep + 1 >= chain.steps.length) {
+            // Chain complete!
+            toast.success(`Achievement: ${chain.name} complete!`, { icon: '🏆' });
+          }
+        }
+      }
+      return changed ? next : prev;
+    });
+  }, []);
+  advanceAchievementRef.current = advanceAchievement;
+
+  /* ─── Phase 3: Prestige System ─── */
+  const PRESTIGE_THRESHOLD = 34; // items needed to prestige
+  const prestigeBuffs = useMemo(() => ({
+    scoreMultiplier: 1 + prestigeLevel * 0.15,  // P1=+15%, P2=+30%, etc.
+    crateSpeedMul: Math.max(0.4, 1 - prestigeLevel * 0.1), // faster crates
+    modifierDurationMul: 1 + prestigeLevel * 0.12, // longer modifiers
+    startWithModifier: prestigeLevel >= 4, // P4+: start with random modifier
+    bonusScorePerLevel: Math.max(0, (prestigeLevel - 4) * 0.05), // P5+: +5% stacking
+  }), [prestigeLevel]);
+
+  // Check if prestige is available
+  useEffect(() => {
+    if (!playgroundMode) return;
+    setPrestigeAvailable(collection.count() >= PRESTIGE_THRESHOLD);
+  }, [playgroundMode, collection]);
+
+  // Phase 4: Load sandbox from URL hash on mount
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const hash = window.location.hash;
+    if (!hash.includes('sandbox=')) return;
+    try {
+      const encoded = hash.split('sandbox=')[1];
+      const json = atob(encoded);
+      const state = JSON.parse(json);
+      if (state.v === 1) {
+        // Will apply when playground activates
+        window.__synthiSandboxImport = state;
+        toast.info('Sandbox preset detected in URL. Activate playground to load it.', { icon: '🎛️' });
+      }
+    } catch {}
+  }, []);
+
+  const performPrestige = useCallback(() => {
+    if (collection.count() < PRESTIGE_THRESHOLD) return;
+    const newLevel = prestigeLevel + 1;
+    setPrestigeLevel(newLevel);
+    try { localStorage.setItem('synthi_prestige_level', String(newLevel)); } catch {}
+    collection.onPrestige();
+    collection.resetCollection();
+    setAchievementProgress({});
+    achievementDataRef.current = { collisionsIn5s: [], wellAttracted: new Set() };
+    setPrestigeAvailable(false);
+    toast.success(`Prestige ${newLevel}! Collection reset. Permanent buffs active.`, { icon: '⭐' });
+    advanceAchievement('prestige_done');
+  }, [advanceAchievement, collection, prestigeLevel]);
+
+  /* ─── Phase 4: Sandbox Presets & Share ─── */
+  const SANDBOX_PRESETS = useMemo(() => [
+    { name: 'Chaos Arena', gravity: 'zero', force: 'repel', portals: 2, wells: 2, desc: 'Zero-G repel with portals & wells' },
+    { name: 'Orbital Lab', gravity: 'center', force: 'none', portals: 0, wells: 1, desc: 'Center gravity with a single well' },
+    { name: 'Pinball', gravity: 'down', force: 'attract', portals: 1, wells: 3, desc: 'Downward gravity, max wells' },
+    { name: 'Void Storm', gravity: 'zero', force: 'attract', portals: 2, wells: 0, desc: 'Zero-G attract + portal maze' },
+  ], []);
+
+  const serializePlaygroundState = useCallback(() => {
+    const bodies = playgroundBodiesRef.current;
+    const spawns = [];
+    for (const [id, body] of Object.entries(bodies)) {
+      if (!id.startsWith('spawn-')) continue;
+      spawns.push({ x: Math.round(body.x), y: Math.round(body.y), a: +(body.angle || 0).toFixed(2), p: body.pinned ? 1 : 0, o: body.orbit ? 1 : 0 });
+    }
+    return {
+      v: 1,
+      g: playgroundGravityMode,
+      f: playgroundForceMode,
+      s: spawns,
+      pp: portalPairs.map(p => ({ a: { x: Math.round(p.a.x), y: Math.round(p.a.y) }, b: { x: Math.round(p.b.x), y: Math.round(p.b.y) } })),
+      gw: gravityWells.map(w => ({ x: Math.round(w.x), y: Math.round(w.y) })),
+    };
+  }, [playgroundForceMode, playgroundGravityMode, portalPairs, gravityWells]);
+
+  const sharePlaygroundState = useCallback(() => {
+    const state = serializePlaygroundState();
+    try {
+      const json = JSON.stringify(state);
+      const encoded = btoa(json);
+      const url = `${window.location.origin}${window.location.pathname}#sandbox=${encoded}`;
+      navigator.clipboard.writeText(url).then(() => {
+        toast.success('Sandbox link copied to clipboard!', { icon: '📋' });
+      }).catch(() => {
+        toast.info('Could not copy — check console for link.');
+      });
+    } catch {}
+  }, [serializePlaygroundState]);
+
+  const savePresetToLocal = useCallback(() => {
+    const state = serializePlaygroundState();
+    try {
+      const presets = JSON.parse(localStorage.getItem('synthi_sandbox_presets') || '[]');
+      const name = `Custom ${presets.length + 1}`;
+      presets.push({ name, state, savedAt: Date.now() });
+      localStorage.setItem('synthi_sandbox_presets', JSON.stringify(presets));
+      toast.success(`Preset "${name}" saved!`, { icon: '💾' });
+    } catch {}
+  }, [serializePlaygroundState]);
+
+  const loadPreset = useCallback((preset) => {
+    setPlaygroundGravityMode(preset.gravity || 'zero');
+    setPlaygroundForceMode(preset.force || 'none');
+    // Clear existing portals and wells
+    setPortalPairs([]);
+    portalPairsRef.current = [];
+    setGravityWells([]);
+    gravityWellsRef.current = [];
+    // Auto-place portals
+    if (preset.portals > 0) {
+      const W = window.innerWidth, H = window.innerHeight;
+      const newPairs = [];
+      for (let i = 0; i < Math.min(preset.portals, 2); i++) {
+        const pair = { id: ++portalIdRef.current, a: { x: 100 + i * 200, y: H * 0.3 }, b: { x: W - 100 - i * 200, y: H * 0.7 } };
+        newPairs.push(pair);
+      }
+      setPortalPairs(newPairs);
+      portalPairsRef.current = newPairs;
+    }
+    // Auto-place wells
+    if (preset.wells > 0) {
+      const W = window.innerWidth, H = window.innerHeight;
+      const newWells = [];
+      for (let i = 0; i < Math.min(preset.wells, 3); i++) {
+        newWells.push({ id: ++gravityWellIdRef.current, x: W * (0.3 + i * 0.2), y: H * 0.5, strength: 800 });
+      }
+      setGravityWells(newWells);
+      gravityWellsRef.current = newWells;
+    }
+    setPresetMenuOpen(false);
+    toast.success(`Loaded preset: ${preset.name}`, { icon: '🎛️' });
+  }, []);
+
   const despawnPlaygroundToy = useCallback((id) => {
     delete playgroundBodiesRef.current[id];
     delete playgroundNodesRef.current[id];
@@ -1402,11 +1659,12 @@ export default function ModernHome() {
     if (playgroundNodesRef.current[crateId]) delete playgroundNodesRef.current[crateId];
 
     const now = Date.now();
+    const buffedDuration = modifier.duration * prestigeBuffs.modifierDurationMul;
     setActiveModifiers(prev => {
       // If already active, refresh duration
       const existing = prev.find(m => m.id === modifier.id);
       if (existing) {
-        const refreshed = prev.map(m => m.id === modifier.id ? { ...m, expiresAt: now + modifier.duration, startedAt: now } : m);
+        const refreshed = prev.map(m => m.id === modifier.id ? { ...m, expiresAt: now + buffedDuration, startedAt: now } : m);
         activeModifiersRef.current = refreshed;
         return refreshed;
       }
@@ -1415,24 +1673,27 @@ export default function ModernHome() {
       if (next.length >= 2) {
         next = next.slice(1);
       }
-      next = [...next, { ...modifier, startedAt: now, expiresAt: now + modifier.duration }];
+      next = [...next, { ...modifier, startedAt: now, expiresAt: now + buffedDuration }];
       activeModifiersRef.current = next;
       return next;
     });
     spawnImpactBurst(window.innerWidth / 2, window.innerHeight / 2, 2);
     playPlaygroundSound('crate_open');
-  }, [playPlaygroundSound, spawnImpactBurst]);
+    // Phase 3: Achievement chain triggers
+    if (modifier.id === 'clone_storm') advanceAchievement('clone_storm_active');
+    if (modifier.id === 'time_warp') advanceAchievement('time_warp_active');
+  }, [advanceAchievement, playPlaygroundSound, prestigeBuffs.modifierDurationMul, spawnImpactBurst]);
 
   // Helper: check if a modifier is active (for physics loop via ref)
   const hasModifier = useCallback((modId) => {
     return activeModifiersRef.current.some(m => m.id === modId && Date.now() < m.expiresAt);
   }, []);
 
-  // Crate spawn timer
+  // Crate spawn timer (prestige buff: crateSpeedMul makes crates faster)
   useEffect(() => {
     if (!playgroundMode) return;
     const scheduleNext = () => {
-      const delay = 25000 + Math.random() * 35000; // 25-60s
+      const delay = (25000 + Math.random() * 35000) * prestigeBuffs.crateSpeedMul; // 25-60s base
       crateSpawnTimerRef.current = setTimeout(() => {
         spawnCrate();
         scheduleNext();
@@ -1442,9 +1703,9 @@ export default function ModernHome() {
     crateSpawnTimerRef.current = setTimeout(() => {
       spawnCrate();
       scheduleNext();
-    }, 15000 + Math.random() * 10000);
+    }, (15000 + Math.random() * 10000) * prestigeBuffs.crateSpeedMul);
     return () => { if (crateSpawnTimerRef.current) clearTimeout(crateSpawnTimerRef.current); };
-  }, [playgroundMode, spawnCrate]);
+  }, [playgroundMode, prestigeBuffs.crateSpeedMul, spawnCrate]);
 
   // Expire modifiers
   useEffect(() => {
@@ -1550,9 +1811,16 @@ export default function ModernHome() {
     playgroundComboResetRef.current = setTimeout(() => setPlaygroundCombo(0), 2600);
 
     const baseScore = { satellite: 180, toast: 120, code: 160, relay: 140 }[spawn.kind] || 100;
-    const newScore = playgroundScore + baseScore + Math.min(nextCombo, 5) * 25;
+    const prestigeScoreMul = prestigeBuffs.scoreMultiplier + prestigeBuffs.bonusScorePerLevel;
+    const newScore = playgroundScore + Math.round((baseScore + Math.min(nextCombo, 5) * 25) * prestigeScoreMul);
     collection.onScoreChange(playgroundScore, newScore);
     setPlaygroundScore(newScore);
+    // Phase 3: Achievement chain triggers
+    if (newScore >= 500) advanceAchievement('score_500');
+    if (nextCombo >= 5) advanceAchievement('combo_5');
+    dailySeed.updateDailyProgress('score', newScore);
+    dailySeed.updateDailyProgress('collect', 1);
+    dailySeed.updateDailyProgress('combo', nextCombo);
     spawnImpactBurst(centerX, centerY, 1.25);
     playPlaygroundSound('collect');
 
@@ -1563,7 +1831,10 @@ export default function ModernHome() {
     const challengeResult = speedrun.updateProgress('collects', 1);
     speedrun.updateProgress('score', newScore);
     speedrun.updateProgress('combo', nextCombo);
-    if (challengeResult) collection.onSpeedrunCompleted(challengeResult.challengeId);
+    if (challengeResult) {
+      collection.onSpeedrunCompleted(challengeResult.challengeId);
+      advanceAchievement('speedrun_done');
+    }
     if (voidDim.inVoid) voidDim.addVoidScore(baseScore);
 
     if (spawn.kind === 'satellite') {
@@ -1622,6 +1893,12 @@ export default function ModernHome() {
     body.sleepFrames = 0;
     collection.onPinToggle(id);
     if (body.pinned) speedrun.updateProgress('pins', 1);
+    // Phase 3: Achievement - pin count
+    if (body.pinned) {
+      const pinnedCount = Object.values(playgroundBodiesRef.current).filter(b => b && b.pinned).length;
+      if (pinnedCount >= 6) advanceAchievement('pin_6');
+      dailySeed.updateDailyProgress('pin', pinnedCount);
+    }
     syncPlaygroundMeta();
   }, [collection, isPlaygroundItemId, playgroundMode, speedrun, syncPlaygroundMeta]);
 
@@ -1688,6 +1965,15 @@ export default function ModernHome() {
       setObjectiveIndices(newIndices.slice(0, 4));
       setPlaygroundMode(true);
       collection.onSessionStart();
+      // Phase 3: Prestige P4+ — start with a random modifier
+      if (prestigeBuffs.startWithModifier) {
+        setTimeout(() => {
+          const randomMod = CRATE_MODIFIERS[Math.floor(Math.random() * CRATE_MODIFIERS.length)];
+          const fakeId = `crate-prestige-${Date.now()}`;
+          setPlaygroundCrates(prev => [...prev, { id: fakeId, x: -999, y: -999, modifier: randomMod, spawnedAt: Date.now() }]);
+          activateModifier(randomMod, fakeId);
+        }, 1500);
+      }
       // Boot sequence — terminal-style init in the corner
       {
         const lines = [
@@ -1917,6 +2203,22 @@ export default function ModernHome() {
       if (event.key === 't' || event.key === 'T') {
         speedrun.startChallenge();
       }
+      // Phase 2: Portal placement mode
+      if (event.key === 'p' || event.key === 'P') {
+        setPortalPlacementMode(prev => {
+          if (prev) portalPendingRef.current = null; // cancel pending click
+          return !prev;
+        });
+        setGravityWellPlacementMode(false); // exclusive modes
+      }
+      // Phase 2: Gravity well placement mode
+      if (event.key === 'g' || event.key === 'G') {
+        setGravityWellPlacementMode(prev => {
+          return !prev;
+        });
+        setPortalPlacementMode(false); // exclusive modes
+        portalPendingRef.current = null;
+      }
     };
     const onKeyUp = (event) => {
       const tag = document.activeElement?.tagName;
@@ -2015,6 +2317,35 @@ export default function ModernHome() {
             if (weatherMods?.gravityPulse) body.vy += weatherMods.gravityPulse * dt;
             if (weatherMods?.solarDrift) body.vy += weatherMods.solarDrift * dt;
 
+            // Phase 2: Gravity wells — inverse-square attraction, slingshot eject at <25px
+            const wells = gravityWellsRef.current;
+            for (let wi = 0; wi < wells.length; wi++) {
+              const well = wells[wi];
+              const wdx = well.x - rect.centerX;
+              const wdy = well.y - rect.centerY;
+              const wDist = Math.max(Math.hypot(wdx, wdy), 1);
+              if (wDist < 300) {
+                const isSolar = weather.stage === 'solar';
+                const stormMul = weather.stage === 'storm' ? 1.5 : 1;
+                if (wDist < 25) {
+                  // Slingshot eject — strong push away
+                  const ejectForce = 6 * dt * stormMul;
+                  body.vx -= (wdx / wDist) * ejectForce;
+                  body.vy -= (wdy / wDist) * ejectForce;
+                  // Phase 3: count items sucked into well
+                  const aD = achievementDataRef.current;
+                  if (!aD.wellAttracted) aD.wellAttracted = new Set();
+                  aD.wellAttracted.add(id);
+                  if (aD.wellAttracted.size >= 3) advanceAchievement('well_attract_3');
+                } else {
+                  const strength = well.strength * stormMul / (wDist * wDist);
+                  const dir = isSolar ? -1 : 1; // solar = push instead of pull
+                  body.vx += dir * (wdx / wDist) * strength * dt;
+                  body.vy += dir * (wdy / wDist) * strength * dt;
+                }
+              }
+            }
+
             if (dragging && playgroundDragRef.current?.engaged) {
               const drag = playgroundDragRef.current;
               const grabPoint = getPlaygroundBodyViewportPoint(body, drag.grabLocalX, drag.grabLocalY);
@@ -2056,6 +2387,36 @@ export default function ModernHome() {
             body.x += body.vx * dt;
             body.y += body.vy * dt;
             body.angle += body.spin * dt;
+
+            // Phase 2: Portal teleportation
+            const pPairs = portalPairsRef.current;
+            if (pPairs.length > 0 && !body.pinned) {
+              const pRect = getPlaygroundBodyViewportRect(body);
+              const pcx = pRect.centerX, pcy = pRect.centerY;
+              const cooldownKey = id;
+              const cooldownTime = portalCooldownRef.current[cooldownKey] || 0;
+              if (now - cooldownTime > 200) {
+                for (let pi = 0; pi < pPairs.length; pi++) {
+                  const pair = pPairs[pi];
+                  const PORTAL_RADIUS = 35;
+                  const distA = Math.hypot(pcx - pair.a.x, pcy - pair.a.y);
+                  const distB = Math.hypot(pcx - pair.b.x, pcy - pair.b.y);
+                  if (distA < PORTAL_RADIUS) {
+                    body.x += pair.b.x - pair.a.x;
+                    body.y += pair.b.y - pair.a.y;
+                    portalCooldownRef.current[cooldownKey] = now;
+                    collection.onPortalTraversal();
+                    break;
+                  } else if (distB < PORTAL_RADIUS) {
+                    body.x += pair.a.x - pair.b.x;
+                    body.y += pair.a.y - pair.b.y;
+                    portalCooldownRef.current[cooldownKey] = now;
+                    collection.onPortalTraversal();
+                    break;
+                  }
+                }
+              }
+            }
           }
 
           if (body.fixed) {
@@ -2342,10 +2703,16 @@ export default function ModernHome() {
             setPlaygroundStats(prev => ({ ...prev, collisions: prev.collisions + scoreAdd }));
             collection.onCollision(a.id, b.id, playgroundBodiesRef.current);
             collection.onLifetimeCollision();
+            // Phase 3: Track collisions for achievement chain
+            const aData = achievementDataRef.current;
+            aData.collisionsIn5s.push(now);
+            aData.collisionsIn5s = aData.collisionsIn5s.filter(t => now - t < 5000);
+            if (aData.collisionsIn5s.length >= 10) advanceAchievement('ten_collisions_5s');
             const bossHit = bosses.hitBoss(mx, my);
             if (bossHit && bossHit !== 'hit') {
               collection.onBossDefeated(bossHit);
               collection.onLifetimeBossDefeat();
+              advanceAchievement('boss_defeated');
             }
             if (hasMod('clone_storm') && Math.random() < 0.35) {
               const toyCount = Object.keys(playgroundBodiesRef.current).filter(k => k.startsWith('spawn-')).length;
@@ -2361,6 +2728,167 @@ export default function ModernHome() {
         });
       }
 
+      // Phase 2: Gravity well collectible check
+      if (gravityWellsRef.current.length >= 3) {
+        let caughtInWells = 0;
+        bodies.forEach(({ body }) => {
+          if (body.pinned || body.sleeping) return;
+          const bRect = getPlaygroundBodyViewportRect(body);
+          for (const well of gravityWellsRef.current) {
+            if (Math.hypot(bRect.centerX - well.x, bRect.centerY - well.y) < 300) { caughtInWells++; break; }
+          }
+        });
+        collection.onGravityWellCheck(gravityWellsRef.current.length, caughtInWells);
+      }
+
+      /* ─── Phase 3: Toy Fusion detection ─── */
+      const orbitingToys = bodies.filter(b => b.body.orbit && b.id.startsWith('spawn-'));
+      const overlapMap = fusionOverlapRef.current;
+      const touchedOverlaps = new Set();
+      for (let fi = 0; fi < orbitingToys.length; fi++) {
+        for (let fj = fi + 1; fj < orbitingToys.length; fj++) {
+          const ta = orbitingToys[fi], tb = orbitingToys[fj];
+          const ra = getPlaygroundBodyViewportRect(ta.body);
+          const rb = getPlaygroundBodyViewportRect(tb.body);
+          const dist = Math.hypot(ra.centerX - rb.centerX, ra.centerY - rb.centerY);
+          const overlapThreshold = (ta.body.width + tb.body.width) * 0.35;
+          const key = ta.id < tb.id ? `${ta.id}|${tb.id}` : `${tb.id}|${ta.id}`;
+          touchedOverlaps.add(key);
+          if (dist < overlapThreshold) {
+            if (!overlapMap[key]) overlapMap[key] = now;
+            else if (now - overlapMap[key] >= 500) {
+              // Fuse! Find spawn data for both
+              const spawnA = playgroundSpawns.find(s => s.id === ta.id);
+              const spawnB = playgroundSpawns.find(s => s.id === tb.id);
+              if (spawnA && spawnB) {
+                const fusionKey = getFusionKey(spawnA.kind, spawnB.kind);
+                const recipe = FUSION_RECIPES[fusionKey];
+                const fusedTemplate = recipe || { kind: 'fused', label: 'ALLOY', body: 'Unknown Fusion', accent: '#94a3b8', gradient: 'linear-gradient(135deg, #94a3b8, #64748b)' };
+                // Remove both toys, spawn fused toy at midpoint
+                const mx = (ra.centerX + rb.centerX) / 2;
+                const my = (ra.centerY + rb.centerY) / 2;
+                despawnPlaygroundToy(ta.id);
+                despawnPlaygroundToy(tb.id);
+                // Spawn the fused toy
+                const fusedId = `spawn-${++playgroundSpawnIdRef.current}`;
+                playgroundBodiesRef.current[fusedId] = {
+                  x: mx - 80, y: my - 45, vx: 0, vy: -1,
+                  angle: 0, spin: 0.02,
+                  pinned: false, orbit: false,
+                  orbitAngle: Math.random() * Math.PI * 2, orbitRadius: 100,
+                  fixed: true, baseX: 0, baseY: 0,
+                  width: 160, height: 95, escapeArmed: false,
+                  mass: 2.5, // heavier
+                };
+                applyPlaygroundBodyMaterial(fusedId, playgroundBodiesRef.current[fusedId]);
+                setPlaygroundSpawns(prev => [...prev, { id: fusedId, ...fusedTemplate, _fused: true, _spawnTime: Date.now() }]);
+                spawnImpactBurst(mx, my, 2.0);
+                fusionCountRef.current++;
+                collection.onToyFusion(recipe || 'Alloy');
+                dailySeed.updateDailyProgress('fuse', 1);
+                delete overlapMap[key];
+              }
+              break;
+            }
+          } else {
+            delete overlapMap[key];
+          }
+        }
+      }
+      // Clean stale overlaps
+      for (const k in overlapMap) {
+        if (!touchedOverlaps.has(k)) delete overlapMap[k];
+      }
+
+      /* ─── Phase 2: Arena Mutations ─── */
+      const mutation = arenaMutationRef.current;
+      if (mutation && dt > 0) {
+        const elapsed = now - mutation.startTime;
+        if (elapsed > mutation.duration) {
+          arenaMutationRef.current = null;
+          setArenaMutation(null);
+          arenaMutationCooldownRef.current = now;
+          collection.onArenaMutationSurvived();
+          dailySeed.updateDailyProgress('mutation', 1);
+        } else {
+          const progress = elapsed / mutation.duration;
+          const activeBodies = bodies.filter(b => !b.body.sleeping || mutation.type === 'earthquake');
+
+          switch (mutation.type) {
+            case 'earthquake':
+              // Wake all sleeping bodies, apply random impulse (strongest at start)
+              if (progress < 0.1) {
+                bodies.forEach(({ body }) => {
+                  body.sleeping = false;
+                  body.sleepFrames = 0;
+                  if (!body.pinned) {
+                    body.vx += (Math.random() - 0.5) * 4;
+                    body.vy += (Math.random() - 0.5) * 4;
+                  }
+                });
+              } else {
+                bodies.forEach(({ body }) => {
+                  if (!body.pinned && !body.sleeping) {
+                    body.vx += (Math.random() - 0.5) * 1.5 * (1 - progress) * dt;
+                    body.vy += (Math.random() - 0.5) * 1.5 * (1 - progress) * dt;
+                  }
+                });
+              }
+              break;
+            case 'solar_flare':
+              // Radial push from center
+              activeBodies.forEach(({ body }) => {
+                if (body.pinned) return;
+                const r = getPlaygroundBodyViewportRect(body);
+                const fdx = r.centerX - coreX;
+                const fdy = r.centerY - coreY;
+                const fDist = Math.max(Math.hypot(fdx, fdy), 1);
+                const pushForce = 2.5 * (1 - progress * 0.7) * dt;
+                body.vx += (fdx / fDist) * pushForce;
+                body.vy += (fdy / fDist) * pushForce;
+              });
+              break;
+            case 'data_corruption':
+              // Swap body positions at the start (once)
+              if (!mutation._swapped) {
+                mutation._swapped = true;
+                const swappable = activeBodies.filter(b => !b.body.pinned && !b.body.orbit);
+                const count = Math.min(swappable.length, 6);
+                for (let si = 0; si < count - 1; si += 2) {
+                  const a = swappable[si].body, b = swappable[si + 1].body;
+                  const tmpX = a.x, tmpY = a.y;
+                  a.x = b.x; a.y = b.y;
+                  b.x = tmpX; b.y = tmpY;
+                }
+              }
+              break;
+            case 'magnetic_storm':
+              // Pairwise body attraction
+              for (let ai = 0; ai < activeBodies.length; ai++) {
+                const ab = activeBodies[ai].body;
+                if (ab.pinned) continue;
+                const ar = getPlaygroundBodyViewportRect(ab);
+                for (let bi = ai + 1; bi < activeBodies.length; bi++) {
+                  const bb = activeBodies[bi].body;
+                  if (bb.pinned) continue;
+                  const br = getPlaygroundBodyViewportRect(bb);
+                  const mdx = br.centerX - ar.centerX;
+                  const mdy = br.centerY - ar.centerY;
+                  const mDist = Math.max(Math.hypot(mdx, mdy), 30);
+                  if (mDist < 400) {
+                    const pull = 0.15 * dt * (1 - mDist / 400);
+                    ab.vx += (mdx / mDist) * pull;
+                    ab.vy += (mdy / mDist) * pull;
+                    bb.vx -= (mdx / mDist) * pull;
+                    bb.vy -= (mdy / mDist) * pull;
+                  }
+                }
+              }
+              break;
+          }
+        }
+      }
+
       bodies.forEach(({ id, node, body }) => {
         const dragging = playgroundDragRef.current?.id === id;
         node.style.transform = `translate3d(${body.x}px, ${body.y}px, 0) rotate(${body.angle}rad) scale(${dragging ? 1.03 : body.pinned ? 1.02 : 1})`;
@@ -2374,6 +2902,10 @@ export default function ModernHome() {
       const deadlockResult = bosses.checkDeadlockOrbs();
       if (deadlockResult) { collection.onBossDefeated(deadlockResult); collection.onLifetimeBossDefeat(); }
 
+      // Phase 4: Ghost replay — record positions, advance playback
+      ghostReplay.recordFrame(playgroundBodiesRef.current);
+      ghostReplay.replayFrame();
+
       playgroundRafRef.current = requestAnimationFrame(step);
     };
     playgroundRafRef.current = requestAnimationFrame(step);
@@ -2381,6 +2913,38 @@ export default function ModernHome() {
       if (playgroundRafRef.current) cancelAnimationFrame(playgroundRafRef.current);
     };
   }, [activateModifier, bosses, collection, createPlaygroundBody, despawnPlaygroundToy, getPlaygroundBodyViewportPoint, getPlaygroundBodyViewportRect, hasModifier, isPlaygroundItemId, playgroundForceMode, playgroundGravityMode, playgroundMode, playgroundPaused, playgroundSlowMo, playPlaygroundSound, spawnImpactBurst, spawnPlaygroundToy, syncPlaygroundBodyNodeMetrics, weather]);
+
+  /* ─── Phase 2: Arena Mutation scheduler ─── */
+  useEffect(() => {
+    if (!playgroundMode) {
+      if (arenaMutationTimerRef.current) clearTimeout(arenaMutationTimerRef.current);
+      arenaMutationRef.current = null;
+      setArenaMutation(null);
+      return;
+    }
+    const MUTATION_TYPES = [
+      { type: 'earthquake',      name: 'EARTHQUAKE',      duration: 6000 },
+      { type: 'solar_flare',     name: 'SOLAR FLARE',     duration: 7000 },
+      { type: 'data_corruption', name: 'DATA CORRUPTION', duration: 5000 },
+      { type: 'magnetic_storm',  name: 'MAGNETIC STORM',  duration: 8000 },
+    ];
+    const scheduleMutation = () => {
+      const delay = 90000 + Math.random() * 60000; // 90-150s
+      arenaMutationTimerRef.current = setTimeout(() => {
+        if (!arenaMutationRef.current) {
+          const mt = MUTATION_TYPES[Math.floor(Math.random() * MUTATION_TYPES.length)];
+          const m = { ...mt, startTime: performance.now() };
+          arenaMutationRef.current = m;
+          setArenaMutation(m);
+        }
+        scheduleMutation();
+      }, delay);
+    };
+    scheduleMutation();
+    return () => {
+      if (arenaMutationTimerRef.current) clearTimeout(arenaMutationTimerRef.current);
+    };
+  }, [playgroundMode]);
 
   const explodePlaygroundItems = useCallback(() => {
     const centerX = window.innerWidth / 2;
@@ -2463,6 +3027,55 @@ export default function ModernHome() {
     if (!playgroundMode || playgroundDragRef.current) return;
     const target = event.target;
     if (target.closest('[data-playground-control], [data-playground-item], button, input, textarea, a, label, kbd')) return;
+
+    // Phase 2: Portal placement mode
+    if (portalPlacementMode) {
+      const px = event.clientX, py = event.clientY;
+      if (portalPendingRef.current) {
+        // Second click - complete the pair
+        const a = portalPendingRef.current;
+        const dist = Math.hypot(px - a.x, py - a.y);
+        if (dist < 60) return; // too close, ignore
+        const newPair = { id: ++portalIdRef.current, a, b: { x: px, y: py } };
+        setPortalPairs(prev => {
+          const next = [...prev, newPair].slice(-2); // max 2 pairs
+          portalPairsRef.current = next;
+          return next;
+        });
+        portalPendingRef.current = null;
+        setPortalPlacementMode(false);
+        return;
+      } else {
+        // First click - mark pending
+        portalPendingRef.current = { x: px, y: py };
+        return;
+      }
+    }
+
+    // Phase 2: Gravity well placement mode
+    if (gravityWellPlacementMode) {
+      const wx = event.clientX, wy = event.clientY;
+      // Check if clicking near existing well to remove it
+      const existingIdx = gravityWellsRef.current.findIndex(w => Math.hypot(wx - w.x, wy - w.y) < 40);
+      if (existingIdx >= 0) {
+        setGravityWells(prev => {
+          const next = prev.filter((_, i) => i !== existingIdx);
+          gravityWellsRef.current = next;
+          return next;
+        });
+        return;
+      }
+      if (gravityWellsRef.current.length >= 3) return; // max 3
+      const newWell = { id: ++gravityWellIdRef.current, x: wx, y: wy, strength: 800 };
+      setGravityWells(prev => {
+        const next = [...prev, newWell];
+        gravityWellsRef.current = next;
+        return next;
+      });
+      advanceAchievement('gravity_well_placed');
+      return;
+    }
+
     // Boss click (race_condition)
     const bossResult = bosses.clickBoss(event.clientX, event.clientY);
     if (bossResult && bossResult !== 'hit') {
@@ -2479,7 +3092,7 @@ export default function ModernHome() {
       }
     }
     spawnPlaygroundToy(event.clientX, event.clientY);
-  }, [bosses, collection, playgroundMode, spawnPlaygroundToy, voidDim]);
+  }, [bosses, collection, playgroundMode, spawnPlaygroundToy, voidDim, portalPlacementMode, gravityWellPlacementMode]);
 
   const getDragStyle = useCallback((id) => {
     if (!playgroundMode || !isPlaygroundItemId(id)) return {};
@@ -2885,10 +3498,11 @@ export default function ModernHome() {
     { label: 'Score 200 points',    get: (s, c, sc) => Math.min(sc, 200),     target: 200 },
     { label: 'Score 500 points',    get: (s, c, sc) => Math.min(sc, 500),     target: 500 },
   ]);
-  const [objectiveIndices, setObjectiveIndices] = useState(() => {
+  const [objectiveIndices, setObjectiveIndices] = useState([0, 1, 2, 3]);
+  useEffect(() => {
     const indices = ALL_OBJECTIVES.current.map((_, i) => i).sort(() => Math.random() - 0.5);
-    return indices.slice(0, 4);
-  });
+    setObjectiveIndices(indices.slice(0, 4));
+  }, []);
   const playgroundObjectives = useMemo(() =>
     objectiveIndices.map(i => {
       const obj = ALL_OBJECTIVES.current[i];
@@ -2912,6 +3526,103 @@ export default function ModernHome() {
     <div className="relative min-h-screen" onClickCapture={handlePlaygroundSurfaceClick} style={playgroundMode ? { outline: '2px dashed rgba(88,164,176,0.3)', animation: 'playgroundBorder 3s linear infinite' } : undefined}>
       {playgroundMode && (
         <>
+
+
+          {/* ─── Phase 2: Portal Pairs ─── */}
+          {portalPairs.length > 0 && (
+            <div className="fixed inset-0 z-[37] pointer-events-none">
+              {portalPairs.map(pair => (
+                <React.Fragment key={pair.id}>
+                  <div className="absolute rounded-full" style={{
+                    left: pair.a.x - 18, top: pair.a.y - 18, width: 36, height: 36,
+                    border: '2px solid rgba(167,139,250,0.6)',
+                    boxShadow: '0 0 20px rgba(167,139,250,0.3), inset 0 0 12px rgba(167,139,250,0.2)',
+                    animation: 'deployLivePulse 2s ease-in-out infinite',
+                    background: 'radial-gradient(circle, rgba(167,139,250,0.15) 0%, transparent 70%)',
+                  }} />
+                  <div className="absolute rounded-full" style={{
+                    left: pair.b.x - 18, top: pair.b.y - 18, width: 36, height: 36,
+                    border: '2px solid rgba(167,139,250,0.6)',
+                    boxShadow: '0 0 20px rgba(167,139,250,0.3), inset 0 0 12px rgba(167,139,250,0.2)',
+                    animation: 'deployLivePulse 2s ease-in-out infinite',
+                    background: 'radial-gradient(circle, rgba(167,139,250,0.15) 0%, transparent 70%)',
+                  }} />
+                  <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ overflow: 'visible' }}>
+                    <line x1={pair.a.x} y1={pair.a.y} x2={pair.b.x} y2={pair.b.y}
+                      stroke="rgba(167,139,250,0.15)" strokeWidth="1" strokeDasharray="6,8" />
+                  </svg>
+                </React.Fragment>
+              ))}
+            </div>
+          )}
+          {/* ─── Phase 2: Portal placement pending indicator ─── */}
+          {portalPlacementMode && portalPendingRef.current && (
+            <div className="fixed z-[37] pointer-events-none rounded-full" style={{
+              left: portalPendingRef.current.x - 18, top: portalPendingRef.current.y - 18, width: 36, height: 36,
+              border: '2px dashed rgba(167,139,250,0.8)',
+              animation: 'deployLivePulse 1s ease-in-out infinite',
+            }} />
+          )}
+          {/* ─── Phase 2: Gravity Wells ─── */}
+          {gravityWells.length > 0 && (
+            <div className="fixed inset-0 z-[36] pointer-events-none">
+              {gravityWells.map(well => (
+                <div key={well.id} className="absolute" style={{
+                  left: well.x - 24, top: well.y - 24, width: 48, height: 48,
+                }}>
+                  <div className="absolute inset-0 rounded-full" style={{
+                    background: 'radial-gradient(circle, rgba(251,191,36,0.25) 0%, rgba(251,191,36,0.08) 40%, transparent 70%)',
+                    boxShadow: '0 0 30px rgba(251,191,36,0.15)',
+                    animation: 'deployLivePulse 3s ease-in-out infinite',
+                  }} />
+                  <div className="absolute rounded-full" style={{
+                    left: 16, top: 16, width: 16, height: 16,
+                    background: 'radial-gradient(circle, rgba(251,191,36,0.8), rgba(251,191,36,0.3))',
+                    boxShadow: '0 0 12px rgba(251,191,36,0.5)',
+                  }} />
+                  {/* Range indicator */}
+                  <div className="absolute rounded-full" style={{
+                    left: 24 - 150, top: 24 - 150, width: 300, height: 300,
+                    border: '1px solid rgba(251,191,36,0.06)',
+                    borderRadius: '50%',
+                  }} />
+                </div>
+              ))}
+            </div>
+          )}
+          {/* ─── Phase 2: Arena Mutation flash ─── */}
+          {arenaMutation && (
+            <div className="fixed inset-0 z-[130] pointer-events-none flex items-center justify-center" style={{
+              animation: 'arenaMutationFlash 0.6s ease-out both',
+            }}>
+              <div className="text-center">
+                <div className="font-mono text-3xl font-black tracking-[0.4em] text-white/90" style={{
+                  textShadow: '0 0 40px rgba(255,107,107,0.5), 0 0 80px rgba(255,107,107,0.2)',
+                  animation: 'arenaMutationText 5s ease-out both',
+                }}>
+                  ⚡ {arenaMutation.name} ⚡
+                </div>
+              </div>
+            </div>
+          )}
+          {/* Phase 4: Ghost Replay Overlay */}
+          {ghostReplay.replaying && ghostReplay.ghostPositions.length > 0 && (
+            ghostReplay.ghostPositions.map((ghost, i) => (
+              <div
+                key={`ghost-${i}`}
+                className="fixed z-[60] pointer-events-none rounded-2xl border border-cyan-400/15"
+                style={{
+                  left: 0, top: 0,
+                  width: ghost.w || 132,
+                  height: ghost.h || 95,
+                  transform: `translate(${ghost.x}px, ${ghost.y}px) rotate(${ghost.a || 0}rad)`,
+                  background: 'rgba(88, 164, 176, 0.06)',
+                  boxShadow: '0 0 16px rgba(88, 164, 176, 0.1)',
+                  opacity: 0.4,
+                }}
+              />
+            ))
+          )}
           <div
             ref={playgroundHudRef}
             className={`fixed z-[120] rounded-2xl border border-[#58A4B0]/20 bg-[#0d1114]/90 backdrop-blur-xl shadow-2xl p-4 ease-out ${playgroundHudDragging ? 'transition-none' : 'transition-all duration-300'} ${playgroundHudMin ? 'w-auto' : 'w-[320px] space-y-4'}`}
@@ -3015,16 +3726,144 @@ export default function ModernHome() {
               <button className="rounded-xl px-3 py-2 text-[11px] font-mono border border-white/10 text-slate-400 hover:border-white/20 hover:text-white transition-colors" onClick={chaosRain} data-playground-control>
                 Chaos rain
               </button>
-              <button className={`rounded-xl px-3 py-2 text-[11px] font-mono border transition-colors ${playgroundSfxOn ? 'border-[#58A4B0]/40 bg-[#58A4B0]/10 text-[#58A4B0]' : 'border-white/10 text-slate-400 hover:border-white/20 hover:text-white'}`} onClick={() => setPlaygroundSfxOn(prev => !prev)} data-playground-control>
-                {playgroundSfxOn ? 'SFX on' : 'SFX off'}
-              </button>
+
             </div>
 
             <div className="flex flex-wrap gap-2" data-playground-control>
               <span className={`px-2 py-1 rounded-full text-[10px] font-mono border ${playgroundSlowMo ? 'border-amber-400/40 text-amber-300 bg-amber-500/10' : 'border-white/10 text-slate-500'}`}>Shift = slow-mo</span>
               <span className={`px-2 py-1 rounded-full text-[10px] font-mono border ${playgroundPaused ? 'border-[#58A4B0]/40 text-[#58A4B0] bg-[#58A4B0]/10' : 'border-white/10 text-slate-500'}`}>Space = freeze</span>
+              <span className={`px-2 py-1 rounded-full text-[10px] font-mono border cursor-pointer select-none ${portalPlacementMode ? 'border-purple-400/40 text-purple-300 bg-purple-500/10' : 'border-white/10 text-slate-500 hover:text-white hover:border-white/20'}`} onClick={() => { setPortalPlacementMode(p => { if (p) portalPendingRef.current = null; return !p; }); setGravityWellPlacementMode(false); }} data-playground-control>P = portals ({portalPairs.length}/2)</span>
+              <span className={`px-2 py-1 rounded-full text-[10px] font-mono border cursor-pointer select-none ${gravityWellPlacementMode ? 'border-amber-400/40 text-amber-300 bg-amber-500/10' : 'border-white/10 text-slate-500 hover:text-white hover:border-white/20'}`} onClick={() => { setGravityWellPlacementMode(p => !p); setPortalPlacementMode(false); portalPendingRef.current = null; }} data-playground-control>G = wells ({gravityWells.length}/3)</span>
             </div>
+            {/* Phase 3: Achievement Chains HUD */}
+            {ACHIEVEMENT_CHAINS.some(c => (achievementProgress[c.id] || 0) > 0 && (achievementProgress[c.id] || 0) < c.steps.length) && (
+              <div className="mt-2 space-y-1.5" data-playground-control>
+                {ACHIEVEMENT_CHAINS.filter(c => (achievementProgress[c.id] || 0) > 0 && (achievementProgress[c.id] || 0) < c.steps.length).map(chain => {
+                  const step = achievementProgress[chain.id] || 0;
+                  return (
+                    <div key={chain.id} className="text-[10px] font-mono text-slate-400">
+                      <span className="text-amber-300">🏆 {chain.name}</span>{' '}
+                      <span className="text-slate-500">{step}/{chain.steps.length}</span>{' '}
+                      <span className="text-slate-500">→ {chain.steps[step]?.label}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+            {/* Phase 3: Prestige System */}
+            {prestigeLevel > 0 && (
+              <div className="mt-2 text-[10px] font-mono text-amber-300" data-playground-control>
+                {'⭐'.repeat(Math.min(prestigeLevel, 5))} Prestige {prestigeLevel} — {Math.round((prestigeBuffs.scoreMultiplier - 1) * 100)}% score bonus
+              </div>
+            )}
+            {prestigeAvailable && (
+              <button
+                className="mt-2 w-full rounded-lg border border-amber-400/30 bg-amber-500/10 px-3 py-1.5 text-[10px] font-mono text-amber-300 hover:bg-amber-500/20 transition-colors"
+                onClick={performPrestige}
+                data-playground-control
+              >
+                ⭐ PRESTIGE (reset collection for permanent buffs)
+              </button>
+            )}
+            {/* Phase 4: Daily Seed Challenge */}
+            {dailySeed.dailyChallenge && !dailySeed.dailyActive && !dailySeed.dailyCompleted && (
+              <button
+                className="mt-2 w-full rounded-lg border border-cyan-400/30 bg-cyan-500/10 px-3 py-1.5 text-[10px] font-mono text-cyan-300 hover:bg-cyan-500/20 transition-colors"
+                onClick={() => {
+                  const cfg = dailySeed.startDaily();
+                  if (cfg) {
+                    setPlaygroundGravityMode(cfg.gravityMode);
+                    setPlaygroundForceMode(cfg.forceMode);
+                    toast.success('Daily Challenge started! Complete all objectives.', { icon: '📅' });
+                  }
+                }}
+                data-playground-control
+              >
+                📅 DAILY CHALLENGE
+              </button>
+            )}
+            {dailySeed.dailyCompleted && (
+              <div className="mt-2 text-[10px] font-mono text-emerald-300" data-playground-control>
+                ✅ Daily challenge complete! Best: {dailySeed.dailyBestScore}
+              </div>
+            )}
+            {dailySeed.dailyActive && dailySeed.dailyChallenge && (
+              <div className="mt-2 space-y-1 border border-cyan-500/20 rounded-lg p-2 bg-cyan-500/5" data-playground-control>
+                <div className="text-[10px] font-mono text-cyan-300 font-bold">📅 DAILY CHALLENGE</div>
+                {dailySeed.dailyChallenge.objectives.map(obj => {
+                  const current = dailySeed.dailyProgress[obj.id] || 0;
+                  const done = obj.target ? current >= obj.target : current > 0;
+                  return (
+                    <div key={obj.id} className={`text-[9px] font-mono ${done ? 'text-emerald-400' : 'text-slate-400'}`}>
+                      {done ? '✅' : '⬜'} {obj.label} {obj.target ? `(${Math.min(current, obj.target)}/${obj.target})` : ''}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
             </>
+            )}
+            {/* Phase 4: Ghost Replay Controls */}
+            <div className="mt-2 flex gap-1.5 flex-wrap" data-playground-control>
+              {!ghostReplay.recording && !ghostReplay.replaying && (
+                <button className="px-2 py-1 rounded-lg border border-rose-400/20 bg-rose-500/5 text-[9px] font-mono text-rose-300 hover:bg-rose-500/15 transition-colors" onClick={ghostReplay.startRecording} data-playground-control>
+                  ⏺ REC
+                </button>
+              )}
+              {ghostReplay.recording && (
+                <button className="px-2 py-1 rounded-lg border border-rose-400/30 bg-rose-500/15 text-[9px] font-mono text-rose-300 animate-pulse" onClick={ghostReplay.stopRecording} data-playground-control>
+                  ⏹ STOP REC
+                </button>
+              )}
+              {ghostReplay.hasGhost && !ghostReplay.replaying && !ghostReplay.recording && (
+                <button className="px-2 py-1 rounded-lg border border-cyan-400/20 bg-cyan-500/5 text-[9px] font-mono text-cyan-300 hover:bg-cyan-500/15 transition-colors" onClick={ghostReplay.startReplay} data-playground-control>
+                  👻 GHOST
+                </button>
+              )}
+              {ghostReplay.replaying && (
+                <button className="px-2 py-1 rounded-lg border border-cyan-400/30 bg-cyan-500/15 text-[9px] font-mono text-cyan-300" onClick={ghostReplay.stopReplay} data-playground-control>
+                  ⏹ STOP GHOST
+                </button>
+              )}
+            </div>
+            {/* Phase 4: Sandbox Presets & Share */}
+            <div className="mt-1 flex gap-1.5 flex-wrap" data-playground-control>
+              <button className="px-2 py-1 rounded-lg border border-violet-400/20 bg-violet-500/5 text-[9px] font-mono text-violet-300 hover:bg-violet-500/15 transition-colors" onClick={() => setPresetMenuOpen(p => !p)} data-playground-control>
+                🎛️ PRESETS
+              </button>
+              <button className="px-2 py-1 rounded-lg border border-emerald-400/20 bg-emerald-500/5 text-[9px] font-mono text-emerald-300 hover:bg-emerald-500/15 transition-colors" onClick={sharePlaygroundState} data-playground-control>
+                📋 SHARE
+              </button>
+              <button className="px-2 py-1 rounded-lg border border-amber-400/20 bg-amber-500/5 text-[9px] font-mono text-amber-300 hover:bg-amber-500/15 transition-colors" onClick={savePresetToLocal} data-playground-control>
+                💾 SAVE
+              </button>
+            </div>
+            {presetMenuOpen && (
+              <div className="mt-1 space-y-1 border border-violet-500/20 rounded-lg p-2 bg-violet-500/5" data-playground-control>
+                {SANDBOX_PRESETS.map(preset => (
+                  <button key={preset.name} className="w-full text-left px-2 py-1.5 rounded-lg text-[9px] font-mono text-violet-200 hover:bg-violet-500/15 transition-colors" onClick={() => loadPreset(preset)} data-playground-control>
+                    <div className="font-bold">{preset.name}</div>
+                    <div className="text-slate-500">{preset.desc}</div>
+                  </button>
+                ))}
+                {(() => {
+                  try {
+                    const custom = JSON.parse(localStorage.getItem('synthi_sandbox_presets') || '[]');
+                    return custom.map((p, i) => (
+                      <button key={`custom-${i}`} className="w-full text-left px-2 py-1.5 rounded-lg text-[9px] font-mono text-amber-200 hover:bg-amber-500/15 transition-colors" onClick={() => {
+                        setPlaygroundGravityMode(p.state.g || 'zero');
+                        setPlaygroundForceMode(p.state.f || 'none');
+                        if (p.state.pp) { setPortalPairs(p.state.pp.map((pp, idx) => ({ id: ++portalIdRef.current, a: pp.a, b: pp.b }))); portalPairsRef.current = p.state.pp.map((pp, idx) => ({ id: idx + 1, a: pp.a, b: pp.b })); }
+                        if (p.state.gw) { const nw = p.state.gw.map(w => ({ id: ++gravityWellIdRef.current, x: w.x, y: w.y, strength: 800 })); setGravityWells(nw); gravityWellsRef.current = nw; }
+                        setPresetMenuOpen(false);
+                        toast.success(`Loaded: ${p.name}`, { icon: '🎛️' });
+                      }} data-playground-control>
+                        <div className="font-bold">💾 {p.name}</div>
+                      </button>
+                    ));
+                  } catch { return null; }
+                })()}
+              </div>
             )}
 
             {!playgroundHudMin && (
@@ -3090,14 +3929,20 @@ export default function ModernHome() {
             <div
               key={spawn.id}
               {...getPlaygroundItemProps(spawn.id)}
-              className="fixed left-0 top-0 z-[65] w-[132px] rounded-2xl border border-white/10 bg-[#0f1216]/90 backdrop-blur-xl p-3 shadow-2xl"
-              style={withPlaygroundStyle(spawn.id, { backgroundImage: `linear-gradient(135deg, ${spawn.accent}20, rgba(255,255,255,0.02))` })}
+              className={`fixed left-0 top-0 z-[65] rounded-2xl border backdrop-blur-xl p-3 shadow-2xl ${spawn._fused ? 'w-[160px] border-white/20' : 'w-[132px] border-white/10'}`}
+              style={withPlaygroundStyle(spawn.id, {
+                backgroundImage: spawn._fused && spawn.gradient
+                  ? spawn.gradient
+                  : `linear-gradient(135deg, ${spawn.accent}20, rgba(255,255,255,0.02))`,
+                background: spawn._fused ? `${spawn.gradient || `linear-gradient(135deg, ${spawn.accent}20, rgba(15,18,22,0.92))`}` : undefined,
+                boxShadow: spawn._fused ? `0 0 24px ${spawn.accent}40, inset 0 0 16px ${spawn.accent}15` : undefined,
+              })}
             >
               <div className="flex items-center justify-between text-[9px] font-mono uppercase tracking-[0.24em] text-slate-500">
-                <span>{spawn.kind}</span>
+                <span>{spawn._fused ? '⚛ fused' : spawn.kind}</span>
                 <span style={{ color: spawn.accent }}>+</span>
               </div>
-              <div className="mt-2 text-sm font-semibold text-white">{spawn.label}</div>
+              <div className={`mt-2 font-semibold text-white ${spawn._fused ? 'text-base' : 'text-sm'}`}>{spawn.label}</div>
               <p className="mt-1 text-[11px] leading-relaxed text-slate-400">{spawn.body}</p>
             </div>
           ))}
@@ -3200,6 +4045,7 @@ export default function ModernHome() {
               canSeeRareHints={collection.canSeeRareHints()}
               canSeeEpicHints={collection.canSeeEpicHints()}
               canSeeLegendaryHints={collection.canSeeLegendaryHints()}
+              prestigeLevel={prestigeLevel}
               onReset={() => { collection.resetCollection(); setJournalSnapshot(collection.getSnapshot()); }}
               onClose={() => setJournalOpen(false)}
             />
@@ -4121,6 +4967,18 @@ export default function ModernHome() {
         @keyframes playgroundSpark {
           0% { opacity: 1; transform: translate(-50%, -50%) scale(0.6); }
           100% { opacity: 0; transform: translate(-50%, -50%) scale(1.3); }
+        }
+
+        /* ─── Phase 2: Arena Mutation animations ─── */
+        @keyframes arenaMutationFlash {
+          0% { background: rgba(255,107,107,0.15); }
+          100% { background: transparent; }
+        }
+        @keyframes arenaMutationText {
+          0% { opacity: 0; transform: scale(1.3); }
+          10% { opacity: 1; transform: scale(1); }
+          80% { opacity: 1; }
+          100% { opacity: 0; transform: scale(0.95) translateY(-10px); }
         }
 
         /* ─── Crate animations ─── */

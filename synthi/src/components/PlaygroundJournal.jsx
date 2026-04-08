@@ -5,7 +5,7 @@ import { COLLECTIBLE_ITEMS, RARITY } from "@/hooks/usePlaygroundCollection";
 const RARITY_ORDER = ['common', 'rare', 'epic', 'legendary', 'mythic', 'transcendent', 'secret'];
 const TABS = [{ key: 'all', label: 'All' }, ...RARITY_ORDER.map(r => ({ key: r, label: RARITY[r].label }))];
 
-export default function PlaygroundJournal({ snapshot, canSeeRareHints, canSeeEpicHints, canSeeLegendaryHints, onReset, onClose }) {
+export default function PlaygroundJournal({ snapshot, canSeeRareHints, canSeeEpicHints, canSeeLegendaryHints, prestigeLevel = 0, onReset, onClose }) {
   const [tab, setTab] = useState('all');
 
   const items = useMemo(() => {
@@ -47,6 +47,7 @@ export default function PlaygroundJournal({ snapshot, canSeeRareHints, canSeeEpi
           <span className="text-lg">🏆</span>
           <span className="font-mono text-[11px] tracking-[0.24em] text-slate-300 font-bold">COLLECTION</span>
           <span className="ml-1 px-2 py-0.5 rounded-full bg-white/5 text-[10px] font-mono text-slate-400">{totalCollected}/{totalItems}</span>
+          {prestigeLevel > 0 && <span className="ml-1 text-[10px] text-amber-300">{'⭐'.repeat(Math.min(prestigeLevel, 5))} P{prestigeLevel}</span>}
         </div>
         <button
           onClick={onClose}
