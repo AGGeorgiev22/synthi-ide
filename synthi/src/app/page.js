@@ -1,7 +1,15 @@
 "use client";
 import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
-import { ChevronDown, Rocket, Zap, Shield, Users, Cloud, Linkedin, Play, Unlock, Terminal, ArrowRight, Clock, Check, Star, GitBranch, Globe, Cpu, Code, Sparkles, Volume2, VolumeX, Home, Layers, HelpCircle, DollarSign, GripVertical, ArrowUp } from "lucide-react";
+import { ChevronDown, Rocket, Zap, Shield, Users, Cloud, Linkedin, Play, Unlock, Terminal, ArrowRight, Clock, Check, Star, GitBranch, Globe, Cpu, Code, Sparkles, Volume2, VolumeX, Home, Layers, HelpCircle, DollarSign, GripVertical, ArrowUp, Trophy } from "lucide-react";
 import { toast } from "sonner";
+import { usePlaygroundCollection, COLLECTIBLE_ITEMS, RARITY } from "@/hooks/usePlaygroundCollection";
+import PlaygroundJournal from "@/components/PlaygroundJournal";
+import { useWeatherSystem } from "@/hooks/useWeatherSystem";
+import { useBossSystem } from "@/hooks/useBossSystem";
+import { useConstellationSystem } from "@/hooks/useConstellationSystem";
+import { useSpeedrunChallenge } from "@/hooks/useSpeedrunChallenge";
+import { useAmbientDrone } from "@/hooks/useAmbientDrone";
+import { useVoidDimension } from "@/hooks/useVoidDimension";
 
 const BUILD_LOGS = [
   { text: "Allocating cloud node...", delay: 0 },
@@ -38,6 +46,13 @@ const AI_SUGGESTIONS = {
   Go: { comment: "add context timeout", code: "ctx, cancel := context.WithTimeout(ctx, 5*time.Second)" },
   "Plain Text": { comment: "optimization available", code: "..." },
 };
+
+const PLAYGROUND_TOYS = [
+  { kind: 'satellite', label: 'SAT-01', body: 'Micro node online', accent: '#58A4B0' },
+  { kind: 'toast', label: 'Build ✓', body: 'Edge deploy stable', accent: '#34D399' },
+  { kind: 'code', label: 'const orbit = true;', body: 'Fragmented code shard', accent: '#60A5FA' },
+  { kind: 'relay', label: 'EDGE', body: 'Signal relay attached', accent: '#F472B6' },
+];
 
 function detectLanguage(code) {
   if (/\b(fn\s|let\s+mut|impl\s|struct\s|pub\s+fn|->|::)/.test(code)) return 'Rust';
@@ -98,8 +113,88 @@ export default function ModernHome() {
   const [showSecondLine, setShowSecondLine] = useState(false);
   const [secondLineText, setSecondLineText] = useState("");
   const [typewriterComplete, setTypewriterComplete] = useState(false);
-  const [waitlistCount, setWaitlistCount] = useState(0);
+  const [waitlistCount, setWaitlistCount] = useState(null); // null = loading
   const [email, setEmail] = useState("");
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [waitlistPosition, setWaitlistPosition] = useState(null);
+  const [positionCountUp, setPositionCountUp] = useState(0);
+
+  /* Deploy terminal animation */
+  const [deployPhase, setDeployPhase] = useState(0); // 0=idle, 1=typing cmd, 2=logs1, 3=logs2, 4=logs3, 5=live, 6=confetti
+  const [deployTriggered, setDeployTriggered] = useState(false);
+  const [deployTypedChars, setDeployTypedChars] = useState(0);
+  const deployRef = useRef(null);
+  const deployCmd = 'synthi deploy --prod';
+
+  /* Playground mode */
+  const [playgroundMode, setPlaygroundMode] = useState(false);
+  const [playgroundForceMode, setPlaygroundForceMode] = useState('none');
+  const [playgroundGravityMode, setPlaygroundGravityMode] = useState('zero');
+  const [playgroundOrbitMode, setPlaygroundOrbitMode] = useState(false);
+  const [playgroundPaused, setPlaygroundPaused] = useState(false);
+  const [playgroundSlowMo, setPlaygroundSlowMo] = useState(false);
+  const [playgroundStats, setPlaygroundStats] = useState({ launches: 0, spawns: 0, collisions: 0, pinned: 0, orbiters: 0 });
+  const [playgroundSpawns, setPlaygroundSpawns] = useState([]);
+  const [playgroundBursts, setPlaygroundBursts] = useState([]);
+  const [playgroundMastered, setPlaygroundMastered] = useState(false);
+  const [playgroundScore, setPlaygroundScore] = useState(0);
+  const [playgroundCombo, setPlaygroundCombo] = useState(0);
+  const [playgroundCollectibles, setPlaygroundCollectibles] = useState(0);
+  const [playgroundSfxOn, setPlaygroundSfxOn] = useState(true);
+  const [playgroundHudMin, setPlaygroundHudMin] = useState(false);
+  const logoClickCount = useRef(0);
+  const logoClickTimer = useRef(null);
+  const playgroundNodesRef = useRef({});
+  const playgroundBodiesRef = useRef({});
+  const playgroundDragRef = useRef(null);
+  const playgroundRafRef = useRef(null);
+  const playgroundSpawnIdRef = useRef(0);
+  const playgroundBurstIdRef = useRef(0);
+  const playgroundCollisionGateRef = useRef(0);
+  const playgroundPointerRef = useRef({ x: 0, y: 0, vx: 0, vy: 0, lastX: 0, lastY: 0, lastT: 0 });
+  const playgroundAudioRef = useRef(null);
+  const playPlaygroundSoundRef = useRef(null);
+  const playgroundLastCollectRef = useRef(0);
+  const playgroundComboResetRef = useRef(null);
+  const playgroundForceTimeoutRef = useRef(null);
+
+  /* Collection / Journal */
+  const [journalOpen, setJournalOpen] = useState(false);
+  const [journalSnapshot, setJournalSnapshot] = useState(null);
+  const [collectionToast, setCollectionToast] = useState(null); // { item, rarity }
+  const [mythicCinematic, setMythicCinematic] = useState(false);
+
+  /* Tutorial & Help */
+  const [helpPanelOpen, setHelpPanelOpen] = useState(false);
+  const [pgBootLines, setPgBootLines] = useState([]); // playground boot sequence lines
+  const [ghostHint, setGhostHint] = useState(null); // contextual floating hint
+  const ghostHintShownRef = useRef({}); // track which hints have been shown
+  const bootTimerRef = useRef(null);
+  const ghostTimerRef = useRef(null);
+  const [editorHelpOutput, setEditorHelpOutput] = useState(null); // man synthi output
+
+  const handleCollectionUnlock = useCallback((item) => {
+    const r = RARITY[item.rarity];
+    toast.success(`${r.label} unlocked: ${item.name}`, { icon: item.icon });
+    setCollectionToast({ item, rarity: item.rarity });
+    setTimeout(() => setCollectionToast(null), 2500);
+    // play rarity sound after a tick (audio context may need resuming)
+    setTimeout(() => {
+      const soundKey = item.rarity === 'common' ? 'unlock' : `unlock_${item.rarity}`;
+      playPlaygroundSoundRef.current?.(soundKey);
+    }, 50);
+  }, []);
+
+  const collection = usePlaygroundCollection(handleCollectionUnlock);
+
+  /* ─── Wave 2 systems ─── */
+  const weather = useWeatherSystem(playgroundMode, collection.onWeatherChange);
+  const bosses = useBossSystem(playgroundMode, playgroundScore, playPlaygroundSoundRef.current);
+  const constellations = useConstellationSystem(playgroundMode, playgroundBodiesRef, playgroundNodesRef, collection.onConstellationFormed);
+  const speedrun = useSpeedrunChallenge(playgroundMode, playPlaygroundSoundRef.current);
+  const ambient = useAmbientDrone(playgroundMode, playgroundSfxOn, weather.stage);
+  const voidDim = useVoidDimension(playgroundMode, playPlaygroundSoundRef.current);
+
   const featuresRef = useRef(null);
   const businessRef = useRef(null);
 
@@ -331,7 +426,50 @@ export default function ModernHome() {
     if (editorCode.trim().toLowerCase() === 'sasha') {
       setSashaEaster(true);
       setTimeout(() => setSashaEaster(false), 5000);
+      if (playgroundMode) collection.onSashaEgg();
       return;
+    }
+
+    // man synthi / help command
+    const cmd = editorCode.trim().toLowerCase();
+    if (playgroundMode && (cmd === 'help' || cmd === 'man synthi')) {
+      setEditorHelpOutput([
+        '$ man synthi',
+        '',
+        'SYNTHI(1)         PLAYGROUND MANUAL         SYNTHI(1)',
+        '',
+        'SYNOPSIS',
+        '  Physics sandbox with ' + COLLECTIBLE_ITEMS.length + ' embedded anomalies.',
+        '',
+        'HIDDEN PROTOCOLS',
+        '  "The void opens for those who push past 6000."',
+        '  "Two chained orbs drift apart. Only you can reunite them."',
+        '  "A duck hides where the price is right."',
+        '  "Dates break at the millennium boundary."',
+        '  "Chaos, three times invoked, deletes everything."',
+        '  "Eight satellites form a constellation of creation."',
+        '  "The stars remember who clicks them."',
+        '  "End every statement with conviction."',
+        '  "Authority is granted to those who sudo."',
+        '',
+        'KEYBOARD',
+        '  Shift .... slow-mo    Space .... freeze',
+        '  V ........ the void   T ........ speedrun',
+        '  Ctrl+K ... cmd palette',
+        '  ↑↑↓↓←→←→BA ......... [CLASSIFIED]',
+        '',
+        'SEE ALSO',
+        '  sasha(1), collect(1), sudo(8)',
+        '',
+        '                  — end of line —',
+      ]);
+      setTimeout(() => setEditorHelpOutput(null), 12000);
+      return;
+    }
+
+    // Golden Semicolon collectible
+    if (playgroundMode && editorCode.trim().toLowerCase() === 'collect;') {
+      collection.onEditorCollectSemicolon();
     }
 
     setRocketLaunched(true);
@@ -364,7 +502,7 @@ export default function ModernHome() {
       setRocketLaunched(false);
       setTimeout(() => setCloudCpu(0), 2000);
     }, 1800);
-  }, [isCompiling]);
+  }, [collection, isCompiling, playgroundMode]);
 
   /* Cleanup on unmount */
   useEffect(() => {
@@ -376,21 +514,39 @@ export default function ModernHome() {
       if (hmrTimerRef.current) clearTimeout(hmrTimerRef.current);
       if (bugFixRef.current) clearTimeout(bugFixRef.current);
       if (cometRef.current) clearTimeout(cometRef.current);
+      if (bootTimerRef.current) clearTimeout(bootTimerRef.current);
+      if (ghostTimerRef.current) clearTimeout(ghostTimerRef.current);
     };
   }, []);
 
   /* Ctrl+K Easter egg - command palette */
+  const [cmdPaletteInput, setCmdPaletteInput] = useState('');
+  const cmdPaletteTimerRef = useRef(null);
   useEffect(() => {
     const handler = (e) => {
       if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
         e.preventDefault();
         setShowCommandPalette(true);
-        setTimeout(() => setShowCommandPalette(false), 2800);
+        setCmdPaletteInput('');
+        if (cmdPaletteTimerRef.current) clearTimeout(cmdPaletteTimerRef.current);
+        // Keep open longer in playground mode for typing
+        cmdPaletteTimerRef.current = setTimeout(() => setShowCommandPalette(false), playgroundMode ? 8000 : 2800);
       }
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
-  }, []);
+  }, [playgroundMode]);
+
+  const handleCmdPaletteSubmit = useCallback((value) => {
+    const v = value.trim().toLowerCase();
+    if (playgroundMode) {
+      if (v === 'sudo collect') collection.onRootShell();
+      if (v === 'synthi') collection.onCommandPaletteSynthi();
+      if (v === 'help' || v === 'man synthi' || v === 'man') setHelpPanelOpen(true);
+    }
+    setShowCommandPalette(false);
+    if (cmdPaletteTimerRef.current) clearTimeout(cmdPaletteTimerRef.current);
+  }, [collection, playgroundMode]);
 
   /* Mouse tracking for nebula parallax (ref-based, no re-renders) */
   useEffect(() => {
@@ -407,6 +563,41 @@ export default function ModernHome() {
     window.addEventListener('mousemove', onMove, { passive: true });
     return () => window.removeEventListener('mousemove', onMove);
   }, [mounted]);
+
+  /* Proximity glitch for hidden secret elements */
+  useEffect(() => {
+    if (!mounted || !playgroundMode) return;
+    let raf = null;
+    const PROXIMITY_RADIUS = 150;
+    const onMove = (e) => {
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        const els = document.querySelectorAll('[data-secret-proximity]');
+        const cx = e.clientX;
+        const cy = e.clientY;
+        els.forEach(el => {
+          const rect = el.getBoundingClientRect();
+          const ex = rect.left + rect.width / 2;
+          const ey = rect.top + rect.height / 2;
+          const dist = Math.sqrt((cx - ex) ** 2 + (cy - ey) ** 2);
+          if (dist < PROXIMITY_RADIUS) {
+            const intensity = 1 - dist / PROXIMITY_RADIUS;
+            el.style.animation = `proximityGlitch ${0.8 + (1 - intensity) * 1.5}s steps(1) infinite`;
+            el.style.opacity = String(parseFloat(el.dataset.baseOpacity || '0.15') + intensity * 0.45);
+          } else {
+            el.style.animation = el.dataset.defaultAnimation || '';
+            el.style.opacity = el.dataset.baseOpacity || '0.15';
+          }
+        });
+        raf = null;
+      });
+    };
+    window.addEventListener('mousemove', onMove, { passive: true });
+    return () => {
+      window.removeEventListener('mousemove', onMove);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, [mounted, playgroundMode]);
 
   /* Comet - fires every 20-35s (separate from shooting stars) */
   const [comet, setComet] = useState(null);
@@ -460,13 +651,29 @@ export default function ModernHome() {
       if (e.key === '?' && !e.ctrlKey && !e.metaKey && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
         setShowShortcuts(prev => !prev);
       }
-      if (e.key === 'Escape') setShowShortcuts(false);
+      if (e.key === 'Escape') {
+        setShowShortcuts(false);
+        deactivatePlayground();
+      }
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
   }, []);
 
+  /* Track void auto-exit */
+  const wasInVoidRef = useRef(false);
+  useEffect(() => {
+    if (wasInVoidRef.current && !voidDim.inVoid) {
+      collection.onVoidExit(voidDim.voidScore);
+    }
+    wasInVoidRef.current = voidDim.inVoid;
+  }, [voidDim.inVoid, voidDim.voidScore, collection]);
+
   /* Konami code: ↑↑↓↓←→←→BA */
+  const playgroundComboRef = useRef(0);
+  playgroundComboRef.current = playgroundCombo;
+  const playgroundScoreRef = useRef(0);
+  playgroundScoreRef.current = playgroundScore;
   useEffect(() => {
     const KONAMI = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
     const handler = (e) => {
@@ -478,11 +685,1036 @@ export default function ModernHome() {
         buf.length = 0;
         setKonamiActive(true);
         setTimeout(() => setKonamiActive(false), 3000);
+        if (playgroundMode) collection.onKonami(playgroundComboRef.current);
       }
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
+  }, [collection, playgroundMode]);
+
+  /* Deploy terminal animation - triggers when scrolled into view */
+  useEffect(() => {
+    if (!mounted || deployTriggered) return;
+    const obs = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        setDeployTriggered(true);
+        obs.disconnect();
+
+        // Phase 1: start typing after short pause
+        let charIndex = 0;
+        const typeTimer = setTimeout(() => {
+          setDeployPhase(1);
+          const typeInterval = setInterval(() => {
+            charIndex++;
+            setDeployTypedChars(charIndex);
+            if (charIndex >= deployCmd.length) {
+              clearInterval(typeInterval);
+              // After typing done, stagger the log lines
+              setTimeout(() => setDeployPhase(2), 500);  // "Enumerating objects..."
+              setTimeout(() => setDeployPhase(3), 1200);  // "Compressing objects..."
+              setTimeout(() => setDeployPhase(4), 1900);  // "remote: Building..."
+              setTimeout(() => setDeployPhase(5), 3000);  // "remote: Deploying..." + LIVE
+              setTimeout(() => setDeployPhase(6), 3600);  // confetti
+            }
+          }, 55 + Math.random() * 30);
+        }, 400);
+
+        return () => clearTimeout(typeTimer);
+      }
+    }, { threshold: 0.4 });
+    if (deployRef.current) obs.observe(deployRef.current);
+    return () => obs.disconnect();
+  }, [mounted, deployTriggered]);
+
+  /* Waitlist position count-up animation */
+  useEffect(() => {
+    if (waitlistPosition === null) return;
+    const duration = 1200;
+    const fps = 60;
+    const totalFrames = Math.round(duration / (1000 / fps));
+    let frame = 0;
+    const ease = (t) => 1 - Math.pow(1 - t, 3);
+    const timer = setInterval(() => {
+      frame++;
+      const progress = ease(Math.min(frame / totalFrames, 1));
+      setPositionCountUp(Math.round(waitlistPosition * progress));
+      if (frame >= totalFrames) clearInterval(timer);
+    }, 1000 / fps);
+    return () => clearInterval(timer);
+  }, [waitlistPosition]);
+
+  const isPlaygroundItemId = useCallback((id) => {
+    if (!id) return false;
+    return id.startsWith('spawn-')
+      || /^stats-card-\d+$/.test(id)
+      || /^roadmap-\d+$/.test(id)
+      || /^faq-\d+$/.test(id)
+      || [
+        'pricing-core',
+        'pricing-pro',
+        'feature-ai',
+        'feature-waitlist',
+        'feature-bugs',
+        'feature-cloud',
+        'feature-collab',
+        'feature-freedom',
+        'feature-hmr',
+        'language-showcase',
+        'before-after',
+        'comparison-table',
+        'deploy-terminal',
+        'persona-solo',
+        'persona-startup',
+        'persona-enterprise',
+      ].includes(id);
   }, []);
+
+  const registerPlaygroundNode = useCallback((id, node) => {
+    if (!id) return;
+    if (!node) {
+      delete playgroundNodesRef.current[id];
+      return;
+    }
+    playgroundNodesRef.current[id] = node;
+    node.dataset.playgroundItem = id;
+    if (!playgroundBodiesRef.current[id]) {
+      playgroundBodiesRef.current[id] = {
+        x: 0,
+        y: 0,
+        vx: 0,
+        vy: 0,
+        angle: 0,
+        spin: 0,
+        pinned: false,
+        orbit: false,
+        orbitAngle: Math.random() * Math.PI * 2,
+        orbitRadius: 90 + Math.random() * 110,
+      };
+    }
+  }, []);
+
+  const syncPlaygroundMeta = useCallback(() => {
+    const bodies = Object.entries(playgroundBodiesRef.current).filter(([id]) => isPlaygroundItemId(id));
+    const orbiters = bodies.filter(([, body]) => body?.orbit).length;
+    setPlaygroundStats(prev => ({
+      ...prev,
+      pinned: bodies.filter(([, body]) => body?.pinned).length,
+      orbiters,
+    }));
+    collection.onOrbitChange(orbiters);
+    speedrun.updateProgress('orbiters', orbiters);
+  }, [collection, isPlaygroundItemId, speedrun]);
+
+  const resetPlaygroundLayout = useCallback(({ clearSpawns = false } = {}) => {
+    playgroundDragRef.current = null;
+    Object.entries(playgroundBodiesRef.current).forEach(([id, body]) => {
+      if (!body) return;
+      if (clearSpawns && id.startsWith('spawn-')) {
+        delete playgroundBodiesRef.current[id];
+        return;
+      }
+      body.x = 0;
+      body.y = 0;
+      body.vx = 0;
+      body.vy = 0;
+      body.angle = 0;
+      body.spin = 0;
+      body.pinned = false;
+      body.orbit = false;
+    });
+    Object.values(playgroundNodesRef.current).forEach((node) => {
+      if (!node) return;
+      node.style.transform = '';
+      node.style.zIndex = '';
+      node.style.boxShadow = '';
+      node.style.filter = '';
+      node.style.cursor = '';
+      node.style.touchAction = '';
+    });
+    if (clearSpawns) {
+      setPlaygroundSpawns([]);
+      setPlaygroundBursts([]);
+    }
+    setPlaygroundStats(prev => ({ ...prev, pinned: 0, orbiters: 0 }));
+  }, []);
+
+  const deactivatePlayground = useCallback(() => {
+    resetPlaygroundLayout({ clearSpawns: true });
+    setPlaygroundMode(false);
+    setPlaygroundForceMode('none');
+    setPlaygroundGravityMode('zero');
+    setPlaygroundOrbitMode(false);
+    setPlaygroundPaused(false);
+    setPlaygroundSlowMo(false);
+    setPlaygroundMastered(false);
+    setPlaygroundStats({ launches: 0, spawns: 0, collisions: 0, pinned: 0, orbiters: 0 });
+    setPlaygroundScore(0);
+    setPlaygroundCombo(0);
+    setPlaygroundCollectibles(0);
+    playgroundPointerRef.current = { x: 0, y: 0, vx: 0, vy: 0, lastX: 0, lastY: 0, lastT: 0 };
+    playgroundSpawnIdRef.current = 0;
+    playgroundBurstIdRef.current = 0;
+    playgroundCollisionGateRef.current = 0;
+    playgroundLastCollectRef.current = 0;
+    if (playgroundComboResetRef.current) clearTimeout(playgroundComboResetRef.current);
+    if (playgroundForceTimeoutRef.current) clearTimeout(playgroundForceTimeoutRef.current);
+  }, [resetPlaygroundLayout]);
+
+  const playPlaygroundSound = useCallback((kind = 'impact') => {
+    if (!playgroundSfxOn || typeof window === 'undefined') return;
+    const AudioCtor = window.AudioContext || window.webkitAudioContext;
+    if (!AudioCtor) return;
+    try {
+      if (!playgroundAudioRef.current) playgroundAudioRef.current = new AudioCtor();
+      const ctx = playgroundAudioRef.current;
+      if (ctx.state === 'suspended') ctx.resume();
+      const now = ctx.currentTime;
+      const preset = {
+        impact: { start: 240, end: 120, duration: 0.05, type: 'triangle', volume: 0.022 },
+        spawn: { start: 520, end: 760, duration: 0.09, type: 'sine', volume: 0.018 },
+        collect: { start: 620, end: 980, duration: 0.12, type: 'triangle', volume: 0.028 },
+        explode: { start: 180, end: 50, duration: 0.18, type: 'sawtooth', volume: 0.025 },
+        unlock: { start: 440, end: 880, duration: 0.16, type: 'triangle', volume: 0.03 },
+        unlock_rare: { start: 520, end: 1040, duration: 0.2, type: 'sine', volume: 0.035 },
+        unlock_epic: { start: 660, end: 1320, duration: 0.25, type: 'triangle', volume: 0.04 },
+        unlock_legendary: { start: 440, end: 1760, duration: 0.35, type: 'sine', volume: 0.045 },
+        unlock_mythic: { start: 220, end: 1760, duration: 0.5, type: 'sine', volume: 0.05 },
+        unlock_transcendent: { start: 110, end: 2200, duration: 0.7, type: 'sine', volume: 0.055 },
+        unlock_secret: { start: 330, end: 660, duration: 0.4, type: 'triangle', volume: 0.04 },
+      }[kind] || { start: 260, end: 180, duration: 0.05, type: 'triangle', volume: 0.02 };
+      const oscillator = ctx.createOscillator();
+      const gain = ctx.createGain();
+      oscillator.type = preset.type;
+      oscillator.frequency.setValueAtTime(preset.start, now);
+      oscillator.frequency.exponentialRampToValueAtTime(Math.max(preset.end, 40), now + preset.duration);
+      gain.gain.setValueAtTime(0.0001, now);
+      gain.gain.exponentialRampToValueAtTime(preset.volume, now + 0.01);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + preset.duration);
+      oscillator.connect(gain);
+      gain.connect(ctx.destination);
+      oscillator.start(now);
+      oscillator.stop(now + preset.duration + 0.02);
+    } catch {
+      // Ignore audio failures in browsers that block autoplay contexts.
+    }
+  }, [playgroundSfxOn]);
+  playPlaygroundSoundRef.current = playPlaygroundSound;
+
+  const spawnImpactBurst = useCallback((x, y, scale = 1) => {
+    const id = ++playgroundBurstIdRef.current;
+    setPlaygroundBursts(prev => [...prev, { id, x, y, scale }]);
+    window.setTimeout(() => {
+      setPlaygroundBursts(prev => prev.filter((burst) => burst.id !== id));
+    }, 420);
+  }, []);
+
+  const spawnPlaygroundToy = useCallback((x, y) => {
+    const id = `spawn-${++playgroundSpawnIdRef.current}`;
+    // Memory Leak: occasionally spawn a letter instead of a regular toy
+    const memoryLetter = collection.shouldSpawnMemoryLetter();
+    const template = memoryLetter
+      ? { icon: memoryLetter, label: 'Memory Fragment', accent: '#FBBF24', _memoryLetter: memoryLetter }
+      : PLAYGROUND_TOYS[(playgroundSpawnIdRef.current - 1) % PLAYGROUND_TOYS.length];
+    if (memoryLetter) collection.onMemoryLetterSpawned(id);
+    playgroundBodiesRef.current[id] = {
+      x: x - 64,
+      y: y - 36,
+      vx: (Math.random() - 0.5) * 3,
+      vy: -2 - Math.random() * 2,
+      angle: 0,
+      spin: (Math.random() - 0.5) * 0.16,
+      pinned: false,
+      orbit: false,
+      orbitAngle: Math.random() * Math.PI * 2,
+      orbitRadius: 90 + Math.random() * 110,
+    };
+    setPlaygroundSpawns(prev => {
+      const next = [...prev, { id, ...template, _spawnTime: Date.now() }];
+      if (next.length > 8) {
+        const oldest = next[0];
+        delete playgroundBodiesRef.current[oldest.id];
+        return next.slice(1);
+      }
+      return next;
+    });
+    setPlaygroundStats(prev => ({ ...prev, spawns: prev.spawns + 1 }));
+    spawnImpactBurst(x, y, 1.1);
+    playPlaygroundSound('spawn');
+  }, [collection, playPlaygroundSound, spawnImpactBurst]);
+
+  const sendNearestItemToOrbit = useCallback((x, y) => {
+    let nearest = null;
+    let nearestDist = Number.POSITIVE_INFINITY;
+    Object.entries(playgroundNodesRef.current).forEach(([id, node]) => {
+      if (!node || !node.isConnected || id.startsWith('spawn-') || !isPlaygroundItemId(id)) return;
+      const rect = node.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      const distance = Math.hypot(cx - x, cy - y);
+      if (distance < nearestDist) {
+        nearest = { id, cx, cy };
+        nearestDist = distance;
+      }
+    });
+    if (!nearest) return;
+    const body = playgroundBodiesRef.current[nearest.id];
+    if (!body) return;
+    const coreX = window.innerWidth / 2;
+    const coreY = window.innerHeight * 0.35;
+    body.orbit = true;
+    body.pinned = false;
+    body.vx = 0;
+    body.vy = 0;
+    body.orbitRadius = Math.max(110, Math.min(230, Math.hypot(nearest.cx - coreX, nearest.cy - coreY)));
+    body.orbitAngle = Math.atan2(nearest.cy - coreY, nearest.cx - coreX);
+    body.spin = 0.03;
+    syncPlaygroundMeta();
+  }, [isPlaygroundItemId, syncPlaygroundMeta]);
+
+  const collectPlaygroundToy = useCallback((id, event) => {
+    if (!playgroundMode || playgroundOrbitMode) return;
+    const spawn = playgroundSpawns.find((item) => item.id === id);
+    if (!spawn) return;
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    const node = playgroundNodesRef.current[id];
+    const rect = node?.getBoundingClientRect();
+    const centerX = rect ? rect.left + rect.width / 2 : window.innerWidth / 2;
+    const centerY = rect ? rect.top + rect.height / 2 : window.innerHeight / 2;
+
+    delete playgroundBodiesRef.current[id];
+    delete playgroundNodesRef.current[id];
+    setPlaygroundSpawns(prev => prev.filter((item) => item.id !== id));
+
+    const now = Date.now();
+    const nextCombo = now - playgroundLastCollectRef.current < 2200 ? playgroundCombo + 1 : 1;
+    playgroundLastCollectRef.current = now;
+    setPlaygroundCombo(nextCombo);
+    setPlaygroundCollectibles(prev => prev + 1);
+    if (playgroundComboResetRef.current) clearTimeout(playgroundComboResetRef.current);
+    playgroundComboResetRef.current = setTimeout(() => setPlaygroundCombo(0), 2600);
+
+    const baseScore = { satellite: 180, toast: 120, code: 160, relay: 140 }[spawn.kind] || 100;
+    const newScore = playgroundScore + baseScore + Math.min(nextCombo, 5) * 25;
+    collection.onScoreChange(playgroundScore, newScore);
+    setPlaygroundScore(newScore);
+    spawnImpactBurst(centerX, centerY, 1.25);
+    playPlaygroundSound('collect');
+
+    // Collection tracking
+    collection.onToyCollected(spawn, newScore, nextCombo, playgroundSpawns);
+
+    // Speedrun + Void score
+    const challengeResult = speedrun.updateProgress('collects', 1);
+    speedrun.updateProgress('score', newScore);
+    speedrun.updateProgress('combo', nextCombo);
+    if (challengeResult) collection.onSpeedrunCompleted(challengeResult.challengeId);
+    if (voidDim.inVoid) voidDim.addVoidScore(baseScore);
+
+    if (spawn.kind === 'satellite') {
+      sendNearestItemToOrbit(centerX, centerY);
+      toast.success('Satellite captured: nearest card sent into orbit.');
+    }
+    if (spawn.kind === 'toast') {
+      setPlaygroundGravityMode('zero');
+      toast.success('Stability pickup: gravity neutralized.');
+    }
+    if (spawn.kind === 'code') {
+      spawnPlaygroundToy(centerX + 36, centerY - 22);
+      spawnPlaygroundToy(centerX - 36, centerY + 22);
+      toast.success('Code shard split into two more fragments.');
+    }
+    if (spawn.kind === 'relay') {
+      setPlaygroundForceMode('magnet');
+      if (playgroundForceTimeoutRef.current) clearTimeout(playgroundForceTimeoutRef.current);
+      playgroundForceTimeoutRef.current = setTimeout(() => setPlaygroundForceMode('none'), 4500);
+      toast.success('Relay captured: temporary magnet field active.');
+    }
+
+    // Memory Leak letter collection
+    if (spawn._memoryLetter) {
+      collection.onMemoryLetterCollected(spawn._memoryLetter);
+      toast.success(`Memory fragment collected: "${spawn._memoryLetter}"`);
+    }
+
+    // Check mythic / transcendent after every collect
+    const mythicResult = collection.checkMythic();
+    if (mythicResult === 'mythic' || mythicResult === 'transcendent') {
+      setMythicCinematic(mythicResult);
+      setTimeout(() => setMythicCinematic(false), mythicResult === 'transcendent' ? 5000 : 3500);
+    }
+  }, [collection, playPlaygroundSound, playgroundCombo, playgroundMode, playgroundOrbitMode, playgroundScore, playgroundSpawns, sendNearestItemToOrbit, spawnImpactBurst, spawnPlaygroundToy, speedrun, voidDim]);
+
+  const togglePlaygroundPin = useCallback((id, event) => {
+    if (!playgroundMode || !isPlaygroundItemId(id)) return;
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    const body = playgroundBodiesRef.current[id];
+    if (!body) return;
+    body.pinned = !body.pinned;
+    if (body.pinned) {
+      body.vx = 0;
+      body.vy = 0;
+      body.spin = 0;
+      body.orbit = false;
+    } else {
+      body.vx += (Math.random() - 0.5) * 1;
+      body.vy -= 0.5;
+    }
+    collection.onPinToggle(id);
+    if (body.pinned) speedrun.updateProgress('pins', 1);
+    syncPlaygroundMeta();
+  }, [collection, isPlaygroundItemId, playgroundMode, speedrun, syncPlaygroundMeta]);
+
+  const togglePlaygroundOrbit = useCallback((id, event) => {
+    if (!playgroundMode || !isPlaygroundItemId(id)) return false;
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    const body = playgroundBodiesRef.current[id];
+    const node = playgroundNodesRef.current[id];
+    if (!body || !node) return false;
+    const rect = node.getBoundingClientRect();
+    const coreX = window.innerWidth / 2;
+    const coreY = window.innerHeight * 0.35;
+    body.orbit = !body.orbit;
+    body.pinned = false;
+    if (body.orbit) {
+      body.orbitRadius = Math.max(100, Math.min(220, Math.hypot((rect.left + rect.width / 2) - coreX, (rect.top + rect.height / 2) - coreY)));
+      body.orbitAngle = Math.atan2((rect.top + rect.height / 2) - coreY, (rect.left + rect.width / 2) - coreX);
+      body.vx = 0;
+      body.vy = 0;
+      body.spin = 0.008 + Math.random() * 0.012;
+    }
+    syncPlaygroundMeta();
+    return true;
+  }, [isPlaygroundItemId, playgroundMode, syncPlaygroundMeta]);
+
+  const handlePlaygroundItemCapture = useCallback((id, event) => {
+    if (!playgroundMode || !playgroundOrbitMode) return;
+    togglePlaygroundOrbit(id, event);
+  }, [playgroundMode, playgroundOrbitMode, togglePlaygroundOrbit]);
+
+  /* Playground mode - triple-click logo */
+  const handleLogoClick = useCallback(() => {
+    logoClickCount.current += 1;
+    if (logoClickTimer.current) clearTimeout(logoClickTimer.current);
+    if (logoClickCount.current >= 3) {
+      logoClickCount.current = 0;
+      if (playgroundMode) {
+        deactivatePlayground();
+        toast.success('Playground closed');
+        return;
+      }
+      resetPlaygroundLayout({ clearSpawns: true });
+      setPlaygroundForceMode('none');
+      setPlaygroundGravityMode('zero');
+      setPlaygroundOrbitMode(false);
+      setPlaygroundPaused(false);
+      setPlaygroundSlowMo(false);
+      setPlaygroundMastered(false);
+      setPlaygroundStats({ launches: 0, spawns: 0, collisions: 0, pinned: 0, orbiters: 0 });
+      setPlaygroundScore(0);
+      setPlaygroundCombo(0);
+      setPlaygroundCollectibles(0);
+      // Re-randomize objectives
+      const newIndices = ALL_OBJECTIVES.current.map((_, i) => i).sort(() => Math.random() - 0.5);
+      setObjectiveIndices(newIndices.slice(0, 4));
+      setPlaygroundMode(true);
+      collection.onSessionStart();
+      // Boot sequence — terminal-style init in the corner
+      {
+        const lines = [
+          '> SYSTEM OVERRIDE ACCEPTED',
+          '> initializing physics_engine.sh... [OK]',
+          '> enabling drag_and_fling... [OK]',
+          '> loading double_click_to_pin... [OK]',
+          '> spawning toy_elements... [OK]',
+          '> unlocking force_modes... [OK]',
+          `> WARNING: ${COLLECTIBLE_ITEMS.length} anomalies detected in DOM`,
+          '> all systems armed. proceed with caution.',
+        ];
+        setPgBootLines([]);
+        let i = 0;
+        const tick = () => {
+          if (i < lines.length) {
+            const currentLine = lines[i];
+            setPgBootLines(prev => [...prev, currentLine]);
+            i++;
+            bootTimerRef.current = setTimeout(tick, 180 + Math.random() * 120);
+          } else {
+            bootTimerRef.current = setTimeout(() => setPgBootLines([]), 2800);
+          }
+        };
+        bootTimerRef.current = setTimeout(tick, 400);
+      }
+      // Ghost hint — first contextual hint
+      if (typeof window !== 'undefined' && !localStorage.getItem('synthi_tutorial_done')) {
+        ghostHintShownRef.current = {};
+        setGhostHint('try dragging a card...');
+      }
+      playPlaygroundSound('unlock');
+      toast.success('Playground unlocked. Drag cards, double-click to pin, click empty space to spawn toys.');
+      return;
+    }
+    logoClickTimer.current = setTimeout(() => { logoClickCount.current = 0; }, 400);
+  }, [deactivatePlayground, playgroundMode, playPlaygroundSound, resetPlaygroundLayout]);
+
+  const playgroundDragStart = useCallback((id, event) => {
+    if (!playgroundMode || !isPlaygroundItemId(id) || playgroundOrbitMode) return;
+    if (event.target.closest('input, button, a, textarea, label, [data-playground-control]')) return;
+    const point = event.touches ? event.touches[0] : event;
+    registerPlaygroundNode(id, event.currentTarget);
+    const body = playgroundBodiesRef.current[id];
+    if (!body) return;
+    body.pinned = false;
+    body.orbit = false;
+    body.vx = 0;
+    body.vy = 0;
+    body.spin = 0;
+    playgroundDragRef.current = { id, lastX: point.clientX, lastY: point.clientY, lastT: performance.now(), startX: point.clientX, startY: point.clientY, engaged: false };
+    // Disable touch scrolling only on the actively dragged element
+    event.currentTarget.style.touchAction = 'none';
+    syncPlaygroundMeta();
+    event.preventDefault();
+  }, [isPlaygroundItemId, playgroundMode, playgroundOrbitMode, registerPlaygroundNode, syncPlaygroundMeta]);
+
+  // Ghost hint progression — advance contextual hints based on actions
+  useEffect(() => {
+    if (!playgroundMode || !ghostHint) return;
+    const g = ghostHintShownRef.current;
+    const s = playgroundStats;
+    let nextHint = null;
+    let delay = 800;
+    if (!g.drag && s.launches > 0) {
+      g.drag = true;
+      nextHint = 'click empty space to spawn something...';
+    } else if (!g.spawn && g.drag && s.spawns > 0) {
+      g.spawn = true;
+      nextHint = 'double-click a card to pin it in place...';
+    } else if (!g.pin && g.spawn && s.pinned > 0) {
+      g.pin = true;
+      nextHint = 'check the HUD. change gravity. break things.';
+    } else if (!g.collide && g.pin && s.collisions > 2) {
+      g.collide = true;
+      nextHint = `${COLLECTIBLE_ITEMS.length} anomalies are watching. type "man synthi" in the editor.`;
+      delay = 1200;
+    } else if (g.collide && s.collisions > 5 && !g.done) {
+      g.done = true;
+      localStorage.setItem('synthi_tutorial_done', '1');
+      if (ghostTimerRef.current) clearTimeout(ghostTimerRef.current);
+      ghostTimerRef.current = setTimeout(() => setGhostHint(null), 3000);
+      return;
+    }
+    if (nextHint) {
+      if (ghostTimerRef.current) clearTimeout(ghostTimerRef.current);
+      // brief fade gap
+      setGhostHint(null);
+      ghostTimerRef.current = setTimeout(() => setGhostHint(nextHint), delay);
+    }
+  }, [playgroundMode, ghostHint, playgroundStats]);
+
+  useEffect(() => {
+    if (!playgroundMode) return;
+    const onMove = (event) => {
+      // Safety: if no mouse button is held, clear any stale drag
+      if (!event.touches && event.buttons === 0 && playgroundDragRef.current) {
+        const staleDrag = playgroundDragRef.current;
+        const staleBody = playgroundBodiesRef.current[staleDrag.id];
+        if (staleBody) {
+          const flingSpeed = Math.hypot(staleBody.vx, staleBody.vy);
+          if (flingSpeed > 18) { staleBody.vx *= 18 / flingSpeed; staleBody.vy *= 18 / flingSpeed; }
+        }
+        playgroundDragRef.current = null;
+      }
+      const point = event.touches ? event.touches[0] : event;
+      const now = performance.now();
+      const pointer = playgroundPointerRef.current;
+      if (pointer.lastT) {
+        const pointerDt = Math.max((now - pointer.lastT) / 16.67, 0.5);
+        pointer.vx = (point.clientX - pointer.lastX) / pointerDt;
+        pointer.vy = (point.clientY - pointer.lastY) / pointerDt;
+      }
+      pointer.x = point.clientX;
+      pointer.y = point.clientY;
+      pointer.lastX = point.clientX;
+      pointer.lastY = point.clientY;
+      pointer.lastT = now;
+
+      const drag = playgroundDragRef.current;
+      if (!drag) return;
+      // Require minimum 4px movement before engaging drag (prevents click-fling)
+      if (!drag.engaged) {
+        if (Math.hypot(point.clientX - drag.startX, point.clientY - drag.startY) < 4) return;
+        drag.engaged = true;
+        drag.lastX = point.clientX;
+        drag.lastY = point.clientY;
+        drag.lastT = now;
+        return;
+      }
+      const body = playgroundBodiesRef.current[drag.id];
+      if (!body) return;
+      const dragDt = Math.max((now - drag.lastT) / 16.67, 0.5);
+      const dx = point.clientX - drag.lastX;
+      const dy = point.clientY - drag.lastY;
+      body.x += dx;
+      body.y += dy;
+      body.vx = dx / dragDt;
+      body.vy = dy / dragDt;
+      body.angle += dx * 0.002;
+      body.spin = dx * 0.0008;
+      drag.lastX = point.clientX;
+      drag.lastY = point.clientY;
+      drag.lastT = now;
+      if (event.cancelable) event.preventDefault();
+    };
+    const onUp = () => {
+      const drag = playgroundDragRef.current;
+      if (!drag) return;
+      const body = playgroundBodiesRef.current[drag.id];
+      if (body) {
+        if (!drag.engaged) {
+          // Click without drag — don't fling
+          body.vx = 0;
+          body.vy = 0;
+          body.spin = 0;
+        } else {
+          // Cap fling velocity so items don't fly uncontrollably
+          const flingSpeed = Math.hypot(body.vx, body.vy);
+          if (flingSpeed > 18) { body.vx *= 18 / flingSpeed; body.vy *= 18 / flingSpeed; }
+          if (flingSpeed > 5) {
+            setPlaygroundStats(prev => ({ ...prev, launches: prev.launches + 1 }));
+          }
+        }
+      }
+      // Restore touch scrolling on the released element
+      const dragNode = playgroundNodesRef.current[drag.id];
+      if (dragNode) dragNode.style.touchAction = '';
+      playgroundDragRef.current = null;
+    };
+    const onKeyDown = (event) => {
+      const tag = document.activeElement?.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || document.activeElement?.isContentEditable) return;
+      if (event.key === 'Shift') { setPlaygroundSlowMo(true); collection.onSlowMo(); }
+      if (event.code === 'Space') {
+        event.preventDefault();
+        setPlaygroundPaused(true);
+      }
+      // Void: press V to enter when score >= 6000
+      if (event.key === 'v' || event.key === 'V') {
+        if (playgroundScoreRef.current >= 6000 && !voidDim.inVoid) voidDim.enterVoid();
+      }
+      // Speedrun: press T to start timed challenge
+      if (event.key === 't' || event.key === 'T') {
+        speedrun.startChallenge();
+      }
+    };
+    const onKeyUp = (event) => {
+      const tag = document.activeElement?.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || document.activeElement?.isContentEditable) return;
+      if (event.key === 'Shift') setPlaygroundSlowMo(false);
+      if (event.code === 'Space') setPlaygroundPaused(false);
+    };
+    window.addEventListener('mousemove', onMove, { passive: true });
+    window.addEventListener('mouseup', onUp);
+    window.addEventListener('touchmove', onMove, { passive: false });
+    window.addEventListener('touchend', onUp);
+    window.addEventListener('keydown', onKeyDown);
+    window.addEventListener('keyup', onKeyUp);
+    return () => {
+      window.removeEventListener('mousemove', onMove);
+      window.removeEventListener('mouseup', onUp);
+      window.removeEventListener('touchmove', onMove);
+      window.removeEventListener('touchend', onUp);
+      window.removeEventListener('keydown', onKeyDown);
+      window.removeEventListener('keyup', onKeyUp);
+    };
+  }, [playgroundMode]);
+
+  useEffect(() => {
+    if (!playgroundMode) {
+      if (playgroundRafRef.current) cancelAnimationFrame(playgroundRafRef.current);
+      return;
+    }
+    let last = performance.now();
+    const step = (now) => {
+      const rawDt = Math.min((now - last) / 16.67, 2.25);
+      last = now;
+      const dt = playgroundPaused ? 0 : rawDt * (playgroundSlowMo ? 0.22 : 1);
+      const weatherMods = weather.getPhysicsMods();
+      const coreX = window.innerWidth / 2;
+      const coreY = window.innerHeight * 0.35;
+      const bodies = Object.entries(playgroundNodesRef.current)
+        .filter(([id, node]) => node && node.isConnected && isPlaygroundItemId(id))
+        .map(([id, node]) => ({
+          id,
+          node,
+          rect: node.getBoundingClientRect(),
+          body: playgroundBodiesRef.current[id] ?? (playgroundBodiesRef.current[id] = {
+            x: 0,
+            y: 0,
+            vx: 0,
+            vy: 0,
+            angle: 0,
+            spin: 0,
+            pinned: false,
+            orbit: false,
+            orbitAngle: Math.random() * Math.PI * 2,
+            orbitRadius: 90 + Math.random() * 110,
+          }),
+        }));
+
+      if (dt > 0) {
+        bodies.forEach((item) => {
+          const { id, rect, body } = item;
+          const dragging = playgroundDragRef.current?.id === id;
+          const inViewport = rect.bottom > -180 && rect.top < window.innerHeight + 180 && rect.right > -180 && rect.left < window.innerWidth + 180;
+          const activeBody = dragging || body.orbit || body.pinned || id.startsWith('spawn-') || Math.abs(body.x) > 0.5 || Math.abs(body.y) > 0.5 || Math.abs(body.vx) > 0.05 || Math.abs(body.vy) > 0.05 || Math.abs(body.angle) > 0.01 || Math.abs(body.spin) > 0.001;
+          item.deltaX = 0;
+          item.deltaY = 0;
+          item.inViewport = inViewport;
+          item.activeBody = activeBody;
+
+          if (dragging) return;
+          if (!inViewport && !activeBody) return;
+
+          if (body.orbit) {
+            body.orbitAngle += 0.012 * dt;
+            const cx = rect.left + rect.width / 2;
+            const cy = rect.top + rect.height / 2;
+            const targetX = coreX + Math.cos(body.orbitAngle) * body.orbitRadius;
+            const targetY = coreY + Math.sin(body.orbitAngle) * (body.orbitRadius * 0.55);
+            body.vx = (targetX - cx) * 0.16;
+            body.vy = (targetY - cy) * 0.16;
+            item.deltaX = body.vx * dt;
+            item.deltaY = body.vy * dt;
+            body.x += item.deltaX;
+            body.y += item.deltaY;
+            body.angle += 0.012 * dt;
+            return;
+          }
+
+          if (body.pinned) return;
+
+          if (playgroundGravityMode === 'down') body.vy += 0.16 * dt;
+          if (playgroundGravityMode === 'reverse') body.vy -= 0.16 * dt;
+
+          if (playgroundForceMode !== 'none') {
+            const forceOriginX = playgroundPointerRef.current.x || coreX;
+            const forceOriginY = playgroundPointerRef.current.y || coreY;
+            const dx = forceOriginX - (rect.left + rect.width / 2);
+            const dy = forceOriginY - (rect.top + rect.height / 2);
+            const dist = Math.max(Math.hypot(dx, dy), 1);
+            if (dist < 600) {
+              const direction = playgroundForceMode === 'magnet' ? 1 : -1;
+              const force = (1 - dist / 600) * 0.65 * dt;
+              body.vx += direction * (dx / dist) * force;
+              body.vy += direction * (dy / dist) * force;
+            }
+          }
+
+          body.vx *= Math.pow(0.97 * (weatherMods?.frictionMul ?? 1), dt);
+          body.vy *= Math.pow(0.97 * (weatherMods?.frictionMul ?? 1), dt);
+          body.spin *= Math.pow(0.96, dt);
+
+          // Weather gravity pulse + solar drift
+          if (weatherMods?.gravityPulse) body.vy += weatherMods.gravityPulse * dt;
+          if (weatherMods?.solarDrift) body.vy += weatherMods.solarDrift * dt;
+
+          // Velocity cap
+          const speed = Math.hypot(body.vx, body.vy);
+          if (speed > 22) { body.vx *= 22 / speed; body.vy *= 22 / speed; }
+
+          // Settle threshold - snap to zero when nearly stopped
+          if (Math.abs(body.vx) < 0.02) body.vx = 0;
+          if (Math.abs(body.vy) < 0.02) body.vy = 0;
+          if (Math.abs(body.spin) < 0.0003) body.spin = 0;
+
+          item.deltaX = body.vx * dt;
+          item.deltaY = body.vy * dt;
+          body.x += item.deltaX;
+          body.y += item.deltaY;
+          body.angle += body.spin * dt;
+
+          // Wall-bounce ONLY for spawns (position:fixed). Page-flow items scroll
+          // naturally; bounding them to viewport causes teleporting on scroll.
+          const isSpawn = id.startsWith('spawn-');
+          if (isSpawn) {
+            const nextLeft = rect.left + item.deltaX;
+            const nextTop = rect.top + item.deltaY;
+            let impacted = false;
+            if (nextLeft < 12) {
+              body.x += 12 - nextLeft;
+              body.vx = Math.abs(body.vx) * 0.65;
+              body.spin += body.vy * 0.003;
+              impacted = true;
+            }
+            if (nextLeft + rect.width > window.innerWidth - 12) {
+              body.x -= (nextLeft + rect.width) - (window.innerWidth - 12);
+              body.vx = -Math.abs(body.vx) * 0.65;
+              body.spin -= body.vy * 0.003;
+              impacted = true;
+            }
+            if (nextTop < 12) {
+              body.y += 12 - nextTop;
+              body.vy = Math.abs(body.vy) * 0.65;
+              body.spin += body.vx * 0.003;
+              impacted = true;
+            }
+            if (nextTop + rect.height > window.innerHeight - 12) {
+              body.y -= (nextTop + rect.height) - (window.innerHeight - 12);
+              body.vy = -Math.abs(body.vy) * 0.65;
+              body.spin += body.vx * 0.003;
+              impacted = true;
+            }
+
+            if (impacted && now - playgroundCollisionGateRef.current > 90) {
+              playgroundCollisionGateRef.current = now;
+              spawnImpactBurst(
+                Math.min(Math.max(rect.left + rect.width / 2, 24), window.innerWidth - 24),
+                Math.min(Math.max(rect.top + rect.height / 2, 24), window.innerHeight - 24),
+                1,
+              );
+              playPlaygroundSound('impact');
+              setPlaygroundStats(prev => ({ ...prev, collisions: prev.collisions + 1 }));
+            }
+          }
+        });
+
+        for (let i = 0; i < bodies.length; i++) {
+          for (let j = i + 1; j < bodies.length; j++) {
+            const a = bodies[i];
+            const b = bodies[j];
+            if (playgroundDragRef.current?.id === a.id || playgroundDragRef.current?.id === b.id) continue;
+            if ((!a.inViewport && !a.activeBody) || (!b.inViewport && !b.activeBody)) continue;
+
+            // Skip collisions between two dormant page-flow items (prevents
+            // false collisions when items from different page sections overlap
+            // in viewport coordinates during scroll)
+            const aIsActive = a.id.startsWith('spawn-') || Math.abs(a.body.vx) > 0.3 || Math.abs(a.body.vy) > 0.3;
+            const bIsActive = b.id.startsWith('spawn-') || Math.abs(b.body.vx) > 0.3 || Math.abs(b.body.vy) > 0.3;
+            if (!aIsActive && !bIsActive) continue;
+
+            const aLeft = a.rect.left + (a.deltaX || 0);
+            const aTop = a.rect.top + (a.deltaY || 0);
+            const bLeft = b.rect.left + (b.deltaX || 0);
+            const bTop = b.rect.top + (b.deltaY || 0);
+            const overlapX = Math.min(aLeft + a.rect.width, bLeft + b.rect.width) - Math.max(aLeft, bLeft);
+            const overlapY = Math.min(aTop + a.rect.height, bTop + b.rect.height) - Math.max(aTop, bTop);
+
+            if (overlapX > 0 && overlapY > 0) {
+              const directionX = (aLeft + a.rect.width / 2) < (bLeft + b.rect.width / 2) ? -1 : 1;
+              const directionY = (aTop + a.rect.height / 2) < (bTop + b.rect.height / 2) ? -1 : 1;
+              const pushX = (overlapX / 2) * directionX;
+              const pushY = (overlapY / 2) * directionY;
+
+              // Determine if each item is dormant (page-flow card at rest).
+              // Dormant items act as immovable walls — only the active item bounces.
+              const aDormant = !aIsActive && !a.id.startsWith('spawn-');
+              const bDormant = !bIsActive && !b.id.startsWith('spawn-');
+
+              if (!a.body.pinned && !aDormant) {
+                a.body.x += pushX;
+                a.body.y += pushY;
+              }
+              if (!b.body.pinned && !bDormant) {
+                b.body.x -= pushX;
+                b.body.y -= pushY;
+              }
+
+              // Semi-elastic collision: swap velocity components along collision axis
+              const aVx = a.body.vx;
+              const aVy = a.body.vy;
+              const bVx = b.body.vx;
+              const bVy = b.body.vy;
+              const restitution = 0.75;
+              if (!aDormant) {
+                a.body.vx = aVx * 0.15 + bVx * 0.6 + pushX * 0.12;
+                a.body.vy = aVy * 0.15 + bVy * 0.6 + pushY * 0.12;
+                // Scale resulting velocity by restitution
+                a.body.vx *= restitution;
+                a.body.vy *= restitution;
+                a.body.spin += (pushX + (bVy - aVy) * 0.3) * 0.0012;
+              }
+              if (!bDormant) {
+                b.body.vx = bVx * 0.15 + aVx * 0.6 - pushX * 0.12;
+                b.body.vy = bVy * 0.15 + aVy * 0.6 - pushY * 0.12;
+                b.body.vx *= restitution;
+                b.body.vy *= restitution;
+                b.body.spin -= (pushX + (aVy - bVy) * 0.3) * 0.0012;
+              }
+
+              if (now - playgroundCollisionGateRef.current > 90) {
+                playgroundCollisionGateRef.current = now;
+                const mx = (aLeft + bLeft + b.rect.width / 2) / 2;
+                const my = (aTop + bTop + b.rect.height / 2) / 2;
+                spawnImpactBurst(mx, my, 1.15);
+                playPlaygroundSound('impact');
+                setPlaygroundStats(prev => ({ ...prev, collisions: prev.collisions + 1 }));
+                collection.onCollision(a.id, b.id, playgroundBodiesRef.current);
+                collection.onLifetimeCollision();
+                // Boss hit detection
+                const bossHit = bosses.hitBoss(mx, my);
+                if (bossHit && bossHit !== 'hit') { collection.onBossDefeated(bossHit); collection.onLifetimeBossDefeat(); }
+              }
+            }
+          }
+        }
+      }
+
+      bodies.forEach(({ id, node, body }) => {
+        const dragging = playgroundDragRef.current?.id === id;
+        node.style.transform = `translate3d(${body.x}px, ${body.y}px, 0) rotate(${body.angle}rad) scale(${dragging ? 1.03 : body.pinned ? 1.02 : 1})`;
+        node.style.zIndex = dragging ? '90' : body.orbit ? '80' : body.pinned ? '70' : id.startsWith('spawn-') ? '65' : '40';
+        node.style.cursor = dragging ? 'grabbing' : 'grab';
+        node.style.boxShadow = body.orbit ? '0 0 36px rgba(88,164,176,0.16)' : body.pinned ? '0 0 0 1px rgba(52,211,153,0.55)' : '';
+        node.style.filter = body.orbit ? 'drop-shadow(0 0 20px rgba(88,164,176,0.35))' : body.pinned ? 'drop-shadow(0 0 12px rgba(52,211,153,0.18))' : '';
+      });
+
+      // Check deadlock orb resolution
+      const deadlockResult = bosses.checkDeadlockOrbs();
+      if (deadlockResult) { collection.onBossDefeated(deadlockResult); collection.onLifetimeBossDefeat(); }
+
+      playgroundRafRef.current = requestAnimationFrame(step);
+    };
+    playgroundRafRef.current = requestAnimationFrame(step);
+    return () => {
+      if (playgroundRafRef.current) cancelAnimationFrame(playgroundRafRef.current);
+    };
+  }, [bosses, isPlaygroundItemId, playgroundForceMode, playgroundGravityMode, playgroundMode, playgroundPaused, playgroundSlowMo, spawnImpactBurst, weather]);
+
+  const explodePlaygroundItems = useCallback(() => {
+    const centerX = window.innerWidth / 2;
+    const centerY = window.innerHeight * 0.45;
+    Object.entries(playgroundNodesRef.current).forEach(([id, node]) => {
+      if (!node || !node.isConnected || !isPlaygroundItemId(id)) return;
+      const body = playgroundBodiesRef.current[id];
+      if (!body) return;
+      const rect = node.getBoundingClientRect();
+      const dx = (rect.left + rect.width / 2) - centerX;
+      const dy = (rect.top + rect.height / 2) - centerY;
+      const dist = Math.max(Math.hypot(dx, dy), 1);
+      body.pinned = false;
+      body.orbit = false;
+      body.vx = (dx / dist) * (4 + Math.random() * 5);
+      body.vy = (dy / dist) * (3.5 + Math.random() * 4.5);
+      body.spin = (Math.random() - 0.5) * 0.1;
+    });
+    syncPlaygroundMeta();
+    spawnImpactBurst(centerX, centerY, 1.6);
+    playPlaygroundSound('explode');
+  }, [isPlaygroundItemId, playPlaygroundSound, spawnImpactBurst, syncPlaygroundMeta]);
+
+  const shufflePlaygroundItems = useCallback(() => {
+    Object.entries(playgroundBodiesRef.current).forEach(([id, body]) => {
+      if (!isPlaygroundItemId(id) || !body) return;
+      body.pinned = false;
+      body.orbit = false;
+      body.x += (Math.random() - 0.5) * 180;
+      body.y += (Math.random() - 0.5) * 120;
+      body.vx = (Math.random() - 0.5) * 3;
+      body.vy = (Math.random() - 0.5) * 3;
+      body.spin = (Math.random() - 0.5) * 0.06;
+    });
+    syncPlaygroundMeta();
+  }, [isPlaygroundItemId, syncPlaygroundMeta]);
+
+  const stackPlaygroundItems = useCallback(() => {
+    const entries = Object.entries(playgroundNodesRef.current).filter(([id, node]) => node && node.isConnected && isPlaygroundItemId(id));
+    const cols = window.innerWidth < 900 ? 2 : 4;
+    entries.forEach(([id, node], index) => {
+      const body = playgroundBodiesRef.current[id];
+      if (!body) return;
+      const rect = node.getBoundingClientRect();
+      const row = Math.floor(index / cols);
+      const col = index % cols;
+      const targetX = 120 + (col * 190);
+      const targetY = 120 + (row * 132);
+      const currentX = rect.left + rect.width / 2;
+      const currentY = rect.top + rect.height / 2;
+      body.pinned = false;
+      body.orbit = false;
+      body.vx = 0;
+      body.vy = 0;
+      body.spin = 0;
+      body.angle = 0;
+      body.x += targetX - currentX;
+      body.y += targetY - currentY;
+    });
+    syncPlaygroundMeta();
+  }, [isPlaygroundItemId, syncPlaygroundMeta]);
+
+  const chaosRain = useCallback(() => {
+    const centerX = window.innerWidth / 2;
+    const centerY = window.innerHeight * 0.42;
+    explodePlaygroundItems();
+    spawnPlaygroundToy(centerX - 96, centerY - 42);
+    spawnPlaygroundToy(centerX + 96, centerY - 10);
+    spawnPlaygroundToy(centerX, centerY + 68);
+    setPlaygroundForceMode('repel');
+    collection.onRepelActivated();
+    collection.onChaosRain();
+    if (playgroundForceTimeoutRef.current) clearTimeout(playgroundForceTimeoutRef.current);
+    playgroundForceTimeoutRef.current = setTimeout(() => setPlaygroundForceMode('none'), 3500);
+  }, [collection, explodePlaygroundItems, spawnPlaygroundToy]);
+
+  const handlePlaygroundSurfaceClick = useCallback((event) => {
+    if (!playgroundMode || playgroundDragRef.current) return;
+    const target = event.target;
+    if (target.closest('[data-playground-control], [data-playground-item], button, input, textarea, a, label, kbd')) return;
+    // Boss click (race_condition)
+    const bossResult = bosses.clickBoss(event.clientX, event.clientY);
+    if (bossResult && bossResult !== 'hit') {
+      collection.onBossDefeated(bossResult);
+      collection.onLifetimeBossDefeat();
+      return;
+    }
+    // Void entity click
+    if (voidDim.inVoid && voidDim.nullEntity) {
+      const entityResult = voidDim.hitNullEntity(event.clientX, event.clientY);
+      if (entityResult && entityResult !== 'hit') {
+        collection.onBossDefeated(entityResult);
+        return;
+      }
+    }
+    spawnPlaygroundToy(event.clientX, event.clientY);
+  }, [bosses, collection, playgroundMode, spawnPlaygroundToy, voidDim]);
+
+  const getDragStyle = useCallback((id) => {
+    if (!playgroundMode || !isPlaygroundItemId(id)) return {};
+    return {
+      cursor: 'grab',
+      userSelect: 'none',
+      outline: '1px dashed rgba(88,164,176,0.28)',
+      outlineOffset: '4px',
+      borderRadius: '16px',
+      willChange: 'transform',
+    };
+  }, [isPlaygroundItemId, playgroundMode]);
+
+  const withPlaygroundStyle = useCallback((id, baseStyle = {}) => ({
+    ...baseStyle,
+    ...getDragStyle(id),
+  }), [getDragStyle]);
+
+  const getPlaygroundItemProps = useCallback((id) => {
+    if (!playgroundMode || !isPlaygroundItemId(id)) return {};
+    return {
+      ref: (node) => registerPlaygroundNode(id, node),
+      style: getDragStyle(id),
+      onMouseDown: (event) => playgroundDragStart(id, event),
+      onTouchStart: (event) => playgroundDragStart(id, event),
+      onDoubleClick: (event) => togglePlaygroundPin(id, event),
+      onClickCapture: (event) => handlePlaygroundItemCapture(id, event),
+      onClick: id.startsWith('spawn-') ? (event) => collectPlaygroundToy(id, event) : undefined,
+      'data-playground-item': id,
+    };
+  }, [collectPlaygroundToy, getDragStyle, handlePlaygroundItemCapture, isPlaygroundItemId, playgroundDragStart, playgroundMode, registerPlaygroundNode, togglePlaygroundPin]);
 
   /* Language showcase carousel - auto-rotate every 3s */
   const LANG_SHOWCASE = useMemo(() => [
@@ -498,15 +1730,17 @@ export default function ModernHome() {
 
   /* Magnetic button handler */
   const handleMagneticMove = useCallback((e) => {
+    if (playgroundMode) return;
     const btn = e.currentTarget;
     const rect = btn.getBoundingClientRect();
     const x = e.clientX - rect.left - rect.width / 2;
     const y = e.clientY - rect.top - rect.height / 2;
     btn.style.transform = `translate(${x * 0.15}px, ${y * 0.15}px)`;
-  }, []);
+  }, [playgroundMode]);
   const handleMagneticLeave = useCallback((e) => {
+    if (playgroundMode) return;
     e.currentTarget.style.transform = 'translate(0, 0)';
-  }, []);
+  }, [playgroundMode]);
 
   /* Before/after slider drag */
   const handleSliderDrag = useCallback((clientX) => {
@@ -634,6 +1868,7 @@ export default function ModernHome() {
 
   /* Mouse spotlight handler for bento cards */
   const handleCardMouseMove = (e) => {
+    if (playgroundMode) return;
     const card = e.currentTarget;
     const rect = card.getBoundingClientRect();
     card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
@@ -642,6 +1877,7 @@ export default function ModernHome() {
 
   /* Pricing Pro card: spotlight + 3D magnetic tilt */
   const handleProCardMouseMove = (e) => {
+    if (playgroundMode) return;
     handleCardMouseMove(e);
     const card = e.currentTarget;
     const rect = card.getBoundingClientRect();
@@ -652,6 +1888,7 @@ export default function ModernHome() {
     card.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
   };
   const handleProCardMouseLeave = (e) => {
+    if (playgroundMode) return;
     e.currentTarget.style.transform = 'perspective(800px) rotateX(0deg) rotateY(0deg)';
   };
 
@@ -794,15 +2031,21 @@ export default function ModernHome() {
       console.error("Failed to fetch waitlist count:", error);
     }
   };
-  const handleSubmit = async () => {
-    if (!email || !email.trim()) {
-      toast.error("Please enter a valid email");
+  const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  const handleSubmit = async (submitEmail) => {
+    const targetEmail = (submitEmail || email || "").trim();
+    if (!targetEmail) {
+      toast.error("Please enter your email");
+      return;
+    }
+    if (!EMAIL_REGEX.test(targetEmail)) {
+      toast.error("Please enter a valid email address");
       return;
     }
     const fetchPromise = fetch("/api/waitlist", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: email.trim() }),
+      body: JSON.stringify({ email: targetEmail }),
     }).then(async (response) => {
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Failed to join waitlist");
@@ -813,8 +2056,11 @@ export default function ModernHome() {
       success: (data) => {
         if (data.message === "Email already on waitlist") return "You're already on the waitlist!";
         setEmail("");
+        setWaitlistPosition(data.count || 0);
+        setPositionCountUp(0);
         fetchWaitlistCount();
-        return "Successfully joined the waitlist 🎉";
+        setShowShareModal(true);
+        return "Successfully joined the waitlist!";
       },
       error: (error) => error.message || "Something went wrong. Please try again.",
     });
@@ -828,9 +2074,657 @@ export default function ModernHome() {
   const extraFromScroll = Math.min((scrollProgress / 100) * 0.7, 0.7); // max 0.7
   const overlayOpacity = Math.min(baseOpacity + extraFromScroll, 0.7);
   const showScrollIndicator = scrollProgress < 3;
+  const ALL_OBJECTIVES = useRef([
+    { label: 'Launch 3 objects',    get: (s, c, sc) => Math.min(s.launches, 3),   target: 3 },
+    { label: 'Launch 8 objects',    get: (s, c, sc) => Math.min(s.launches, 8),   target: 8 },
+    { label: 'Pin 2 objects',       get: (s, c, sc) => Math.min(s.pinned, 2),     target: 2 },
+    { label: 'Pin 4 objects',       get: (s, c, sc) => Math.min(s.pinned, 4),     target: 4 },
+    { label: 'Collect 2 toys',      get: (s, c, sc) => Math.min(c, 2),            target: 2 },
+    { label: 'Collect 5 toys',      get: (s, c, sc) => Math.min(c, 5),            target: 5 },
+    { label: 'Orbit 1 object',      get: (s, c, sc) => Math.min(s.orbiters, 1),   target: 1 },
+    { label: 'Orbit 3 objects',     get: (s, c, sc) => Math.min(s.orbiters, 3),   target: 3 },
+    { label: '10 collisions',       get: (s, c, sc) => Math.min(s.collisions, 10), target: 10 },
+    { label: '5 spawns',            get: (s, c, sc) => Math.min(s.spawns, 5),      target: 5 },
+    { label: 'Score 200 points',    get: (s, c, sc) => Math.min(sc, 200),     target: 200 },
+    { label: 'Score 500 points',    get: (s, c, sc) => Math.min(sc, 500),     target: 500 },
+  ]);
+  const [objectiveIndices, setObjectiveIndices] = useState(() => {
+    const indices = ALL_OBJECTIVES.current.map((_, i) => i).sort(() => Math.random() - 0.5);
+    return indices.slice(0, 4);
+  });
+  const playgroundObjectives = useMemo(() =>
+    objectiveIndices.map(i => {
+      const obj = ALL_OBJECTIVES.current[i];
+      return {
+        label: obj.label,
+        value: obj.get(playgroundStats, playgroundCollectibles, playgroundScore),
+        target: obj.target,
+      };
+    })
+  , [objectiveIndices, playgroundCollectibles, playgroundStats, playgroundScore]);
+
+  useEffect(() => {
+    if (!playgroundMode || playgroundMastered) return;
+    if (playgroundObjectives.every((objective) => objective.value >= objective.target)) {
+      setPlaygroundMastered(true);
+      toast.success('Playground master unlocked.');
+    }
+  }, [playgroundMastered, playgroundMode, playgroundObjectives]);
 
   return (
-    <div className="relative min-h-screen">
+    <div className="relative min-h-screen" onClickCapture={handlePlaygroundSurfaceClick} style={playgroundMode ? { outline: '2px dashed rgba(88,164,176,0.3)', animation: 'playgroundBorder 3s linear infinite' } : undefined}>
+      {playgroundMode && (
+        <>
+          <div className={`fixed top-4 right-4 z-[120] rounded-2xl border border-[#58A4B0]/20 bg-[#0d1114]/90 backdrop-blur-xl shadow-2xl p-4 transition-all duration-300 ease-out ${playgroundHudMin ? 'w-auto' : 'w-[320px] space-y-4'}`} data-playground-control style={{ animation: 'playgroundHudIn 0.35s ease-out both' }}>
+            <div className="flex items-center justify-between gap-3" data-playground-control>
+              <div className="flex items-center gap-2" data-playground-control>
+                <div className="w-2 h-2 rounded-full bg-[#58A4B0] shrink-0" style={{ animation: 'deployLivePulse 2s ease-in-out infinite' }} />
+                <span className="font-mono text-[11px] text-[#58A4B0] tracking-[0.28em] font-bold">PLAYGROUND</span>
+                {playgroundHudMin && (
+                  <span className="text-[10px] font-mono text-slate-500 ml-1">{playgroundScore}pts</span>
+                )}
+              </div>
+              <div className="flex items-center gap-1.5" data-playground-control>
+                <button className="px-2 py-0.5 rounded-lg border border-white/10 text-[10px] font-mono text-slate-400 hover:text-white hover:border-white/20 transition-colors" onClick={() => setPlaygroundHudMin(prev => !prev)} data-playground-control>
+                  {playgroundHudMin ? '▲' : '▼'}
+                </button>
+                <button className="px-2 py-0.5 rounded-lg border border-white/10 text-[10px] font-mono text-slate-400 hover:text-white hover:border-white/20 transition-colors" onClick={deactivatePlayground} data-playground-control>
+                  ✕
+                </button>
+              </div>
+            </div>
+
+            {!playgroundHudMin && (
+            <p className="text-[11px] text-slate-400 leading-relaxed">Zero-g sandbox. Drag cards, double-click to pin, click empty space to spawn toys.</p>
+            )}
+
+            {!playgroundHudMin && (
+            <>
+            <div className="grid grid-cols-3 gap-2" data-playground-control>
+              {[
+                ['zero', 'Zero-G'],
+                ['down', 'Gravity'],
+                ['reverse', 'Reverse'],
+              ].map(([mode, label]) => (
+                <button
+                  key={mode}
+                  className={`rounded-xl px-3 py-2 text-[11px] font-mono border transition-colors ${playgroundGravityMode === mode ? 'border-[#58A4B0]/40 bg-[#58A4B0]/10 text-[#58A4B0]' : 'border-white/10 text-slate-400 hover:border-white/20 hover:text-white'}`}
+                  onClick={() => setPlaygroundGravityMode(mode)}
+                  data-playground-control
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+
+            <div className="grid grid-cols-3 gap-2" data-playground-control>
+              {[
+                ['none', 'Neutral'],
+                ['magnet', 'Magnet'],
+                ['repel', 'Repel'],
+              ].map(([mode, label]) => (
+                <button
+                  key={mode}
+                  className={`rounded-xl px-3 py-2 text-[11px] font-mono border transition-colors ${playgroundForceMode === mode ? 'border-[#58A4B0]/40 bg-[#58A4B0]/10 text-[#58A4B0]' : 'border-white/10 text-slate-400 hover:border-white/20 hover:text-white'}`}
+                  onClick={() => setPlaygroundForceMode(mode)}
+                  data-playground-control
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+
+            <div className="grid grid-cols-2 gap-2" data-playground-control>
+              <button className={`rounded-xl px-3 py-2 text-[11px] font-mono border transition-colors ${playgroundOrbitMode ? 'border-[#58A4B0]/40 bg-[#58A4B0]/10 text-[#58A4B0]' : 'border-white/10 text-slate-400 hover:border-white/20 hover:text-white'}`} onClick={() => setPlaygroundOrbitMode(prev => !prev)} data-playground-control>
+                {playgroundOrbitMode ? 'Orbit: armed' : 'Orbit: click card'}
+              </button>
+              <button className="rounded-xl px-3 py-2 text-[11px] font-mono border border-white/10 text-slate-400 hover:border-white/20 hover:text-white transition-colors" onClick={explodePlaygroundItems} data-playground-control>
+                Explode all
+              </button>
+              <button className="rounded-xl px-3 py-2 text-[11px] font-mono border border-white/10 text-slate-400 hover:border-white/20 hover:text-white transition-colors" onClick={shufflePlaygroundItems} data-playground-control>
+                Shuffle
+              </button>
+              <button className="rounded-xl px-3 py-2 text-[11px] font-mono border border-white/10 text-slate-400 hover:border-white/20 hover:text-white transition-colors" onClick={stackPlaygroundItems} data-playground-control>
+                Stack neatly
+              </button>
+              <button className="rounded-xl px-3 py-2 text-[11px] font-mono border border-white/10 text-slate-400 hover:border-white/20 hover:text-white transition-colors" onClick={() => resetPlaygroundLayout({ clearSpawns: false })} data-playground-control>
+                Return layout
+              </button>
+              <button className="rounded-xl px-3 py-2 text-[11px] font-mono border border-white/10 text-slate-400 hover:border-white/20 hover:text-white transition-colors" onClick={() => resetPlaygroundLayout({ clearSpawns: true })} data-playground-control>
+                Reset sandbox
+              </button>
+              <button className="rounded-xl px-3 py-2 text-[11px] font-mono border border-white/10 text-slate-400 hover:border-white/20 hover:text-white transition-colors" onClick={chaosRain} data-playground-control>
+                Chaos rain
+              </button>
+              <button className={`rounded-xl px-3 py-2 text-[11px] font-mono border transition-colors ${playgroundSfxOn ? 'border-[#58A4B0]/40 bg-[#58A4B0]/10 text-[#58A4B0]' : 'border-white/10 text-slate-400 hover:border-white/20 hover:text-white'}`} onClick={() => setPlaygroundSfxOn(prev => !prev)} data-playground-control>
+                {playgroundSfxOn ? 'SFX on' : 'SFX off'}
+              </button>
+            </div>
+
+            <div className="flex flex-wrap gap-2" data-playground-control>
+              <span className={`px-2 py-1 rounded-full text-[10px] font-mono border ${playgroundSlowMo ? 'border-amber-400/40 text-amber-300 bg-amber-500/10' : 'border-white/10 text-slate-500'}`}>Shift = slow-mo</span>
+              <span className={`px-2 py-1 rounded-full text-[10px] font-mono border ${playgroundPaused ? 'border-[#58A4B0]/40 text-[#58A4B0] bg-[#58A4B0]/10' : 'border-white/10 text-slate-500'}`}>Space = freeze</span>
+            </div>
+            </>
+            )}
+
+            {!playgroundHudMin && (
+            <>
+            <div className="grid grid-cols-3 gap-2 text-[10px] font-mono" data-playground-control>
+              <div className="rounded-xl border border-white/8 bg-white/[0.03] px-3 py-2"><div className="text-slate-500">score</div><div className="text-white mt-1">{playgroundScore}</div></div>
+              <div className="rounded-xl border border-white/8 bg-white/[0.03] px-3 py-2"><div className="text-slate-500">combo</div><div className={`mt-1 ${playgroundCombo > 1 ? 'text-[#58A4B0]' : 'text-white'}`}>{playgroundCombo > 0 ? `x${playgroundCombo}` : '-'}</div></div>
+              <div className="rounded-xl border border-white/8 bg-white/[0.03] px-3 py-2"><div className="text-slate-500">loot</div><div className="text-white mt-1">{playgroundCollectibles}</div></div>
+            </div>
+
+            <div className="grid grid-cols-3 gap-2 text-[10px] font-mono" data-playground-control>
+              <div className="rounded-xl border border-white/8 bg-white/[0.03] px-3 py-2"><div className="text-slate-500">launches</div><div className="text-white mt-1">{playgroundStats.launches}</div></div>
+              <div className="rounded-xl border border-white/8 bg-white/[0.03] px-3 py-2"><div className="text-slate-500">spawns</div><div className="text-white mt-1">{playgroundStats.spawns}</div></div>
+              <div className="rounded-xl border border-white/8 bg-white/[0.03] px-3 py-2"><div className="text-slate-500">impacts</div><div className="text-white mt-1">{playgroundStats.collisions}</div></div>
+              <div className="rounded-xl border border-white/8 bg-white/[0.03] px-3 py-2"><div className="text-slate-500">pinned</div><div className="text-white mt-1">{playgroundStats.pinned}</div></div>
+              <div className="rounded-xl border border-white/8 bg-white/[0.03] px-3 py-2"><div className="text-slate-500">orbiters</div><div className="text-white mt-1">{playgroundStats.orbiters}</div></div>
+              <div className={`rounded-xl border px-3 py-2 ${playgroundMastered ? 'border-emerald-400/30 bg-emerald-500/10' : 'border-white/8 bg-white/[0.03]'}`}><div className="text-slate-500">status</div><div className={`mt-1 ${playgroundMastered ? 'text-emerald-300' : 'text-white'}`}>{playgroundMastered ? 'mastered' : 'live'}</div></div>
+            </div>
+
+            {/* Wave 2 stats row */}
+            <div className="grid grid-cols-3 gap-2 text-[10px] font-mono" data-playground-control>
+              <div className="rounded-xl border border-white/8 bg-white/[0.03] px-3 py-2"><div className="text-slate-500">weather</div><div className="text-white mt-1">{weather.stage}</div></div>
+              <div className="rounded-xl border border-white/8 bg-white/[0.03] px-3 py-2"><div className="text-slate-500">speedruns</div><div className="text-white mt-1">{speedrun.completedCount}/{speedrun.totalChallenges}</div></div>
+              <div className={`rounded-xl border px-3 py-2 ${voidDim.inVoid ? 'border-emerald-400/30 bg-emerald-500/10' : 'border-white/8 bg-white/[0.03]'}`}><div className="text-slate-500">void</div><div className={`mt-1 ${voidDim.inVoid ? 'text-emerald-300' : 'text-white'}`}>{voidDim.inVoid ? `${voidDim.voidTimer}s` : playgroundScore >= 6000 ? 'ready' : 'locked'}</div></div>
+            </div>
+            </>
+            )}
+
+            {!playgroundHudMin && (
+            <>
+            <div className="space-y-2" data-playground-control>
+              <div className="text-[10px] font-mono uppercase tracking-[0.24em] text-slate-500">Hidden objectives</div>
+              {playgroundObjectives.map((objective) => {
+                const done = objective.value >= objective.target;
+                return (
+                  <div key={objective.label} className={`rounded-xl border px-3 py-2 ${done ? 'border-emerald-400/25 bg-emerald-500/8' : 'border-white/8 bg-white/[0.02]'}`} data-playground-control>
+                    <div className="flex items-center justify-between gap-3 text-[11px]">
+                      <span className={done ? 'text-emerald-300' : 'text-slate-300'}>{objective.label}</span>
+                      <span className={done ? 'text-emerald-300 font-mono' : 'text-slate-500 font-mono'}>{objective.value}/{objective.target}</span>
+                    </div>
+                    <div className="mt-2 h-1.5 rounded-full bg-white/[0.05] overflow-hidden">
+                      <div className={`h-full rounded-full ${done ? 'bg-emerald-400' : 'bg-[#58A4B0]'}`} style={{ width: `${(objective.value / objective.target) * 100}%`, transition: 'width 0.25s ease-out' }} />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            <p className="text-[10px] text-slate-500 font-mono leading-relaxed" data-playground-control>
+              Double-click an item to pin it. Orbit mode captures the next card you click. Click spawned toys to collect them and trigger powers.
+            </p>
+            </>
+            )}
+          </div>
+
+          <div className="fixed left-1/2 top-[35%] -translate-x-1/2 -translate-y-1/2 pointer-events-none z-[60]" style={{ opacity: playgroundOrbitMode ? 1 : 0.55 }}>
+            <div className="w-28 h-28 rounded-full border border-[#58A4B0]/20 bg-[#58A4B0]/[0.03] backdrop-blur-sm" style={{ animation: 'playgroundCorePulse 3s ease-in-out infinite' }} />
+            <div className="absolute inset-4 rounded-full border border-[#58A4B0]/30" />
+            <div className="absolute inset-0 flex items-center justify-center text-[10px] font-mono tracking-[0.28em] text-[#58A4B0]/80">CORE</div>
+          </div>
+
+          {playgroundSpawns.map((spawn) => (
+            <div
+              key={spawn.id}
+              {...getPlaygroundItemProps(spawn.id)}
+              className="fixed left-0 top-0 z-[65] w-[132px] rounded-2xl border border-white/10 bg-[#0f1216]/90 backdrop-blur-xl p-3 shadow-2xl"
+              style={withPlaygroundStyle(spawn.id, { backgroundImage: `linear-gradient(135deg, ${spawn.accent}20, rgba(255,255,255,0.02))` })}
+            >
+              <div className="flex items-center justify-between text-[9px] font-mono uppercase tracking-[0.24em] text-slate-500">
+                <span>{spawn.kind}</span>
+                <span style={{ color: spawn.accent }}>+</span>
+              </div>
+              <div className="mt-2 text-sm font-semibold text-white">{spawn.label}</div>
+              <p className="mt-1 text-[11px] leading-relaxed text-slate-400">{spawn.body}</p>
+            </div>
+          ))}
+
+          {playgroundBursts.map((burst) => (
+            <div key={burst.id} className="fixed pointer-events-none z-[110]" style={{ left: burst.x, top: burst.y, transform: 'translate(-50%, -50%)', animation: 'playgroundSpark 0.45s ease-out forwards' }}>
+              <div className="relative" style={{ width: 28 * burst.scale, height: 28 * burst.scale }}>
+                <div className="absolute inset-0 rounded-full border border-[#58A4B0]/50" />
+                <div className="absolute left-1/2 top-0 h-full w-px bg-gradient-to-b from-transparent via-[#58A4B0] to-transparent -translate-x-1/2" />
+                <div className="absolute top-1/2 left-0 w-full h-px bg-gradient-to-r from-transparent via-[#58A4B0] to-transparent -translate-y-1/2" />
+              </div>
+            </div>
+          ))}
+
+          {/* ─── Journal toggle button ─── */}
+          <button
+            onClick={() => { setJournalOpen(prev => !prev); setJournalSnapshot(collection.getSnapshot()); }}
+            className="fixed bottom-4 left-4 z-[125] flex items-center gap-2 px-3 py-2 rounded-xl border border-[#58A4B0]/20 bg-[#0d1114]/90 backdrop-blur-xl shadow-xl hover:border-[#58A4B0]/40 transition-colors"
+            data-playground-control
+            style={{ animation: 'playgroundHudIn 0.35s ease-out both' }}
+          >
+            <Trophy size={14} className="text-[#58A4B0]" />
+            <span className="text-[10px] font-mono text-slate-300">{collection.count()}/{COLLECTIBLE_ITEMS.length}</span>
+          </button>
+
+          {/* ─── Help panel toggle ─── */}
+          <button
+            onClick={() => setHelpPanelOpen(prev => !prev)}
+            className="fixed bottom-4 left-[120px] z-[125] flex items-center gap-1.5 px-3 py-2 rounded-xl border border-white/10 bg-[#0d1114]/90 backdrop-blur-xl shadow-xl hover:border-emerald-500/30 transition-colors"
+            data-playground-control
+            style={{ animation: 'playgroundHudIn 0.35s ease-out 0.1s both' }}
+          >
+            <span className="text-[10px] font-mono text-emerald-400/70">[?]</span>
+            <span className="text-[10px] font-mono text-slate-500">man</span>
+          </button>
+
+          {/* ─── Journal panel ─── */}
+          {journalOpen && journalSnapshot && (
+            <PlaygroundJournal
+              snapshot={journalSnapshot}
+              canSeeRareHints={collection.canSeeRareHints()}
+              canSeeEpicHints={collection.canSeeEpicHints()}
+              canSeeLegendaryHints={collection.canSeeLegendaryHints()}
+              onReset={() => { collection.resetCollection(); setJournalSnapshot(collection.getSnapshot()); }}
+              onClose={() => setJournalOpen(false)}
+            />
+          )}
+
+          {/* ─── Help panel ─── */}
+          {helpPanelOpen && (
+            <div className="fixed bottom-16 left-4 z-[135] w-[340px] max-h-[60vh] overflow-y-auto rounded-2xl border border-emerald-500/15 bg-[#080c08]/95 backdrop-blur-xl shadow-2xl" data-playground-control style={{ animation: 'journalSlideIn 0.3s ease-out both' }}>
+              <div className="sticky top-0 flex items-center justify-between px-4 py-3 border-b border-emerald-500/10 bg-[#080c08]/95 backdrop-blur-xl z-10">
+                <span className="text-sm font-mono font-bold text-emerald-400/80">$ man synthi</span>
+                <button onClick={() => setHelpPanelOpen(false)} className="text-slate-600 hover:text-emerald-400 text-xs font-mono">[x]</button>
+              </div>
+              <div className="p-4 space-y-4 text-[11px] font-mono text-slate-400">
+                <div>
+                  <h4 className="text-emerald-400/70 font-bold mb-1">[INPUT] controls</h4>
+                  <ul className="space-y-0.5 text-slate-500">
+                    <li>triple-click logo .... toggle playground</li>
+                    <li>drag any card ....... fling it</li>
+                    <li>double-click card ... pin/unpin</li>
+                    <li>click empty space ... spawn toy</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 className="text-emerald-400/70 font-bold mb-1">[KEYS] shortcuts</h4>
+                  <ul className="space-y-0.5 text-slate-500">
+                    <li>Shift ......... slow-mo</li>
+                    <li>Space ......... freeze/unfreeze</li>
+                    <li>V ............. enter the void</li>
+                    <li>T ............. speedrun timer</li>
+                    <li>Ctrl+K ........ cmd palette</li>
+                    <li>konami code ... [CLASSIFIED]</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 className="text-emerald-400/70 font-bold mb-1">[PHYSICS] force modes</h4>
+                  <ul className="space-y-0.5 text-slate-500">
+                    <li>gravity: zero-g / fall / float / orbit. pick your poison.</li>
+                    <li>forces: none / attract / repel / vortex. each breaks differently.</li>
+                    <li>orbit: cards orbit your cursor. you are the sun.</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 className="text-emerald-400/70 font-bold mb-1">[THREAT] boss encounters</h4>
+                  <ul className="space-y-0.5 text-slate-500">
+                    <li><span className="text-red-400/80">segfault</span> (1000pt) — 5 collision hits to kill</li>
+                    <li><span className="text-purple-400/80">deadlock</span> (2500pt) — reunite the chained orbs</li>
+                    <li><span className="text-amber-400/80">race condition</span> (4000pt) — click before it teleports</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 className="text-emerald-400/70 font-bold mb-1">[SYS] anomalies</h4>
+                  <ul className="space-y-0.5 text-slate-500">
+                    <li>{COLLECTIBLE_ITEMS.length} items. 7 rarity tiers. hidden everywhere.</li>
+                    <li>journal (trophy icon) tracks progress + hints.</li>
+                    <li>some things only appear when you are not looking.</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 className="text-emerald-400/70 font-bold mb-1">[ENV] dynamic systems</h4>
+                  <ul className="space-y-0.5 text-slate-500">
+                    <li>weather shifts every 30s. affects physics.</li>
+                    <li>constellations form between orbiting cards.</li>
+                    <li>shooting stars appear. click them if you can.</li>
+                  </ul>
+                </div>
+                <div className="pt-2 border-t border-emerald-500/10 text-[10px] text-slate-600">
+                  type &quot;man synthi&quot; in the editor for hidden protocols.
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ─── Boot sequence overlay ─── */}
+          {pgBootLines.length > 0 && (
+            <div className="fixed bottom-16 right-4 z-[130] w-[340px] pointer-events-none" style={{ animation: 'playgroundHudIn 0.3s ease-out both' }}>
+              <div className="rounded-xl border border-emerald-500/20 bg-[#050a05]/90 backdrop-blur-sm p-3 font-mono text-[10px]" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                {pgBootLines.map((line, i) => (
+                  <div key={i} className="log-appear" style={{
+                    color: line.includes('[OK]') ? '#34d399' : line.includes('WARNING') ? '#f59e0b' : line.startsWith('>') ? '#22c55e' : '#64748b',
+                    opacity: 0.85,
+                    animationDelay: `${i * 0.05}s`,
+                  }}>{line}</div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* ─── Ghost hint ─── */}
+          {ghostHint && (
+            <div className="fixed left-1/2 top-[45%] -translate-x-1/2 -translate-y-1/2 z-[120] pointer-events-none text-center">
+              <span className="font-mono text-sm tracking-wide" style={{
+                color: 'rgba(52, 211, 153, 0.35)',
+                textShadow: '0 0 20px rgba(52, 211, 153, 0.15)',
+                animation: 'whisperFade 4s ease-in-out infinite',
+                letterSpacing: '0.15em',
+              }}>{ghostHint}</span>
+            </div>
+          )}
+
+          {/* ─── Collection toast ─── */}
+          {collectionToast && (
+            <div className="fixed top-20 left-1/2 -translate-x-1/2 z-[140] pointer-events-none" style={{ animation: 'collectionToastIn 0.5s ease-out both' }}>
+              <div className="flex items-center gap-3 px-5 py-3 rounded-2xl border backdrop-blur-xl shadow-2xl" style={{
+                borderColor: RARITY[collectionToast.rarity].border,
+                background: `linear-gradient(135deg, ${RARITY[collectionToast.rarity].glow}, rgba(13,17,20,0.95))`,
+                boxShadow: `0 0 30px ${RARITY[collectionToast.rarity].glow}`,
+              }}>
+                <span className="text-2xl">{collectionToast.item.icon}</span>
+                <div>
+                  <div className="text-xs font-mono font-bold" style={{ color: RARITY[collectionToast.rarity].color }}>{collectionToast.item.name}</div>
+                  <div className="text-[10px] font-mono" style={{ color: RARITY[collectionToast.rarity].color }}>{RARITY[collectionToast.rarity].label}</div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ─── Overflow glitch: score >= 5000 ─── */}
+          {playgroundScore >= 5000 && !collection.has('overflow') && (
+            <div
+              className="fixed top-4 right-[345px] z-[121] cursor-pointer"
+              onClick={() => collection.onOverflowClick(playgroundScore)}
+              data-playground-control
+              style={{ animation: 'glitchFlicker 0.15s infinite' }}
+            >
+              <div className="px-3 py-2 rounded-xl border border-red-500/30 bg-red-500/10 text-red-400 text-[10px] font-mono">
+                ⚠ SCORE OVERFLOW
+              </div>
+            </div>
+          )}
+
+          {/* ─── Whisper hints (Compiler's Key chain) ─── */}
+          {collection.canSeeLegendaryHints() && collection.countByRarity('epic') >= 3 && !collection.has('compilers_key') && (
+            <div className="fixed bottom-24 left-1/2 -translate-x-1/2 z-[60] pointer-events-none" style={{ animation: 'whisperFade 4s ease-in-out infinite' }}>
+              <span className="text-[11px] font-mono italic text-[#58A4B0]/30">
+                {(() => {
+                  const snap = collection.getSnapshot();
+                  if (snap.compilerKeyStep >= 1) return '"Speak the name to the machine" — Ctrl+K';
+                  return `"Where the stars are born, count the sparks" — ${snap.starClicks}/7`;
+                })()}
+              </span>
+            </div>
+          )}
+
+          {/* ─── Mythic / Transcendent cinematic ─── */}
+          {mythicCinematic && (
+            <div className="fixed inset-0 z-[200] pointer-events-none" style={{ animation: 'mythicAuroraIn 3s ease-out forwards' }}>
+              <div className="absolute inset-0" style={{ background: mythicCinematic === 'transcendent'
+                ? 'linear-gradient(to top, rgba(52,211,153,0.15), rgba(96,165,250,0.1), rgba(244,114,182,0.1))'
+                : 'linear-gradient(to top, rgba(244,114,182,0.1), rgba(167,139,250,0.1), rgba(96,165,250,0.1))'
+              }} />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div style={{ animation: 'mythicItemReveal 2s ease-out 1s both' }}>
+                  <div className="text-6xl mb-4 text-center">{mythicCinematic === 'transcendent' ? '🌊' : '💎'}</div>
+                  <div className="text-2xl font-bold text-center font-mono" style={{ background: mythicCinematic === 'transcendent'
+                    ? 'linear-gradient(90deg, #34D399, #60A5FA, #A78BFA, #F472B6, #FBBF24, #34D399)'
+                    : 'linear-gradient(90deg, #F472B6, #A78BFA, #60A5FA, #34D399, #FBBF24)',
+                    backgroundClip: 'text', WebkitBackgroundClip: 'text', color: 'transparent', backgroundSize: '300% 100%', animation: 'journalRainbow 2s linear infinite' }}>
+                    {mythicCinematic === 'transcendent' ? 'THE DEEP END' : 'THE SOURCE CODE'}
+                  </div>
+                  <div className="text-sm text-center text-slate-300 mt-2 font-mono">
+                    {mythicCinematic === 'transcendent' ? 'The abyss stares back. You are complete.' : 'You found everything.'}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ─── Weather overlay ─── */}
+          {weather.stage !== 'clear' && (
+            <div className="fixed inset-0 z-[55] pointer-events-none">
+              {/* Rain / Storm particles */}
+              {(weather.stage === 'rain' || weather.stage === 'storm') && weather.raindrops.map(drop => (
+                <div key={drop.id} className="absolute w-px rounded-full" style={{
+                  left: `${drop.x}%`,
+                  top: '-8px',
+                  height: weather.stage === 'storm' ? '28px' : '18px',
+                  background: weather.stage === 'storm'
+                    ? 'linear-gradient(to bottom, transparent, rgba(147,197,253,0.5))'
+                    : 'linear-gradient(to bottom, transparent, rgba(148,163,184,0.3))',
+                  opacity: drop.opacity,
+                  animation: `rainFall ${drop.speed}s linear ${drop.delay}s forwards`,
+                }} />
+              ))}
+              {/* Lightning flash */}
+              {weather.lightning && (
+                <div className="absolute inset-0 bg-white/5" style={{ animation: 'lightningFlash 0.12s ease-out' }} />
+              )}
+              {/* Solar glow */}
+              {weather.stage === 'solar' && (
+                <div className="absolute inset-0" style={{
+                  background: 'radial-gradient(ellipse 60% 40% at 50% 0%, rgba(251,191,36,0.06), transparent)',
+                  animation: 'solarPulse 4s ease-in-out infinite',
+                }} />
+              )}
+              {/* Weather indicator */}
+              <div className="absolute top-4 left-4 z-[121] flex items-center gap-2 px-3 py-1.5 rounded-xl border border-white/5 bg-[#0d1114]/70 backdrop-blur-md" data-playground-control>
+                <span className="text-sm">{weather.stage === 'rain' ? '🌧️' : weather.stage === 'storm' ? '⛈️' : '☀️'}</span>
+                <span className="text-[10px] font-mono text-slate-400 uppercase">{weather.stage}</span>
+              </div>
+            </div>
+          )}
+
+          {/* ─── Constellation lines SVG ─── */}
+          {constellations.lines.length > 0 && (
+            <svg className="fixed inset-0 z-[56] pointer-events-none" width="100%" height="100%">
+              {constellations.lines.map((line, i) => (
+                <line key={i} x1={line.x1} y1={line.y1} x2={line.x2} y2={line.y2}
+                  stroke="rgba(96,165,250,0.2)" strokeWidth="1" strokeDasharray="4 4"
+                  style={{ animation: 'constellationFade 2s ease-in-out infinite alternate' }} />
+              ))}
+            </svg>
+          )}
+          {constellations.activePattern && (
+            <div className="fixed top-32 left-1/2 -translate-x-1/2 z-[141] pointer-events-none" style={{ animation: 'collectionToastIn 0.5s ease-out both' }}>
+              <div className="px-5 py-3 rounded-2xl border border-blue-400/30 bg-blue-500/10 backdrop-blur-xl shadow-2xl">
+                <div className="text-sm font-mono font-bold text-blue-300 text-center">
+                  ⭐ Constellation: {constellations.activePattern === 'triangle' ? 'Triforce' : 'Polaris'}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ─── Boss encounter ─── */}
+          {bosses.activeBoss && (
+            <div
+              className="fixed z-[130] pointer-events-auto cursor-pointer"
+              data-playground-control
+              onClick={(e) => {
+                const result = bosses.clickBoss(e.clientX, e.clientY);
+                if (result && result !== 'hit') { collection.onBossDefeated(result); collection.onLifetimeBossDefeat(); }
+              }}
+              style={{
+                left: bosses.activeBoss.x - bosses.activeBoss.size / 2,
+                top: bosses.activeBoss.y - bosses.activeBoss.size / 2,
+                width: bosses.activeBoss.size,
+                height: bosses.activeBoss.size,
+                animation: bosses.activeBoss.behavior === 'jitter' ? 'bossJitter 0.1s infinite' : bosses.activeBoss.behavior === 'teleport' ? 'bossTeleport 0.3s ease-out' : 'bossFloat 2s ease-in-out infinite',
+              }}
+            >
+              <div className="w-full h-full rounded-full flex items-center justify-center border-2" style={{
+                borderColor: bosses.activeBoss.color,
+                background: `radial-gradient(circle, ${bosses.activeBoss.color}20, transparent)`,
+                boxShadow: `0 0 30px ${bosses.activeBoss.color}40`,
+              }}>
+                <span className="text-2xl">{bosses.activeBoss.icon}</span>
+              </div>
+              <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 whitespace-nowrap">
+                <span className="text-[9px] font-mono px-2 py-0.5 rounded-md bg-black/60 backdrop-blur-sm" style={{ color: bosses.activeBoss.color }}>
+                  {bosses.activeBoss.name} — HP: {bosses.activeBoss.currentHp}/{bosses.activeBoss.hp}
+                </span>
+              </div>
+            </div>
+          )}
+
+          {/* ─── Deadlock orbs ─── */}
+          {bosses.activeBoss?.behavior === 'linked' && bosses.bossOrbs.length === 2 && (
+            <>
+              {/* Chain line between orbs */}
+              <svg className="fixed inset-0 z-[129] pointer-events-none" style={{ width: '100vw', height: '100vh' }}>
+                <line
+                  x1={bosses.bossOrbs[0].x} y1={bosses.bossOrbs[0].y}
+                  x2={bosses.bossOrbs[1].x} y2={bosses.bossOrbs[1].y}
+                  stroke="#8B5CF6" strokeWidth="1.5" strokeDasharray="6 4" opacity="0.4"
+                />
+              </svg>
+              {bosses.bossOrbs.map((orb, i) => (
+                <div
+                  key={`deadlock-orb-${i}`}
+                  className="fixed z-[131] pointer-events-auto cursor-grab active:cursor-grabbing select-none"
+                  data-playground-control
+                  style={{
+                    left: orb.x - 18,
+                    top: orb.y - 18,
+                    width: 36,
+                    height: 36,
+                    animation: 'bossFloat 2s ease-in-out infinite',
+                    animationDelay: `${i * 0.5}s`,
+                    touchAction: 'none',
+                  }}
+                  onMouseDown={(e) => {
+                    e.stopPropagation();
+                    if (bosses.startDragOrb(e.clientX, e.clientY)) {
+                      const onMove = (ev) => bosses.dragOrb(ev.clientX, ev.clientY);
+                      const onUp = (ev) => {
+                        bosses.releaseDragOrb(ev.movementX, ev.movementY);
+                        window.removeEventListener('mousemove', onMove);
+                        window.removeEventListener('mouseup', onUp);
+                      };
+                      window.addEventListener('mousemove', onMove);
+                      window.addEventListener('mouseup', onUp);
+                    }
+                  }}
+                  onTouchStart={(e) => {
+                    e.stopPropagation();
+                    const touch = e.touches[0];
+                    if (bosses.startDragOrb(touch.clientX, touch.clientY)) {
+                      let lastX = touch.clientX, lastY = touch.clientY;
+                      const onMove = (ev) => {
+                        const t = ev.touches[0];
+                        lastX = t.clientX; lastY = t.clientY;
+                        bosses.dragOrb(t.clientX, t.clientY);
+                      };
+                      const onEnd = () => {
+                        bosses.releaseDragOrb(0, 0);
+                        window.removeEventListener('touchmove', onMove);
+                        window.removeEventListener('touchend', onEnd);
+                      };
+                      window.addEventListener('touchmove', onMove, { passive: false });
+                      window.addEventListener('touchend', onEnd);
+                    }
+                  }}
+                >
+                  <div className="w-full h-full rounded-full flex items-center justify-center border-2" style={{
+                    borderColor: i === 0 ? '#A78BFA' : '#7C3AED',
+                    background: `radial-gradient(circle, ${i === 0 ? '#A78BFA' : '#7C3AED'}30, transparent)`,
+                    boxShadow: `0 0 20px ${i === 0 ? '#A78BFA' : '#7C3AED'}50`,
+                  }}>
+                    <span className="text-sm">{i === 0 ? '🔒' : '🔑'}</span>
+                  </div>
+                  <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 whitespace-nowrap">
+                    <span className="text-[8px] font-mono text-purple-300/60">{i === 0 ? 'LOCK' : 'KEY'}</span>
+                  </div>
+                </div>
+              ))}
+              {/* Hint text */}
+              <div className="fixed z-[128] bottom-28 left-1/2 -translate-x-1/2 pointer-events-none" data-playground-control>
+                <span className="text-[10px] font-mono text-purple-400/50 px-3 py-1 bg-black/40 rounded-full backdrop-blur-sm">
+                  ⛓️ Drag the orbs into each other to break the deadlock
+                </span>
+              </div>
+            </>
+          )}
+
+          {/* ─── Speedrun challenge HUD ─── */}
+          {speedrun.challenge && (
+            <div className="fixed bottom-20 right-4 z-[125] w-[220px] rounded-2xl border border-amber-500/20 bg-[#0d1114]/90 backdrop-blur-xl shadow-2xl p-3" data-playground-control style={{ animation: 'playgroundHudIn 0.35s ease-out both' }}>
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-[10px] font-mono text-amber-400 font-bold uppercase tracking-wider">⏱ {speedrun.challenge.name}</span>
+                <span className="text-[10px] font-mono text-amber-300">{speedrun.getTimeLeft().toFixed(1)}s</span>
+              </div>
+              <div className="text-[11px] font-mono text-slate-300 mb-2">{speedrun.challenge.desc}</div>
+              <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+                <div className="h-full bg-gradient-to-r from-amber-500 to-amber-300 rounded-full transition-all duration-200" style={{ width: `${Math.min(100, (speedrun.challenge.progress / speedrun.challenge.target) * 100)}%` }} />
+              </div>
+              <div className="text-right text-[9px] font-mono text-amber-400/60 mt-1">{speedrun.challenge.progress}/{speedrun.challenge.target}</div>
+            </div>
+          )}
+          {speedrun.showResult && (
+            <div className="fixed bottom-44 right-4 z-[141] pointer-events-none" style={{ animation: 'collectionToastIn 0.5s ease-out both' }}>
+              <div className={`px-4 py-2 rounded-xl border backdrop-blur-xl font-mono text-sm font-bold ${speedrun.showResult === 'success' ? 'border-emerald-400/30 bg-emerald-500/10 text-emerald-300' : 'border-red-400/30 bg-red-500/10 text-red-300'}`}>
+                {speedrun.showResult === 'success' ? '✓ Challenge Complete!' : '✗ Time\'s Up!'}
+              </div>
+            </div>
+          )}
+
+          {/* ─── Void dimension overlay ─── */}
+          {voidDim.inVoid && (
+            <div className="fixed inset-0 z-[50] pointer-events-none" style={{ animation: 'voidEnter 1s ease-out forwards' }}>
+              <div className="absolute inset-0 bg-black/60" />
+              <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at center, rgba(52,211,153,0.05), transparent 70%)' }} />
+              {/* Void HUD */}
+              <div className="absolute top-4 left-1/2 -translate-x-1/2 z-[131] flex items-center gap-4 px-4 py-2 rounded-2xl border border-emerald-500/20 bg-black/70 backdrop-blur-xl pointer-events-auto" data-playground-control>
+                <span className="text-[10px] font-mono text-emerald-400 font-bold tracking-wider">🕳️ THE VOID</span>
+                <span className="text-[10px] font-mono text-emerald-300">{voidDim.voidTimer}s</span>
+                <span className="text-[10px] font-mono text-emerald-200/60">Score: {voidDim.voidScore}</span>
+                <button onClick={() => { const vs = voidDim.exitVoid(); collection.onVoidExit(vs); }} className="px-2 py-0.5 text-[9px] font-mono text-slate-400 border border-white/10 rounded hover:text-white">EXIT</button>
+              </div>
+              {/* Null Entity */}
+              {voidDim.nullEntity && (
+                <div className="absolute pointer-events-auto cursor-crosshair" style={{
+                  left: voidDim.nullEntity.x - voidDim.nullEntity.radius,
+                  top: voidDim.nullEntity.y - voidDim.nullEntity.radius,
+                  width: voidDim.nullEntity.radius * 2,
+                  height: voidDim.nullEntity.radius * 2,
+                  opacity: voidDim.nullEntity.visible ? 0.7 : 0.05,
+                  transition: 'opacity 0.2s',
+                }}>
+                  <div className="w-full h-full rounded-full border border-emerald-400/40 flex items-center justify-center" style={{
+                    background: 'radial-gradient(circle, rgba(52,211,153,0.15), transparent)',
+                    boxShadow: voidDim.nullEntity.visible ? '0 0 40px rgba(52,211,153,0.3)' : 'none',
+                  }}>
+                    <span className="text-lg">👁️</span>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* ─── Void eligible hint ─── */}
+          {playgroundScore >= 6000 && !voidDim.inVoid && (
+            <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-[60] pointer-events-none" style={{ animation: 'whisperFade 4s ease-in-out infinite' }}>
+              <span className="text-[10px] font-mono italic text-emerald-400/30">Press V to enter The Void...</span>
+            </div>
+          )}
+
+          {/* ─── Speedrun hint ─── */}
+          {!speedrun.challenge && playgroundScore >= 500 && (
+            <div className="fixed bottom-4 right-4 z-[60] pointer-events-none" style={{ animation: 'whisperFade 6s ease-in-out infinite', animationDelay: '2s' }}>
+              <span className="text-[10px] font-mono italic text-amber-400/20">Press T for timed challenge ({speedrun.completedCount}/{speedrun.totalChallenges})</span>
+            </div>
+          )}
+        </>
+      )}
       {/* ═══ Boot sequence overlay ═══ */}
       {bootPhase < 2 && (
         <div className={`fixed inset-0 z-[200] bg-[#0a0a0a] flex items-center justify-center ${bootPhase === 1 ? 'boot-fade-out' : ''}`}>
@@ -1268,6 +3162,89 @@ export default function ModernHome() {
           to { opacity: 0; transform: scale(0.95) translateY(8px); }
         }
 
+        /* ─── Share modal ─── */
+        @keyframes shareModalIn {
+          0% { opacity: 0; transform: scale(0.9) translateY(20px); }
+          60% { opacity: 1; transform: scale(1.02) translateY(-2px); }
+          100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        @keyframes shareBackdropIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        @keyframes shareBtnIn {
+          from { opacity: 0; transform: translateY(12px) scale(0.9); }
+          to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @keyframes shareCheckPop {
+          0% { transform: scale(0); opacity: 0; }
+          50% { transform: scale(1.3); opacity: 1; }
+          100% { transform: scale(1); opacity: 1; }
+        }
+        @keyframes shareRing {
+          0% { transform: scale(0.8); opacity: 0.6; }
+          100% { transform: scale(2.5); opacity: 0; }
+        }
+        @keyframes shareSparkle {
+          0% { transform: translate(0, 0) scale(1); opacity: 1; }
+          100% { transform: translate(var(--sx), var(--sy)) scale(0); opacity: 0; }
+        }
+        @keyframes shareGlow {
+          0%, 100% { box-shadow: 0 0 20px rgba(88,164,176,0.15); }
+          50% { box-shadow: 0 0 40px rgba(88,164,176,0.3); }
+        }
+
+        /* ─── Waitlist position ─── */
+        @keyframes positionPop {
+          0% { transform: scale(0); opacity: 0; }
+          50% { transform: scale(1.2); }
+          100% { transform: scale(1); opacity: 1; }
+        }
+        @keyframes positionBar {
+          from { width: 0%; }
+          to { width: 100%; }
+        }
+
+        /* ─── Deploy terminal ─── */
+        @keyframes deployLineIn {
+          from { opacity: 0; transform: translateY(4px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes deployBlink {
+          0%, 49% { opacity: 1; }
+          50%, 100% { opacity: 0; }
+        }
+        @keyframes deployConfetti {
+          0% { transform: translate(0, 0) rotate(0deg) scale(1); opacity: 1; }
+          100% { transform: translate(var(--cx), var(--cy)) rotate(var(--cr)) scale(0); opacity: 0; }
+        }
+        @keyframes deployLivePulse {
+          0%, 100% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.4); }
+          50% { box-shadow: 0 0 12px 4px rgba(52, 211, 153, 0.2); }
+        }
+
+        /* ─── Playground mode ─── */
+        @keyframes playgroundBorder {
+          0%, 100% { border-color: rgba(88,164,176,0.3); }
+          50% { border-color: rgba(88,164,176,0.6); }
+        }
+        @keyframes playgroundHudIn {
+          0% { transform: translateY(-10px) scale(0.98); opacity: 0; }
+          100% { transform: translateY(0) scale(1); opacity: 1; }
+        }
+        @keyframes playgroundBadge {
+          0% { transform: translateY(-10px) scale(0.9); opacity: 0; }
+          100% { transform: translateY(0) scale(1); opacity: 1; }
+        }
+        @keyframes playgroundCorePulse {
+          0%, 100% { box-shadow: 0 0 0 0 rgba(88,164,176,0.08), 0 0 40px rgba(88,164,176,0.08); }
+          50% { box-shadow: 0 0 0 14px rgba(88,164,176,0.02), 0 0 60px rgba(88,164,176,0.14); }
+        }
+        @keyframes playgroundSpark {
+          0% { opacity: 1; transform: translate(-50%, -50%) scale(0.6); }
+          100% { opacity: 0; transform: translate(-50%, -50%) scale(1.3); }
+        }
+
         /* ─── Milestone counter ─── */
         @keyframes milestoneGlow {
           0%, 100% { box-shadow: 0 0 0 0 rgba(88,164,176,0); }
@@ -1354,12 +3331,94 @@ export default function ModernHome() {
           from { opacity: 1; transform: translateY(0); }
           to { opacity: 0; transform: translateY(8px); }
         }
+
+        /* ─── Collection system animations ─── */
+        @keyframes journalSlideIn {
+          from { opacity: 0; transform: translateX(-20px); }
+          to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes journalRainbow {
+          0% { background-position: 0% 50%; }
+          100% { background-position: 300% 50%; }
+        }
+        @keyframes collectionToastIn {
+          0% { opacity: 0; transform: translate(-50%, -20px) scale(0.9); }
+          60% { opacity: 1; transform: translate(-50%, 4px) scale(1.02); }
+          100% { opacity: 1; transform: translate(-50%, 0) scale(1); }
+        }
+        @keyframes glitchFlicker {
+          0%, 90%, 100% { opacity: 0.15; }
+          92% { opacity: 0.6; transform: translateX(2px); }
+          94% { opacity: 0.1; transform: translateX(-1px); }
+          96% { opacity: 0.5; }
+          98% { opacity: 0.2; transform: translateX(1px); }
+        }
+        @keyframes whisperFade {
+          0%, 100% { opacity: 0; }
+          40%, 60% { opacity: 0.3; }
+        }
+        @keyframes proximityGlitch {
+          0%, 85%, 100% { opacity: var(--prox-base, 0.15); transform: translate(0, 0); }
+          87% { opacity: 0.6; transform: translate(1px, -1px) skewX(1deg); }
+          89% { opacity: 0.1; transform: translate(-2px, 1px); }
+          91% { opacity: 0.7; transform: translate(2px, 0) skewX(-0.5deg); }
+          93% { opacity: 0.15; transform: translate(-1px, -1px); }
+          95% { opacity: 0.5; transform: translate(0, 2px); }
+        }
+        @keyframes mythicAuroraIn {
+          0% { opacity: 0; }
+          30% { opacity: 1; }
+          80% { opacity: 1; }
+          100% { opacity: 0; }
+        }
+        @keyframes mythicItemReveal {
+          0% { opacity: 0; transform: scale(0.3); filter: blur(20px); }
+          60% { opacity: 1; transform: scale(1.1); filter: blur(0); }
+          100% { opacity: 1; transform: scale(1); filter: blur(0); }
+        }
+
+        /* ─── Wave 2 keyframes ─── */
+        @keyframes rainFall {
+          0% { transform: translateY(0); opacity: 1; }
+          100% { transform: translateY(100vh); opacity: 0; }
+        }
+        @keyframes lightningFlash {
+          0% { opacity: 0.8; }
+          50% { opacity: 0.3; }
+          100% { opacity: 0; }
+        }
+        @keyframes solarPulse {
+          0%, 100% { opacity: 0.5; }
+          50% { opacity: 1; }
+        }
+        @keyframes bossJitter {
+          0%, 100% { transform: translate(0, 0); }
+          25% { transform: translate(-2px, 1px); }
+          50% { transform: translate(1px, -2px); }
+          75% { transform: translate(2px, 1px); }
+        }
+        @keyframes bossTeleport {
+          0% { opacity: 0; transform: scale(0.5); }
+          100% { opacity: 1; transform: scale(1); }
+        }
+        @keyframes bossFloat {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-8px); }
+        }
+        @keyframes constellationFade {
+          0% { opacity: 0.1; }
+          100% { opacity: 0.35; }
+        }
+        @keyframes voidEnter {
+          0% { opacity: 0; }
+          100% { opacity: 1; }
+        }
       `}</style>
 
       {/* Top nav */}
       <div className="fixed top-0 left-0 right-0 z-50 bg-[#131112]/80 backdrop-blur-md border-b border-[#E5E5E5]/5">
         <div className="px-8 py-4 flex items-center">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 cursor-pointer select-none" onClick={handleLogoClick}>
             <img
               src="/synthi-logo.svg"
               alt="Synthi 26 Logo"
@@ -1367,11 +3426,17 @@ export default function ModernHome() {
             />
             <span className="text-[#E5E5E5] font-semibold text-sm -ml-2 -mt-2 tracking-tight">26'</span>
           </div>
+          {/* Playground mode badge */}
+          {playgroundMode && (
+            <div className="ml-3 px-2.5 py-1 bg-[#58A4B0]/10 border border-[#58A4B0]/30 rounded-full text-[10px] font-mono text-[#58A4B0] tracking-wider" style={{ animation: 'playgroundBadge 0.3s ease-out' }}>
+              PLAYGROUND
+            </div>
+          )}
           {/* Ambient sound toggle */}
           <button
             onClick={toggleAmbient}
             className="ml-auto text-slate-500 hover:text-[#58A4B0] transition-colors p-1.5 rounded-lg hover:bg-white/[0.04]"
-            title={ambientOn ? 'Mute ambient' : 'Enable ambient sound'}
+            aria-label={ambientOn ? 'Mute ambient sound' : 'Enable ambient sound'}
           >
             {ambientOn ? <Volume2 size={14} /> : <VolumeX size={14} />}
           </button>
@@ -1392,7 +3457,7 @@ export default function ModernHome() {
             key={s.id}
             onClick={() => scrollToSection(s.id)}
             className="group relative flex items-center"
-            title={s.label}
+            aria-label={`Navigate to ${s.label} section`}
           >
             <span className={`block w-2 h-2 rounded-full transition-all duration-300 ${
               activeSection === s.id
@@ -1509,7 +3574,12 @@ export default function ModernHome() {
 
       {/* Shooting star */}
       {shootingStar && (
-        <div key={shootingStar.id} className="fixed pointer-events-none z-0 shooting-star" style={{ left: `${shootingStar.x}%`, top: `${shootingStar.y}%` }} />
+        <div
+          key={shootingStar.id}
+          className={`fixed z-0 shooting-star ${playgroundMode ? 'pointer-events-auto cursor-crosshair' : 'pointer-events-none'}`}
+          style={{ left: `${shootingStar.x}%`, top: `${shootingStar.y}%`, width: playgroundMode ? '40px' : undefined, height: playgroundMode ? '40px' : undefined }}
+          onClick={playgroundMode ? () => collection.onShootingStarClick() : undefined}
+        />
       )}
 
       {/* Comet - longer, glowing, rarer */}
@@ -1558,6 +3628,17 @@ export default function ModernHome() {
                 <div className="absolute inset-0 w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
               </div>
               <span className="text-emerald-400 text-sm font-medium">All systems operational</span>
+              {/* Ghost Process collectible */}
+              {playgroundMode && !collection.has('ghost_process') && (
+                <span
+                  onClick={(e) => { e.stopPropagation(); collection.onGhostProcess(); }}
+                  className="ml-2 text-[10px] font-mono cursor-pointer select-none"
+                  data-secret-proximity="true"
+                  data-base-opacity="0.15"
+                  data-default-animation="whisperFade 6s ease-in-out infinite 2s"
+                  style={{ color: '#A78BFA', opacity: 0.15, animation: 'whisperFade 6s ease-in-out infinite', animationDelay: '2s' }}
+                >PID 0</span>
+              )}
             </div>
             {/* Headline with typewriter effect */}
             <div
@@ -1731,6 +3812,19 @@ export default function ModernHome() {
                 </div>
               )}
 
+              {/* man synthi output */}
+              {editorHelpOutput && (
+                <div className="border-t border-emerald-500/20 bg-[#0a0f0a]" style={{ maxHeight: 320, overflowY: 'auto' }}>
+                  <div className="px-4 py-3 font-mono text-xs space-y-0.5" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                    {editorHelpOutput.map((line, i) => (
+                      <div key={i} className="log-appear" style={{ animationDelay: `${i * 0.03}s` }}>
+                        <span style={{ color: line.startsWith('$') ? '#34d399' : line.startsWith('  "') ? '#64748b' : line === line.toUpperCase() && line.trim() ? '#94a3b8' : '#cbd5e1' }}>{line || '\u00A0'}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {/* Bottom status bar */}
               <div className="flex items-center justify-between px-4 py-2 border-t border-white/5 bg-[#1A1A1A]/60 text-xs text-slate-500 font-mono">
                 <span>Ln {editorLines.length}</span>
@@ -1749,16 +3843,17 @@ export default function ModernHome() {
       </div>
 
       {/* ═══ Animated Stats Counter Bar ═══ */}
-      <div ref={statsRef} className="relative z-10 py-16 px-6 md:px-20">
+      <div ref={statsRef} className="relative z-10 py-16 px-6 md:px-20" style={getDragStyle('stats')} onMouseDown={(e) => playgroundDragStart('stats', e)} onTouchStart={(e) => playgroundDragStart('stats', e)}>
         <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
           {STAT_TARGETS.map((stat, i) => (
             <div
               key={i}
+              {...getPlaygroundItemProps(`stats-card-${i}`)}
               className="text-center"
-              style={{
+              style={withPlaygroundStyle(`stats-card-${i}`, {
                 animation: statsVisible ? `countSlideUp 0.7s ease-out ${i * 120}ms both` : 'none',
                 opacity: statsVisible ? undefined : 0,
-              }}
+              })}
             >
               <div className="text-3xl md:text-4xl font-bold text-white font-mono">
                 {stat.prefix}{stat.decimals > 0 ? counterValues[i].toFixed(stat.decimals) : counterValues[i]}{stat.suffix}
@@ -1778,7 +3873,7 @@ export default function ModernHome() {
       </div>
 
       {/* Business Model */}
-      <div ref={businessRef} className="relative z-10 min-h-screen flex items-center justify-center px-6 md:px-20 py-20 md:py-32">
+      <div ref={businessRef} className="relative z-10 min-h-screen flex items-center justify-center px-6 md:px-20 py-20 md:py-32" style={getDragStyle('pricing')} onMouseDown={(e) => playgroundDragStart('pricing', e)} onTouchStart={(e) => playgroundDragStart('pricing', e)}>
         <div className="max-w-7xl w-full space-y-16">
           <div className="text-center space-y-6 relative">
             {renderBurst('business', businessVisible)}
@@ -1834,6 +3929,7 @@ export default function ModernHome() {
           >
             {/* Free Tier */}
             <div
+              {...getPlaygroundItemProps('pricing-core')}
               className="pricing-card relative group bg-[#141414]/95 border border-white/[0.08] rounded-2xl p-10 hover:border-[#58A4B0]/30 transition-all duration-300"
               onMouseMove={handleCardMouseMove}
             >
@@ -1871,15 +3967,28 @@ export default function ModernHome() {
                 >
                   Join Free
                 </button>
+                {/* Secret: Rubber Duck */}
+                {playgroundMode && !collection.has('rubber_duck') && (
+                  <span
+                    onClick={(e) => { e.stopPropagation(); collection.onRubberDuckClick(); }}
+                    className="absolute bottom-3 right-3 text-[10px] cursor-pointer select-none"
+                    data-secret-proximity="true"
+                    data-base-opacity="0.12"
+                    data-default-animation=""
+                    style={{ opacity: 0.12, filter: 'grayscale(0.8)', transition: 'opacity 0.3s' }}
+                    title="quack?"
+                  >🦆</span>
+                )}
               </div>
             </div>
 
             {/* Premium Tier */}
             <div
+              {...getPlaygroundItemProps('pricing-pro')}
               className="pricing-card pro-card-border pro-tilt relative group bg-[#141414]/95 rounded-2xl p-10"
               onMouseMove={handleProCardMouseMove}
               onMouseLeave={handleProCardMouseLeave}
-              style={{ boxShadow: '0 0 80px -20px rgba(88, 164, 176, 0.25)' }}
+              style={withPlaygroundStyle('pricing-pro', { boxShadow: '0 0 80px -20px rgba(88, 164, 176, 0.25)' })}
             >
               <div className="pricing-spotlight" />
               <div className="pricing-grid" />
@@ -1950,15 +4059,29 @@ export default function ModernHome() {
       <div
         ref={featuresRef}
         className="relative z-10 px-6 md:px-20 py-20 md:py-32"
+        style={getDragStyle('features')}
+        onMouseDown={(e) => playgroundDragStart('features', e)}
+        onTouchStart={(e) => playgroundDragStart('features', e)}
       >
         <div className="max-w-7xl mx-auto space-y-12">
           {/* Section header */}
           <div className="text-center space-y-4 relative">
             {renderBurst('features', featuresVisible)}
             <h2
-              className={`text-4xl md:text-6xl font-bold text-white tracking-tight transition-all duration-1000 ${featuresVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
+              className={`text-4xl md:text-6xl font-bold text-white tracking-tight transition-all duration-1000 relative inline-block ${featuresVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
             >
               Code <span className="text-[#327464]">Beyond Hardware</span>,<br />
+              {/* Phantom Deploy collectible */}
+              {playgroundMode && !collection.has('phantom_deploy') && (
+                <span
+                  onClick={(e) => { e.stopPropagation(); collection.onPhantomDeploy(); }}
+                  className="absolute -right-10 top-2 text-lg cursor-pointer select-none"
+                  data-secret-proximity="true"
+                  data-base-opacity="0.12"
+                  data-default-animation="whisperFade 5s ease-in-out infinite"
+                  style={{ color: '#A78BFA', opacity: 0.12, animation: 'whisperFade 5s ease-in-out infinite' }}
+                >🚀</span>
+              )}
               <span className="inline-block mt-2">Build at Instant.</span>
             </h2>
             <p
@@ -1974,6 +4097,7 @@ export default function ModernHome() {
           >
             {/* ── AI Pair Programmer - wide hero card ── */}
             <div
+              {...getPlaygroundItemProps('feature-ai')}
               className="spotlight-card md:col-span-2 group relative bg-[#141414] border border-white/[0.08] rounded-2xl overflow-hidden transition-all duration-300 hover:border-[#58A4B0]/30"
               onMouseMove={handleCardMouseMove}
             >
@@ -2008,6 +4132,7 @@ export default function ModernHome() {
 
             {/* ── Waitlist - gradient glow border card ── */}
             <div
+              {...getPlaygroundItemProps('feature-waitlist')}
               className="spotlight-card group relative rounded-2xl overflow-hidden transition-all duration-300"
               onMouseMove={handleCardMouseMove}
             >
@@ -2025,9 +4150,10 @@ export default function ModernHome() {
                     className="w-full px-4 py-3 bg-white/[0.03] border border-white/[0.12] rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-[#58A4B0] focus:ring-1 focus:ring-[#58A4B0] transition-all duration-300 text-sm"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                    onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleSubmit(); } }}
                   />
                   <button
-                    onClick={handleSubmit}
+                    onClick={() => handleSubmit()}
                     className="w-full group/btn relative px-5 py-2.5 bg-white text-black font-semibold rounded-lg overflow-hidden transition-all duration-300 hover:-translate-y-0.5 cursor-pointer"
                   >
                     <span className="relative z-10 font-mono text-xs tracking-wide">JOIN WAITLIST</span>
@@ -2037,7 +4163,10 @@ export default function ModernHome() {
                 <div className="flex items-center gap-2 text-slate-400 text-xs">
                   <div className="w-1.5 h-1.5 bg-emerald-400 animate-pulse rounded-full" />
                   <span>
-                    <strong className="text-white">{waitlistCount}</strong> developers on the list
+                    {waitlistCount === null
+                      ? <span className="inline-block w-20 h-3 bg-white/[0.06] rounded animate-pulse" />
+                      : <><strong className="text-white">{waitlistCount}</strong> developers on the list</>
+                    }
                   </span>
                 </div>
               </div>
@@ -2045,6 +4174,7 @@ export default function ModernHome() {
 
             {/* ── Bugs Fixed - small card ── */}
             <div
+              {...getPlaygroundItemProps('feature-bugs')}
               className="spotlight-card group relative bg-[#141414] border border-white/[0.08] rounded-2xl overflow-hidden transition-all duration-300 hover:border-[#58A4B0]/30"
               onMouseMove={handleCardMouseMove}
             >
@@ -2090,6 +4220,7 @@ export default function ModernHome() {
 
             {/* ── Cloud Compile - small card ── */}
             <div
+              {...getPlaygroundItemProps('feature-cloud')}
               className="spotlight-card group relative bg-[#141414] border border-white/[0.08] rounded-2xl overflow-hidden transition-all duration-300 hover:border-[#58A4B0]/30"
               onMouseMove={handleCardMouseMove}
             >
@@ -2132,6 +4263,7 @@ export default function ModernHome() {
 
             {/* ── Collaboration - small card ── */}
             <div
+              {...getPlaygroundItemProps('feature-collab')}
               className="spotlight-card group relative bg-[#141414] border border-white/[0.08] rounded-2xl overflow-hidden transition-all duration-300 hover:border-[#58A4B0]/30"
               onMouseMove={handleCardMouseMove}
             >
@@ -2166,6 +4298,7 @@ export default function ModernHome() {
 
             {/* ── AI Tools Freedom - small card ── */}
             <div
+              {...getPlaygroundItemProps('feature-freedom')}
               className="spotlight-card group relative bg-[#141414] border border-white/[0.08] rounded-2xl overflow-hidden transition-all duration-300 hover:border-[#58A4B0]/30"
               onMouseMove={handleCardMouseMove}
             >
@@ -2199,6 +4332,7 @@ export default function ModernHome() {
 
             {/* ── HMR for Compiled Languages - wide card (live animation) ── */}
             <div
+              {...getPlaygroundItemProps('feature-hmr')}
               className="spotlight-card md:col-span-2 group relative bg-[#141414] border border-white/[0.08] rounded-2xl overflow-hidden transition-all duration-300 hover:border-[#58A4B0]/30"
               onMouseMove={handleCardMouseMove}
             >
@@ -2262,7 +4396,7 @@ export default function ModernHome() {
       </div>
 
       {/* ═══ Language Showcase Carousel ═══ */}
-      <div className="relative z-10 px-6 md:px-20 py-20 md:py-28">
+      <div className="relative z-10 px-6 md:px-20 py-20 md:py-28" style={getDragStyle('carousel')} onMouseDown={(e) => playgroundDragStart('carousel', e)} onTouchStart={(e) => playgroundDragStart('carousel', e)}>
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
             <span className="text-[#58A4B0] font-mono text-xs tracking-widest uppercase mb-3 block">Polyglot by design</span>
@@ -2272,7 +4406,7 @@ export default function ModernHome() {
               ))}
             </h2>
           </div>
-          <div className="relative overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.02] backdrop-blur-sm">
+          <div {...getPlaygroundItemProps('language-showcase')} className="relative overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.02] backdrop-blur-sm">
             {/* Language tabs */}
             <div className="flex border-b border-white/[0.06]">
               {LANG_SHOWCASE.map((lang, i) => (
@@ -2297,7 +4431,7 @@ export default function ModernHome() {
       </div>
 
       {/* ═══ Before / After IDE Slider ═══ */}
-      <div className="relative z-10 px-6 md:px-20 py-16 md:py-24">
+      <div className="relative z-10 px-6 md:px-20 py-16 md:py-24" style={getDragStyle('slider')} onMouseDown={(e) => playgroundDragStart('slider', e)} onTouchStart={(e) => playgroundDragStart('slider', e)}>
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-10">
             <span className="text-[#58A4B0] font-mono text-xs tracking-widest uppercase mb-3 block">See the difference</span>
@@ -2355,17 +4489,28 @@ export default function ModernHome() {
       </div>
 
       {/* ═══ Comparison Table ═══ */}
-      <div ref={comparisonRef} className="relative z-10 px-6 md:px-20 py-20 md:py-28">
+      <div ref={comparisonRef} className="relative z-10 px-6 md:px-20 py-20 md:py-28" style={getDragStyle('comparison')} onMouseDown={(e) => playgroundDragStart('comparison', e)} onTouchStart={(e) => playgroundDragStart('comparison', e)}>
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
             <span className="text-[#58A4B0] font-mono text-xs tracking-widest uppercase mb-3 block">The honest comparison</span>
-            <h2 className={`text-3xl md:text-5xl font-bold text-white tracking-tight ${comparisonVisible ? 'text-reveal' : 'text-reveal-hidden'}`}>
+            <h2 className={`text-3xl md:text-5xl font-bold text-white tracking-tight relative inline-block ${comparisonVisible ? 'text-reveal' : 'text-reveal-hidden'}`}>
               {'Synthi vs. the rest'.split('').map((c, i) => (
                 <span key={i} style={{ animationDelay: `${i * 40}ms` }}>{c === ' ' ? '\u00A0' : c}</span>
               ))}
+              {/* Kernel Patch collectible */}
+              {playgroundMode && !collection.has('kernel_patch') && (
+                <span
+                  onClick={(e) => { e.stopPropagation(); collection.onKernelPatch(); }}
+                  className="absolute -right-8 top-1/2 -translate-y-1/2 text-base cursor-pointer select-none"
+                  data-secret-proximity="true"
+                  data-base-opacity="0.2"
+                  data-default-animation="glitchFlicker 2.5s ease-in-out infinite"
+                  style={{ color: '#A78BFA', opacity: 0.2, animation: 'glitchFlicker 2.5s ease-in-out infinite' }}
+                >🩹</span>
+              )}
             </h2>
           </div>
-          <div className={`overflow-x-auto rounded-2xl border border-white/[0.06] transition-all duration-1000 ${comparisonVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
+          <div {...getPlaygroundItemProps('comparison-table')} className={`overflow-x-auto rounded-2xl border border-white/[0.06] transition-all duration-1000 ${comparisonVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
             <table className="w-full text-left text-xs sm:text-sm min-w-[480px]">
               <thead>
                 <tr className="border-b border-white/[0.06] bg-white/[0.02]">
@@ -2398,7 +4543,7 @@ export default function ModernHome() {
       </div>
 
       {/* ═══ Merge with Synthi - Migration Roadmap ═══ */}
-      <div ref={roadmapRef} className="relative z-10 px-6 md:px-20 py-20 md:py-28">
+      <div ref={roadmapRef} className="relative z-10 px-6 md:px-20 py-20 md:py-28" style={getDragStyle('roadmap')} onMouseDown={(e) => playgroundDragStart('roadmap', e)} onTouchStart={(e) => playgroundDragStart('roadmap', e)}>
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-16">
             <span className="text-[#58A4B0] font-mono text-xs tracking-widest uppercase mb-3 block">Switch in minutes</span>
@@ -2408,6 +4553,18 @@ export default function ModernHome() {
               ))}
             </h2>
             <p className={`text-slate-400 text-lg mt-4 transition-all duration-1000 delay-300 ${roadmapVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>Your workflow, your extensions, your settings - nothing left behind.</p>
+            {/* Secret: Y2K Bug — hidden timestamp */}
+            {playgroundMode && !collection.has('y2k_bug') && (
+              <span
+                onClick={(e) => { e.stopPropagation(); collection.onY2kBugClick(); }}
+                className="inline-block mt-2 cursor-pointer select-none font-mono"
+                data-secret-proximity="true"
+                data-base-opacity="0.2"
+                data-default-animation=""
+                style={{ fontSize: '8px', color: '#334155', opacity: 0.2, transition: 'opacity 0.3s' }}
+                title="01/01/2000 00:00:00"
+              >01/01/2000 00:00:00</span>
+            )}
           </div>
           <div className={`relative transition-all duration-1000 ${roadmapVisible ? 'opacity-100' : 'opacity-0'}`}>
             {/* Vertical line */}
@@ -2419,7 +4576,7 @@ export default function ModernHome() {
               { step: '04', title: 'Sync settings & keybinds', desc: 'Import your settings.json and keybindings. Synthi feels exactly like home.', done: true },
               { step: '05', title: 'Build - faster than before', desc: 'Cloud compile kicks in automatically. Same project, dramatically faster builds.', done: true },
             ].map((item, i) => (
-              <div key={i} className="relative pl-12 md:pl-16 pb-10 last:pb-0" style={{ transitionDelay: roadmapVisible ? `${i * 150}ms` : '0ms', opacity: roadmapVisible ? 1 : 0, transform: roadmapVisible ? 'translateY(0)' : 'translateY(20px)', transition: 'opacity 0.6s ease-out, transform 0.6s ease-out' }}>
+              <div key={i} {...getPlaygroundItemProps(`roadmap-${i}`)} className="relative pl-12 md:pl-16 pb-10 last:pb-0" style={withPlaygroundStyle(`roadmap-${i}`, { transitionDelay: roadmapVisible ? `${i * 150}ms` : '0ms', opacity: roadmapVisible ? 1 : 0, transform: roadmapVisible ? 'translateY(0)' : 'translateY(20px)', transition: 'opacity 0.6s ease-out, transform 0.6s ease-out' })}>
                 {/* Dot */}
                 <div className="absolute left-2.5 md:left-4.5 top-1.5 w-3 h-3 rounded-full border-2 bg-[#58A4B0] border-[#58A4B0]">
                   <div className="absolute inset-0 rounded-full" style={{ animation: 'timelineDotPing 2s ease-out infinite', animationDelay: `${i * 300}ms` }} />
@@ -2434,8 +4591,9 @@ export default function ModernHome() {
       </div>
 
 
+
       {/* ═══ Who Is This For? — Persona Cards ═══ */}
-      <div ref={personasRef} className="relative z-10 px-6 md:px-20 py-20 md:py-28">
+      <div ref={personasRef} className="relative z-10 px-6 md:px-20 py-20 md:py-28" style={getDragStyle('personas')} onMouseDown={(e) => playgroundDragStart('personas', e)} onTouchStart={(e) => playgroundDragStart('personas', e)}>
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-14">
             <span className="text-[#58A4B0] font-mono text-xs tracking-widest uppercase mb-3 block">Built for every builder</span>
@@ -2449,6 +4607,7 @@ export default function ModernHome() {
           <div className={`grid grid-cols-1 md:grid-cols-3 gap-6 transition-all duration-1000 delay-300 ${personasVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
             {/* Solo Devs */}
             <div
+              {...getPlaygroundItemProps('persona-solo')}
               className="pricing-card group relative bg-white/[0.03] rounded-2xl p-8"
               onMouseMove={handleCardMouseMove}
             >
@@ -2482,10 +4641,11 @@ export default function ModernHome() {
 
             {/* Startup Teams — featured card with animated border + 3D tilt */}
             <div
+              {...getPlaygroundItemProps('persona-startup')}
               className="pricing-card pro-card-border group relative bg-white/[0.03] rounded-2xl p-8"
               onMouseMove={handleProCardMouseMove}
               onMouseLeave={handleProCardMouseLeave}
-              style={{ boxShadow: '0 0 80px -20px rgba(88, 164, 176, 0.2)', transitionDelay: personasVisible ? '100ms' : '0ms' }}
+              style={withPlaygroundStyle('persona-startup', { boxShadow: '0 0 80px -20px rgba(88, 164, 176, 0.2)', transitionDelay: personasVisible ? '100ms' : '0ms' })}
             >
               <div className="pricing-spotlight" />
               <div className="pricing-grid" />
@@ -2520,9 +4680,10 @@ export default function ModernHome() {
 
             {/* Enterprise */}
             <div
+              {...getPlaygroundItemProps('persona-enterprise')}
               className="pricing-card group relative bg-white/[0.03] rounded-2xl p-8"
               onMouseMove={handleCardMouseMove}
-              style={{ transitionDelay: personasVisible ? '200ms' : '0ms' }}
+              style={withPlaygroundStyle('persona-enterprise', { transitionDelay: personasVisible ? '200ms' : '0ms' })}
             >
               <div className="pricing-spotlight" />
               <div className="pricing-grid" />
@@ -2561,28 +4722,51 @@ export default function ModernHome() {
           <div className="cmd-palette-in w-[480px] bg-[#1a1a1a]/95 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-2xl overflow-hidden pointer-events-auto" style={{ boxShadow: '0 0 80px -20px rgba(88,164,176,0.3)' }}>
             <div className="flex items-center gap-3 px-5 py-4 border-b border-white/5">
               <div className="text-[#58A4B0] text-sm font-mono">✦</div>
-              <span className="text-white/40 text-sm font-mono flex-1">Synthi AI - what would you like to build?</span>
+              {playgroundMode ? (
+                <input
+                  autoFocus
+                  className="flex-1 bg-transparent text-white text-sm font-mono outline-none placeholder:text-white/30"
+                  placeholder="Type a command..."
+                  value={cmdPaletteInput}
+                  onChange={(e) => setCmdPaletteInput(e.target.value)}
+                  onKeyDown={(e) => { if (e.key === 'Enter') handleCmdPaletteSubmit(cmdPaletteInput); if (e.key === 'Escape') setShowCommandPalette(false); }}
+                />
+              ) : (
+                <span className="text-white/40 text-sm font-mono flex-1">Synthi AI - what would you like to build?</span>
+              )}
               <kbd className="text-[10px] text-slate-500 bg-white/5 border border-white/10 rounded px-1.5 py-0.5 font-mono">Esc</kbd>
             </div>
             <div className="px-5 py-3 space-y-2">
               <div className="flex items-center gap-2 text-slate-400 text-xs font-mono">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                Scanning workspace...
+                {playgroundMode ? 'Try: sudo collect, synthi' : 'Scanning workspace...'}
               </div>
               <div className="w-full h-0.5 bg-white/5 rounded-full overflow-hidden">
                 <div className="h-full bg-gradient-to-r from-[#58A4B0] to-[#327464] cmd-scan-bar rounded-full"></div>
               </div>
-              <div className="text-[10px] text-slate-600 font-mono mt-1">Try it when Synthi launches. Press Ctrl+K anytime.</div>
+              <div className="text-[10px] text-slate-600 font-mono mt-1">{playgroundMode ? 'Commands unlock collectibles.' : 'Try it when Synthi launches. Press Ctrl+K anytime.'}</div>
             </div>
           </div>
         </div>
       )}
 
       {/* FAQ Section */}
-      <div ref={faqRef} className="relative z-10 px-6 md:px-20 py-20 md:py-32">
+      <div ref={faqRef} className="relative z-10 px-6 md:px-20 py-20 md:py-32" style={getDragStyle('faq')} onMouseDown={(e) => playgroundDragStart('faq', e)} onTouchStart={(e) => playgroundDragStart('faq', e)}>
         <div className="max-w-3xl mx-auto space-y-10">
           <div className="text-center space-y-4">
-            <h2 className="text-3xl md:text-5xl font-bold text-white tracking-tight">Questions?</h2>
+            <h2 className="text-3xl md:text-5xl font-bold text-white tracking-tight relative inline-block">Questions?
+              {playgroundMode && !collection.has('four_oh_four') && (
+                <span
+                  onClick={(e) => { e.stopPropagation(); collection.on404Click(); }}
+                  className="absolute -right-6 top-0 text-lg cursor-pointer select-none"
+                  data-secret-proximity="true"
+                  data-base-opacity="0.25"
+                  data-default-animation="glitchFlicker 3s ease-in-out infinite"
+                  style={{ color: '#A78BFA', opacity: 0.25, animation: 'glitchFlicker 3s ease-in-out infinite', textShadow: '0 0 8px rgba(167,139,250,0.5)' }}
+                  title="?"
+                >?</span>
+              )}
+            </h2>
             <p className="text-slate-400 text-lg">Quick answers to what you&apos;re probably wondering.</p>
           </div>
           <div className="space-y-3">
@@ -2595,8 +4779,13 @@ export default function ModernHome() {
             ].map((item, i) => (
               <div
                 key={i}
+                {...getPlaygroundItemProps(`faq-${i}`)}
                 className="group bg-white/[0.02] border border-white/[0.06] rounded-xl overflow-hidden hover:border-[#58A4B0]/20 transition-colors duration-300 cursor-pointer"
                 onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                role="button"
+                aria-expanded={openFaq === i}
+                tabIndex={0}
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setOpenFaq(openFaq === i ? null : i); } }}
               >
                 <div className="flex items-center justify-between px-6 py-4">
                   <span className="text-[#E5E5E5] font-medium text-sm md:text-base">{item.q}</span>
@@ -2670,11 +4859,13 @@ export default function ModernHome() {
                 type="email"
                 value={stickyEmail}
                 onChange={e => setStickyEmail(e.target.value)}
+                onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); if (stickyEmail.trim()) { handleSubmit(stickyEmail); setStickyEmail(''); } } }}
                 placeholder="your@email.com"
+                aria-label="Email for waitlist"
                 className="flex-1 md:w-56 bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-1.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#58A4B0]/40 transition-colors"
               />
               <button
-                onClick={async () => { if (stickyEmail) { setEmail(stickyEmail); await handleSubmit(new Event('submit')); setStickyEmail(''); }}}
+                onClick={async () => { if (stickyEmail.trim()) { await handleSubmit(stickyEmail); setStickyEmail(''); }}}
                 className="bg-white text-black text-sm font-medium px-4 py-1.5 rounded-lg hover:opacity-90 transition-opacity flex items-center gap-1.5 whitespace-nowrap font-mono font-semibold uppercase tracking-wider"
               >
                 Join <ArrowRight size={14} />
@@ -2690,18 +4881,139 @@ export default function ModernHome() {
           <p className="text-slate-400 text-sm">
             <span className="text-white font-semibold">Expect soon.</span> Inquiries: dev@synthi.app
           </p>
-          {/* LinkedIn social link */}
-          <a
-            href="https://www.linkedin.com/in/amkolev"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-2 text-slate-400 hover:text-[#58A4B0] transition-all duration-300 hover:-translate-y-1"
-          >
-            <Linkedin size={20} />
-            <span className="hidden md:inline">Follow on LinkedIn</span>
-          </a>
+          <div className="flex items-center gap-4">
+            <a href="/privacy" className="text-slate-500 hover:text-slate-300 text-xs transition-colors">Privacy</a>
+            {/* LinkedIn social link */}
+            <a
+              href="https://www.linkedin.com/in/amkolev"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 text-slate-400 hover:text-[#58A4B0] transition-all duration-300 hover:-translate-y-1"
+              aria-label="Follow on LinkedIn"
+            >
+              <Linkedin size={20} />
+              <span className="hidden md:inline">Follow on LinkedIn</span>
+            </a>
+          </div>
         </div>
       </footer>
+
+      {/* ═══ Share / Referral Modal ═══ */}
+      {showShareModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center" onClick={() => setShowShareModal(false)} style={{ animation: 'shareBackdropIn 0.3s ease-out' }}>
+          {/* Backdrop */}
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-md" />
+
+          {/* Sparkle particles */}
+          <div className="absolute inset-0 pointer-events-none overflow-hidden">
+            {Array.from({ length: 16 }).map((_, i) => {
+              const angle = (i / 16) * 360;
+              const dist = 60 + Math.random() * 80;
+              const sx = Math.cos((angle * Math.PI) / 180) * dist;
+              const sy = Math.sin((angle * Math.PI) / 180) * dist;
+              return (
+                <div
+                  key={i}
+                  className="absolute left-1/2 top-1/2 rounded-full"
+                  style={{
+                    width: 3 + Math.random() * 4,
+                    height: 3 + Math.random() * 4,
+                    background: i % 3 === 0 ? '#58A4B0' : i % 3 === 1 ? '#7EC8D4' : '#ffffff',
+                    '--sx': `${sx}px`,
+                    '--sy': `${sy}px`,
+                    animation: `shareSparkle ${0.5 + Math.random() * 0.4}s ease-out ${0.1 + Math.random() * 0.2}s forwards`,
+                    opacity: 0,
+                  }}
+                />
+              );
+            })}
+          </div>
+
+          {/* Modal card */}
+          <div
+            className="relative w-[440px] max-w-[90vw] bg-[#161616]/95 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-2xl p-8 overflow-hidden"
+            onClick={e => e.stopPropagation()}
+            style={{ animation: 'shareModalIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards, shareGlow 3s ease-in-out 0.6s infinite' }}
+          >
+            {/* Subtle top gradient accent */}
+            <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#58A4B0]/50 to-transparent" />
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-16 bg-[#58A4B0]/10 blur-2xl rounded-full" />
+
+            {/* Expanding ring behind checkmark */}
+            <div className="flex justify-center mb-5">
+              <div className="relative">
+                <div className="absolute inset-0 m-auto w-12 h-12 rounded-full border border-[#58A4B0]/30" style={{ animation: 'shareRing 1s ease-out 0.3s forwards' }} />
+                <div className="absolute inset-0 m-auto w-12 h-12 rounded-full border border-[#58A4B0]/20" style={{ animation: 'shareRing 1s ease-out 0.5s forwards' }} />
+                <div
+                  className="w-12 h-12 rounded-full bg-gradient-to-br from-[#58A4B0] to-[#327464] flex items-center justify-center"
+                  style={{ animation: 'shareCheckPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.15s both' }}
+                >
+                  <Check size={22} className="text-white" strokeWidth={3} />
+                </div>
+              </div>
+            </div>
+
+            <div className="text-center space-y-3">
+              <h3 className="text-xl font-bold text-white" style={{ animation: 'shareBtnIn 0.4s ease-out 0.25s both' }}>You&apos;re on the list!</h3>
+              
+              {/* Waitlist position reveal */}
+              {waitlistPosition && (
+                <div className="py-3" style={{ animation: 'shareBtnIn 0.5s ease-out 0.3s both' }}>
+                  <div className="inline-flex items-baseline gap-1">
+                    <span className="text-slate-500 text-sm">You&apos;re</span>
+                    <span className="text-3xl font-bold font-mono text-[#58A4B0]" style={{ animation: 'positionPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.5s both' }}>
+                      #{positionCountUp}
+                    </span>
+                    <span className="text-slate-500 text-sm">on the waitlist</span>
+                  </div>
+                </div>
+              )}
+
+              <p className="text-slate-400 text-sm leading-relaxed" style={{ animation: 'shareBtnIn 0.4s ease-out 0.35s both' }}>
+                Share Synthi with friends to help us grow. The bigger the community, the sooner we launch.
+              </p>
+
+              <div className="flex gap-2 justify-center pt-4">
+                <a
+                  href="https://twitter.com/intent/tweet?text=Just%20joined%20the%20waitlist%20for%20Synthi%20-%20the%20world%27s%20first%20Autonomous%20Development%20Environment.%20Cloud-compiled%2C%20AI-native.%20Check%20it%20out%3A%20https%3A%2F%2Fsynthi.app"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 px-5 py-2.5 bg-white/[0.05] border border-white/[0.08] rounded-xl text-sm text-slate-300 hover:bg-white/[0.1] hover:border-[#58A4B0]/40 hover:text-white transition-all duration-300 hover:scale-105"
+                  style={{ animation: 'shareBtnIn 0.4s ease-out 0.45s both' }}
+                >
+                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                  Post
+                </a>
+                <a
+                  href="https://www.linkedin.com/sharing/share-offsite/?url=https://synthi.app"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 px-5 py-2.5 bg-white/[0.05] border border-white/[0.08] rounded-xl text-sm text-slate-300 hover:bg-white/[0.1] hover:border-[#58A4B0]/40 hover:text-white transition-all duration-300 hover:scale-105"
+                  style={{ animation: 'shareBtnIn 0.4s ease-out 0.55s both' }}
+                >
+                  <Linkedin size={16} />
+                  Share
+                </a>
+                <button
+                  onClick={() => { navigator.clipboard.writeText('https://synthi.app'); toast.success('Link copied!'); }}
+                  className="flex items-center gap-2 px-5 py-2.5 bg-white/[0.05] border border-white/[0.08] rounded-xl text-sm text-slate-300 hover:bg-white/[0.1] hover:border-[#58A4B0]/40 hover:text-white transition-all duration-300 hover:scale-105 cursor-pointer"
+                  style={{ animation: 'shareBtnIn 0.4s ease-out 0.65s both' }}
+                >
+                  <Globe size={16} />
+                  Copy link
+                </button>
+              </div>
+              <button
+                onClick={() => setShowShareModal(false)}
+                className="mt-5 text-slate-500 text-xs hover:text-slate-300 transition-colors cursor-pointer"
+                style={{ animation: 'shareBtnIn 0.4s ease-out 0.75s both' }}
+              >
+                Maybe later
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ═══ Konami code Matrix rain ═══ */}
       {konamiActive && (
@@ -2738,6 +5050,7 @@ export default function ModernHome() {
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
           className="group flex items-center gap-2 bg-[#141414]/80 backdrop-blur-xl border border-white/[0.08] rounded-full pl-3 pr-4 py-2 text-slate-400 hover:text-[#58A4B0] hover:border-[#58A4B0]/30 transition-all duration-300 shadow-lg"
+          aria-label="Back to top"
         >
           <ArrowUp size={14} className="group-hover:-translate-y-0.5 transition-transform duration-200" />
           <span className="text-xs font-medium">Top</span>
