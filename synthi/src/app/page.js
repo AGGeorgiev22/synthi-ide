@@ -1522,7 +1522,7 @@ export default function ModernHome() {
     if (!playgroundMode || playgroundOrbitMode) return;
     if (consumeSuppressedPlaygroundClick(id)) {
       if (event) {
-        event.preventDefault();
+        if (event.cancelable) event.preventDefault();
         event.stopPropagation();
       }
       return;
@@ -1530,7 +1530,7 @@ export default function ModernHome() {
     const spawn = playgroundSpawns.find((item) => item.id === id);
     if (!spawn) return;
     if (event) {
-      event.preventDefault();
+      if (event.cancelable) event.preventDefault();
       event.stopPropagation();
     }
     const node = playgroundNodesRef.current[id];
@@ -1603,7 +1603,7 @@ export default function ModernHome() {
   const togglePlaygroundPin = useCallback((id, event) => {
     if (!playgroundMode || !isPlaygroundItemId(id)) return;
     if (event) {
-      event.preventDefault();
+      if (event.cancelable) event.preventDefault();
       event.stopPropagation();
     }
     const body = playgroundBodiesRef.current[id];
@@ -1628,7 +1628,7 @@ export default function ModernHome() {
   const togglePlaygroundOrbit = useCallback((id, event) => {
     if (!playgroundMode || !isPlaygroundItemId(id)) return false;
     if (event) {
-      event.preventDefault();
+      if (event.cancelable) event.preventDefault();
       event.stopPropagation();
     }
     const body = playgroundBodiesRef.current[id];
@@ -1653,7 +1653,7 @@ export default function ModernHome() {
 
   const handlePlaygroundItemCapture = useCallback((id, event) => {
     if (consumeSuppressedPlaygroundClick(id)) {
-      event.preventDefault();
+      if (event.cancelable) event.preventDefault();
       event.stopPropagation();
       return;
     }
@@ -1762,7 +1762,7 @@ export default function ModernHome() {
     // Disable touch scrolling only on the actively dragged element
     event.currentTarget.style.touchAction = 'none';
     syncPlaygroundMeta();
-    event.preventDefault();
+    if (event.cancelable) event.preventDefault();
   }, [getPlaygroundBodyViewportRect, isPlaygroundItemId, playgroundMode, playgroundOrbitMode, registerPlaygroundNode, syncPlaygroundMeta]);
 
   // Ghost hint progression — advance contextual hints based on actions
