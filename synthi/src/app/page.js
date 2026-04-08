@@ -676,8 +676,13 @@ export default function ModernHome() {
   const handleRunClick = useCallback(() => {
     if (isCompiling) return;
 
+    const command = editorCode.trim().toLowerCase();
+
+    setEditorHelpOutput(null);
+    setShowOutput(false);
+
     // Sasha easter egg
-    if (editorCode.trim().toLowerCase() === 'sasha') {
+    if (command === 'sasha') {
       setSashaEaster(true);
       setTimeout(() => setSashaEaster(false), 5000);
       if (playgroundMode) collection.onSashaEgg();
@@ -685,8 +690,7 @@ export default function ModernHome() {
     }
 
     // man synthi / help command
-    const cmd = editorCode.trim().toLowerCase();
-    if (playgroundMode && (cmd === 'help' || cmd === 'man synthi')) {
+    if (playgroundMode && (command === 'help' || command === 'man synthi')) {
       setEditorHelpOutput([
         '$ man synthi',
         '',
@@ -722,14 +726,13 @@ export default function ModernHome() {
     }
 
     // Golden Semicolon collectible
-    if (playgroundMode && editorCode.trim().toLowerCase() === 'collect;') {
+    if (playgroundMode && command === 'collect;') {
       collection.onEditorCollectSemicolon();
     }
 
     setRocketLaunched(true);
     setBorderPulse(true);
     setIsCompiling(true);
-    setShowOutput(false);
     setBuildLogIndex(0);
     setCloudCpu(0);
 
@@ -756,7 +759,7 @@ export default function ModernHome() {
       setRocketLaunched(false);
       setTimeout(() => setCloudCpu(0), 2000);
     }, 1800);
-  }, [collection, isCompiling, playgroundMode]);
+  }, [collection, editorCode, isCompiling, playgroundMode]);
 
   /* Cleanup on unmount */
   useEffect(() => {
@@ -2016,6 +2019,7 @@ export default function ModernHome() {
     if (!playgroundMode || !isPlaygroundItemId(id) || playgroundOrbitMode) return;
     if (event.target.closest('input, button, a, textarea, label, [data-playground-control]')) return;
     const point = event.touches ? event.touches[0] : event;
+    const now = performance.now();
     registerPlaygroundNode(id, event.currentTarget);
     const body = playgroundBodiesRef.current[id];
     if (!body) return;
@@ -2032,6 +2036,15 @@ export default function ModernHome() {
     const offsetX = point.clientX - rect.centerX;
     const offsetY = point.clientY - rect.centerY;
     const localOffset = rotateVector(offsetX, offsetY, -body.angle);
+    playgroundPointerRef.current = {
+      x: point.clientX,
+      y: point.clientY,
+      vx: 0,
+      vy: 0,
+      lastX: point.clientX,
+      lastY: point.clientY,
+      lastT: now,
+    };
     playgroundDragRef.current = {
       id,
       startX: point.clientX,
@@ -2088,13 +2101,19 @@ export default function ModernHome() {
 
   useEffect(() => {
     if (!playgroundMode) return;
-    const updatePointerFromEvent = (point, now) => {
+    const updatePointerFromEvent = (point, now, { preserveVelocityIfStationary = false } = {}) => {
       if (!point) return;
       const pointer = playgroundPointerRef.current;
+      const deltaX = point.clientX - pointer.lastX;
+      const deltaY = point.clientY - pointer.lastY;
       if (pointer.lastT) {
         const pointerDt = Math.max((now - pointer.lastT) / 16.67, 0.5);
-        pointer.vx = (point.clientX - pointer.lastX) / pointerDt;
-        pointer.vy = (point.clientY - pointer.lastY) / pointerDt;
+        const moved = Math.hypot(deltaX, deltaY) > 0.5;
+        const keepRecentVelocity = preserveVelocityIfStationary && !moved && (now - pointer.lastT) <= 90;
+        if (!keepRecentVelocity) {
+          pointer.vx = moved ? deltaX / pointerDt : 0;
+          pointer.vy = moved ? deltaY / pointerDt : 0;
+        }
       }
       pointer.x = point.clientX;
       pointer.y = point.clientY;
@@ -2179,7 +2198,7 @@ export default function ModernHome() {
     };
     const onUp = (event) => {
       const point = event.changedTouches ? event.changedTouches[0] : event;
-      if (point) updatePointerFromEvent(point, performance.now());
+      if (point) updatePointerFromEvent(point, performance.now(), { preserveVelocityIfStationary: true });
       const drag = playgroundDragRef.current;
       if (drag) {
         drag.releaseVx = playgroundPointerRef.current.vx;
@@ -2230,6 +2249,7 @@ export default function ModernHome() {
     window.addEventListener('mouseup', onUp);
     window.addEventListener('touchmove', onMove, { passive: false });
     window.addEventListener('touchend', onUp);
+    window.addEventListener('touchcancel', onUp);
     window.addEventListener('keydown', onKeyDown);
     window.addEventListener('keyup', onKeyUp);
     return () => {
@@ -2237,6 +2257,7 @@ export default function ModernHome() {
       window.removeEventListener('mouseup', onUp);
       window.removeEventListener('touchmove', onMove);
       window.removeEventListener('touchend', onUp);
+      window.removeEventListener('touchcancel', onUp);
       window.removeEventListener('keydown', onKeyDown);
       window.removeEventListener('keyup', onKeyUp);
     };
