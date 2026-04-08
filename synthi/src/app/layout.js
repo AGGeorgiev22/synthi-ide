@@ -40,7 +40,7 @@ export const metadata = {
       "Cloud-compiled, AI-native development. Build at instant — regardless of your hardware.",
   },
   icons: {
-    icon: "/synthi-logo.svg",
+    icon: "./src/app/favicon.ico",
   },
 }
 
