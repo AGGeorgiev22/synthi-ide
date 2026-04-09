@@ -33,6 +33,106 @@ const CRATE_MODIFIERS = [
   { id: 'explosive_touch',label: 'EXPLOSIVE TOUCH', desc: 'collisions blast objects apart',     color: '#ef4444', icon: '💥', duration: 10000 },
 ];
 
+const CREATOR_STORAGE_KEYS = {
+  challenges: 'synthi_creator_challenges',
+  modifierPacks: 'synthi_creator_modifier_packs',
+  anomalyLoadouts: 'synthi_creator_anomaly_loadouts',
+  presets: 'synthi_sandbox_presets',
+};
+
+const CREATOR_CHALLENGE_METRICS = [
+  { id: 'score', label: 'Score Delta', mode: 'delta' },
+  { id: 'collects', label: 'Collectibles', mode: 'delta' },
+  { id: 'collisions', label: 'Collisions', mode: 'delta' },
+  { id: 'combo', label: 'Combo Peak', mode: 'absolute' },
+  { id: 'orbiters', label: 'Orbiters', mode: 'absolute' },
+  { id: 'pins', label: 'Pinned', mode: 'absolute' },
+];
+
+const CHAOS_EVENTS = [
+  {
+    id: 'black_sun',
+    name: 'BLACK SUN',
+    desc: 'Reverse drift. Code shards and satellites flood the arena.',
+    color: '#f59e0b',
+    icon: '☀',
+    duration: 32000,
+    objective: { metric: 'collects', target: 4, label: 'Collect 4 warped fragments' },
+    reward: { kind: 'modifier', modifierId: 'gravity_flip', label: 'SUN SHARD' },
+    effects: {
+      gravityOverride: 'reverse',
+      lateralDrift: 0.08,
+      scoreMultiplier: 1.3,
+      spawnKinds: ['code', 'satellite'],
+    },
+  },
+  {
+    id: 'mirror_cache',
+    name: 'MIRROR CACHE',
+    desc: 'Collisions duplicate pressure patterns across the room.',
+    color: '#60a5fa',
+    icon: '◫',
+    duration: 28000,
+    objective: { metric: 'collisions', target: 10, label: 'Trigger 10 mirrored collisions' },
+    reward: { kind: 'modifier', modifierId: 'clone_storm', label: 'CACHE GHOST' },
+    effects: {
+      forceOverride: 'magnet',
+      scoreMultiplier: 1.15,
+      collisionImpulseMul: 1.2,
+      spawnKinds: ['relay', 'code'],
+    },
+  },
+  {
+    id: 'signal_bloom',
+    name: 'SIGNAL BLOOM',
+    desc: 'Relays blossom into a combo-rich attract field.',
+    color: '#34d399',
+    icon: '✦',
+    duration: 30000,
+    objective: { metric: 'combo', target: 4, label: 'Hit a x4 combo peak' },
+    reward: { kind: 'modifier', modifierId: 'magnet_pulse', label: 'BLOOM CORE' },
+    effects: {
+      forceOverride: 'magnet',
+      scoreMultiplier: 1.2,
+      spawnKinds: ['relay', 'toast'],
+    },
+  },
+  {
+    id: 'orbital_harvest',
+    name: 'ORBITAL HARVEST',
+    desc: 'The arena wants structure. Orbiters pay out in surplus score.',
+    color: '#a78bfa',
+    icon: '◎',
+    duration: 34000,
+    objective: { metric: 'orbiters', target: 3, label: 'Hold 3 orbiters at once' },
+    reward: { kind: 'modifier', modifierId: 'score_surge', label: 'HARVEST KEY' },
+    effects: {
+      gravityOverride: 'zero',
+      scoreMultiplier: 1.35,
+      spawnKinds: ['satellite', 'toast'],
+    },
+  },
+];
+
+const readStoredList = (key) => {
+  if (typeof window === 'undefined') return [];
+  try {
+    const parsed = JSON.parse(localStorage.getItem(key) || '[]');
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+};
+
+const writeStoredList = (key, list) => {
+  if (typeof window === 'undefined') return;
+  try {
+    localStorage.setItem(key, JSON.stringify(list));
+  } catch {
+    // Ignore storage failures.
+  }
+};
+
 const PLAYGROUND_HUD_STORAGE_KEY = 'synthi_playground_hud_position';
 const PLAYGROUND_HUD_MARGIN = 16;
 const PLAYGROUND_HUD_TOP_CLEARANCE = 76;
@@ -392,9 +492,36 @@ export default function ModernHome() {
     try { return parseInt(localStorage.getItem('synthi_prestige_level') || '0', 10); } catch { return 0; }
   });
   const [prestigeAvailable, setPrestigeAvailable] = useState(false);
+  const creatorTier = useMemo(() => Math.min(4, prestigeLevel), [prestigeLevel]);
+
+  /* Phase 4: Creator Studio */
+  const [creatorStudioOpen, setCreatorStudioOpen] = useState(false);
+  const [creatorPresetName, setCreatorPresetName] = useState('');
+  const [creatorChallengeDraft, setCreatorChallengeDraft] = useState({ name: 'Deep Run', metric: 'score', target: 1200, timeLimit: 25 });
+  const [creatorModifierPackName, setCreatorModifierPackName] = useState('');
+  const [creatorModifierPackDraft, setCreatorModifierPackDraft] = useState(['score_surge', 'time_warp']);
+  const [creatorLoadoutName, setCreatorLoadoutName] = useState('');
+  const [creatorLoadoutDraft, setCreatorLoadoutDraft] = useState(['black_sun']);
+  const [creatorChallenges, setCreatorChallenges] = useState(() => readStoredList(CREATOR_STORAGE_KEYS.challenges));
+  const [creatorModifierPacks, setCreatorModifierPacks] = useState(() => readStoredList(CREATOR_STORAGE_KEYS.modifierPacks));
+  const [creatorAnomalyLoadouts, setCreatorAnomalyLoadouts] = useState(() => readStoredList(CREATOR_STORAGE_KEYS.anomalyLoadouts));
+  const [activeCreatorChallenge, setActiveCreatorChallenge] = useState(null);
+  const [creatorChallengeResult, setCreatorChallengeResult] = useState(null);
+  const [creatorChallengeTick, setCreatorChallengeTick] = useState(0);
+  const creatorLoadoutQueueRef = useRef([]);
 
   /* Phase 4: Sandbox Presets */
   const [presetMenuOpen, setPresetMenuOpen] = useState(false);
+
+  /* Phase 4: Curated Chaos */
+  const [chaosEvent, setChaosEvent] = useState(null);
+  const [chaosEventResult, setChaosEventResult] = useState(null);
+  const [chaosEventTick, setChaosEventTick] = useState(0);
+  const chaosEventRef = useRef(null);
+  const chaosEventTimerRef = useRef(null);
+
+  /* Boss rewards */
+  const [bossRewardToast, setBossRewardToast] = useState(null);
 
   /* Crate / Modifier system */
   const [playgroundCrates, setPlaygroundCrates] = useState([]); // active crates on screen
@@ -452,7 +579,7 @@ export default function ModernHome() {
   const constellations = useConstellationSystem(playgroundMode, playgroundBodiesRef, playgroundNodesRef, constellationCallback);
   const speedrun = useSpeedrunChallenge(playgroundMode, playPlaygroundSoundRef.current);
   const ambient = useAmbientDrone(playgroundMode && playgroundHumOn, playgroundSfxOn, weather.stage);
-  const voidDim = useVoidDimension(playgroundMode, playPlaygroundSoundRef.current);
+  const voidDim = useVoidDimension(playgroundMode, playPlaygroundSoundRef.current, prestigeLevel);
   const dailySeed = useDailySeedChallenge(playgroundMode);
   const ghostReplay = useGhostReplay(playgroundMode);
 
@@ -928,6 +1055,9 @@ export default function ModernHome() {
   /* Track void auto-exit */
   const wasInVoidRef = useRef(false);
   useEffect(() => {
+    if (!wasInVoidRef.current && voidDim.inVoid) {
+      collection.onLifetimeVoidTrip();
+    }
     if (wasInVoidRef.current && !voidDim.inVoid) {
       collection.onVoidExit(voidDim.voidScore);
     }
@@ -939,6 +1069,10 @@ export default function ModernHome() {
   playgroundComboRef.current = playgroundCombo;
   const playgroundScoreRef = useRef(0);
   playgroundScoreRef.current = playgroundScore;
+  const playgroundCollectiblesRef = useRef(0);
+  playgroundCollectiblesRef.current = playgroundCollectibles;
+  const playgroundStatsRef = useRef(playgroundStats);
+  playgroundStatsRef.current = playgroundStats;
   useEffect(() => {
     const KONAMI = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
     const handler = (e) => {
@@ -1454,6 +1588,13 @@ export default function ModernHome() {
     startWithModifier: prestigeLevel >= 4, // P4+: start with random modifier
     bonusScorePerLevel: Math.max(0, (prestigeLevel - 4) * 0.05), // P5+: +5% stacking
   }), [prestigeLevel]);
+  const creatorPermissions = useMemo(() => ({
+    customPresets: creatorTier >= 1,
+    customChallenges: creatorTier >= 2,
+    modifierPacks: creatorTier >= 3,
+    anomalyLoadouts: creatorTier >= 4,
+    anomalySlots: creatorTier >= 4 ? (voidDim.relicInventory?.anomaly_key ? 4 : 3) : 0,
+  }), [creatorTier, voidDim.relicInventory]);
 
   // Check if prestige is available
   useEffect(() => {
@@ -1531,16 +1672,26 @@ export default function ModernHome() {
     } catch {}
   }, [serializePlaygroundState]);
 
-  const savePresetToLocal = useCallback(() => {
+  const savePresetToLocal = useCallback((nameOverride = '') => {
+    if (!creatorPermissions.customPresets) {
+      toast.info('Prestige 1 unlocks custom presets.', { icon: '⭐' });
+      return null;
+    }
+
     const state = serializePlaygroundState();
     try {
-      const presets = JSON.parse(localStorage.getItem('synthi_sandbox_presets') || '[]');
-      const name = `Custom ${presets.length + 1}`;
-      presets.push({ name, state, savedAt: Date.now() });
-      localStorage.setItem('synthi_sandbox_presets', JSON.stringify(presets));
+      const presets = readStoredList(CREATOR_STORAGE_KEYS.presets);
+      const name = (nameOverride || creatorPresetName || `Custom ${presets.length + 1}`).trim() || `Custom ${presets.length + 1}`;
+      const next = [...presets, { name, state, savedAt: Date.now() }];
+      writeStoredList(CREATOR_STORAGE_KEYS.presets, next);
+      setCreatorPresetName('');
       toast.success(`Preset "${name}" saved!`, { icon: '💾' });
-    } catch {}
-  }, [serializePlaygroundState]);
+      return name;
+    } catch {
+      toast.error('Could not save preset.');
+      return null;
+    }
+  }, [creatorPermissions.customPresets, creatorPresetName, serializePlaygroundState]);
 
   const loadPreset = useCallback((preset) => {
     setPlaygroundGravityMode(preset.gravity || 'zero');
@@ -1582,13 +1733,16 @@ export default function ModernHome() {
     setPlaygroundSpawns(prev => prev.filter((item) => item.id !== id));
   }, []);
 
-  const spawnPlaygroundToy = useCallback((x, y) => {
+  const spawnPlaygroundToy = useCallback((x, y, overrideTemplate = null) => {
     const id = `spawn-${++playgroundSpawnIdRef.current}`;
-    // Memory Leak: occasionally spawn a letter instead of a regular toy
-    const memoryLetter = collection.shouldSpawnMemoryLetter();
-    const template = memoryLetter
-      ? { icon: memoryLetter, label: 'Memory Fragment', accent: '#FBBF24', _memoryLetter: memoryLetter }
-      : PLAYGROUND_TOYS[(playgroundSpawnIdRef.current - 1) % PLAYGROUND_TOYS.length];
+    const activeChaosEvent = chaosEventRef.current;
+    const memoryLetter = overrideTemplate ? null : collection.shouldSpawnMemoryLetter();
+    const chaosPool = activeChaosEvent?.effects?.spawnKinds?.map((kind) => PLAYGROUND_TOYS.find((toy) => toy.kind === kind)).filter(Boolean) || [];
+    const template = overrideTemplate
+      || (memoryLetter
+        ? { icon: memoryLetter, label: 'Memory Fragment', accent: '#FBBF24', _memoryLetter: memoryLetter }
+        : chaosPool[Math.floor(Math.random() * chaosPool.length)]
+          || PLAYGROUND_TOYS[(playgroundSpawnIdRef.current - 1) % PLAYGROUND_TOYS.length]);
     if (memoryLetter) collection.onMemoryLetterSpawned(id);
     playgroundBodiesRef.current[id] = {
       x: x - 64,
@@ -1609,7 +1763,7 @@ export default function ModernHome() {
       escapeArmed: false,
     };
     setPlaygroundSpawns(prev => {
-      const next = [...prev, { id, ...template, _spawnTime: Date.now() }];
+      const next = [...prev, { id, ...template, _spawnTime: Date.now(), _chaosEventId: activeChaosEvent?.id || null }];
       if (next.length > 8) {
         const oldest = next[0];
         delete playgroundBodiesRef.current[oldest.id];
@@ -1699,6 +1853,288 @@ export default function ModernHome() {
   const hasModifier = useCallback((modId) => {
     return activeModifiersRef.current.some(m => m.id === modId && Date.now() < m.expiresAt);
   }, []);
+
+  const addPortalRewardPair = useCallback(() => {
+    const W = window.innerWidth;
+    const H = window.innerHeight;
+    const newPair = {
+      id: ++portalIdRef.current,
+      a: { x: 110, y: H * 0.32 },
+      b: { x: W - 110, y: H * 0.68 },
+    };
+    setPortalPairs((prev) => {
+      const next = [...prev, newPair].slice(-2);
+      portalPairsRef.current = next;
+      return next;
+    });
+    return newPair;
+  }, []);
+
+  const injectModifier = useCallback((modifierId, source = 'system') => {
+    const modifier = CRATE_MODIFIERS.find((entry) => entry.id === modifierId);
+    if (!modifier) return null;
+    activateModifier(modifier, `virtual-${source}-${Date.now()}`);
+    return modifier;
+  }, [activateModifier]);
+
+  const buildTrackedObjective = useCallback((template) => ({
+    ...template,
+    instanceId: `${template.name}-${Date.now()}`,
+    startedAt: Date.now(),
+    progress: 0,
+    completed: false,
+    baselines: {
+      score: playgroundScoreRef.current,
+      collects: playgroundCollectiblesRef.current,
+      collisions: playgroundStatsRef.current.collisions,
+    },
+  }), []);
+
+  const computeObjectiveProgress = useCallback((objective) => {
+    if (!objective) return 0;
+    switch (objective.metric) {
+      case 'score':
+        return Math.max(0, playgroundScoreRef.current - (objective.baselines?.score || 0));
+      case 'collects':
+        return Math.max(0, playgroundCollectiblesRef.current - (objective.baselines?.collects || 0));
+      case 'collisions':
+        return Math.max(0, playgroundStatsRef.current.collisions - (objective.baselines?.collisions || 0));
+      case 'combo':
+        return playgroundComboRef.current;
+      case 'orbiters':
+        return playgroundStatsRef.current.orbiters;
+      case 'pins':
+        return playgroundStatsRef.current.pinned;
+      default:
+        return 0;
+    }
+  }, []);
+
+  const saveCreatorChallenge = useCallback(() => {
+    if (!creatorPermissions.customChallenges) {
+      toast.info('Prestige 2 unlocks challenge cards.', { icon: '⭐' });
+      return;
+    }
+    const name = creatorChallengeDraft.name.trim() || `Challenge ${creatorChallenges.length + 1}`;
+    const next = [
+      ...creatorChallenges,
+      {
+        ...creatorChallengeDraft,
+        name,
+        target: Math.max(1, Number(creatorChallengeDraft.target) || 1),
+        timeLimit: Math.max(5, Number(creatorChallengeDraft.timeLimit) || 5),
+        savedAt: Date.now(),
+      },
+    ];
+    setCreatorChallenges(next);
+    writeStoredList(CREATOR_STORAGE_KEYS.challenges, next);
+    toast.success(`Challenge card "${name}" saved.`, { icon: '🃏' });
+  }, [creatorChallengeDraft, creatorChallenges, creatorPermissions.customChallenges]);
+
+  const startCreatorChallenge = useCallback((template) => {
+    if (!creatorPermissions.customChallenges) return false;
+    const tracked = buildTrackedObjective(template);
+    setActiveCreatorChallenge(tracked);
+    setCreatorChallengeResult(null);
+    toast.success(`Creator challenge: ${template.name}`, { icon: '🃏' });
+    return true;
+  }, [buildTrackedObjective, creatorPermissions.customChallenges]);
+
+  const toggleModifierPackDraft = useCallback((modifierId) => {
+    setCreatorModifierPackDraft((prev) => {
+      if (prev.includes(modifierId)) return prev.filter((id) => id !== modifierId);
+      if (prev.length >= 2) return [...prev.slice(1), modifierId];
+      return [...prev, modifierId];
+    });
+  }, []);
+
+  const saveModifierPack = useCallback(() => {
+    if (!creatorPermissions.modifierPacks) {
+      toast.info('Prestige 3 unlocks modifier packs.', { icon: '⭐' });
+      return;
+    }
+    if (creatorModifierPackDraft.length === 0) {
+      toast.info('Select at least one modifier.');
+      return;
+    }
+    const name = creatorModifierPackName.trim() || `Pack ${creatorModifierPacks.length + 1}`;
+    const next = [...creatorModifierPacks, { name, modifierIds: creatorModifierPackDraft, savedAt: Date.now() }];
+    setCreatorModifierPacks(next);
+    writeStoredList(CREATOR_STORAGE_KEYS.modifierPacks, next);
+    setCreatorModifierPackName('');
+    toast.success(`Modifier pack "${name}" saved.`, { icon: '🧪' });
+  }, [creatorModifierPackDraft, creatorModifierPackName, creatorModifierPacks, creatorPermissions.modifierPacks]);
+
+  const runModifierPack = useCallback((pack) => {
+    if (!pack?.modifierIds?.length) return;
+    pack.modifierIds.forEach((modifierId) => injectModifier(modifierId, `pack-${pack.name}`));
+    toast.success(`Modifier pack "${pack.name}" injected.`, { icon: '⚡' });
+  }, [injectModifier]);
+
+  const toggleLoadoutDraftEvent = useCallback((eventId) => {
+    setCreatorLoadoutDraft((prev) => {
+      if (prev.includes(eventId)) return prev.filter((id) => id !== eventId);
+      if (prev.length >= creatorPermissions.anomalySlots) return [...prev.slice(1), eventId];
+      return [...prev, eventId];
+    });
+  }, [creatorPermissions.anomalySlots]);
+
+  const startChaosEvent = useCallback((eventId, source = 'scheduler') => {
+    const definition = CHAOS_EVENTS.find((entry) => entry.id === eventId);
+    if (!definition) return false;
+
+    const tracked = buildTrackedObjective({
+      ...definition,
+      metric: definition.objective.metric,
+      target: definition.objective.target,
+    });
+    const next = {
+      ...definition,
+      ...tracked,
+      source,
+    };
+    chaosEventRef.current = next;
+    setChaosEvent(next);
+    setChaosEventResult(null);
+    toast.success(`${definition.name} online.`, { icon: definition.icon });
+    return true;
+  }, [buildTrackedObjective]);
+
+  const saveAnomalyLoadout = useCallback(() => {
+    if (!creatorPermissions.anomalyLoadouts) {
+      toast.info('Prestige 4 unlocks anomaly loadouts.', { icon: '⭐' });
+      return;
+    }
+    if (creatorLoadoutDraft.length === 0) {
+      toast.info('Select at least one chaos event.');
+      return;
+    }
+    const trimmedIds = creatorLoadoutDraft.slice(0, creatorPermissions.anomalySlots);
+    const name = creatorLoadoutName.trim() || `Loadout ${creatorAnomalyLoadouts.length + 1}`;
+    const next = [...creatorAnomalyLoadouts, { name, eventIds: trimmedIds, savedAt: Date.now() }];
+    setCreatorAnomalyLoadouts(next);
+    writeStoredList(CREATOR_STORAGE_KEYS.anomalyLoadouts, next);
+    setCreatorLoadoutName('');
+    toast.success(`Anomaly loadout "${name}" saved.`, { icon: '🌀' });
+  }, [creatorAnomalyLoadouts, creatorLoadoutDraft, creatorLoadoutName, creatorPermissions.anomalyLoadouts, creatorPermissions.anomalySlots]);
+
+  const runAnomalyLoadout = useCallback((loadout) => {
+    if (!loadout?.eventIds?.length) return false;
+    creatorLoadoutQueueRef.current = loadout.eventIds.slice(1);
+    const started = startChaosEvent(loadout.eventIds[0], `loadout:${loadout.name}`);
+    if (started) toast.success(`Loadout "${loadout.name}" engaged.`, { icon: '🌀' });
+    return started;
+  }, [startChaosEvent]);
+
+  const resolveBossReward = useCallback((reward) => {
+    if (!reward) return;
+    if (reward.kind === 'modifier' && reward.modifierId) {
+      injectModifier(reward.modifierId, `boss-${reward.bossId}`);
+    }
+    if (reward.kind === 'portals') {
+      addPortalRewardPair();
+    }
+    setBossRewardToast(reward);
+    window.setTimeout(() => setBossRewardToast(null), 3200);
+    toast.success(`${reward.label}: ${reward.desc}`, { icon: '🏆' });
+  }, [addPortalRewardPair, injectModifier]);
+
+  useEffect(() => {
+    if (!bosses.rewardDrop) return;
+    resolveBossReward(bosses.rewardDrop);
+    bosses.clearReward();
+  }, [bosses.clearReward, bosses.rewardDrop, resolveBossReward]);
+
+  useEffect(() => {
+    if (!activeCreatorChallenge) return;
+    const interval = setInterval(() => setCreatorChallengeTick((tick) => tick + 1), 200);
+    return () => clearInterval(interval);
+  }, [activeCreatorChallenge]);
+
+  useEffect(() => {
+    if (!activeCreatorChallenge) return;
+
+    const progress = computeObjectiveProgress(activeCreatorChallenge);
+    if (progress !== activeCreatorChallenge.progress) {
+      setActiveCreatorChallenge((prev) => (prev ? { ...prev, progress } : prev));
+      if (progress >= activeCreatorChallenge.target) {
+        setCreatorChallengeResult({ type: 'success', label: activeCreatorChallenge.name });
+        setActiveCreatorChallenge(null);
+        toast.success(`Creator challenge complete: ${activeCreatorChallenge.name}`, { icon: '🃏' });
+        injectModifier('score_surge', 'creator-challenge');
+      }
+      return;
+    }
+
+    const elapsed = (Date.now() - activeCreatorChallenge.startedAt) / 1000;
+    if (elapsed >= activeCreatorChallenge.timeLimit) {
+      setCreatorChallengeResult({ type: 'fail', label: activeCreatorChallenge.name });
+      setActiveCreatorChallenge(null);
+      toast.error(`Creator challenge failed: ${activeCreatorChallenge.name}`);
+    }
+  }, [activeCreatorChallenge, computeObjectiveProgress, creatorChallengeTick, injectModifier, playgroundCollectibles, playgroundCombo, playgroundScore, playgroundStats]);
+
+  useEffect(() => {
+    chaosEventRef.current = chaosEvent;
+  }, [chaosEvent]);
+
+  useEffect(() => {
+    if (!playgroundMode) {
+      if (chaosEventTimerRef.current) clearTimeout(chaosEventTimerRef.current);
+      chaosEventRef.current = null;
+      setChaosEvent(null);
+      return;
+    }
+
+    if (chaosEvent) {
+      const tick = setInterval(() => setChaosEventTick((value) => value + 1), 250);
+      chaosEventTimerRef.current = setTimeout(() => {
+        setChaosEvent(null);
+        chaosEventRef.current = null;
+        const nextQueued = creatorLoadoutQueueRef.current.shift();
+        if (nextQueued) {
+          window.setTimeout(() => startChaosEvent(nextQueued, 'loadout-chain'), 1200);
+        }
+      }, chaosEvent.duration);
+      return () => {
+        clearInterval(tick);
+        if (chaosEventTimerRef.current) clearTimeout(chaosEventTimerRef.current);
+      };
+    }
+
+    chaosEventTimerRef.current = setTimeout(() => {
+      const randomEvent = CHAOS_EVENTS[Math.floor(Math.random() * CHAOS_EVENTS.length)];
+      startChaosEvent(randomEvent.id, 'scheduler');
+    }, 120000 + Math.random() * 60000);
+
+    return () => {
+      if (chaosEventTimerRef.current) clearTimeout(chaosEventTimerRef.current);
+    };
+  }, [chaosEvent, playgroundMode, startChaosEvent]);
+
+  useEffect(() => {
+    if (!chaosEvent) return;
+    if (chaosEvent.completed) return;
+
+    const progress = computeObjectiveProgress(chaosEvent);
+    if (progress === chaosEvent.progress) return;
+
+    const next = { ...chaosEvent, progress };
+    if (progress >= chaosEvent.objective.target) {
+      next.completed = true;
+      chaosEventRef.current = next;
+      setChaosEvent(next);
+      setChaosEventResult({ type: 'success', label: chaosEvent.reward.label, eventName: chaosEvent.name });
+      if (chaosEvent.reward.kind === 'modifier') {
+        injectModifier(chaosEvent.reward.modifierId, `chaos-${chaosEvent.id}`);
+      }
+      toast.success(`${chaosEvent.name} stabilized. Reward: ${chaosEvent.reward.label}`, { icon: chaosEvent.icon });
+      return;
+    }
+
+    chaosEventRef.current = next;
+    setChaosEvent(next);
+  }, [chaosEvent, chaosEventTick, computeObjectiveProgress, injectModifier, playgroundCollectibles, playgroundCombo, playgroundScore, playgroundStats]);
 
   // Crate spawn timer (prestige buff: crateSpeedMul makes crates faster)
   useEffect(() => {
@@ -1823,7 +2259,9 @@ export default function ModernHome() {
 
     const baseScore = { satellite: 180, toast: 120, code: 160, relay: 140 }[spawn.kind] || 100;
     const prestigeScoreMul = prestigeBuffs.scoreMultiplier + prestigeBuffs.bonusScorePerLevel;
-    const newScore = playgroundScore + Math.round((baseScore + Math.min(nextCombo, 5) * 25) * prestigeScoreMul);
+    const chaosScoreMul = chaosEventRef.current?.effects?.scoreMultiplier || 1;
+    const voidScoreMul = voidDim.inVoid ? (voidDim.getPhysicsMods()?.scoreMul || 1) : 1;
+    const newScore = playgroundScore + Math.round((baseScore + Math.min(nextCombo, 5) * 25) * prestigeScoreMul * chaosScoreMul * voidScoreMul);
     collection.onScoreChange(playgroundScore, newScore);
     setPlaygroundScore(newScore);
     // Phase 3: Achievement chain triggers
@@ -2249,9 +2687,9 @@ export default function ModernHome() {
         event.preventDefault();
         setPlaygroundPaused(true);
       }
-      // Void: press V to enter when score >= 6000
+      // Void: press V to enter when score threshold is met
       if (event.key === 'v' || event.key === 'V') {
-        if (playgroundScoreRef.current >= 6000 && !voidDim.inVoid) voidDim.enterVoid();
+        if (playgroundScoreRef.current >= voidDim.entryScoreThreshold && !voidDim.inVoid) voidDim.enterVoid();
       }
       // Speedrun: press T to start timed challenge
       if (event.key === 't' || event.key === 'T') {
@@ -2309,6 +2747,9 @@ export default function ModernHome() {
       last = now;
       const dt = playgroundPaused ? 0 : rawDt * (playgroundSlowMo ? 0.22 : 1) * (hasModifier('time_warp') ? 2 : 1);
       const weatherMods = weather.getPhysicsMods();
+      const voidMods = voidDim.getPhysicsMods();
+      const chaosEffects = chaosEventRef.current?.effects || null;
+      const bossArenaEffect = bosses.arenaEffect;
       const mods = activeModifiersRef.current.filter(m => Date.now() < m.expiresAt);
       const hasMod = (id) => mods.some(m => m.id === id);
       const draggedId = playgroundDragRef.current?.id;
@@ -2352,18 +2793,45 @@ export default function ModernHome() {
           }
 
           if (!body.pinned) {
-            if (playgroundGravityMode === 'down') body.vy += 0.16 * dt;
-            if (playgroundGravityMode === 'reverse') body.vy -= 0.16 * dt;
-            if (hasMod('gravity_flip')) body.vy -= 0.32 * dt;
+            const effectiveGravityMode = chaosEffects?.gravityOverride || playgroundGravityMode;
+            const effectiveForceMode = chaosEffects?.forceOverride || playgroundForceMode;
 
-            if (playgroundForceMode !== 'none' || hasMod('magnet_pulse')) {
+            if (effectiveGravityMode === 'down') body.vy += 0.16 * dt;
+            if (effectiveGravityMode === 'reverse') body.vy -= 0.16 * dt;
+            if (hasMod('gravity_flip')) body.vy -= 0.32 * dt;
+            if (voidMods?.gravityBias) body.vy += voidMods.gravityBias * dt;
+            if (voidMods?.lateralDrift) body.vx += voidMods.lateralDrift * dt;
+            if (chaosEffects?.lateralDrift) body.vx += chaosEffects.lateralDrift * dt;
+            if (voidMods?.jitterChance && Math.random() < voidMods.jitterChance * 0.1 * dt) {
+              body.vx += (Math.random() - 0.5) * voidMods.jitterForce * dt;
+              body.vy += (Math.random() - 0.5) * voidMods.jitterForce * dt;
+            }
+
+            if (bossArenaEffect?.type === 'segfault_field') {
+              body.vx += (Math.random() - 0.5) * 0.22 * dt * bossArenaEffect.intensity;
+              body.vy += (Math.random() - 0.5) * 0.22 * dt * bossArenaEffect.intensity;
+            }
+            if (bossArenaEffect?.type === 'lockfield') {
+              const lockDx = coreX - rect.centerX;
+              const lockDy = coreY - rect.centerY;
+              const lockDist = Math.max(Math.hypot(lockDx, lockDy), 1);
+              body.vx += (lockDx / lockDist) * 0.2 * dt * bossArenaEffect.intensity;
+              body.vy += (lockDy / lockDist) * 0.2 * dt * bossArenaEffect.intensity;
+            }
+            if (bossArenaEffect?.type === 'time_skew' && Math.random() < 0.03 * dt) {
+              body.vx *= 1 + 0.02 * bossArenaEffect.intensity;
+              body.vy *= 1 + 0.02 * bossArenaEffect.intensity;
+              body.spin += (Math.random() - 0.5) * 0.015 * dt;
+            }
+
+            if (effectiveForceMode !== 'none' || hasMod('magnet_pulse')) {
               const forceOriginX = playgroundPointerRef.current.x || coreX;
               const forceOriginY = playgroundPointerRef.current.y || coreY;
               const dx = forceOriginX - rect.centerX;
               const dy = forceOriginY - rect.centerY;
               const dist = Math.max(Math.hypot(dx, dy), 1);
               if (dist < 600) {
-                const direction = (playgroundForceMode === 'magnet' || hasMod('magnet_pulse')) ? 1 : -1;
+                const direction = (effectiveForceMode === 'magnet' || hasMod('magnet_pulse')) ? 1 : -1;
                 const force = (1 - dist / 600) * 0.65 * dt * (hasMod('magnet_pulse') ? 1.6 : 1);
                 body.vx += direction * (dx / dist) * force;
                 body.vy += direction * (dy / dist) * force;
@@ -2422,14 +2890,14 @@ export default function ModernHome() {
               body.sleepFrames = 0;
             }
 
-            const damping = (hasMod('zero_friction') ? Math.min(body.linearDamping + 0.006, 0.9985) : body.linearDamping) * (weatherMods?.frictionMul ?? 1);
+            const damping = (hasMod('zero_friction') ? Math.min(body.linearDamping + 0.006, 0.9985) : body.linearDamping) * (weatherMods?.frictionMul ?? 1) * (voidMods?.dragMul ?? 1);
             body.vx *= Math.pow(damping, dt);
             body.vy *= Math.pow(damping, dt);
             body.spin *= Math.pow(body.angularDamping, dt);
             if (hasMod('hyper_spin')) body.spin += (Math.random() - 0.5) * 0.04 * dt;
 
             const speed = Math.hypot(body.vx, body.vy);
-            const maxSpeed = body.maxSpeed ?? PLAYGROUND_MAX_TRAVEL_SPEED;
+            const maxSpeed = (body.maxSpeed ?? PLAYGROUND_MAX_TRAVEL_SPEED) * (voidMods?.maxSpeedMul ?? 1);
             if (speed > maxSpeed) {
               body.vx *= maxSpeed / speed;
               body.vy *= maxSpeed / speed;
@@ -2688,7 +3156,7 @@ export default function ModernHome() {
             if (denom > 0.00001) {
                 const baseRestitution = ((a.body.restitution ?? 0.2) + (b.body.restitution ?? 0.2)) * 0.5;
                 const restitution = clampNumber(baseRestitution * pairImpactBoost * (hasMod('mega_bounce') ? 2.35 : 1), 0.06, 0.96);
-                const explosiveMul = (hasMod('explosive_touch') ? 1.85 : 1) * pairImpactBoost;
+                const explosiveMul = (hasMod('explosive_touch') ? 1.85 : 1) * pairImpactBoost * (chaosEffects?.collisionImpulseMul ?? 1);
               const impulseScalar = (-(1 + restitution) * velAlongNormal / denom) * explosiveMul;
               normalImpulseX = collision.normalX * impulseScalar;
               normalImpulseY = collision.normalY * impulseScalar;
@@ -2968,7 +3436,7 @@ export default function ModernHome() {
     return () => {
       if (playgroundRafRef.current) cancelAnimationFrame(playgroundRafRef.current);
     };
-  }, [activateModifier, bosses, collection, createPlaygroundBody, despawnPlaygroundToy, getPlaygroundBodyViewportPoint, getPlaygroundBodyViewportRect, hasModifier, isPlaygroundItemId, playgroundForceMode, playgroundGravityMode, playgroundMode, playgroundPaused, playgroundSlowMo, playPlaygroundSound, spawnImpactBurst, spawnPlaygroundToy, syncPlaygroundBodyNodeMetrics, weather]);
+  }, [activateModifier, bosses, collection, createPlaygroundBody, despawnPlaygroundToy, getPlaygroundBodyViewportPoint, getPlaygroundBodyViewportRect, hasModifier, isPlaygroundItemId, playgroundForceMode, playgroundGravityMode, playgroundMode, playgroundPaused, playgroundSlowMo, playPlaygroundSound, spawnImpactBurst, spawnPlaygroundToy, syncPlaygroundBodyNodeMetrics, voidDim, weather]);
 
   /* ─── Phase 2: Arena Mutation scheduler ─── */
   useEffect(() => {
@@ -3661,6 +4129,47 @@ export default function ModernHome() {
               </div>
             </div>
           )}
+          {chaosEvent && (
+            <div className="fixed top-20 left-1/2 -translate-x-1/2 z-[142] pointer-events-none" style={{ animation: 'collectionToastIn 0.45s ease-out both' }}>
+              <div className="px-5 py-3 rounded-2xl border backdrop-blur-xl shadow-2xl" style={{ borderColor: `${chaosEvent.color}55`, background: `linear-gradient(135deg, ${chaosEvent.color}22, rgba(8,12,18,0.95))`, boxShadow: `0 0 28px ${chaosEvent.color}35` }}>
+                <div className="flex items-center gap-3">
+                  <span className="text-lg" style={{ color: chaosEvent.color }}>{chaosEvent.icon}</span>
+                  <div>
+                    <div className="text-[10px] font-mono tracking-[0.3em]" style={{ color: chaosEvent.color }}>CURATED CHAOS</div>
+                    <div className="text-sm font-mono text-white">{chaosEvent.name}</div>
+                    <div className="text-[10px] text-slate-400">{chaosEvent.desc}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+          {bossRewardToast && (
+            <div className="fixed top-36 right-4 z-[142] pointer-events-none" style={{ animation: 'collectionToastIn 0.45s ease-out both' }}>
+              <div className="px-4 py-3 rounded-2xl border border-amber-400/30 bg-amber-500/10 backdrop-blur-xl shadow-2xl max-w-[260px]">
+                <div className="text-[10px] font-mono tracking-[0.24em] text-amber-300">BOSS DROP</div>
+                <div className="text-sm font-mono text-white mt-1">{bossRewardToast.label}</div>
+                <div className="text-[10px] text-slate-400 mt-1">{bossRewardToast.desc}</div>
+              </div>
+            </div>
+          )}
+          {creatorChallengeResult && (
+            <div className="fixed bottom-24 left-1/2 -translate-x-1/2 z-[142] pointer-events-none" style={{ animation: 'collectionToastIn 0.45s ease-out both' }}>
+              <div className={`px-4 py-3 rounded-2xl border backdrop-blur-xl shadow-2xl ${creatorChallengeResult.success ? 'border-emerald-400/30 bg-emerald-500/10' : 'border-rose-400/30 bg-rose-500/10'}`}>
+                <div className="text-[10px] font-mono tracking-[0.24em] text-white/70">CREATOR CHALLENGE</div>
+                <div className="text-sm font-mono text-white mt-1">{creatorChallengeResult.name}</div>
+                <div className="text-[10px] text-slate-300 mt-1">{creatorChallengeResult.summary}</div>
+              </div>
+            </div>
+          )}
+          {chaosEventResult && (
+            <div className="fixed bottom-12 left-1/2 -translate-x-1/2 z-[142] pointer-events-none" style={{ animation: 'collectionToastIn 0.45s ease-out both' }}>
+              <div className="px-4 py-3 rounded-2xl border border-rose-400/30 bg-rose-500/12 backdrop-blur-xl shadow-2xl">
+                <div className="text-[10px] font-mono tracking-[0.24em] text-rose-200">CHAOS RESOLVED</div>
+                <div className="text-sm font-mono text-white mt-1">{chaosEventResult.name}</div>
+                <div className="text-[10px] text-slate-300 mt-1">{chaosEventResult.summary}</div>
+              </div>
+            </div>
+          )}
           {/* Phase 4: Ghost Replay Overlay */}
           {ghostReplay.replaying && ghostReplay.ghostPositions.length > 0 && (
             ghostReplay.ghostPositions.map((ghost, i) => (
@@ -3897,6 +4406,9 @@ export default function ModernHome() {
               <button className="px-2 py-1 rounded-lg border border-violet-400/20 bg-violet-500/5 text-[9px] font-mono text-violet-300 hover:bg-violet-500/15 transition-colors" onClick={() => setPresetMenuOpen(p => !p)} data-playground-control>
                 🎛️ PRESETS
               </button>
+              <button className={`px-2 py-1 rounded-lg border text-[9px] font-mono transition-colors ${creatorTier > 0 ? 'border-rose-400/20 bg-rose-500/5 text-rose-300 hover:bg-rose-500/15' : 'border-white/10 text-slate-500 hover:text-white hover:border-white/20'}`} onClick={() => setCreatorStudioOpen(prev => !prev)} data-playground-control>
+                ⭐ CREATOR {creatorTier > 0 ? `P${creatorTier}` : 'LOCKED'}
+              </button>
               <button className="px-2 py-1 rounded-lg border border-emerald-400/20 bg-emerald-500/5 text-[9px] font-mono text-emerald-300 hover:bg-emerald-500/15 transition-colors" onClick={sharePlaygroundState} data-playground-control>
                 📋 SHARE
               </button>
@@ -3914,7 +4426,7 @@ export default function ModernHome() {
                 ))}
                 {(() => {
                   try {
-                    const custom = JSON.parse(localStorage.getItem('synthi_sandbox_presets') || '[]');
+                    const custom = readStoredList(CREATOR_STORAGE_KEYS.presets);
                     return custom.map((p, i) => (
                       <button key={`custom-${i}`} className="w-full text-left px-2 py-1.5 rounded-lg text-[9px] font-mono text-amber-200 hover:bg-amber-500/15 transition-colors" onClick={() => {
                         setPlaygroundGravityMode(p.state.g || 'zero');
@@ -3929,6 +4441,108 @@ export default function ModernHome() {
                     ));
                   } catch { return null; }
                 })()}
+              </div>
+            )}
+            {creatorStudioOpen && (
+              <div className="mt-1 space-y-2 border border-rose-500/20 rounded-lg p-2 bg-rose-500/5" data-playground-control>
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <div className="text-[10px] font-mono text-rose-300">Creator Studio</div>
+                    <div className="text-[9px] text-slate-500">Prestige unlocks authorship instead of pure buffs.</div>
+                  </div>
+                  <div className="text-[9px] font-mono text-slate-400">P{prestigeLevel}</div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-1.5 text-[9px] font-mono text-slate-500">
+                  <div className={creatorPermissions.customPresets ? 'text-emerald-300' : ''}>P1 presets</div>
+                  <div className={creatorPermissions.customChallenges ? 'text-emerald-300' : ''}>P2 challenge cards</div>
+                  <div className={creatorPermissions.modifierPacks ? 'text-emerald-300' : ''}>P3 modifier packs</div>
+                  <div className={creatorPermissions.anomalyLoadouts ? 'text-emerald-300' : ''}>P4 anomaly loadouts</div>
+                </div>
+
+                {creatorPermissions.customPresets && (
+                  <div className="space-y-1.5">
+                    <div className="text-[9px] font-mono text-rose-200">Named preset</div>
+                    <div className="flex gap-1.5">
+                      <input value={creatorPresetName} onChange={(e) => setCreatorPresetName(e.target.value)} placeholder="Preset name" className="flex-1 rounded-lg border border-white/10 bg-black/20 px-2 py-1 text-[9px] font-mono text-white outline-none" data-playground-control />
+                      <button className="px-2 py-1 rounded-lg border border-rose-400/20 text-[9px] font-mono text-rose-300 hover:bg-rose-500/15 transition-colors" onClick={() => savePresetToLocal(creatorPresetName)} data-playground-control>
+                        save
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {creatorPermissions.customChallenges && (
+                  <div className="space-y-1.5 border-t border-white/5 pt-2">
+                    <div className="text-[9px] font-mono text-rose-200">Challenge cards</div>
+                    <div className="grid grid-cols-2 gap-1.5">
+                      <input value={creatorChallengeDraft.name} onChange={(e) => setCreatorChallengeDraft(prev => ({ ...prev, name: e.target.value }))} placeholder="Challenge name" className="rounded-lg border border-white/10 bg-black/20 px-2 py-1 text-[9px] font-mono text-white outline-none" data-playground-control />
+                      <select value={creatorChallengeDraft.metric} onChange={(e) => setCreatorChallengeDraft(prev => ({ ...prev, metric: e.target.value }))} className="rounded-lg border border-white/10 bg-black/20 px-2 py-1 text-[9px] font-mono text-white outline-none" data-playground-control>
+                        {CREATOR_CHALLENGE_METRICS.map(metric => <option key={metric.id} value={metric.id}>{metric.label}</option>)}
+                      </select>
+                      <input type="number" min="1" value={creatorChallengeDraft.target} onChange={(e) => setCreatorChallengeDraft(prev => ({ ...prev, target: e.target.value }))} placeholder="Target" className="rounded-lg border border-white/10 bg-black/20 px-2 py-1 text-[9px] font-mono text-white outline-none" data-playground-control />
+                      <input type="number" min="5" value={creatorChallengeDraft.timeLimit} onChange={(e) => setCreatorChallengeDraft(prev => ({ ...prev, timeLimit: e.target.value }))} placeholder="Seconds" className="rounded-lg border border-white/10 bg-black/20 px-2 py-1 text-[9px] font-mono text-white outline-none" data-playground-control />
+                    </div>
+                    <div className="flex gap-1.5 flex-wrap">
+                      <button className="px-2 py-1 rounded-lg border border-rose-400/20 text-[9px] font-mono text-rose-300 hover:bg-rose-500/15 transition-colors" onClick={saveCreatorChallenge} data-playground-control>
+                        save card
+                      </button>
+                      {creatorChallenges.slice(-3).map((challenge) => (
+                        <button key={challenge.name + challenge.savedAt} className="px-2 py-1 rounded-lg border border-white/10 text-[9px] font-mono text-slate-300 hover:border-white/20" onClick={() => startCreatorChallenge(challenge)} data-playground-control>
+                          {challenge.name}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {creatorPermissions.modifierPacks && (
+                  <div className="space-y-1.5 border-t border-white/5 pt-2">
+                    <div className="text-[9px] font-mono text-rose-200">Modifier packs</div>
+                    <input value={creatorModifierPackName} onChange={(e) => setCreatorModifierPackName(e.target.value)} placeholder="Pack name" className="w-full rounded-lg border border-white/10 bg-black/20 px-2 py-1 text-[9px] font-mono text-white outline-none" data-playground-control />
+                    <div className="flex flex-wrap gap-1">
+                      {CRATE_MODIFIERS.map((modifier) => (
+                        <button key={modifier.id} className={`px-2 py-1 rounded-lg border text-[8px] font-mono transition-colors ${creatorModifierPackDraft.includes(modifier.id) ? 'border-rose-400/30 bg-rose-500/10 text-rose-200' : 'border-white/10 text-slate-500 hover:text-white hover:border-white/20'}`} onClick={() => toggleModifierPackDraft(modifier.id)} data-playground-control>
+                          {modifier.label}
+                        </button>
+                      ))}
+                    </div>
+                    <div className="flex gap-1.5 flex-wrap">
+                      <button className="px-2 py-1 rounded-lg border border-rose-400/20 text-[9px] font-mono text-rose-300 hover:bg-rose-500/15 transition-colors" onClick={saveModifierPack} data-playground-control>
+                        save pack
+                      </button>
+                      {creatorModifierPacks.slice(-2).map((pack) => (
+                        <button key={pack.name + pack.savedAt} className="px-2 py-1 rounded-lg border border-white/10 text-[9px] font-mono text-slate-300 hover:border-white/20" onClick={() => runModifierPack(pack)} data-playground-control>
+                          {pack.name}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {creatorPermissions.anomalyLoadouts && (
+                  <div className="space-y-1.5 border-t border-white/5 pt-2">
+                    <div className="text-[9px] font-mono text-rose-200">Anomaly loadouts ({creatorPermissions.anomalySlots} slots)</div>
+                    <input value={creatorLoadoutName} onChange={(e) => setCreatorLoadoutName(e.target.value)} placeholder="Loadout name" className="w-full rounded-lg border border-white/10 bg-black/20 px-2 py-1 text-[9px] font-mono text-white outline-none" data-playground-control />
+                    <div className="flex flex-wrap gap-1">
+                      {CHAOS_EVENTS.map((eventDef) => (
+                        <button key={eventDef.id} className={`px-2 py-1 rounded-lg border text-[8px] font-mono transition-colors ${creatorLoadoutDraft.includes(eventDef.id) ? 'border-rose-400/30 bg-rose-500/10 text-rose-200' : 'border-white/10 text-slate-500 hover:text-white hover:border-white/20'}`} onClick={() => toggleLoadoutDraftEvent(eventDef.id)} data-playground-control>
+                          {eventDef.name}
+                        </button>
+                      ))}
+                    </div>
+                    <div className="flex gap-1.5 flex-wrap">
+                      <button className="px-2 py-1 rounded-lg border border-rose-400/20 text-[9px] font-mono text-rose-300 hover:bg-rose-500/15 transition-colors" onClick={saveAnomalyLoadout} data-playground-control>
+                        save loadout
+                      </button>
+                      {creatorAnomalyLoadouts.slice(-2).map((loadout) => (
+                        <button key={loadout.name + loadout.savedAt} className="px-2 py-1 rounded-lg border border-white/10 text-[9px] font-mono text-slate-300 hover:border-white/20" onClick={() => runAnomalyLoadout(loadout)} data-playground-control>
+                          {loadout.name}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             )}
 
@@ -3953,8 +4567,41 @@ export default function ModernHome() {
             <div className="grid grid-cols-3 gap-2 text-[10px] font-mono" data-playground-control>
               <div className="rounded-xl border border-white/8 bg-white/[0.03] px-3 py-2"><div className="text-slate-500">weather</div><div className="text-white mt-1">{weather.stage}</div></div>
               <div className="rounded-xl border border-white/8 bg-white/[0.03] px-3 py-2"><div className="text-slate-500">speedruns</div><div className="text-white mt-1">{speedrun.completedCount}/{speedrun.totalChallenges}</div></div>
-              <div className={`rounded-xl border px-3 py-2 ${voidDim.inVoid ? 'border-emerald-400/30 bg-emerald-500/10' : 'border-white/8 bg-white/[0.03]'}`}><div className="text-slate-500">void</div><div className={`mt-1 ${voidDim.inVoid ? 'text-emerald-300' : 'text-white'}`}>{voidDim.inVoid ? `${voidDim.voidTimer}s` : playgroundScore >= 6000 ? 'ready' : 'locked'}</div></div>
+              <div className={`rounded-xl border px-3 py-2 ${voidDim.inVoid ? 'border-emerald-400/30 bg-emerald-500/10' : 'border-white/8 bg-white/[0.03]'}`}><div className="text-slate-500">void</div><div className={`mt-1 ${voidDim.inVoid ? 'text-emerald-300' : 'text-white'}`}>{voidDim.inVoid ? `${voidDim.voidTimer}s` : playgroundScore >= voidDim.entryScoreThreshold ? 'ready' : 'locked'}</div></div>
             </div>
+            {chaosEvent && (
+              <div className="rounded-xl border px-3 py-2 border-rose-400/20 bg-rose-500/8" data-playground-control>
+                <div className="flex items-center justify-between gap-3">
+                  <span className="text-[10px] font-mono" style={{ color: chaosEvent.color }}>{chaosEvent.icon} {chaosEvent.name}</span>
+                  <span className="text-[10px] font-mono text-slate-400">{chaosEvent.progress}/{chaosEvent.objective.target}</span>
+                </div>
+                <div className="text-[9px] text-slate-500 mt-1">{chaosEvent.objective.label}</div>
+                <div className="mt-2 h-1.5 rounded-full bg-white/5 overflow-hidden">
+                  <div className="h-full rounded-full transition-all duration-200" style={{ width: `${Math.min(100, (chaosEvent.progress / chaosEvent.objective.target) * 100)}%`, background: chaosEvent.color }} />
+                </div>
+              </div>
+            )}
+            {voidDim.bestDepth > 0 && (
+              <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/6 px-3 py-2" data-playground-control>
+                <div className="flex items-center justify-between gap-3 text-[10px] font-mono">
+                  <span className="text-emerald-300">VOID DEPTH</span>
+                  <span className="text-slate-300">best {voidDim.bestDepth}</span>
+                </div>
+                <div className="text-[9px] text-slate-500 mt-1">Relics: {Object.keys(voidDim.relicInventory || {}).length}</div>
+              </div>
+            )}
+            {activeCreatorChallenge && (
+              <div className="rounded-xl border border-rose-400/20 bg-rose-500/8 px-3 py-2" data-playground-control>
+                <div className="flex items-center justify-between gap-3 text-[10px] font-mono">
+                  <span className="text-rose-200">{activeCreatorChallenge.name}</span>
+                  <span className="text-slate-400">{Math.max(0, activeCreatorChallenge.timeLeft)}s</span>
+                </div>
+                <div className="text-[9px] text-slate-500 mt-1">{activeCreatorChallenge.objective.label}</div>
+                <div className="mt-2 h-1.5 rounded-full bg-white/5 overflow-hidden">
+                  <div className="h-full rounded-full bg-rose-300 transition-all duration-200" style={{ width: `${Math.min(100, (activeCreatorChallenge.progress / activeCreatorChallenge.objective.target) * 100)}%` }} />
+                </div>
+              </div>
+            )}
             </>
             )}
 
@@ -4372,9 +5019,10 @@ export default function ModernHome() {
                 <span className="text-2xl">{bosses.activeBoss.icon}</span>
               </div>
               <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 whitespace-nowrap">
-                <span className="text-[9px] font-mono px-2 py-0.5 rounded-md bg-black/60 backdrop-blur-sm" style={{ color: bosses.activeBoss.color }}>
-                  {bosses.activeBoss.name} — HP: {bosses.activeBoss.currentHp}/{bosses.activeBoss.hp}
-                </span>
+                <div className="text-[9px] font-mono px-2 py-1 rounded-md bg-black/60 backdrop-blur-sm text-center" style={{ color: bosses.activeBoss.color }}>
+                  <div>{bosses.activeBoss.name} — HP: {bosses.activeBoss.currentHp}/{bosses.activeBoss.hp}</div>
+                  <div className="text-[8px] text-slate-300">phase {bosses.activeBoss.phase}{bosses.arenaEffect ? ` • ${bosses.arenaEffect.label}` : ''}</div>
+                </div>
               </div>
             </div>
           )}
@@ -4486,10 +5134,16 @@ export default function ModernHome() {
               <div className="absolute inset-0 bg-black/60" />
               <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at center, rgba(52,211,153,0.05), transparent 70%)' }} />
               {/* Void HUD */}
-              <div className="absolute top-4 left-1/2 -translate-x-1/2 z-[131] flex items-center gap-4 px-4 py-2 rounded-2xl border border-emerald-500/20 bg-black/70 backdrop-blur-xl pointer-events-auto" data-playground-control>
-                <span className="text-[10px] font-mono text-emerald-400 font-bold tracking-wider">🕳️ THE VOID</span>
+              <div className="absolute top-4 left-1/2 -translate-x-1/2 z-[131] flex items-center gap-4 px-4 py-3 rounded-2xl border border-emerald-500/20 bg-black/70 backdrop-blur-xl pointer-events-auto" data-playground-control>
+                <div>
+                  <div className="text-[10px] font-mono text-emerald-400 font-bold tracking-wider">🕳️ THE VOID</div>
+                  <div className="text-[9px] font-mono text-emerald-200/60 mt-1">Depth {voidDim.voidDepth} • Best {voidDim.bestDepth} • Score {voidDim.voidScore}</div>
+                </div>
                 <span className="text-[10px] font-mono text-emerald-300">{voidDim.voidTimer}s</span>
-                <span className="text-[10px] font-mono text-emerald-200/60">Score: {voidDim.voidScore}</span>
+                <div className="text-[9px] font-mono text-slate-400">
+                  Relics {Object.keys(voidDim.relicInventory || {}).length}
+                  {voidDim.latestDrop ? <div className="text-emerald-200 mt-1">Latest: {voidDim.latestDrop.label}</div> : null}
+                </div>
                 <button onClick={() => { const vs = voidDim.exitVoid(); collection.onVoidExit(vs); }} className="px-2 py-0.5 text-[9px] font-mono text-slate-400 border border-white/10 rounded hover:text-white">EXIT</button>
               </div>
               {/* Null Entity */}
@@ -4514,9 +5168,9 @@ export default function ModernHome() {
           )}
 
           {/* ─── Void eligible hint ─── */}
-          {playgroundScore >= 6000 && !voidDim.inVoid && (
+          {playgroundScore >= voidDim.entryScoreThreshold && !voidDim.inVoid && (
             <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-[60] pointer-events-none" style={{ animation: 'whisperFade 4s ease-in-out infinite' }}>
-              <span className="text-[10px] font-mono italic text-emerald-400/30">Press V to enter The Void...</span>
+              <span className="text-[10px] font-mono italic text-emerald-400/30">Press V to descend into The Void...</span>
             </div>
           )}
 
