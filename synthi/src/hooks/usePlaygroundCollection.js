@@ -166,6 +166,34 @@ function saveSessionStats(stats) {
      the same ref, no additional useEffects.
    ═══════════════════════════════════════════════════════════════════════════ */
 
+/** Generate randomized unlock thresholds for this session */
+function generateSessionThresholds() {
+  const rand = (min, max) => min + Math.floor(Math.random() * (max - min + 1));
+  return {
+    syntaxTokenCollects: rand(2, 5),        // common: session collects to unlock syntax_token
+    heatSinkCombo: rand(2, 5),              // common: combo needed for heat_sink
+    cacheHitWindow: rand(300, 800),         // common: ms window to collect after spawn for cache_hit
+    quantumLockKinds: rand(3, 4),           // rare: unique kinds needed for quantum_lock
+    zeroDayCollects: rand(3, 7),            // rare: collects within window for zero_day
+    darkMatterCollects: rand(2, 5),         // rare: collects after repel for dark_matter
+    debugProbeToggles: rand(4, 8),          // common: pin toggles for debug_probe
+    binaryStarOrbiters: rand(2, 3),         // common: orbiters for binary_star
+    eventHorizonOrbiters: rand(4, 7),       // rare: orbiters for event_horizon
+    itsAliveOrbiters: rand(6, 10),          // secret: orbiters for it's_alive
+    coldBootScore: rand(800, 1500),         // rare: score threshold for cold_boot
+    portalTraversals: rand(3, 7),           // epic: portal traversals for wormhole_weaver
+    chaosWellCount: rand(2, 4),             // legendary: well count for singularity
+    chaosCaughtCount: rand(5, 10),          // legendary: caught count for singularity
+    mutationsSurvived: rand(2, 5),          // rare: mutations for chaos_surfer
+    fusionCountStone: rand(3, 7),           // legendary: fusions for philosopher's stone
+    chaosRainCount: rand(2, 5),             // secret: chaos rains for rm_rf
+    starClicks: rand(5, 10),               // legendary: star clicks for compiler's key chain
+    speedrunCompletions: rand(3, 7),        // epic: speedrun completions for speedrunner
+    voidArchitectScore: rand(1500, 3000),   // legendary: void score for void_architect
+    weatherStagesSeen: rand(2, 4),          // common: weather stages for stormchaser
+  };
+}
+
 export function usePlaygroundCollection(onUnlock) {
   // ── persistent ref for all mutable tracking state ──
   const stateRef = useRef(null);
@@ -175,6 +203,8 @@ export function usePlaygroundCollection(onUnlock) {
     const saved = loadCollection();
     const savedStats = loadSessionStats();
     stateRef.current = {
+      // Randomized thresholds for this session
+      thresholds: generateSessionThresholds(),
       // items: { [itemId]: { unlockedAt: number } }
       items: saved?.items ?? {},
       // per-session volatile trackers (not persisted across page loads)
@@ -265,25 +295,25 @@ export function usePlaygroundCollection(onUnlock) {
 
     // ── Common triggers ──
     unlock('null_pointer'); // first collect ever
-    if (s.sessionCollects >= 3) unlock('syntax_token');
-    if (currentCombo >= 3) unlock('heat_sink');
+    if (s.sessionCollects >= s.thresholds.syntaxTokenCollects) unlock('syntax_token');
+    if (currentCombo >= s.thresholds.heatSinkCombo) unlock('heat_sink');
 
-    // Cache Hit: collected within 0.5s of spawn (caller passes spawnTime)
-    if (spawn._spawnTime && now - spawn._spawnTime < 500) unlock('cache_hit');
+    // Cache Hit: collected within threshold ms of spawn
+    if (spawn._spawnTime && now - spawn._spawnTime < s.thresholds.cacheHitWindow) unlock('cache_hit');
 
     // ── Rare triggers ──
-    // Quantum Lock: all 4 toy kinds on screen at once (including the one just collected)
+    // Quantum Lock: enough toy kinds on screen at once
     const kinds = new Set(allSpawns.map(s2 => s2.kind));
     kinds.add(spawn.kind);
-    if (kinds.size >= 4) unlock('quantum_lock');
+    if (kinds.size >= s.thresholds.quantumLockKinds) unlock('quantum_lock');
 
-    // Zero-Day: 5 collects in 10 seconds
-    if (s.recentCollectTimes.length >= 5) unlock('zero_day');
+    // Zero-Day: N collects in 10 seconds
+    if (s.recentCollectTimes.length >= s.thresholds.zeroDayCollects) unlock('zero_day');
 
-    // Dark Matter: used repel, then collect 3+ within 2s of repel activation
+    // Dark Matter: used repel, then collect N within 2s of repel activation
     if (s.lastRepelActivation && now - s.lastRepelActivation < 2000) {
       s.collectsSinceRepel++;
-      if (s.collectsSinceRepel >= 3) unlock('dark_matter');
+      if (s.collectsSinceRepel >= s.thresholds.darkMatterCollects) unlock('dark_matter');
     }
   }, [s, unlock]);
 
@@ -298,15 +328,15 @@ export function usePlaygroundCollection(onUnlock) {
 
   /** Called when orbit count changes. */
   const onOrbitChange = useCallback((orbitCount) => {
-    if (orbitCount >= 2) unlock('binary_star');
-    if (orbitCount >= 5) unlock('event_horizon');
-    if (orbitCount >= 8) unlock('its_alive');
-  }, [unlock]);
+    if (orbitCount >= s.thresholds.binaryStarOrbiters) unlock('binary_star');
+    if (orbitCount >= s.thresholds.eventHorizonOrbiters) unlock('event_horizon');
+    if (orbitCount >= s.thresholds.itsAliveOrbiters) unlock('its_alive');
+  }, [s, unlock]);
 
   /** Called when an item is pinned/unpinned. */
   const onPinToggle = useCallback((id) => {
     s.pinToggles[id] = (s.pinToggles[id] || 0) + 1;
-    if (s.pinToggles[id] >= 6) unlock('debug_probe'); // 3 pin+unpin cycles = 6 toggles
+    if (s.pinToggles[id] >= s.thresholds.debugProbeToggles) unlock('debug_probe');
   }, [s, unlock]);
 
   /** Called when slow-mo is activated. */
@@ -319,8 +349,8 @@ export function usePlaygroundCollection(onUnlock) {
 
   /** Called when score changes. */
   const onScoreChange = useCallback((prevScore, newScore) => {
-    // Cold Boot: score crosses 1000
-    if (prevScore < 1000 && newScore >= 1000) unlock('cold_boot');
+    // Cold Boot: score crosses threshold
+    if (prevScore < s.thresholds.coldBootScore && newScore >= s.thresholds.coldBootScore) unlock('cold_boot');
     // Overflow: score >= 5000 (just marks eligibility — clicking the glitch unlocks it)
     // (handled in page.js via overflowEligible)
   }, [unlock]);
@@ -334,25 +364,25 @@ export function usePlaygroundCollection(onUnlock) {
   /** Phase 2: Called when a body teleports through a portal. */
   const onPortalTraversal = useCallback(() => {
     s.portalTraversals = (s.portalTraversals || 0) + 1;
-    if (s.portalTraversals >= 5) unlock('wormhole_weaver');
+    if (s.portalTraversals >= s.thresholds.portalTraversals) unlock('wormhole_weaver');
   }, [s, unlock]);
 
   /** Phase 2: Called to check gravity well collectible (3 wells, 8+ objects in pull). */
   const onGravityWellCheck = useCallback((wellCount, caughtCount) => {
-    if (wellCount >= 3 && caughtCount >= 8) unlock('singularity');
+    if (wellCount >= s.thresholds.chaosWellCount && caughtCount >= s.thresholds.chaosCaughtCount) unlock('singularity');
   }, [unlock]);
 
   /** Phase 2: Called when an arena mutation completes. */
   const onArenaMutationSurvived = useCallback(() => {
     s.mutationsSurvived = (s.mutationsSurvived || 0) + 1;
-    if (s.mutationsSurvived >= 3) unlock('chaos_surfer');
+    if (s.mutationsSurvived >= s.thresholds.mutationsSurvived) unlock('chaos_surfer');
   }, [s, unlock]);
 
   /** Phase 3: Called when a toy fusion is performed. */
   const onToyFusion = useCallback((recipeName) => {
     s.fusionCount = (s.fusionCount || 0) + 1;
     if (recipeName !== 'Alloy') unlock('alchemist'); // named recipe = alchemist
-    if (s.fusionCount >= 5) unlock('philosophers_stone');
+    if (s.fusionCount >= s.thresholds.fusionCountStone) unlock('philosophers_stone');
   }, [s, unlock]);
 
   /** Phase 3: Called when player prestiges. */
@@ -375,7 +405,7 @@ export function usePlaygroundCollection(onUnlock) {
   const onY2kBugClick = useCallback(() => unlock('y2k_bug'), [unlock]);
   const onChaosRain = useCallback(() => {
     s.chaosRainCount++;
-    if (s.chaosRainCount >= 3) unlock('rm_rf');
+    if (s.chaosRainCount >= s.thresholds.chaosRainCount) unlock('rm_rf');
   }, [s, unlock]);
 
   /* ─── Legendary triggers ────────────────────────────────────────────── */
@@ -385,7 +415,7 @@ export function usePlaygroundCollection(onUnlock) {
     if (!canSeeLegendaryHints() || s.compilerKeyStep !== 0) return;
     if (countByRarity('epic') < 3) return;
     s.starClicks++;
-    if (s.starClicks >= 7) {
+    if (s.starClicks >= s.thresholds.starClicks) {
       s.compilerKeyStep = 1;
     }
   }, [s, canSeeLegendaryHints, countByRarity]);
@@ -439,7 +469,7 @@ export function usePlaygroundCollection(onUnlock) {
   /** Weather: track stages witnessed this session */
   const onWeatherChange = useCallback((stage) => {
     s.weatherStagesSeen.add(stage);
-    if (s.weatherStagesSeen.size >= 3) unlock('stormchaser');
+    if (s.weatherStagesSeen.size >= s.thresholds.weatherStagesSeen) unlock('stormchaser');
   }, [s, unlock]);
 
   /** Boss defeated */
@@ -462,14 +492,14 @@ export function usePlaygroundCollection(onUnlock) {
   /** Speedrun challenge completed */
   const onSpeedrunCompleted = useCallback((challengeId) => {
     s.speedrunCompleted[challengeId] = true;
-    if (Object.keys(s.speedrunCompleted).length >= 5) unlock('speedrunner');
+    if (Object.keys(s.speedrunCompleted).length >= s.thresholds.speedrunCompletions) unlock('speedrunner');
   }, [s, unlock]);
 
   /** Void visit stats */
   const onVoidExit = useCallback((voidScore) => {
     s.voidVisits++;
     if (voidScore > s.voidBestScore) s.voidBestScore = voidScore;
-    if (voidScore >= 2000) unlock('void_architect');
+    if (voidScore >= s.thresholds.voidArchitectScore) unlock('void_architect');
   }, [s, unlock]);
 
   /* ─── Mythic + Transcendent ──────────────────────────────────────────── */

@@ -49,6 +49,21 @@ const CREATOR_CHALLENGE_METRICS = [
   { id: 'pins', label: 'Pinned', mode: 'absolute' },
 ];
 
+const CHAOS_OBJECTIVE_POOL = [
+  { metric: 'score', gen: () => ({ target: 200 + Math.floor(Math.random() * 600), label: (t) => `Score ${t}+ during the event` }) },
+  { metric: 'collects', gen: () => ({ target: 2 + Math.floor(Math.random() * 6), label: (t) => `Collect ${t} fragments` }) },
+  { metric: 'collisions', gen: () => ({ target: 5 + Math.floor(Math.random() * 12), label: (t) => `Trigger ${t} collisions` }) },
+  { metric: 'combo', gen: () => ({ target: 2 + Math.floor(Math.random() * 5), label: (t) => `Hit a x${t} combo` }) },
+  { metric: 'orbiters', gen: () => ({ target: 2 + Math.floor(Math.random() * 3), label: (t) => `Hold ${t} orbiters at once` }) },
+  { metric: 'pins', gen: () => ({ target: 2 + Math.floor(Math.random() * 4), label: (t) => `Pin ${t} items` }) },
+];
+
+const generateRandomObjective = () => {
+  const pick = CHAOS_OBJECTIVE_POOL[Math.floor(Math.random() * CHAOS_OBJECTIVE_POOL.length)];
+  const { target, label } = pick.gen();
+  return { metric: pick.metric, target, label: label(target) };
+};
+
 const CHAOS_EVENTS = [
   {
     id: 'black_sun',
@@ -57,7 +72,6 @@ const CHAOS_EVENTS = [
     color: '#f59e0b',
     icon: '☀',
     duration: 32000,
-    objective: { metric: 'collects', target: 4, label: 'Collect 4 warped fragments' },
     reward: { kind: 'modifier', modifierId: 'gravity_flip', label: 'SUN SHARD' },
     effects: {
       gravityOverride: 'reverse',
@@ -73,7 +87,6 @@ const CHAOS_EVENTS = [
     color: '#60a5fa',
     icon: '◫',
     duration: 28000,
-    objective: { metric: 'collisions', target: 10, label: 'Trigger 10 mirrored collisions' },
     reward: { kind: 'modifier', modifierId: 'clone_storm', label: 'CACHE GHOST' },
     effects: {
       forceOverride: 'magnet',
@@ -89,7 +102,6 @@ const CHAOS_EVENTS = [
     color: '#34d399',
     icon: '✦',
     duration: 30000,
-    objective: { metric: 'combo', target: 4, label: 'Hit a x4 combo peak' },
     reward: { kind: 'modifier', modifierId: 'magnet_pulse', label: 'BLOOM CORE' },
     effects: {
       forceOverride: 'magnet',
@@ -104,7 +116,6 @@ const CHAOS_EVENTS = [
     color: '#a78bfa',
     icon: '◎',
     duration: 34000,
-    objective: { metric: 'orbiters', target: 3, label: 'Hold 3 orbiters at once' },
     reward: { kind: 'modifier', modifierId: 'score_surge', label: 'HARVEST KEY' },
     effects: {
       gravityOverride: 'zero',
@@ -1983,14 +1994,16 @@ export default function ModernHome() {
     const definition = CHAOS_EVENTS.find((entry) => entry.id === eventId);
     if (!definition) return false;
 
+    const objective = generateRandomObjective();
     const tracked = buildTrackedObjective({
       ...definition,
-      metric: definition.objective.metric,
-      target: definition.objective.target,
+      metric: objective.metric,
+      target: objective.target,
     });
     const next = {
       ...definition,
       ...tracked,
+      objective,
       source,
     };
     chaosEventRef.current = next;
@@ -4008,20 +4021,18 @@ export default function ModernHome() {
   const extraFromScroll = Math.min((scrollProgress / 100) * 0.7, 0.7); // max 0.7
   const overlayOpacity = Math.min(baseOpacity + extraFromScroll, 0.7);
   const showScrollIndicator = scrollProgress < 3;
-  const ALL_OBJECTIVES = useRef([
-    { label: 'Launch 3 objects',    get: (s, c, sc) => Math.min(s.launches, 3),   target: 3 },
-    { label: 'Launch 8 objects',    get: (s, c, sc) => Math.min(s.launches, 8),   target: 8 },
-    { label: 'Pin 2 objects',       get: (s, c, sc) => Math.min(s.pinned, 2),     target: 2 },
-    { label: 'Pin 4 objects',       get: (s, c, sc) => Math.min(s.pinned, 4),     target: 4 },
-    { label: 'Collect 2 toys',      get: (s, c, sc) => Math.min(c, 2),            target: 2 },
-    { label: 'Collect 5 toys',      get: (s, c, sc) => Math.min(c, 5),            target: 5 },
-    { label: 'Orbit 1 object',      get: (s, c, sc) => Math.min(s.orbiters, 1),   target: 1 },
-    { label: 'Orbit 3 objects',     get: (s, c, sc) => Math.min(s.orbiters, 3),   target: 3 },
-    { label: '10 collisions',       get: (s, c, sc) => Math.min(s.collisions, 10), target: 10 },
-    { label: '5 spawns',            get: (s, c, sc) => Math.min(s.spawns, 5),      target: 5 },
-    { label: 'Score 200 points',    get: (s, c, sc) => Math.min(sc, 200),     target: 200 },
-    { label: 'Score 500 points',    get: (s, c, sc) => Math.min(sc, 500),     target: 500 },
-  ]);
+  const ALL_OBJECTIVES = useRef((() => {
+    const r = (min, max) => min + Math.floor(Math.random() * (max - min + 1));
+    return [
+      { metric: 'launches',   gen: () => { const t = r(2, 10); return { label: `Launch ${t} objects`, target: t, get: (s, c, sc) => Math.min(s.launches, t) }; } },
+      { metric: 'pinned',     gen: () => { const t = r(1, 6);  return { label: `Pin ${t} objects`, target: t, get: (s, c, sc) => Math.min(s.pinned, t) }; } },
+      { metric: 'collects',   gen: () => { const t = r(1, 8);  return { label: `Collect ${t} toys`, target: t, get: (s, c, sc) => Math.min(c, t) }; } },
+      { metric: 'orbiters',   gen: () => { const t = r(1, 5);  return { label: `Orbit ${t} objects`, target: t, get: (s, c, sc) => Math.min(s.orbiters, t) }; } },
+      { metric: 'collisions', gen: () => { const t = r(5, 25); return { label: `${t} collisions`, target: t, get: (s, c, sc) => Math.min(s.collisions, t) }; } },
+      { metric: 'spawns',     gen: () => { const t = r(3, 12); return { label: `${t} spawns`, target: t, get: (s, c, sc) => Math.min(s.spawns, t) }; } },
+      { metric: 'score',      gen: () => { const t = r(100, 800); return { label: `Score ${t} points`, target: t, get: (s, c, sc) => Math.min(sc, t) }; } },
+    ].map(entry => entry.gen());
+  })());
   const [objectiveIndices, setObjectiveIndices] = useState([0, 1, 2, 3]);
   useEffect(() => {
     const indices = ALL_OBJECTIVES.current.map((_, i) => i).sort(() => Math.random() - 0.5);
@@ -4197,6 +4208,8 @@ export default function ModernHome() {
               top: playgroundHudPosition?.y ?? PLAYGROUND_HUD_TOP_CLEARANCE,
               left: playgroundHudPosition?.x,
               right: playgroundHudPosition ? 'auto' : PLAYGROUND_HUD_MARGIN,
+              maxHeight: 'calc(100vh - 32px)',
+              overflowY: 'auto',
             }}
           >
             <div className="flex items-center justify-between gap-3" data-playground-control>
@@ -4566,7 +4579,7 @@ export default function ModernHome() {
             {/* Wave 2 stats row */}
             <div className="grid grid-cols-3 gap-2 text-[10px] font-mono" data-playground-control>
               <div className="rounded-xl border border-white/8 bg-white/[0.03] px-3 py-2"><div className="text-slate-500">weather</div><div className="text-white mt-1">{weather.stage}</div></div>
-              <div className="rounded-xl border border-white/8 bg-white/[0.03] px-3 py-2"><div className="text-slate-500">speedruns</div><div className="text-white mt-1">{speedrun.completedCount}/{speedrun.totalChallenges}</div></div>
+              <div className="rounded-xl border border-white/8 bg-white/[0.03] px-3 py-2"><div className="text-slate-500">speedruns</div><div className="text-white mt-1">{speedrun.completedCount}</div></div>
               <div className={`rounded-xl border px-3 py-2 ${voidDim.inVoid ? 'border-emerald-400/30 bg-emerald-500/10' : 'border-white/8 bg-white/[0.03]'}`}><div className="text-slate-500">void</div><div className={`mt-1 ${voidDim.inVoid ? 'text-emerald-300' : 'text-white'}`}>{voidDim.inVoid ? `${voidDim.voidTimer}s` : playgroundScore >= voidDim.entryScoreThreshold ? 'ready' : 'locked'}</div></div>
             </div>
             {chaosEvent && (
@@ -5177,7 +5190,7 @@ export default function ModernHome() {
           {/* ─── Speedrun hint ─── */}
           {!speedrun.challenge && playgroundScore >= 500 && (
             <div className="fixed bottom-4 right-4 z-[60] pointer-events-none" style={{ animation: 'whisperFade 6s ease-in-out infinite', animationDelay: '2s' }}>
-              <span className="text-[10px] font-mono italic text-amber-400/20">Press T for timed challenge ({speedrun.completedCount}/{speedrun.totalChallenges})</span>
+              <span className="text-[10px] font-mono italic text-amber-400/20">Press T for timed challenge ({speedrun.completedCount} done)</span>
             </div>
           )}
         </>

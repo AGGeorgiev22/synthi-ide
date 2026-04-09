@@ -2,25 +2,22 @@
 import { useCallback, useRef, useEffect, useState } from "react";
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   Speedrun Challenges — timed mini-tasks
-   ───────────────────────────────────────────────────────────────────────────
-   Challenges:
-     collect_5     — collect 5 toys in 10 seconds
-     orbit_3       — get 3 orbiters in 15 seconds
-     pin_4         — pin 4 items in 12 seconds
-     score_500     — score 500 points in 20 seconds
-     combo_5       — reach combo 5 in 8 seconds
+   Speedrun Challenges — randomly generated timed mini-tasks
    ═══════════════════════════════════════════════════════════════════════════ */
 
-const CHALLENGES = [
-  { id: 'collect_5',  name: 'Speed Collect',  desc: 'Collect 5 toys',       target: 5,   timeLimit: 10, metric: 'collects' },
-  { id: 'orbit_3',    name: 'Orbit Rush',     desc: 'Get 3 orbiters',      target: 3,   timeLimit: 15, metric: 'orbiters' },
-  { id: 'pin_4',      name: 'Pin Blitz',      desc: 'Pin 4 items',         target: 4,   timeLimit: 12, metric: 'pins' },
-  { id: 'score_500',  name: 'Score Sprint',   desc: 'Score 500 points',    target: 500, timeLimit: 20, metric: 'score' },
-  { id: 'combo_5',    name: 'Combo Chain',    desc: 'Reach combo x5',      target: 5,   timeLimit: 8,  metric: 'combo' },
+const SPEEDRUN_POOL = [
+  { metric: 'collects', name: 'Speed Collect', gen: () => { const t = 2 + Math.floor(Math.random() * 7); return { target: t, timeLimit: 5 + t * 2, desc: `Collect ${t} toys` }; } },
+  { metric: 'orbiters', name: 'Orbit Rush',    gen: () => { const t = 2 + Math.floor(Math.random() * 4); return { target: t, timeLimit: 8 + t * 3, desc: `Get ${t} orbiters` }; } },
+  { metric: 'pins',     name: 'Pin Blitz',     gen: () => { const t = 2 + Math.floor(Math.random() * 5); return { target: t, timeLimit: 6 + t * 2, desc: `Pin ${t} items` }; } },
+  { metric: 'score',    name: 'Score Sprint',  gen: () => { const t = 200 + Math.floor(Math.random() * 800); return { target: t, timeLimit: 10 + Math.ceil(t / 40), desc: `Score ${t} points` }; } },
+  { metric: 'combo',    name: 'Combo Chain',   gen: () => { const t = 2 + Math.floor(Math.random() * 6); return { target: t, timeLimit: 5 + t * 2, desc: `Reach combo x${t}` }; } },
 ];
 
-export { CHALLENGES };
+function generateChallenge() {
+  const pick = SPEEDRUN_POOL[Math.floor(Math.random() * SPEEDRUN_POOL.length)];
+  const { target, timeLimit, desc } = pick.gen();
+  return { id: `${pick.metric}_${target}_${Date.now()}`, name: pick.name, desc, target, timeLimit, metric: pick.metric };
+}
 
 export function useSpeedrunChallenge(active, playSound) {
   const [challenge, setChallenge] = useState(null); // { ...def, startTime, progress, completed }
@@ -29,13 +26,10 @@ export function useSpeedrunChallenge(active, playSound) {
   const progressRef = useRef({});
   const completedRef = useRef({});
 
-  /** Start a random uncompleted challenge */
+  /** Start a random challenge (always fresh) */
   const startChallenge = useCallback(() => {
     if (challenge) return;
-    const available = CHALLENGES.filter(c => !completedRef.current[c.id]);
-    if (available.length === 0) return;
-    const pick = available[Math.floor(Math.random() * available.length)];
-    const c = { ...pick, startTime: Date.now(), progress: 0, completed: false };
+    const c = { ...generateChallenge(), startTime: Date.now(), progress: 0, completed: false };
     progressRef.current = { collects: 0, orbiters: 0, pins: 0, score: 0, combo: 0 };
     setChallenge(c);
     playSound?.('spawn');
@@ -49,7 +43,7 @@ export function useSpeedrunChallenge(active, playSound) {
         playSound?.('impact');
         return null;
       });
-    }, pick.timeLimit * 1000);
+    }, c.timeLimit * 1000);
   }, [challenge, playSound]);
 
   /** Update progress from game events */
@@ -114,6 +108,6 @@ export function useSpeedrunChallenge(active, playSound) {
     getTimeLeft,
     resetSpeedrun,
     completedCount,
-    totalChallenges: CHALLENGES.length
+    totalChallenges: null
   };
 }
