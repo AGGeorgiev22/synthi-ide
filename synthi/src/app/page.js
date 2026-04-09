@@ -332,7 +332,8 @@ export default function ModernHome() {
   const [playgroundScore, setPlaygroundScore] = useState(0);
   const [playgroundCombo, setPlaygroundCombo] = useState(0);
   const [playgroundCollectibles, setPlaygroundCollectibles] = useState(0);
-  const [playgroundSfxOn, setPlaygroundSfxOn] = useState(true);
+  const [playgroundSfxOn] = useState(true);
+  const [playgroundHumOn, setPlaygroundHumOn] = useState(false);
   const [playgroundHudMin, setPlaygroundHudMin] = useState(false);
   const [playgroundHudPosition, setPlaygroundHudPosition] = useState(null);
   const [playgroundHudDragging, setPlaygroundHudDragging] = useState(false);
@@ -411,12 +412,18 @@ export default function ModernHome() {
 
   /* Tutorial & Help */
   const [helpPanelOpen, setHelpPanelOpen] = useState(false);
+  const [utilityHintVisible, setUtilityHintVisible] = useState(false);
   const [pgBootLines, setPgBootLines] = useState([]); // playground boot sequence lines
   const [ghostHint, setGhostHint] = useState(null); // contextual floating hint
   const ghostHintShownRef = useRef({}); // track which hints have been shown
   const bootTimerRef = useRef(null);
   const ghostTimerRef = useRef(null);
+  const utilityHintTimerRef = useRef(null);
+  const utilityHintSeenRef = useRef(false);
   const [editorHelpOutput, setEditorHelpOutput] = useState(null); // man synthi output
+
+  const utilityHintEligible = playgroundCollectibles > 0;
+  const utilityHintActive = utilityHintVisible && !journalOpen && !helpPanelOpen;
 
   playgroundHudPositionRef.current = playgroundHudPosition;
 
@@ -444,7 +451,7 @@ export default function ModernHome() {
   }, [collection]);
   const constellations = useConstellationSystem(playgroundMode, playgroundBodiesRef, playgroundNodesRef, constellationCallback);
   const speedrun = useSpeedrunChallenge(playgroundMode, playPlaygroundSoundRef.current);
-  const ambient = useAmbientDrone(playgroundMode, playgroundSfxOn, weather.stage);
+  const ambient = useAmbientDrone(playgroundMode && playgroundHumOn, playgroundSfxOn, weather.stage);
   const voidDim = useVoidDimension(playgroundMode, playPlaygroundSoundRef.current);
   const dailySeed = useDailySeedChallenge(playgroundMode);
   const ghostReplay = useGhostReplay(playgroundMode);
@@ -773,6 +780,7 @@ export default function ModernHome() {
       if (cometRef.current) clearTimeout(cometRef.current);
       if (bootTimerRef.current) clearTimeout(bootTimerRef.current);
       if (ghostTimerRef.current) clearTimeout(ghostTimerRef.current);
+      if (utilityHintTimerRef.current) clearTimeout(utilityHintTimerRef.current);
     };
   }, []);
 
@@ -2098,6 +2106,33 @@ export default function ModernHome() {
       ghostTimerRef.current = setTimeout(() => setGhostHint(nextHint), delay);
     }
   }, [playgroundMode, ghostHint, playgroundStats]);
+
+  useEffect(() => {
+    if (!playgroundMode) {
+      if (utilityHintTimerRef.current) clearTimeout(utilityHintTimerRef.current);
+      setUtilityHintVisible(false);
+      return;
+    }
+    if (!utilityHintEligible) {
+      if (utilityHintTimerRef.current) clearTimeout(utilityHintTimerRef.current);
+      setUtilityHintVisible(false);
+      return;
+    }
+    if (journalOpen || helpPanelOpen) {
+      utilityHintSeenRef.current = true;
+      if (utilityHintTimerRef.current) clearTimeout(utilityHintTimerRef.current);
+      setUtilityHintVisible(false);
+      return;
+    }
+    if (utilityHintSeenRef.current) return;
+    if (utilityHintTimerRef.current) clearTimeout(utilityHintTimerRef.current);
+    utilityHintTimerRef.current = setTimeout(() => {
+      if (!utilityHintSeenRef.current) setUtilityHintVisible(true);
+    }, 2200);
+    return () => {
+      if (utilityHintTimerRef.current) clearTimeout(utilityHintTimerRef.current);
+    };
+  }, [helpPanelOpen, journalOpen, playgroundMode, utilityHintEligible]);
 
   useEffect(() => {
     if (!playgroundMode) return;
@@ -3676,6 +3711,16 @@ export default function ModernHome() {
                   <GripVertical size={10} />
                   <span>move</span>
                 </div>
+                <button
+                  className={`flex items-center gap-1 rounded-lg border px-2 py-0.5 text-[10px] font-mono transition-colors ${playgroundHumOn ? 'border-[#58A4B0]/40 bg-[#58A4B0]/10 text-[#58A4B0]' : 'border-white/10 text-slate-400 hover:text-white hover:border-white/20'}`}
+                  onClick={() => setPlaygroundHumOn(prev => !prev)}
+                  data-playground-control
+                  title={playgroundHumOn ? 'Disable ambient hum' : 'Enable ambient hum'}
+                  aria-label={playgroundHumOn ? 'Disable ambient hum' : 'Enable ambient hum'}
+                >
+                  {playgroundHumOn ? <Volume2 size={10} /> : <VolumeX size={10} />}
+                  <span>{playgroundHumOn ? 'hum on' : 'hum off'}</span>
+                </button>
                 <button className="px-2 py-0.5 rounded-lg border border-white/10 text-[10px] font-mono text-slate-400 hover:text-white hover:border-white/20 transition-colors" onClick={() => setPlaygroundHudMin(prev => !prev)} data-playground-control>
                   {playgroundHudMin ? '▲' : '▼'}
                 </button>
@@ -4037,12 +4082,25 @@ export default function ModernHome() {
             </div>
           ))}
 
+          {utilityHintActive && (
+            <div className="fixed bottom-16 left-4 z-[126] pointer-events-none" style={{ animation: 'playgroundHudIn 0.35s ease-out both' }}>
+              <div className="relative rounded-xl border border-[#58A4B0]/20 bg-[#081012]/92 px-3 py-2 shadow-xl backdrop-blur-xl">
+                <div className="flex items-center gap-2">
+                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#58A4B0]" style={{ animation: 'deployLivePulse 2s ease-in-out infinite' }} />
+                  <span className="text-[10px] font-mono text-[#58A4B0] tracking-wide">first anomaly logged.</span>
+                </div>
+                <div className="text-[9px] font-mono text-slate-400 mt-1">trophies, hints, strange docs ↙</div>
+                <div className="absolute left-8 top-full h-4 w-px bg-gradient-to-b from-[#58A4B0]/60 to-transparent" />
+              </div>
+            </div>
+          )}
+
           {/* ─── Journal toggle button ─── */}
           <button
             onClick={() => { setJournalOpen(prev => !prev); setJournalSnapshot(collection.getSnapshot()); }}
-            className="fixed bottom-4 left-4 z-[125] flex items-center gap-2 px-3 py-2 rounded-xl border border-[#58A4B0]/20 bg-[#0d1114]/90 backdrop-blur-xl shadow-xl hover:border-[#58A4B0]/40 transition-colors"
+            className={`fixed bottom-4 left-4 z-[125] flex items-center gap-2 px-3 py-2 rounded-xl border bg-[#0d1114]/90 backdrop-blur-xl shadow-xl transition-colors ${utilityHintActive ? 'border-[#58A4B0]/45 hover:border-[#58A4B0]/60' : 'border-[#58A4B0]/20 hover:border-[#58A4B0]/40'}`}
             data-playground-control
-            style={{ animation: 'playgroundHudIn 0.35s ease-out both' }}
+            style={{ animation: utilityHintActive ? 'playgroundHudIn 0.35s ease-out both, utilityDockPulse 1.8s ease-in-out infinite 0.45s' : 'playgroundHudIn 0.35s ease-out both' }}
           >
             <Trophy size={14} className="text-[#58A4B0]" />
             <span className="text-[10px] font-mono text-slate-300">{collection.count()}/{COLLECTIBLE_ITEMS.length}</span>
@@ -4051,9 +4109,9 @@ export default function ModernHome() {
           {/* ─── Help panel toggle ─── */}
           <button
             onClick={() => setHelpPanelOpen(prev => !prev)}
-            className="fixed bottom-4 left-[120px] z-[125] flex items-center gap-1.5 px-3 py-2 rounded-xl border border-white/10 bg-[#0d1114]/90 backdrop-blur-xl shadow-xl hover:border-emerald-500/30 transition-colors"
+            className={`fixed bottom-4 left-[120px] z-[125] flex items-center gap-1.5 px-3 py-2 rounded-xl border bg-[#0d1114]/90 backdrop-blur-xl shadow-xl transition-colors ${utilityHintActive ? 'border-emerald-500/35 hover:border-emerald-400/45' : 'border-white/10 hover:border-emerald-500/30'}`}
             data-playground-control
-            style={{ animation: 'playgroundHudIn 0.35s ease-out 0.1s both' }}
+            style={{ animation: utilityHintActive ? 'playgroundHudIn 0.35s ease-out 0.1s both, utilityDockPulse 1.8s ease-in-out infinite 0.75s' : 'playgroundHudIn 0.35s ease-out 0.1s both' }}
           >
             <span className="text-[10px] font-mono text-emerald-400/70">[?]</span>
             <span className="text-[10px] font-mono text-slate-500">man</span>
@@ -4976,6 +5034,10 @@ export default function ModernHome() {
         @keyframes playgroundHudIn {
           0% { transform: translateY(-10px) scale(0.98); opacity: 0; }
           100% { transform: translateY(0) scale(1); opacity: 1; }
+        }
+        @keyframes utilityDockPulse {
+          0%, 100% { transform: translateY(0) scale(1); box-shadow: 0 12px 28px rgba(0,0,0,0.18); }
+          50% { transform: translateY(-2px) scale(1.02); box-shadow: 0 0 0 6px rgba(88,164,176,0.08), 0 0 26px rgba(88,164,176,0.18); }
         }
         @keyframes playgroundBadge {
           0% { transform: translateY(-10px) scale(0.9); opacity: 0; }
