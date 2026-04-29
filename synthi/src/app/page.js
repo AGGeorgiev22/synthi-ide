@@ -281,7 +281,7 @@ const LANG_OUTPUTS = {
   TSX: "Dashboard rendered \u2014 3 charts loaded in 12ms",
   JavaScript: "Server listening on port 3000",
   Python: "INFO: Uvicorn running on http://0.0.0.0:8000 \u2014 200 OK",
-  Rust: "Compiling synthi-server v0.1.0 \u2014 Finished release in 0.04s",
+  Rust: "Compiling vectant-server v0.1.0 \u2014 Finished release in 0.04s",
   Go: "Build successful \u2014 running main.go",
   "Plain Text": "Output complete",
 };
@@ -427,7 +427,7 @@ export default function ModernHome() {
   const [deployTriggered, setDeployTriggered] = useState(false);
   const [deployTypedChars, setDeployTypedChars] = useState(0);
   const deployRef = useRef(null);
-  const deployCmd = 'synthi deploy --prod';
+  const deployCmd = 'vectant deploy --prod';
 
   /* Playground mode */
   const [playgroundMode, setPlaygroundMode] = useState(false);
@@ -558,7 +558,7 @@ export default function ModernHome() {
   const ghostTimerRef = useRef(null);
   const utilityHintTimerRef = useRef(null);
   const utilityHintSeenRef = useRef(false);
-  const [editorHelpOutput, setEditorHelpOutput] = useState(null); // man synthi output
+  const [editorHelpOutput, setEditorHelpOutput] = useState(null); // man vectant output
 
   const utilityHintEligible = playgroundCollectibles > 0;
   const utilityHintActive = utilityHintVisible && !journalOpen && !helpPanelOpen;
@@ -834,12 +834,12 @@ export default function ModernHome() {
       return;
     }
 
-    // man synthi / help command
-    if (playgroundMode && (command === 'help' || command === 'man synthi')) {
+    // man vectant / help command
+    if (playgroundMode && (command === 'help' || command === 'man vectant')) {
       setEditorHelpOutput([
-        '$ man synthi',
+        '$ man vectant',
         '',
-        'SYNTHI(1)         PLAYGROUND MANUAL         SYNTHI(1)',
+        'VECTANT(1)        PLAYGROUND MANUAL        VECTANT(1)',
         '',
         'SYNOPSIS',
         '  Physics sandbox with ' + COLLECTIBLE_ITEMS.length + ' embedded anomalies.',
@@ -944,8 +944,8 @@ export default function ModernHome() {
     const v = value.trim().toLowerCase();
     if (playgroundMode) {
       if (v === 'sudo collect') collection.onRootShell();
-      if (v === 'synthi') collection.onCommandPaletteSynthi();
-      if (v === 'help' || v === 'man synthi' || v === 'man') setHelpPanelOpen(true);
+      if (v === 'vectant') collection.onCommandPaletteSynthi();
+      if (v === 'help' || v === 'man vectant' || v === 'man') setHelpPanelOpen(true);
     }
     setShowCommandPalette(false);
     if (cmdPaletteTimerRef.current) clearTimeout(cmdPaletteTimerRef.current);
@@ -1023,9 +1023,9 @@ export default function ModernHome() {
 
   /* Boot sequence - 2.5s terminal animation before revealing page */
   const BOOT_LINES = useMemo(() => [
-    { text: '$ synthi init', delay: 0 },
+    { text: '$ vectant init', delay: 0 },
     { text: '  → Loading cloud runtime...', delay: 300 },
-    { text: '  → Connecting to Synthi Edge Network...', delay: 700 },
+    { text: '  → Connecting to Vectant Edge Network...', delay: 700 },
     { text: '  → AI modules ready', delay: 1100 },
     { text: '  → Workspace synced ✓', delay: 1500 },
     { text: '  → All systems operational', delay: 1900 },
@@ -2541,7 +2541,7 @@ export default function ModernHome() {
       nextHint = 'check the HUD. change gravity. break things.';
     } else if (!g.collide && g.pin && s.collisions > 2) {
       g.collide = true;
-      nextHint = `${COLLECTIBLE_ITEMS.length} anomalies are watching. type "man synthi" in the editor.`;
+      nextHint = `${COLLECTIBLE_ITEMS.length} anomalies are watching. type "man vectant" in the editor.`;
       delay = 1200;
     } else if (g.collide && s.collisions > 5 && !g.done) {
       g.done = true;
@@ -3842,7 +3842,7 @@ export default function ModernHome() {
   /**
    * Typewriter strings for hero
    */
-  const firstLine = "Welcome to Synthi.";
+  const firstLine = "Welcome to Vectant.";
   const secondLine = "The world's first ADE."
   /* ---------- Efficient scroll handling (single rAF-driven listener) ---------- */
   useEffect(() => {
@@ -4794,7 +4794,7 @@ export default function ModernHome() {
           {helpPanelOpen && (
             <div className="fixed bottom-16 left-4 z-[135] w-[340px] max-h-[60vh] overflow-y-auto rounded-2xl border border-emerald-500/15 bg-[#080c08]/95 backdrop-blur-xl shadow-2xl" data-playground-control style={{ animation: 'journalSlideIn 0.3s ease-out both' }}>
               <div className="sticky top-0 flex items-center justify-between px-4 py-3 border-b border-emerald-500/10 bg-[#080c08]/95 backdrop-blur-xl z-10">
-                <span className="text-sm font-mono font-bold text-emerald-400/80">$ man synthi</span>
+                <span className="text-sm font-mono font-bold text-emerald-400/80">$ man vectant</span>
                 <button onClick={() => setHelpPanelOpen(false)} className="text-slate-600 hover:text-emerald-400 text-xs font-mono">[x]</button>
               </div>
               <div className="p-4 space-y-4 text-[11px] font-mono text-slate-400">
@@ -4851,7 +4851,7 @@ export default function ModernHome() {
                   </ul>
                 </div>
                 <div className="pt-2 border-t border-emerald-500/10 text-[10px] text-slate-600">
-                  type &quot;man synthi&quot; in the editor for hidden protocols.
+                  type &quot;man vectant&quot; in the editor for hidden protocols.
                 </div>
               </div>
             </div>
@@ -5201,7 +5201,7 @@ export default function ModernHome() {
           <div className="w-full max-w-md px-8 space-y-4">
             <div className="flex items-center gap-2 mb-6">
               <Terminal className="text-[#58A4B0]" size={18} />
-              <span className="text-[#58A4B0] font-mono text-sm font-bold">synthi</span>
+              <span className="text-[#58A4B0] font-mono text-sm font-bold">vectant</span>
             </div>
             <div className="font-mono text-xs space-y-1.5" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
               {bootLines.map((line, i) => (
@@ -5924,13 +5924,12 @@ export default function ModernHome() {
       {/* Top nav */}
       <div className="fixed top-0 left-0 right-0 z-50 bg-[#131112]/80 backdrop-blur-md border-b border-[#E5E5E5]/5">
         <div className="px-8 py-4 flex items-center">
-          <div className="flex items-center gap-3 cursor-pointer select-none" onClick={handleLogoClick}>
+          <div className="flex items-center cursor-pointer select-none" onClick={handleLogoClick}>
             <img
-              src="/synthi-logo.svg"
-              alt="Synthi 26 Logo"
-              className="h-6 inline-block object-contain"
+              src="/Vectant-logo-full-black.svg"
+              alt="Vectant logo"
+              className="h-7 w-auto max-w-[180px] inline-block object-contain"
             />
-            <span className="text-[#E5E5E5] font-semibold text-sm -ml-2 -mt-2 tracking-tight">26'</span>
           </div>
           {/* Playground mode badge */}
           {playgroundMode && (
@@ -6248,7 +6247,7 @@ export default function ModernHome() {
                     <div className="ai-line-reveal mt-1">
                       <div className="flex">
                         <span className="w-8 text-right text-slate-600 select-none flex-shrink-0 pr-3">{editorLines.length + 1}</span>
-                        <span className="text-[#58A4B0]/50 italic">{`// ✦ Synthi AI: ${aiSuggestion.comment}`}</span>
+                        <span className="text-[#58A4B0]/50 italic">{`// ✦ Vectant AI: ${aiSuggestion.comment}`}</span>
                       </div>
                       <div className="flex">
                         <span className="w-8 text-right text-slate-600 select-none flex-shrink-0 pr-3">{editorLines.length + 2}</span>
@@ -6283,7 +6282,7 @@ export default function ModernHome() {
                     <span className="text-slate-500 w-6 text-right">1%</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="text-[#58A4B0]">Synthi Cloud</span>
+                    <span className="text-[#58A4B0]">Vectant Cloud</span>
                     <div className="w-16 h-1.5 bg-white/5 rounded-full overflow-hidden">
                       <div className={`h-full bg-[#58A4B0] rounded-full transition-all duration-300 ${isCompiling ? 'cpu-flare' : ''}`} style={{ width: `${cloudCpu}%` }} />
                     </div>
@@ -6318,7 +6317,7 @@ export default function ModernHome() {
                 </div>
               )}
 
-              {/* man synthi output */}
+              {/* man vectant output */}
               {editorHelpOutput && (
                 <div className="border-t border-emerald-500/20 bg-[#0a0f0a]" style={{ maxHeight: 320, overflowY: 'auto' }}>
                   <div className="px-4 py-3 font-mono text-xs space-y-0.5" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
@@ -6390,7 +6389,7 @@ export default function ModernHome() {
             >
               <br />
               <span className="text-3xl md:text-5xl text-slate-400">
-                Synthi is where <span className="text-[#58A4B0]">everybody</span> builds, <span className="inline-block relative whitespace-nowrap">
+                Vectant is where <span className="text-[#58A4B0]">everybody</span> builds, <span className="inline-block relative whitespace-nowrap">
                   faster
                   <svg
                     className={`absolute left-0 -bottom-2 w-full h-3 pointer-events-none ${businessVisible ? 'draw-line-animated' : ''}`}
@@ -6547,7 +6546,7 @@ export default function ModernHome() {
             <p className="text-slate-300 text-base mt-4 max-w-2xl mx-auto">
               No lock-in, no proprietary traps.
               Export or self-host your work at any time.
-              Synthi strengthens your workflow - without holding it hostage.
+              Vectant strengthens your workflow - without holding it hostage.
             </p>
           </div>
         </div>
@@ -6749,7 +6748,7 @@ export default function ModernHome() {
                     <div className="w-10 h-10 rounded-xl bg-[#58A4B0]/10 border border-[#58A4B0]/20 flex items-center justify-center cloud-pulse-mini">
                       <Cloud className="text-[#58A4B0]" size={18} />
                     </div>
-                    <span className="text-[8px] text-[#58A4B0] font-mono">synthi cloud</span>
+                    <span className="text-[8px] text-[#58A4B0] font-mono">vectant cloud</span>
                   </div>
                 </div>
               </div>
@@ -6831,7 +6830,7 @@ export default function ModernHome() {
                   <ChevronDown className={`text-slate-500 transition-transform duration-300 ${expandedCard === 'freedom' ? 'rotate-180' : ''}`} size={16} />
                 </div>
                 <div style={{ maxHeight: expandedCard === 'freedom' ? '80px' : '0', opacity: expandedCard === 'freedom' ? 1 : 0, overflow: 'hidden', transition: 'max-height 0.4s ease-out, opacity 0.3s ease-out' }}>
-                  <p className="text-slate-400 text-xs leading-relaxed">Synthi doesn&apos;t lock you in. Use Claude Code, Codex, or any AI tool you prefer - we integrate, not isolate.</p>
+                  <p className="text-slate-400 text-xs leading-relaxed">Vectant doesn&apos;t lock you in. Use Claude Code, Codex, or any AI tool you prefer - we integrate, not isolate.</p>
                 </div>
               </div>
             </div>
@@ -6965,12 +6964,12 @@ export default function ModernHome() {
                 </div>
               </div>
             </div>
-            {/* Right side: Synthi (clipped by slider position) */}
+            {/* Right side: Vectant (clipped by slider position) */}
             <div className="absolute inset-0 bg-[#0d1117]" style={{ clipPath: `inset(0 0 0 ${sliderPos}%)` }}>
               <div className="p-6 md:p-8 h-full flex flex-col justify-center">
                 <div className="flex items-center gap-2 mb-4">
                   <div className="w-2.5 h-2.5 rounded-full bg-emerald-400" />
-                  <span className="text-[#58A4B0] text-xs font-mono">Synthi Cloud</span>
+                  <span className="text-[#58A4B0] text-xs font-mono">Vectant Cloud</span>
                 </div>
                 <div className="space-y-3 font-mono text-sm">
                   <div className="flex items-center gap-2"><Clock size={12} className="text-emerald-400" /><span className="text-slate-400">Build time:</span><span className="text-emerald-400">0.18s</span></div>
@@ -7000,7 +6999,7 @@ export default function ModernHome() {
           <div className="text-center mb-12">
             <span className="text-[#58A4B0] font-mono text-xs tracking-widest uppercase mb-3 block">The honest comparison</span>
             <h2 className={`text-3xl md:text-5xl font-bold text-white tracking-tight relative inline-block ${comparisonVisible ? 'text-reveal' : 'text-reveal-hidden'}`}>
-              {'Synthi vs. the rest'.split('').map((c, i) => (
+              {'Vectant vs. the rest'.split('').map((c, i) => (
                 <span key={i} style={{ animationDelay: `${i * 40}ms` }}>{c === ' ' ? '\u00A0' : c}</span>
               ))}
               {/* Kernel Patch collectible */}
@@ -7021,7 +7020,7 @@ export default function ModernHome() {
               <thead>
                 <tr className="border-b border-white/[0.06] bg-white/[0.02]">
                   <th className="px-6 py-4 text-slate-400 font-medium">Feature</th>
-                  <th className="px-6 py-4 text-[#58A4B0] font-semibold">Synthi</th>
+                  <th className="px-6 py-4 text-[#58A4B0] font-semibold">Vectant</th>
                   <th className="px-6 py-4 text-slate-400 font-medium">VS Code</th>
                   <th className="px-6 py-4 text-slate-400 font-medium">Replit</th>
                 </tr>
@@ -7034,10 +7033,10 @@ export default function ModernHome() {
                   ['Real-time Collab', true, false, true],
                   ['Full Offline Mode', true, true, false],
                   ['Free Forever Tier', true, true, false],
-                ].map(([feature, synthi, vscode, replit], i) => (
+                ].map(([feature, vectant, vscode, replit], i) => (
                   <tr key={i} className="border-b border-white/[0.04] hover:bg-white/[0.02] transition-colors" style={{ transitionDelay: comparisonVisible ? `${i * 80}ms` : '0ms', opacity: comparisonVisible ? 1 : 0, transform: comparisonVisible ? 'translateX(0)' : 'translateX(-20px)', transition: 'opacity 0.5s ease-out, transform 0.5s ease-out' }}>
                     <td className="px-6 py-3.5 text-slate-300">{feature}</td>
-                    <td className="px-6 py-3.5">{synthi ? <Check size={16} className="text-emerald-400" /> : <span className="text-slate-600">-</span>}</td>
+                    <td className="px-6 py-3.5">{vectant ? <Check size={16} className="text-emerald-400" /> : <span className="text-slate-600">-</span>}</td>
                     <td className="px-6 py-3.5">{vscode ? <Check size={16} className="text-slate-400" /> : <span className="text-slate-600">-</span>}</td>
                     <td className="px-6 py-3.5">{replit ? <Check size={16} className="text-slate-400" /> : <span className="text-slate-600">-</span>}</td>
                   </tr>
@@ -7048,13 +7047,13 @@ export default function ModernHome() {
         </div>
       </div>
 
-      {/* ═══ Merge with Synthi - Migration Roadmap ═══ */}
+      {/* ═══ Merge with Vectant - Migration Roadmap ═══ */}
       <div ref={roadmapRef} className="relative z-10 px-6 md:px-20 py-20 md:py-28" style={getDragStyle('roadmap')} onMouseDown={(e) => playgroundDragStart('roadmap', e)} onTouchStart={(e) => playgroundDragStart('roadmap', e)}>
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-16">
             <span className="text-[#58A4B0] font-mono text-xs tracking-widest uppercase mb-3 block">Switch in minutes</span>
             <h2 className={`text-3xl md:text-5xl font-bold text-white tracking-tight ${roadmapVisible ? 'text-reveal' : 'text-reveal-hidden'}`}>
-              {'Merge with Synthi'.split('').map((c, i) => (
+              {'Merge with Vectant'.split('').map((c, i) => (
                 <span key={i} style={{ animationDelay: `${i * 40}ms` }}>{c === ' ' ? '\u00A0' : c}</span>
               ))}
             </h2>
@@ -7076,10 +7075,10 @@ export default function ModernHome() {
             {/* Vertical line */}
             <div className="absolute left-4 md:left-6 top-0 bottom-0 w-px bg-gradient-to-b from-[#58A4B0]/40 via-[#327464]/20 to-transparent" />
             {[
-              { step: '01', title: 'Sign up & open Synthi', desc: 'One click - your cloud workspace is ready in seconds. No installs, no setup.', done: true },
+              { step: '01', title: 'Sign up & open Vectant', desc: 'One click - your cloud workspace is ready in seconds. No installs, no setup.', done: true },
               { step: '02', title: 'Import your project', desc: 'Clone from Git, drag & drop a folder, or connect your existing repo. It just works.', done: true },
               { step: '03', title: 'Bring your extensions', desc: 'Install any VS Code extension via our VSIX tool. Your entire extension library carries over.', done: true },
-              { step: '04', title: 'Sync settings & keybinds', desc: 'Import your settings.json and keybindings. Synthi feels exactly like home.', done: true },
+              { step: '04', title: 'Sync settings & keybinds', desc: 'Import your settings.json and keybindings. Vectant feels exactly like home.', done: true },
               { step: '05', title: 'Build - faster than before', desc: 'Cloud compile kicks in automatically. Same project, dramatically faster builds.', done: true },
             ].map((item, i) => (
               <div key={i} {...getPlaygroundItemProps(`roadmap-${i}`)} className="relative pl-12 md:pl-16 pb-10 last:pb-0" style={withPlaygroundStyle(`roadmap-${i}`, { transitionDelay: roadmapVisible ? `${i * 150}ms` : '0ms', opacity: roadmapVisible ? 1 : 0, transform: roadmapVisible ? 'translateY(0)' : 'translateY(20px)', transition: 'opacity 0.6s ease-out, transform 0.6s ease-out' })}>
@@ -7104,7 +7103,7 @@ export default function ModernHome() {
           <div className="text-center mb-14">
             <span className="text-[#58A4B0] font-mono text-xs tracking-widest uppercase mb-3 block">Built for every builder</span>
             <h2 className={`text-3xl md:text-5xl font-bold text-white tracking-tight transition-all duration-1000 ${personasVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
-              Who is Synthi for?
+              Who is Vectant for?
             </h2>
             <p className={`text-slate-400 text-lg mt-4 max-w-2xl mx-auto transition-all duration-1000 delay-200 ${personasVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
               Whether you&apos;re shipping side projects or scaling to millions of users.
@@ -7128,7 +7127,7 @@ export default function ModernHome() {
                   <p className="text-slate-400 text-sm">Side projects & freelance</p>
                 </div>
                 <p className="text-slate-400 text-sm leading-relaxed">
-                  Stop waiting for builds on your laptop. Synthi compiles in the cloud so your hardware doesn&apos;t matter — ship side projects, freelance gigs, and experiments at full speed.
+                  Stop waiting for builds on your laptop. Vectant compiles in the cloud so your hardware doesn&apos;t matter — ship side projects, freelance gigs, and experiments at full speed.
                 </p>
                 <div className="space-y-3 pt-2">
                   {['Free forever tier', 'Instant cloud builds', 'AI pair programmer'].map((f, i) => (
@@ -7202,7 +7201,7 @@ export default function ModernHome() {
                   <p className="text-slate-400 text-sm">Scale with confidence</p>
                 </div>
                 <p className="text-slate-400 text-sm leading-relaxed">
-                  Zero tracking, no data training, full export anytime. Synthi gives your org cloud-native development infrastructure without vendor lock-in or compliance headaches.
+                  Zero tracking, no data training, full export anytime. Vectant gives your org cloud-native development infrastructure without vendor lock-in or compliance headaches.
                 </p>
                 <div className="space-y-3 pt-2">
                   {['Self-host option', 'Priority compilation', 'Advanced AI reasoning'].map((f, i) => (
@@ -7238,19 +7237,19 @@ export default function ModernHome() {
                   onKeyDown={(e) => { if (e.key === 'Enter') handleCmdPaletteSubmit(cmdPaletteInput); if (e.key === 'Escape') setShowCommandPalette(false); }}
                 />
               ) : (
-                <span className="text-white/40 text-sm font-mono flex-1">Synthi AI - what would you like to build?</span>
+                <span className="text-white/40 text-sm font-mono flex-1">Vectant AI - what would you like to build?</span>
               )}
               <kbd className="text-[10px] text-slate-500 bg-white/5 border border-white/10 rounded px-1.5 py-0.5 font-mono">Esc</kbd>
             </div>
             <div className="px-5 py-3 space-y-2">
               <div className="flex items-center gap-2 text-slate-400 text-xs font-mono">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                {playgroundMode ? 'Try: sudo collect, synthi' : 'Scanning workspace...'}
+                {playgroundMode ? 'Try: sudo collect, vectant' : 'Scanning workspace...'}
               </div>
               <div className="w-full h-0.5 bg-white/5 rounded-full overflow-hidden">
                 <div className="h-full bg-gradient-to-r from-[#58A4B0] to-[#327464] cmd-scan-bar rounded-full"></div>
               </div>
-              <div className="text-[10px] text-slate-600 font-mono mt-1">{playgroundMode ? 'Commands unlock collectibles.' : 'Try it when Synthi launches. Press Ctrl+K anytime.'}</div>
+              <div className="text-[10px] text-slate-600 font-mono mt-1">{playgroundMode ? 'Commands unlock collectibles.' : 'Try it when Vectant launches. Press Ctrl+K anytime.'}</div>
             </div>
           </div>
         </div>
@@ -7277,11 +7276,11 @@ export default function ModernHome() {
           </div>
           <div className="space-y-3">
             {[
-              { q: "Is Synthi really free?", a: "Yes. The Core plan is free forever - real-time analysis, cloud compilation, AI suggestions, collaboration, and unlimited projects. No credit card, no trials, no tricks." },
+              { q: "Is Vectant really free?", a: "Yes. The Core plan is free forever - real-time analysis, cloud compilation, AI suggestions, collaboration, and unlimited projects. No credit card, no trials, no tricks." },
               { q: "When does it launch?", a: "We're in closed alpha. Join the waitlist to secure early access - the first wave of invites goes out soon." },
-              { q: "Can I use my own AI tools?", a: "Absolutely. Synthi integrates with Claude Code, Codex, Cursor, and more. We're a platform, not a walled garden - use whatever makes you productive." },
+              { q: "Can I use my own AI tools?", a: "Absolutely. Vectant integrates with Claude Code, Codex, Cursor, and more. We're a platform, not a walled garden - use whatever makes you productive." },
               { q: "What about my data?", a: "Your code stays yours. No training on your data, no telemetry surprises. Export or self-host at any time - zero lock-in, guaranteed." },
-              { q: "What makes this different from VS Code or Cursor?", a: "Synthi compiles in the cloud, not on your machine. That means instant builds regardless of your hardware, native HMR for compiled languages, and AI that understands your entire project context - not just the open file." },
+              { q: "What makes this different from VS Code or Cursor?", a: "Vectant compiles in the cloud, not on your machine. That means instant builds regardless of your hardware, native HMR for compiled languages, and AI that understands your entire project context - not just the open file." },
             ].map((item, i) => (
               <div
                 key={i}
@@ -7385,7 +7384,7 @@ export default function ModernHome() {
       <footer className="relative z-10 py-8 pb-20 md:pb-8 border-t border-[#E5E5E5]/10">
         <div className="px-8 flex flex-col md:flex-row justify-between items-center text-center md:text-left gap-4">
           <p className="text-slate-400 text-sm">
-            <span className="text-white font-semibold">Expect soon.</span> Inquiries: dev@synthi.app
+            <span className="text-white font-semibold">Expect soon.</span> Inquiries: vectant.dev@gmail.com
           </p>
           <div className="flex items-center gap-4">
             <a href="/privacy" className="text-slate-500 hover:text-slate-300 text-xs transition-colors">Privacy</a>
@@ -7476,12 +7475,12 @@ export default function ModernHome() {
               )}
 
               <p className="text-slate-400 text-sm leading-relaxed" style={{ animation: 'shareBtnIn 0.4s ease-out 0.35s both' }}>
-                Share Synthi with friends to help us grow. The bigger the community, the sooner we launch.
+                Share Vectant with friends to help us grow. The bigger the community, the sooner we launch.
               </p>
 
               <div className="flex gap-2 justify-center pt-4">
                 <a
-                  href="https://twitter.com/intent/tweet?text=Just%20joined%20the%20waitlist%20for%20Synthi%20-%20the%20world%27s%20first%20Autonomous%20Development%20Environment.%20Cloud-compiled%2C%20AI-native.%20Check%20it%20out%3A%20https%3A%2F%2Fsynthi.app"
+                  href="https://twitter.com/intent/tweet?text=Just%20joined%20the%20waitlist%20for%20Vectant%20-%20the%20world%27s%20first%20Autonomous%20Development%20Environment.%20Cloud-compiled%2C%20AI-native.%20Check%20it%20out%3A%20https%3A%2F%2Fvectant.dev"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 px-5 py-2.5 bg-white/[0.05] border border-white/[0.08] rounded-xl text-sm text-slate-300 hover:bg-white/[0.1] hover:border-[#58A4B0]/40 hover:text-white transition-all duration-300 hover:scale-105"
@@ -7491,7 +7490,7 @@ export default function ModernHome() {
                   Post
                 </a>
                 <a
-                  href="https://www.linkedin.com/sharing/share-offsite/?url=https://synthi.app"
+                  href="https://www.linkedin.com/sharing/share-offsite/?url=https://vectant.dev"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 px-5 py-2.5 bg-white/[0.05] border border-white/[0.08] rounded-xl text-sm text-slate-300 hover:bg-white/[0.1] hover:border-[#58A4B0]/40 hover:text-white transition-all duration-300 hover:scale-105"
@@ -7501,7 +7500,7 @@ export default function ModernHome() {
                   Share
                 </a>
                 <button
-                  onClick={() => { navigator.clipboard.writeText('https://synthi.app'); toast.success('Link copied!'); }}
+                  onClick={() => { navigator.clipboard.writeText('https://vectant.dev'); toast.success('Link copied!'); }}
                   className="flex items-center gap-2 px-5 py-2.5 bg-white/[0.05] border border-white/[0.08] rounded-xl text-sm text-slate-300 hover:bg-white/[0.1] hover:border-[#58A4B0]/40 hover:text-white transition-all duration-300 hover:scale-105 cursor-pointer"
                   style={{ animation: 'shareBtnIn 0.4s ease-out 0.65s both' }}
                 >

@@ -2,8 +2,8 @@ import Link from "next/link";
 import { ArrowLeft, Lock, Eye, EyeOff, Database, Trash2, Scale, Baby, RefreshCw, Mail } from "lucide-react";
 
 export const metadata = {
-  title: "Privacy Policy - Synthi",
-  description: "Synthi's privacy policy. Zero tracking, no cookies, your code stays yours.",
+  title: "Privacy Policy - Vectant",
+  description: "Vectant's privacy policy. Zero tracking, no cookies, your code stays yours.",
 };
 
 export default function PrivacyPage() {
@@ -44,13 +44,13 @@ export default function PrivacyPage() {
               <h2 className="text-xl font-semibold text-white">Our Promise</h2>
             </div>
             <p>
-              Synthi is built by developers, for developers. We believe your code
+              Vectant is built by developers, for developers. We believe your code
               and data belong to you - full stop. We don&apos;t track you, we don&apos;t
               sell your data, and we don&apos;t train AI models on your code.
             </p>
             <p>
-              This policy applies to the Synthi website (synthi.app), the Synthi
-              cloud IDE, and any related services we operate. By using Synthi you
+              This policy applies to the Vectant website (vectant.dev), the Vectant
+              cloud IDE, and any related services we operate. By using Vectant you
               agree to the practices described here. If anything in this policy
               feels unclear, reach out - we&apos;re happy to explain in plain English.
             </p>
@@ -109,7 +109,7 @@ export default function PrivacyPage() {
               <div className="rounded-lg border border-white/[0.06] bg-white/[0.02] p-4 space-y-1">
                 <p className="text-white font-medium text-sm">Payment data</p>
                 <p className="text-slate-400 text-sm">
-                  If you subscribe to Synthi Pro, payments are processed by Stripe.
+                  If you subscribe to Vectant Pro, payments are processed by Stripe.
                   We never see or store your full card number. We only receive a
                   confirmation that payment succeeded and a reference ID for support
                   purposes. Stripe&apos;s privacy policy governs all payment data.
@@ -128,7 +128,7 @@ export default function PrivacyPage() {
             </div>
             <p>
               This is not a marketing claim. These are hard technical decisions
-              baked into how Synthi is built.
+              baked into how Vectant is built.
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
               {[
@@ -200,7 +200,7 @@ export default function PrivacyPage() {
                   Your code is never used to train, fine-tune, or improve any
                   machine-learning model. This is a hard rule, not a default you
                   have to opt out of. It will never change. If a future version of
-                  Synthi ever offers opt-in telemetry, it will be clearly labeled,
+                  Vectant ever offers opt-in telemetry, it will be clearly labeled,
                   off by default, and fully transparent about what is shared.
                 </p>
               </div>
@@ -281,10 +281,10 @@ export default function PrivacyPage() {
             <p>
               If you discover a security vulnerability, please report it to{" "}
               <a
-                href="mailto:security@synthi.app"
+                href="mailto:vectant.dev@gmail.com"
                 className="text-[#58A4B0] hover:underline"
               >
-                security@synthi.app
+                vectant.dev@gmail.com
               </a>
               . We take every report seriously and will respond within 48 hours.
             </p>
@@ -329,7 +329,7 @@ export default function PrivacyPage() {
               <h2 className="text-xl font-semibold text-white">Children&apos;s Privacy</h2>
             </div>
             <p>
-              Synthi is not directed at children under 13. We do not knowingly
+              Vectant is not directed at children under 13. We do not knowingly
               collect data from anyone under this age. If you believe a child
               has provided us with personal information, please contact us and
               we will promptly delete it.
@@ -364,10 +364,10 @@ export default function PrivacyPage() {
             <p>
               Want off the waitlist? Email{" "}
               <a
-                href="mailto:dev@synthi.app"
+                href="mailto:vectant.dev@gmail.com"
                 className="text-[#58A4B0] hover:underline"
               >
-                dev@synthi.app
+                vectant.dev@gmail.com
               </a>{" "}
               and we&apos;ll remove your email within 24 hours. Once the
               platform launches, you&apos;ll be able to delete your account and
@@ -387,20 +387,20 @@ export default function PrivacyPage() {
             <p>
               Questions about privacy? Reach us at{" "}
               <a
-                href="mailto:dev@synthi.app"
+                href="mailto:vectant.dev@gmail.com"
                 className="text-[#58A4B0] hover:underline"
               >
-                dev@synthi.app
+                vectant.dev@gmail.com
               </a>
               .
             </p>
             <p>
               Security concerns? Contact{" "}
               <a
-                href="mailto:security@synthi.app"
+                href="mailto:vectant.dev@gmail.com"
                 className="text-[#58A4B0] hover:underline"
               >
-                security@synthi.app
+                vectant.dev@gmail.com
               </a>
               .
             </p>

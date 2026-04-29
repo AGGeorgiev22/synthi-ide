@@ -44,13 +44,13 @@ async function sendConfirmationEmail(email) {
         Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        from: process.env.RESEND_FROM_EMAIL || "Synthi <noreply@synthi.app>",
+        from: process.env.RESEND_FROM_EMAIL || "Vectant <vectant.dev@gmail.com>",
         to: email,
-        subject: "You're on the Synthi waitlist!",
+        subject: "You're on the Vectant waitlist!",
         html: `<div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:32px;background:#131112;color:#e5e5e5;border-radius:12px;">
-          <h2 style="margin:0 0 16px;color:#58A4B0;">Welcome to Synthi</h2>
+          <h2 style="margin:0 0 16px;color:#58A4B0;">Welcome to Vectant</h2>
           <p style="line-height:1.6;color:#94a3b8;">You're on the waitlist for the world's first Autonomous Development Environment. We'll notify you when it's your turn.</p>
-          <p style="margin-top:24px;color:#94a3b8;font-size:13px;">— The Synthi Team</p>
+          <p style="margin-top:24px;color:#94a3b8;font-size:13px;">— The Vectant Team</p>
         </div>`,
       }),
     });

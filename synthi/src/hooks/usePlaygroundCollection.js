@@ -217,7 +217,7 @@ export function usePlaygroundCollection(onUnlock) {
       memoryLeakLetters: [],        // letters collected so far for Memory Leak
       memoryLeakNextIndex: 0,       // next letter index to spawn
       memoryLeakCurrentSpawnId: null, // active letter spawn ID
-      compilerKeyStep: 0,          // 0=not started, 1=clicked 7 stars, 2=typed synthi
+      compilerKeyStep: 0,          // 0=not started, 1=clicked 7 stars, 2=typed vectant
       cmdPaletteInput: '',         // captured typed text in command palette
       overflowClicked: false,
       // clue progression gates

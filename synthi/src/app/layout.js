@@ -18,29 +18,30 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Synthi - World's first ADE.",
+  title: "Vectant - World's first ADE.",
   description:
-    "Synthi is the world's first Autonomous Development Environment. Cloud-compiled, AI-native, and built so you can focus on ideas — not infrastructure.",
-  keywords: ["IDE", "cloud IDE", "ADE", "AI coding", "cloud compile", "developer tools", "Synthi"],
-  authors: [{ name: "Synthi" }],
-  metadataBase: new URL("https://synthi.app"),
+    "Vectant is the world's first Autonomous Development Environment. Cloud-compiled, AI-native, and built so you can focus on ideas — not infrastructure.",
+  keywords: ["IDE", "cloud IDE", "ADE", "AI coding", "cloud compile", "developer tools", "Vectant"],
+  authors: [{ name: "Vectant" }],
+  metadataBase: new URL("https://vectant.dev"),
   openGraph: {
-    title: "Synthi - World's first ADE.",
+    title: "Vectant - World's first ADE.",
     description:
       "Cloud-compiled, AI-native development. Build at instant — regardless of your hardware.",
-    url: "https://synthi.app",
-    siteName: "Synthi",
+    url: "https://vectant.dev",
+    siteName: "Vectant",
     type: "website",
     locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Synthi - World's first ADE.",
+    title: "Vectant - World's first ADE.",
     description:
       "Cloud-compiled, AI-native development. Build at instant — regardless of your hardware.",
   },
   icons: {
-    icon: "./src/app/favicon.ico",
+    icon: "/Vectant-logo-white.svg",
+    shortcut: "/Vectant-logo-white.svg",
   },
 }
 

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="16 0 72 64" fill="none" aria-label="Vectant mark">
+  <defs>
+    <linearGradient id="vm-full" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF3DBE"></stop>
+      <stop offset="35%" stop-color="#FF5C2A"></stop>
+      <stop offset="70%" stop-color="#7C5CFF"></stop>
+      <stop offset="100%" stop-color="#22D3EE"></stop>
+    </linearGradient>
+  </defs>
+  <path d="M30 12 H24 V52 H30" stroke="#ffffff" stroke-width="4" stroke-linecap="square" fill="none"></path>
+  <path d="M74 12 H80 V52 H74" stroke="#ffffff" stroke-width="4" stroke-linecap="square" fill="none"></path>
+  <path d="M18 6 H24 M18 6 V12" stroke="#FF3DBE" stroke-width="2" stroke-linecap="square" fill="none"></path>
+  <path d="M86 6 H80 M86 6 V12" stroke="#FF5C2A" stroke-width="2" stroke-linecap="square" fill="none"></path>
+  <path d="M18 58 H24 M18 58 V52" stroke="#22D3EE" stroke-width="2" stroke-linecap="square" fill="none"></path>
+  <path d="M86 58 H80 M86 58 V52" stroke="#7C5CFF" stroke-width="2" stroke-linecap="square" fill="none"></path>
+  <path d="M38 18 L52 44 L66 18" stroke="url(#vm-full)" stroke-width="6" stroke-linecap="square" fill="none"></path>
+</svg>
