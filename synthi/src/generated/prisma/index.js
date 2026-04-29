@@ -123,7 +123,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "C:\\Users\\HP\\Downloads\\synthi-ide\\synthi\\src\\generated\\prisma",
+      "value": "c:\\Users\\HP\\Downloads\\synthi-ide\\synthi\\src\\generated\\prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -137,11 +137,12 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "C:\\Users\\HP\\Downloads\\synthi-ide\\synthi\\prisma\\schema.prisma",
+    "sourceFilePath": "c:\\Users\\HP\\Downloads\\synthi-ide\\synthi\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
-    "rootEnvPath": null
+    "rootEnvPath": null,
+    "schemaEnvPath": "../../../.env"
   },
   "relativePath": "../../../prisma",
   "clientVersion": "6.17.0",

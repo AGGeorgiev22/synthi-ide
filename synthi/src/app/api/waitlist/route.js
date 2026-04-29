@@ -1,13 +1,38 @@
 import { PrismaClient } from "@/generated/prisma";
 import { NextResponse } from "next/server";
 
-const prisma = new PrismaClient();
+const globalForPrisma = globalThis;
+
+function getPrismaClient() {
+  if (!process.env.DATABASE_URL) {
+    return null;
+  }
+
+  try {
+    if (!globalForPrisma.__vectantPrisma) {
+      globalForPrisma.__vectantPrisma = new PrismaClient();
+    }
+  } catch (error) {
+    console.error("Prisma client initialization failed:", getErrorMessage(error));
+    return null;
+  }
+
+  return globalForPrisma.__vectantPrisma;
+}
 
 /* ── Simple in-memory rate limiter ── */
 const rateLimitMap = new Map();
 const RATE_LIMIT_WINDOW = 60 * 1000; // 1 minute
 const RATE_LIMIT_MAX = 5; // max 5 requests per window per IP
 
+
+  function getErrorMessage(error) {
+    if (error instanceof Error) {
+    return error.message;
+    }
+
+    return String(error);
+  }
 function isRateLimited(ip) {
   const now = Date.now();
   const entry = rateLimitMap.get(ip);
@@ -88,6 +113,15 @@ export async function POST(req) {
       );
     }
 
+    const prisma = getPrismaClient();
+
+    if (!prisma) {
+      return NextResponse.json(
+        { error: "Waitlist is unavailable until DATABASE_URL is configured." },
+        { status: 503 }
+      );
+    }
+
     // Try to find existing waitlist
     let waitlist = await prisma.waitlist.findFirst();
 
@@ -120,16 +154,17 @@ export async function POST(req) {
 
     // Send confirmation email (non-blocking, won't fail the request)
     sendConfirmationEmail(trimmedEmail);
-
+      console.error("Waitlist read error:", getErrorMessage(error));
     return NextResponse.json(
       { message: "Successfully added to waitlist", count: waitlist.emails.length },
       { status: 201 }
     );
 
   } catch (error) {
+    console.error("Waitlist write error:", error);
     return NextResponse.json(
-      { error: "Failed to add to waitlist" },
-      { status: 500 }
+      { error: "Waitlist is temporarily unavailable. Please try again later." },
+      { status: 503 }
     );
   }
 }
@@ -137,11 +172,20 @@ export async function POST(req) {
 
 export async function GET(req) {
     try {
+      const prisma = getPrismaClient();
+
+      if (!prisma) {
+        return NextResponse.json(
+          { message: "Waitlist unavailable in this environment", count: 0, emails: [] },
+          { status: 200 }
+        );
+      }
+
       const waitlist = await prisma.waitlist.findFirst();
   
       if (!waitlist) {
         return NextResponse.json(
-          { message: "No waitlist found", emails: [] },
+          { message: "No waitlist found", count: 0, emails: [] },
           { status: 200 }
         );
       }
@@ -155,10 +199,10 @@ export async function GET(req) {
       );
   
     } catch (error) {
-      console.error("Waitlist error:", error);
+      console.error("Waitlist read error:", error);
       return NextResponse.json(
-        { error: "Failed to retrieve waitlist" },
-        { status: 500 }
+        { message: "Waitlist temporarily unavailable", count: 0, emails: [] },
+        { status: 200 }
       );
     }
   }

@@ -7034,7 +7034,7 @@ export default function ModernHome() {
                   ['Full Offline Mode', true, true, false],
                   ['Free Forever Tier', true, true, false],
                 ].map(([feature, vectant, vscode, replit], i) => (
-                  <tr key={i} className="border-b border-white/[0.04] hover:bg-white/[0.02] transition-colors" style={{ transitionDelay: comparisonVisible ? `${i * 80}ms` : '0ms', opacity: comparisonVisible ? 1 : 0, transform: comparisonVisible ? 'translateX(0)' : 'translateX(-20px)', transition: 'opacity 0.5s ease-out, transform 0.5s ease-out' }}>
+                  <tr key={i} className="border-b border-white/[0.04] hover:bg-white/[0.02] transition-colors" style={{ opacity: comparisonVisible ? 1 : 0, transform: comparisonVisible ? 'translateX(0)' : 'translateX(-20px)', transition: `opacity 0.5s ease-out ${comparisonVisible ? i * 80 : 0}ms, transform 0.5s ease-out ${comparisonVisible ? i * 80 : 0}ms` }}>
                     <td className="px-6 py-3.5 text-slate-300">{feature}</td>
                     <td className="px-6 py-3.5">{vectant ? <Check size={16} className="text-emerald-400" /> : <span className="text-slate-600">-</span>}</td>
                     <td className="px-6 py-3.5">{vscode ? <Check size={16} className="text-slate-400" /> : <span className="text-slate-600">-</span>}</td>
@@ -7081,7 +7081,7 @@ export default function ModernHome() {
               { step: '04', title: 'Sync settings & keybinds', desc: 'Import your settings.json and keybindings. Vectant feels exactly like home.', done: true },
               { step: '05', title: 'Build - faster than before', desc: 'Cloud compile kicks in automatically. Same project, dramatically faster builds.', done: true },
             ].map((item, i) => (
-              <div key={i} {...getPlaygroundItemProps(`roadmap-${i}`)} className="relative pl-12 md:pl-16 pb-10 last:pb-0" style={withPlaygroundStyle(`roadmap-${i}`, { transitionDelay: roadmapVisible ? `${i * 150}ms` : '0ms', opacity: roadmapVisible ? 1 : 0, transform: roadmapVisible ? 'translateY(0)' : 'translateY(20px)', transition: 'opacity 0.6s ease-out, transform 0.6s ease-out' })}>
+              <div key={i} {...getPlaygroundItemProps(`roadmap-${i}`)} className="relative pl-12 md:pl-16 pb-10 last:pb-0" style={withPlaygroundStyle(`roadmap-${i}`, { opacity: roadmapVisible ? 1 : 0, transform: roadmapVisible ? 'translateY(0)' : 'translateY(20px)', transition: `opacity 0.6s ease-out ${roadmapVisible ? i * 150 : 0}ms, transform 0.6s ease-out ${roadmapVisible ? i * 150 : 0}ms` })}>
                 {/* Dot */}
                 <div className="absolute left-2.5 md:left-4.5 top-1.5 w-3 h-3 rounded-full border-2 bg-[#58A4B0] border-[#58A4B0]">
                   <div className="absolute inset-0 rounded-full" style={{ animation: 'timelineDotPing 2s ease-out infinite', animationDelay: `${i * 300}ms` }} />
