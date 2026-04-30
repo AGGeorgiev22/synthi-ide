@@ -154,7 +154,6 @@ export async function POST(req) {
 
     // Send confirmation email (non-blocking, won't fail the request)
     sendConfirmationEmail(trimmedEmail);
-      console.error("Waitlist read error:", getErrorMessage(error));
     return NextResponse.json(
       { message: "Successfully added to waitlist", count: waitlist.emails.length },
       { status: 201 }
