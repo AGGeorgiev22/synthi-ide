@@ -421,6 +421,7 @@ export default function ModernHome() {
   const [showShareModal, setShowShareModal] = useState(false);
   const [waitlistPosition, setWaitlistPosition] = useState(null);
   const [positionCountUp, setPositionCountUp] = useState(0);
+  const waitlistSignupRef = useRef(null);
 
   /* Deploy terminal animation */
   const [deployPhase, setDeployPhase] = useState(0); // 0=idle, 1=typing cmd, 2=logs1, 3=logs2, 4=logs3, 5=live, 6=confetti
@@ -4012,8 +4013,8 @@ export default function ModernHome() {
       error: (error) => error.message || "Something went wrong. Please try again.",
     });
   };
-  const scrollToBottom = () => {
-    window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "smooth" });
+  const scrollToWaitlist = () => {
+    waitlistSignupRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
   };
 
   /* ---------- Overlay opacity: darkens with scroll BUT never pure black ---------- */
@@ -6175,7 +6176,7 @@ export default function ModernHome() {
               style={{ transitionDelay: '600ms' }}
             >
               <button
-                onClick={scrollToBottom}
+                onClick={scrollToWaitlist}
                 onMouseMove={handleMagneticMove}
                 onMouseLeave={handleMagneticLeave}
                 className="group relative px-6 md:px-8 py-3.5 bg-white text-black font-semibold rounded-lg overflow-hidden transition-all duration-300 hover:-translate-y-1 cursor-pointer"
@@ -6467,7 +6468,7 @@ export default function ModernHome() {
                   ))}
                 </div>
                 <button
-                  onClick={scrollToBottom}
+                  onClick={scrollToWaitlist}
                   className="w-full py-3 rounded-lg border border-white/20 text-white font-semibold font-mono text-sm tracking-wide hover:bg-white/[0.05] transition-all duration-300 cursor-pointer"
                 >
                   Join Free
@@ -6524,7 +6525,7 @@ export default function ModernHome() {
                   ))}
                 </div>
                 <button
-                  onClick={scrollToBottom}
+                  onClick={scrollToWaitlist}
                   className="w-full py-3 rounded-lg bg-[#58A4B0] text-black font-semibold font-mono text-sm tracking-wide hover:bg-[#6BB8C4] transition-all duration-300 cursor-pointer"
                 >
                   Get Pro Access
@@ -6638,6 +6639,8 @@ export default function ModernHome() {
             {/* ── Waitlist - gradient glow border card ── */}
             <div
               {...getPlaygroundItemProps('feature-waitlist')}
+              id="waitlist-signup"
+              ref={waitlistSignupRef}
               className="spotlight-card group relative rounded-2xl overflow-hidden transition-all duration-300"
               onMouseMove={handleCardMouseMove}
             >
