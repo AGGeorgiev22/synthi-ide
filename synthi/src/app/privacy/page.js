@@ -8,37 +8,41 @@ export const metadata = {
 
 export default function PrivacyPage() {
   return (
-    <div className="min-h-screen bg-[#131112] text-[#E5E5E5]">
-      <div className="max-w-3xl mx-auto px-6 py-20 space-y-16">
-        <div>
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 text-slate-500 hover:text-[#58A4B0] transition-colors text-sm mb-10"
-          >
-            <ArrowLeft size={14} />
-            Back to home
-          </Link>
-          <h1 className="text-4xl md:text-5xl font-bold text-white tracking-tight mb-3">
-            Privacy Policy
-          </h1>
-          <p className="text-slate-500 text-sm">Last updated: April 2026</p>
-        </div>
+    <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-fg)]">
+      <section className="section">
+        <div className="section-inner max-w-3xl space-y-14">
+          <div>
+            <Link
+              href="/"
+              className="inline-flex items-center gap-2 text-[var(--color-fg-muted)] hover:text-[var(--brand)] transition-colors text-sm mb-10"
+            >
+              <ArrowLeft size={14} />
+              Back to home
+            </Link>
+            <h1
+              className="font-display font-semibold tracking-tight mb-3"
+              style={{ fontSize: 'var(--fs-display)', lineHeight: 1.05 }}
+            >
+              <span className="text-gradient">Privacy</span> Policy
+            </h1>
+            <p className="text-[var(--color-fg-dim)] text-sm font-mono uppercase tracking-[0.16em]">Last updated: April 2026</p>
+          </div>
 
-        {/* TL;DR banner */}
-        <div className="relative overflow-hidden rounded-xl border border-[#58A4B0]/20 bg-[#58A4B0]/[0.04] p-6">
-          <div className="absolute top-0 left-0 w-1 h-full bg-[#58A4B0]" />
-          <p className="text-sm font-medium text-white mb-2">TL;DR</p>
-          <p className="text-slate-400 text-sm leading-relaxed">
-            We collect your email when you join the waitlist and use cookie-free analytics for page views.
-            That&apos;s it. No tracking, no fingerprinting, no selling data, no training AI on your code. Ever.
-          </p>
-        </div>
+          {/* TL;DR banner */}
+          <div className="relative overflow-hidden rounded-[var(--r-lg)] border border-[var(--brand)]/25 bg-[var(--brand)]/[0.05] p-6">
+            <div className="absolute top-0 left-0 w-1 h-full bg-[var(--brand)]" />
+            <p className="text-sm font-medium text-white mb-2 font-mono uppercase tracking-[0.16em]">TL;DR</p>
+            <p className="text-[var(--color-fg-muted)] text-sm leading-relaxed">
+              We collect your email when you join the waitlist and use cookie-free analytics for page views.
+              That&apos;s it. No tracking, no fingerprinting, no selling data, no training AI on your code. Ever.
+            </p>
+          </div>
 
         <div className="space-y-14 text-slate-300 text-sm leading-relaxed">
           {/* Our Promise */}
           <section className="space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-[#58A4B0]/10 flex items-center justify-center flex-shrink-0">
+              <div className="w-9 h-9 rounded-[var(--r-md)] bg-[var(--brand)]/10 border border-[var(--brand)]/20 flex items-center justify-center flex-shrink-0">
                 <Lock size={16} className="text-[#58A4B0]" />
               </div>
               <h2 className="text-xl font-semibold text-white">Our Promise</h2>
@@ -59,7 +63,7 @@ export default function PrivacyPage() {
           {/* What We Collect */}
           <section className="space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-[#58A4B0]/10 flex items-center justify-center flex-shrink-0">
+              <div className="w-9 h-9 rounded-[var(--r-md)] bg-[var(--brand)]/10 border border-[var(--brand)]/20 flex items-center justify-center flex-shrink-0">
                 <Eye size={16} className="text-[#58A4B0]" />
               </div>
               <h2 className="text-xl font-semibold text-white">What We Collect</h2>
@@ -69,7 +73,7 @@ export default function PrivacyPage() {
               list - there is nothing else beyond this.
             </p>
             <div className="space-y-4 mt-4">
-              <div className="rounded-lg border border-white/[0.06] bg-white/[0.02] p-4 space-y-1">
+              <div className="surface-card p-4 space-y-1">
                 <p className="text-white font-medium text-sm">Waitlist email</p>
                 <p className="text-slate-400 text-sm">
                   When you join our waitlist, we store your email address solely to
@@ -78,7 +82,7 @@ export default function PrivacyPage() {
                   within 24 hours.
                 </p>
               </div>
-              <div className="rounded-lg border border-white/[0.06] bg-white/[0.02] p-4 space-y-1">
+              <div className="surface-card p-4 space-y-1">
                 <p className="text-white font-medium text-sm">Account information</p>
                 <p className="text-slate-400 text-sm">
                   When the platform launches, creating an account will require an
@@ -87,7 +91,7 @@ export default function PrivacyPage() {
                   any time from your account settings.
                 </p>
               </div>
-              <div className="rounded-lg border border-white/[0.06] bg-white/[0.02] p-4 space-y-1">
+              <div className="surface-card p-4 space-y-1">
                 <p className="text-white font-medium text-sm">Cookie-free analytics</p>
                 <p className="text-slate-400 text-sm">
                   We use Vercel&apos;s privacy-friendly, cookie-free analytics for
@@ -97,7 +101,7 @@ export default function PrivacyPage() {
                   useful so we can improve the product.
                 </p>
               </div>
-              <div className="rounded-lg border border-white/[0.06] bg-white/[0.02] p-4 space-y-1">
+              <div className="surface-card p-4 space-y-1">
                 <p className="text-white font-medium text-sm">Server logs</p>
                 <p className="text-slate-400 text-sm">
                   Standard web-server logs (IP address, user-agent, timestamps)
@@ -106,7 +110,7 @@ export default function PrivacyPage() {
                   They are never used for profiling, advertising, or analytics.
                 </p>
               </div>
-              <div className="rounded-lg border border-white/[0.06] bg-white/[0.02] p-4 space-y-1">
+              <div className="surface-card p-4 space-y-1">
                 <p className="text-white font-medium text-sm">Payment data</p>
                 <p className="text-slate-400 text-sm">
                   If you subscribe to Vectant Pro, payments are processed by Stripe.
@@ -121,7 +125,7 @@ export default function PrivacyPage() {
           {/* What We Don't Collect */}
           <section className="space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-[#58A4B0]/10 flex items-center justify-center flex-shrink-0">
+              <div className="w-9 h-9 rounded-[var(--r-md)] bg-[var(--brand)]/10 border border-[var(--brand)]/20 flex items-center justify-center flex-shrink-0">
                 <EyeOff size={16} className="text-[#58A4B0]" />
               </div>
               <h2 className="text-xl font-semibold text-white">What We Don&apos;t Collect</h2>
@@ -143,7 +147,7 @@ export default function PrivacyPage() {
               ].map((item, i) => (
                 <div
                   key={i}
-                  className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg border border-white/[0.05] bg-white/[0.015] text-slate-400 text-sm"
+                  className="surface-card flex items-center gap-2.5 px-3 py-2.5 text-[var(--color-fg-muted)] text-sm"
                 >
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 flex-shrink-0" />
                   {item}
@@ -155,7 +159,7 @@ export default function PrivacyPage() {
           {/* Your Code */}
           <section className="space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-[#58A4B0]/10 flex items-center justify-center flex-shrink-0">
+              <div className="w-9 h-9 rounded-[var(--r-md)] bg-[var(--brand)]/10 border border-[var(--brand)]/20 flex items-center justify-center flex-shrink-0">
                 <Database size={16} className="text-[#58A4B0]" />
               </div>
               <h2 className="text-xl font-semibold text-white">Your Code</h2>
@@ -165,7 +169,7 @@ export default function PrivacyPage() {
               Here is exactly how we handle it - no vague language, no fine print.
             </p>
             <div className="space-y-4 mt-4">
-              <div className="rounded-lg border border-white/[0.06] bg-white/[0.02] p-4 space-y-1">
+              <div className="surface-card p-4 space-y-1">
                 <p className="text-white font-medium text-sm">Compilation</p>
                 <p className="text-slate-400 text-sm">
                   Your code is sent to our cloud build servers, compiled, and the
@@ -175,7 +179,7 @@ export default function PrivacyPage() {
                   then automatically deleted.
                 </p>
               </div>
-              <div className="rounded-lg border border-white/[0.06] bg-white/[0.02] p-4 space-y-1">
+              <div className="surface-card p-4 space-y-1">
                 <p className="text-white font-medium text-sm">AI features</p>
                 <p className="text-slate-400 text-sm">
                   When you use AI-powered suggestions, the relevant code context is
@@ -185,7 +189,7 @@ export default function PrivacyPage() {
                   features entirely in your settings.
                 </p>
               </div>
-              <div className="rounded-lg border border-white/[0.06] bg-white/[0.02] p-4 space-y-1">
+              <div className="surface-card p-4 space-y-1">
                 <p className="text-white font-medium text-sm">Cloud workspace</p>
                 <p className="text-slate-400 text-sm">
                   Files in your cloud workspace are encrypted at rest (AES-256) and
@@ -194,7 +198,7 @@ export default function PrivacyPage() {
                   engineers do not have access to workspace contents.
                 </p>
               </div>
-              <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/[0.04] p-4 space-y-1">
+              <div className="rounded-[var(--r-md)] border border-emerald-500/25 bg-emerald-500/[0.05] p-4 space-y-1">
                 <p className="text-emerald-400 font-medium text-sm">No training - ever</p>
                 <p className="text-slate-400 text-sm">
                   Your code is never used to train, fine-tune, or improve any
@@ -204,7 +208,7 @@ export default function PrivacyPage() {
                   off by default, and fully transparent about what is shared.
                 </p>
               </div>
-              <div className="rounded-lg border border-white/[0.06] bg-white/[0.02] p-4 space-y-1">
+              <div className="surface-card p-4 space-y-1">
                 <p className="text-white font-medium text-sm">Export and delete</p>
                 <p className="text-slate-400 text-sm">
                   You can export your entire workspace as a zip archive at any time.
@@ -219,18 +223,18 @@ export default function PrivacyPage() {
           {/* Data Retention */}
           <section className="space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-[#58A4B0]/10 flex items-center justify-center flex-shrink-0">
+              <div className="w-9 h-9 rounded-[var(--r-md)] bg-[var(--brand)]/10 border border-[var(--brand)]/20 flex items-center justify-center flex-shrink-0">
                 <RefreshCw size={16} className="text-[#58A4B0]" />
               </div>
               <h2 className="text-xl font-semibold text-white">Data Retention</h2>
             </div>
             <p>Everything has an expiration date.</p>
-            <div className="overflow-hidden rounded-lg border border-white/[0.06] mt-4">
+            <div className="surface-card overflow-hidden mt-4">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-white/[0.06] bg-white/[0.02]">
-                    <th className="text-left text-slate-400 font-medium px-4 py-3">Data type</th>
-                    <th className="text-left text-slate-400 font-medium px-4 py-3">Retention</th>
+                  <tr className="border-b border-[var(--color-line)] bg-white/[0.03]">
+                    <th className="text-left text-[var(--color-fg-dim)] uppercase text-[11px] tracking-[0.16em] font-medium px-4 py-3">Data type</th>
+                    <th className="text-left text-[var(--color-fg-dim)] uppercase text-[11px] tracking-[0.16em] font-medium px-4 py-3">Retention</th>
                   </tr>
                 </thead>
                 <tbody className="text-slate-400">
@@ -262,7 +266,7 @@ export default function PrivacyPage() {
           {/* Security */}
           <section className="space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-[#58A4B0]/10 flex items-center justify-center flex-shrink-0">
+              <div className="w-9 h-9 rounded-[var(--r-md)] bg-[var(--brand)]/10 border border-[var(--brand)]/20 flex items-center justify-center flex-shrink-0">
                 <Lock size={16} className="text-[#58A4B0]" />
               </div>
               <h2 className="text-xl font-semibold text-white">Security</h2>
@@ -282,7 +286,7 @@ export default function PrivacyPage() {
               If you discover a security vulnerability, please report it to{" "}
               <a
                 href="mailto:vectant.dev@gmail.com"
-                className="text-[#58A4B0] hover:underline"
+                className="text-[var(--brand)] hover:underline"
               >
                 vectant.dev@gmail.com
               </a>
@@ -293,7 +297,7 @@ export default function PrivacyPage() {
           {/* Your Rights */}
           <section className="space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-[#58A4B0]/10 flex items-center justify-center flex-shrink-0">
+              <div className="w-9 h-9 rounded-[var(--r-md)] bg-[var(--brand)]/10 border border-[var(--brand)]/20 flex items-center justify-center flex-shrink-0">
                 <Scale size={16} className="text-[#58A4B0]" />
               </div>
               <h2 className="text-xl font-semibold text-white">Your Rights</h2>
@@ -323,7 +327,7 @@ export default function PrivacyPage() {
           {/* Children's Privacy */}
           <section className="space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-[#58A4B0]/10 flex items-center justify-center flex-shrink-0">
+              <div className="w-9 h-9 rounded-[var(--r-md)] bg-[var(--brand)]/10 border border-[var(--brand)]/20 flex items-center justify-center flex-shrink-0">
                 <Baby size={16} className="text-[#58A4B0]" />
               </div>
               <h2 className="text-xl font-semibold text-white">Children&apos;s Privacy</h2>
@@ -339,7 +343,7 @@ export default function PrivacyPage() {
           {/* Changes to This Policy */}
           <section className="space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-[#58A4B0]/10 flex items-center justify-center flex-shrink-0">
+              <div className="w-9 h-9 rounded-[var(--r-md)] bg-[var(--brand)]/10 border border-[var(--brand)]/20 flex items-center justify-center flex-shrink-0">
                 <RefreshCw size={16} className="text-[#58A4B0]" />
               </div>
               <h2 className="text-xl font-semibold text-white">Changes to This Policy</h2>
@@ -356,7 +360,7 @@ export default function PrivacyPage() {
           {/* Data Deletion */}
           <section className="space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-[#58A4B0]/10 flex items-center justify-center flex-shrink-0">
+              <div className="w-9 h-9 rounded-[var(--r-md)] bg-[var(--brand)]/10 border border-[var(--brand)]/20 flex items-center justify-center flex-shrink-0">
                 <Trash2 size={16} className="text-[#58A4B0]" />
               </div>
               <h2 className="text-xl font-semibold text-white">Data Deletion</h2>
@@ -365,7 +369,7 @@ export default function PrivacyPage() {
               Want off the waitlist? Email{" "}
               <a
                 href="mailto:vectant.dev@gmail.com"
-                className="text-[#58A4B0] hover:underline"
+                className="text-[var(--brand)] hover:underline"
               >
                 vectant.dev@gmail.com
               </a>{" "}
@@ -379,7 +383,7 @@ export default function PrivacyPage() {
           {/* Contact */}
           <section className="space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-[#58A4B0]/10 flex items-center justify-center flex-shrink-0">
+              <div className="w-9 h-9 rounded-[var(--r-md)] bg-[var(--brand)]/10 border border-[var(--brand)]/20 flex items-center justify-center flex-shrink-0">
                 <Mail size={16} className="text-[#58A4B0]" />
               </div>
               <h2 className="text-xl font-semibold text-white">Contact</h2>
@@ -388,7 +392,7 @@ export default function PrivacyPage() {
               Questions about privacy? Reach us at{" "}
               <a
                 href="mailto:vectant.dev@gmail.com"
-                className="text-[#58A4B0] hover:underline"
+                className="text-[var(--brand)] hover:underline"
               >
                 vectant.dev@gmail.com
               </a>
@@ -398,7 +402,7 @@ export default function PrivacyPage() {
               Security concerns? Contact{" "}
               <a
                 href="mailto:vectant.dev@gmail.com"
-                className="text-[#58A4B0] hover:underline"
+                className="text-[var(--brand)] hover:underline"
               >
                 vectant.dev@gmail.com
               </a>
@@ -410,6 +414,7 @@ export default function PrivacyPage() {
           </section>
         </div>
       </div>
+    </section>
     </div>
   );
 }

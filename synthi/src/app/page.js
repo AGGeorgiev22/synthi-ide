@@ -5220,8 +5220,7 @@ export default function ModernHome() {
       )}
 
       <style jsx global>{`
-        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
-        body { font-family: 'Space Grotesk', sans-serif; }
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap');
         @keyframes scroll-bounce {
           0%,100% { opacity: 0; transform: translateY(-6px); }
           50% { opacity: 1; transform: translateY(6px); }
@@ -5923,31 +5922,69 @@ export default function ModernHome() {
       `}</style>
 
       {/* Top nav */}
-      <div className="fixed top-0 left-0 right-0 z-50 bg-[#131112]/80 backdrop-blur-md border-b border-[#E5E5E5]/5">
-        <div className="px-8 py-4 flex items-center">
-          <div className="flex items-center cursor-pointer select-none" onClick={handleLogoClick}>
+      <header
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-out ${
+          scrollProgress > 1
+            ? 'bg-[#131112]/75 backdrop-blur-xl border-b border-[var(--color-line)]'
+            : 'bg-transparent border-b border-transparent'
+        }`}
+      >
+        <nav className="max-w-7xl mx-auto px-6 md:px-10 lg:px-16 h-16 flex items-center gap-6">
+          <div className="flex items-center cursor-pointer select-none shrink-0" onClick={handleLogoClick}>
             <img
               src="/Vectant-logo-full-black.svg"
               alt="Vectant logo"
-              className="h-7 w-auto max-w-[180px] inline-block object-contain"
+              className="h-6 w-auto max-w-[150px] inline-block object-contain"
             />
           </div>
-          {/* Playground mode badge */}
           {playgroundMode && (
-            <div className="ml-3 px-2.5 py-1 bg-[#58A4B0]/10 border border-[#58A4B0]/30 rounded-full text-[10px] font-mono text-[#58A4B0] tracking-wider" style={{ animation: 'playgroundBadge 0.3s ease-out' }}>
+            <div className="px-2.5 py-1 bg-[#58A4B0]/10 border border-[#58A4B0]/30 rounded-full text-[10px] font-mono text-[#58A4B0] tracking-wider" style={{ animation: 'playgroundBadge 0.3s ease-out' }}>
               PLAYGROUND
             </div>
           )}
-          {/* Ambient sound toggle */}
-          <button
-            onClick={toggleAmbient}
-            className="ml-auto text-slate-500 hover:text-[#58A4B0] transition-colors p-1.5 rounded-lg hover:bg-white/[0.04]"
-            aria-label={ambientOn ? 'Mute ambient sound' : 'Enable ambient sound'}
-          >
-            {ambientOn ? <Volume2 size={14} /> : <VolumeX size={14} />}
-          </button>
-        </div>
-      </div>
+          <div className="hidden md:flex items-center gap-1 mx-auto">
+            {SECTIONS.filter(s => s.id !== 'hero').map((s) => (
+              <button
+                key={s.id}
+                onClick={() => scrollToSection(s.id)}
+                data-active={activeSection === s.id}
+                className={`relative px-3 py-1.5 text-[13px] font-medium transition-colors duration-200 ${
+                  activeSection === s.id ? 'text-white' : 'text-[var(--color-fg-muted)] hover:text-white'
+                }`}
+              >
+                {s.label}
+                <span
+                  className={`absolute left-3 right-3 -bottom-1 h-px transition-opacity duration-200 ${
+                    activeSection === s.id ? 'opacity-100' : 'opacity-0'
+                  }`}
+                  style={{ background: 'linear-gradient(90deg, transparent, var(--brand), var(--brand-2), transparent)' }}
+                />
+              </button>
+            ))}
+            <a
+              href="/privacy"
+              className="px-3 py-1.5 text-[13px] font-medium text-[var(--color-fg-muted)] hover:text-white transition-colors duration-200"
+            >
+              Privacy
+            </a>
+          </div>
+          <div className="ml-auto md:ml-0 flex items-center gap-2 shrink-0">
+            <button
+              onClick={toggleAmbient}
+              className="text-slate-500 hover:text-[#58A4B0] transition-colors p-2 rounded-lg hover:bg-white/[0.04]"
+              aria-label={ambientOn ? 'Mute ambient sound' : 'Enable ambient sound'}
+            >
+              {ambientOn ? <Volume2 size={14} /> : <VolumeX size={14} />}
+            </button>
+            <button
+              onClick={scrollToWaitlist}
+              className="btn btn-primary btn-sm hidden sm:inline-flex"
+            >
+              Join Waitlist
+            </button>
+          </div>
+        </nav>
+      </header>
 
       {/* Floating rocket progress indicator */}
       <div
@@ -6119,21 +6156,24 @@ export default function ModernHome() {
         </div>
       </div>
 
+      {/* Hero mesh backdrop */}
+      <div aria-hidden className="bg-mesh" />
+
       {/* Main content - hero section */}
-      <div ref={heroRef} className="relative z-10 flex items-center justify-center min-h-screen px-6 md:px-12 lg:px-20">
+      <div ref={heroRef} className="relative z-10 flex items-center justify-center min-h-screen px-6 md:px-10 lg:px-16 pt-24">
         <div className="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-[1.15fr_1fr] gap-10 lg:gap-16 items-center">
           {/* Left: text content */}
           <div className="flex flex-col items-start">
             {/* Operational status indicator */}
             <div
-              className={`flex items-center gap-2 mb-2 ml-0.5 transition-all duration-700 ease-out ${bootPhase === 2 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
+              className={`flex items-center gap-2 mb-4 ml-0.5 transition-all duration-700 ease-out ${bootPhase === 2 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
               style={{ transitionDelay: '100ms' }}
             >
               <div className="relative">
                 <div className="w-2 h-2 rounded-full bg-emerald-400" />
                 <div className="absolute inset-0 w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
               </div>
-              <span className="text-emerald-400 text-sm font-medium">All systems operational</span>
+              <span className="text-emerald-400 text-xs font-medium tracking-wide">All systems operational</span>
               {/* Ghost Process collectible */}
               {playgroundMode && !collection.has('ghost_process') && (
                 <span
@@ -6148,15 +6188,21 @@ export default function ModernHome() {
             </div>
             {/* Headline with typewriter effect */}
             <div
-              className={`space-y-2 pr-12 transition-all duration-700 ease-out ${bootPhase === 2 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
+              className={`space-y-2 transition-all duration-700 ease-out ${bootPhase === 2 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
               style={{ transitionDelay: '200ms' }}
             >
-              <h1 className="text-xl sm:text-xl md:text-2xl lg:text-5xl font-bold bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent tracking-tight leading-[1.05]">
+              <h1
+                className="font-display font-semibold tracking-tight leading-[1.02] bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent"
+                style={{ fontSize: 'var(--fs-display)' }}
+              >
                 {typewriterText}
                 {!showSecondLine && typewriterText.length < firstLine.length && <span className="cursor-blink text-white">|</span>}
               </h1>
               {showSecondLine && (
-                <h1 className="text-xl sm:text-xl md:text-2xl lg:text-7xl font-bold bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent tracking-tight leading-[1.05]">
+                <h1
+                  className="font-display font-semibold tracking-tight leading-[1.02] text-gradient"
+                  style={{ fontSize: 'var(--fs-display)' }}
+                >
                   {secondLineText}
                   {!typewriterComplete && secondLineText.length < secondLine.length && <span className="cursor-blink text-white">|</span>}
                   {typewriterComplete && <span className="cursor-blink text-white">|</span>}
@@ -6165,25 +6211,30 @@ export default function ModernHome() {
             </div>
             {/* Subheading */}
             <p
-              className={`text-slate-400 text-lg md:text-xl mt-6 max-w-xl leading-relaxed transition-all duration-700 ease-out ${bootPhase === 2 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
-              style={{ transitionDelay: '400ms' }}
+              className={`mt-5 max-w-xl text-[var(--color-fg-muted)] transition-all duration-700 ease-out ${bootPhase === 2 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
+              style={{ transitionDelay: '400ms', fontSize: 'var(--fs-lead)', lineHeight: 1.6 }}
             >
               Built so you can focus on your ideas. It handles the rest itself. You&apos;ll love it.
             </p>
-            {/* Join waitlist button */}
+            {/* CTAs */}
             <div
-              className={`flex gap-4 mt-6 transition-all duration-700 ease-out ${bootPhase === 2 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
+              className={`flex flex-wrap items-center gap-3 mt-7 transition-all duration-700 ease-out ${bootPhase === 2 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
               style={{ transitionDelay: '600ms' }}
             >
               <button
                 onClick={scrollToWaitlist}
                 onMouseMove={handleMagneticMove}
                 onMouseLeave={handleMagneticLeave}
-                className="group relative px-6 md:px-8 py-3.5 bg-white text-black font-semibold rounded-lg overflow-hidden transition-all duration-300 hover:-translate-y-1 cursor-pointer"
-                style={{ transition: 'transform 0.2s ease-out' }}
+                className="btn btn-primary"
               >
-                <span className="relative z-10 font-mono text-sm tracking-wide">JOIN WAITLIST</span>
-                <div className="absolute inset-0 bg-gradient-to-r from-[#E5E5E5] to-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                Join Waitlist
+                <ArrowRight size={14} />
+              </button>
+              <button
+                onClick={() => sliderRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })}
+                className="btn btn-ghost"
+              >
+                See it in action
               </button>
             </div>
           </div>
@@ -6204,8 +6255,8 @@ export default function ModernHome() {
             )}
 
             <div
-              className={`relative bg-[#1A1A1A]/80 backdrop-blur-xl border rounded-2xl shadow-2xl overflow-hidden transition-all duration-300 ${borderPulse ? 'border-pulse border-[#58A4B0]/50' : 'border-white/10'}`}
-              style={{ boxShadow: `0 0 80px -20px ${langGlow}` }}
+              className={`relative bg-[#1A1A1A]/80 backdrop-blur-xl border overflow-hidden transition-all duration-300 ${borderPulse ? 'border-pulse border-[#58A4B0]/50' : 'border-white/10'}`}
+              style={{ borderRadius: 'var(--r-lg)', boxShadow: `0 30px 80px -30px rgba(0,0,0,0.7), 0 0 80px -20px ${langGlow}` }}
             >
               {/* Title bar: dots + detected language + run button */}
               <div className="flex items-center justify-between px-4 py-2.5 border-b border-white/5 bg-[#1A1A1A]/60">
@@ -6348,9 +6399,27 @@ export default function ModernHome() {
         </div>
       </div>
 
+      {/* ═══ Trusted Languages / Tools strip ═══ */}
+      <section className="relative z-10 section-tight">
+        <div className="section-inner text-center">
+          <span className="section-eyebrow">Works with everything you use</span>
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-2.5">
+            {['Rust', 'Go', 'TypeScript', 'Python', 'Swift', 'Kotlin', 'C++', 'Java', 'Claude Code', 'Codex', 'Cursor', 'GPT'].map((label) => (
+              <span
+                key={label}
+                className="pill font-mono text-[11px] tracking-wide"
+              >
+                {label}
+              </span>
+            ))}
+          </div>
+          <div className="divider-hairline mt-12" />
+        </div>
+      </section>
+
       {/* ═══ Animated Stats Counter Bar ═══ */}
-      <div ref={statsRef} className="relative z-10 py-16 px-6 md:px-20" style={getDragStyle('stats')} onMouseDown={(e) => playgroundDragStart('stats', e)} onTouchStart={(e) => playgroundDragStart('stats', e)}>
-        <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+      <section ref={statsRef} className="relative z-10 section-tight" style={getDragStyle('stats')} onMouseDown={(e) => playgroundDragStart('stats', e)} onTouchStart={(e) => playgroundDragStart('stats', e)}>
+        <div className="section-inner grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
           {STAT_TARGETS.map((stat, i) => (
             <div
               key={i}
@@ -6361,68 +6430,33 @@ export default function ModernHome() {
                 opacity: statsVisible ? undefined : 0,
               })}
             >
-              <div className="text-3xl md:text-4xl font-bold text-white font-mono">
+              <div className="font-mono font-bold text-white text-4xl md:text-5xl">
                 {stat.prefix}{stat.decimals > 0 ? counterValues[i].toFixed(stat.decimals) : counterValues[i]}{stat.suffix}
               </div>
-              <div className="text-slate-500 text-sm mt-1">{stat.label}</div>
+              <div className="mt-2 text-[11px] uppercase tracking-[0.18em] text-[var(--color-fg-dim)]">{stat.label}</div>
             </div>
           ))}
         </div>
-      </div>
+      </section>
 
-      {/* ═══ Section divider: Hero → Business ═══ */}
-      <div className="relative z-10 w-full overflow-hidden" style={{ height: 60 }}>
-        <svg className="w-full h-full" viewBox="0 0 1200 60" preserveAspectRatio="none" fill="none">
-          <path d="M0,30 C200,10 400,50 600,30 C800,10 1000,50 1200,30" stroke="url(#divGrad1)" strokeWidth="1" strokeDasharray="800" style={{ animation: businessVisible ? 'dividerDraw 2s ease-out forwards' : 'none', strokeDashoffset: 800 }} />
-          <defs><linearGradient id="divGrad1" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stopColor="rgba(88,164,176,0)" /><stop offset="50%" stopColor="rgba(88,164,176,0.3)" /><stop offset="100%" stopColor="rgba(88,164,176,0)" /></linearGradient></defs>
-        </svg>
-      </div>
+      {/* Section divider */}
+      <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-10 lg:px-16"><div className="divider-hairline" /></div>
 
       {/* Business Model */}
-      <div ref={businessRef} className="relative z-10 min-h-screen flex items-center justify-center px-6 md:px-20 py-20 md:py-32" style={getDragStyle('pricing')} onMouseDown={(e) => playgroundDragStart('pricing', e)} onTouchStart={(e) => playgroundDragStart('pricing', e)}>
-        <div className="max-w-7xl w-full space-y-16">
-          <div className="text-center space-y-6 relative">
+      <section ref={businessRef} className="relative z-10 section" style={getDragStyle('pricing')} onMouseDown={(e) => playgroundDragStart('pricing', e)} onTouchStart={(e) => playgroundDragStart('pricing', e)}>
+        <div className="section-inner space-y-14">
+          <div className="text-center relative">
             {renderBurst('business', businessVisible)}
+            <span className={`section-eyebrow transition-all duration-700 ${businessVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-3'}`}>Pricing</span>
             <h2
-              className={`text-4xl md:text-6xl font-bold text-[#E5E5E5] tracking-tight transition-all duration-1000 ${businessVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"
-                }`}
-              style={{ transitionDelay: "200ms" }}
+              className={`section-title mx-auto transition-all duration-1000 ${businessVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+              style={{ transitionDelay: '120ms' }}
             >
-              <br />
-              <span className="text-3xl md:text-5xl text-slate-400">
-                Vectant is where <span className="text-[#58A4B0]">everybody</span> builds, <span className="inline-block relative whitespace-nowrap">
-                  faster
-                  <svg
-                    className={`absolute left-0 -bottom-2 w-full h-3 pointer-events-none ${businessVisible ? 'draw-line-animated' : ''}`}
-                    viewBox="0 0 200 12"
-                    preserveAspectRatio="none"
-                  >
-                    <defs>
-                      <linearGradient id="underlineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                        <stop offset="0%" style={{ stopColor: '#58A4B0' }} />
-                        <stop offset="100%" style={{ stopColor: '#327464' }} />
-                      </linearGradient>
-                    </defs>
-                    <path
-                      d="M2,8 Q25,4 50,7 T100,8 T150,7 T198,8"
-                      fill="none"
-                      stroke="url(#underlineGradient)"
-                      strokeWidth="3"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeDasharray="1000"
-                      strokeDashoffset="1000"
-                      style={{ opacity: 1 }}
-                    />
-                  </svg>
-                </span>.
-              </span>
+              Pricing that scales <span className="text-gradient">with you.</span>
             </h2>
-
             <p
-              className={`text-slate-300 text-lg md:text-xl leading-relaxed max-w-3xl mx-auto transition-all duration-1000 ${businessVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"
-                }`}
-              style={{ transitionDelay: "400ms" }}
+              className={`section-sub-centered transition-all duration-1000 ${businessVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+              style={{ transitionDelay: '260ms' }}
             >
               Start building for free. Unlock advanced AI reasoning when you&apos;re ready to scale.
             </p>
@@ -6436,7 +6470,7 @@ export default function ModernHome() {
             {/* Free Tier */}
             <div
               {...getPlaygroundItemProps('pricing-core')}
-              className="pricing-card relative group bg-[#141414]/95 border border-white/[0.08] rounded-2xl p-10 hover:border-[#58A4B0]/30 transition-all duration-300"
+              className="pricing-card surface-card surface-card-hover relative group p-8 md:p-10"
               onMouseMove={handleCardMouseMove}
             >
               <div className="pricing-spotlight" />
@@ -6469,7 +6503,7 @@ export default function ModernHome() {
                 </div>
                 <button
                   onClick={scrollToWaitlist}
-                  className="w-full py-3 rounded-lg border border-white/20 text-white font-semibold font-mono text-sm tracking-wide hover:bg-white/[0.05] transition-all duration-300 cursor-pointer"
+                  className="btn btn-ghost w-full"
                 >
                   Join Free
                 </button>
@@ -6491,10 +6525,10 @@ export default function ModernHome() {
             {/* Premium Tier */}
             <div
               {...getPlaygroundItemProps('pricing-pro')}
-              className="pricing-card pro-card-border pro-tilt relative group bg-[#141414]/95 rounded-2xl p-10"
+              className="pricing-card pro-card-border pro-tilt surface-card relative group p-8 md:p-10"
               onMouseMove={handleProCardMouseMove}
               onMouseLeave={handleProCardMouseLeave}
-              style={withPlaygroundStyle('pricing-pro', { boxShadow: '0 0 80px -20px rgba(88, 164, 176, 0.25)' })}
+              style={withPlaygroundStyle('pricing-pro', { boxShadow: '0 30px 80px -30px rgba(88, 164, 176, 0.35)' })}
             >
               <div className="pricing-spotlight" />
               <div className="pricing-grid" />
@@ -6526,7 +6560,7 @@ export default function ModernHome() {
                 </div>
                 <button
                   onClick={scrollToWaitlist}
-                  className="w-full py-3 rounded-lg bg-[#58A4B0] text-black font-semibold font-mono text-sm tracking-wide hover:bg-[#6BB8C4] transition-all duration-300 cursor-pointer"
+                  className="btn btn-secondary w-full"
                 >
                   Get Pro Access
                 </button>
@@ -6551,33 +6585,29 @@ export default function ModernHome() {
             </p>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* ═══ Section divider: Business → Features ═══ */}
-      <div className="relative z-10 w-full overflow-hidden" style={{ height: 60 }}>
-        <svg className="w-full h-full" viewBox="0 0 1200 60" preserveAspectRatio="none" fill="none">
-          <path d="M0,30 Q300,5 600,30 Q900,55 1200,30" stroke="url(#divGrad2)" strokeWidth="1" strokeDasharray="800" style={{ animation: featuresVisible ? 'dividerDraw 2s ease-out forwards' : 'none', strokeDashoffset: 800 }} />
-          <defs><linearGradient id="divGrad2" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stopColor="rgba(50,116,100,0)" /><stop offset="50%" stopColor="rgba(50,116,100,0.3)" /><stop offset="100%" stopColor="rgba(50,116,100,0)" /></linearGradient></defs>
-        </svg>
-      </div>
+      {/* Section divider */}
+      <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-10 lg:px-16"><div className="divider-hairline" /></div>
 
       {/* Features - Bento Grid */}
-      <div
+      <section
         ref={featuresRef}
-        className="relative z-10 px-6 md:px-20 py-20 md:py-32"
+        className="relative z-10 section"
         style={getDragStyle('features')}
         onMouseDown={(e) => playgroundDragStart('features', e)}
         onTouchStart={(e) => playgroundDragStart('features', e)}
       >
-        <div className="max-w-7xl mx-auto space-y-12">
+        <div className="section-inner space-y-12">
           {/* Section header */}
-          <div className="text-center space-y-4 relative">
+          <div className="text-center relative">
             {renderBurst('features', featuresVisible)}
+            <span className={`section-eyebrow transition-all duration-700 ${featuresVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-3'}`}>Features</span>
             <h2
-              className={`text-4xl md:text-6xl font-bold text-white tracking-tight transition-all duration-1000 relative inline-block ${featuresVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
+              className={`section-title mx-auto transition-all duration-1000 ${featuresVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'} relative inline-block`}
+              style={{ transitionDelay: '120ms' }}
             >
-              Code <span className="text-[#327464]">Beyond Hardware</span>,<br />
-              {/* Phantom Deploy collectible */}
+              Build at the speed of <span className="text-gradient">thought.</span>
               {playgroundMode && !collection.has('phantom_deploy') && (
                 <span
                   onClick={(e) => { e.stopPropagation(); collection.onPhantomDeploy(); }}
@@ -6588,10 +6618,10 @@ export default function ModernHome() {
                   style={{ color: '#A78BFA', opacity: 0.12, animation: 'whisperFade 5s ease-in-out infinite' }}
                 >🚀</span>
               )}
-              <span className="inline-block mt-2">Build at Instant.</span>
             </h2>
             <p
-              className={`text-slate-400 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed transition-all duration-1000 delay-200 ${featuresVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
+              className={`section-sub-centered transition-all duration-1000 ${featuresVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+              style={{ transitionDelay: '260ms' }}
             >
               Your code, accelerated. AI that understands context, predicts errors, and delivers intelligent suggestions.
             </p>
@@ -6604,7 +6634,7 @@ export default function ModernHome() {
             {/* ── AI Pair Programmer - wide hero card ── */}
             <div
               {...getPlaygroundItemProps('feature-ai')}
-              className="spotlight-card md:col-span-2 group relative bg-[#141414] border border-white/[0.08] rounded-2xl overflow-hidden transition-all duration-300 hover:border-[#58A4B0]/30"
+              className="spotlight-card surface-card surface-card-hover md:col-span-2 group relative overflow-hidden"
               onMouseMove={handleCardMouseMove}
             >
               <div className="spotlight-overlay" />
@@ -6655,17 +6685,16 @@ export default function ModernHome() {
                   <input
                     type="email"
                     placeholder="Enter your email"
-                    className="w-full px-4 py-3 bg-white/[0.03] border border-white/[0.12] rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-[#58A4B0] focus:ring-1 focus:ring-[#58A4B0] transition-all duration-300 text-sm"
+                    className="input-base w-full text-sm placeholder-slate-500"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleSubmit(); } }}
                   />
                   <button
                     onClick={() => handleSubmit()}
-                    className="w-full group/btn relative px-5 py-2.5 bg-white text-black font-semibold rounded-lg overflow-hidden transition-all duration-300 hover:-translate-y-0.5 cursor-pointer"
+                    className="btn btn-primary btn-sm w-full"
                   >
-                    <span className="relative z-10 font-mono text-xs tracking-wide">JOIN WAITLIST</span>
-                    <div className="absolute inset-0 bg-gradient-to-r from-[#E5E5E5] to-white opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300" />
+                    Join Waitlist
                   </button>
                 </div>
                 <div className="flex items-center gap-2 text-slate-400 text-xs">
@@ -6683,7 +6712,7 @@ export default function ModernHome() {
             {/* ── Bugs Fixed - small card ── */}
             <div
               {...getPlaygroundItemProps('feature-bugs')}
-              className="spotlight-card group relative bg-[#141414] border border-white/[0.08] rounded-2xl overflow-hidden transition-all duration-300 hover:border-[#58A4B0]/30"
+              className="spotlight-card surface-card surface-card-hover group relative overflow-hidden"
               onMouseMove={handleCardMouseMove}
             >
               <div className="spotlight-overlay" />
@@ -6729,7 +6758,7 @@ export default function ModernHome() {
             {/* ── Cloud Compile - small card ── */}
             <div
               {...getPlaygroundItemProps('feature-cloud')}
-              className="spotlight-card group relative bg-[#141414] border border-white/[0.08] rounded-2xl overflow-hidden transition-all duration-300 hover:border-[#58A4B0]/30"
+              className="spotlight-card surface-card surface-card-hover group relative overflow-hidden"
               onMouseMove={handleCardMouseMove}
             >
               <div className="spotlight-overlay" />
@@ -6772,7 +6801,7 @@ export default function ModernHome() {
             {/* ── Collaboration - small card ── */}
             <div
               {...getPlaygroundItemProps('feature-collab')}
-              className="spotlight-card group relative bg-[#141414] border border-white/[0.08] rounded-2xl overflow-hidden transition-all duration-300 hover:border-[#58A4B0]/30"
+              className="spotlight-card surface-card surface-card-hover group relative overflow-hidden"
               onMouseMove={handleCardMouseMove}
             >
               <div className="spotlight-overlay" />
@@ -6807,7 +6836,7 @@ export default function ModernHome() {
             {/* ── AI Tools Freedom - small card ── */}
             <div
               {...getPlaygroundItemProps('feature-freedom')}
-              className="spotlight-card group relative bg-[#141414] border border-white/[0.08] rounded-2xl overflow-hidden transition-all duration-300 hover:border-[#58A4B0]/30"
+              className="spotlight-card surface-card surface-card-hover group relative overflow-hidden"
               onMouseMove={handleCardMouseMove}
             >
               <div className="spotlight-overlay" />
@@ -6841,7 +6870,7 @@ export default function ModernHome() {
             {/* ── HMR for Compiled Languages - wide card (live animation) ── */}
             <div
               {...getPlaygroundItemProps('feature-hmr')}
-              className="spotlight-card md:col-span-2 group relative bg-[#141414] border border-white/[0.08] rounded-2xl overflow-hidden transition-all duration-300 hover:border-[#58A4B0]/30"
+              className="spotlight-card surface-card surface-card-hover md:col-span-2 group relative overflow-hidden"
               onMouseMove={handleCardMouseMove}
             >
               <div className="spotlight-overlay" />
@@ -6901,26 +6930,39 @@ export default function ModernHome() {
             </div>
           </div>
         </div>
-      </div>
+      </section>
+
+      {/* Section divider */}
+      <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-10 lg:px-16"><div className="divider-hairline" /></div>
 
       {/* ═══ Language Showcase Carousel ═══ */}
-      <div className="relative z-10 px-6 md:px-20 py-20 md:py-28" style={getDragStyle('carousel')} onMouseDown={(e) => playgroundDragStart('carousel', e)} onTouchStart={(e) => playgroundDragStart('carousel', e)}>
-        <div className="max-w-5xl mx-auto">
+      <section className="relative z-10 section-tight" style={getDragStyle('carousel')} onMouseDown={(e) => playgroundDragStart('carousel', e)} onTouchStart={(e) => playgroundDragStart('carousel', e)}>
+        <div className="section-inner max-w-5xl">
           <div className="text-center mb-12">
-            <span className="text-[#58A4B0] font-mono text-xs tracking-widest uppercase mb-3 block">Polyglot by design</span>
-            <h2 className="text-3xl md:text-5xl font-bold text-white tracking-tight text-reveal">
+            <span className="section-eyebrow">Polyglot by design</span>
+            <h2 className="section-title text-reveal mt-3 inline-block">
               {'Any language. One IDE.'.split('').map((c, i) => (
                 <span key={i} style={{ animationDelay: `${i * 40}ms` }}>{c === ' ' ? '\u00A0' : c}</span>
               ))}
             </h2>
           </div>
-          <div {...getPlaygroundItemProps('language-showcase')} className="relative overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.02] backdrop-blur-sm">
+          <div {...getPlaygroundItemProps('language-showcase')} className="surface-card relative overflow-hidden">
             {/* Language tabs */}
-            <div className="flex border-b border-white/[0.06]">
+            <div className="flex border-b border-[var(--color-line)]">
               {LANG_SHOWCASE.map((lang, i) => (
-                <button key={lang.name} onClick={() => setLangIndex(i)} className={`flex-1 px-4 py-3 text-sm font-mono transition-all duration-300 ${langIndex === i ? 'text-white bg-white/[0.04]' : 'text-slate-500 hover:text-slate-300'}`}>
+                <button
+                  key={lang.name}
+                  onClick={() => setLangIndex(i)}
+                  className={`relative flex-1 px-4 py-3 text-sm font-mono transition-colors duration-300 ${
+                    langIndex === i ? 'text-white' : 'text-[var(--color-fg-muted)] hover:text-slate-200'
+                  }`}
+                >
                   <span className="inline-block w-2 h-2 rounded-full mr-2" style={{ backgroundColor: lang.color, opacity: langIndex === i ? 1 : 0.4 }} />
                   {lang.name}
+                  <span
+                    className={`absolute left-0 right-0 -bottom-px h-[2px] transition-opacity duration-300 ${langIndex === i ? 'opacity-100' : 'opacity-0'}`}
+                    style={{ background: 'var(--brand)' }}
+                  />
                 </button>
               ))}
             </div>
@@ -6936,18 +6978,18 @@ export default function ModernHome() {
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
       {/* ═══ Before / After IDE Slider ═══ */}
-      <div className="relative z-10 px-6 md:px-20 py-16 md:py-24" style={getDragStyle('slider')} onMouseDown={(e) => playgroundDragStart('slider', e)} onTouchStart={(e) => playgroundDragStart('slider', e)}>
-        <div className="max-w-4xl mx-auto">
+      <section className="relative z-10 section-tight" style={getDragStyle('slider')} onMouseDown={(e) => playgroundDragStart('slider', e)} onTouchStart={(e) => playgroundDragStart('slider', e)}>
+        <div className="section-inner max-w-4xl">
           <div className="text-center mb-10">
-            <span className="text-[#58A4B0] font-mono text-xs tracking-widest uppercase mb-3 block">See the difference</span>
-            <h2 className="text-3xl md:text-4xl font-bold text-white tracking-tight">Drag to compare</h2>
+            <span className="section-eyebrow">See the difference</span>
+            <h2 className="section-title mt-3">Drag to compare</h2>
           </div>
           <div
             ref={sliderRef}
-            className="relative overflow-hidden rounded-2xl border border-white/[0.06] h-[280px] md:h-[340px] select-none"
+            className="surface-card relative overflow-hidden h-[280px] md:h-[340px] select-none"
             onMouseDown={(e) => { setIsDragging(true); handleSliderDrag(e.clientX); }}
             onTouchStart={(e) => { setIsDragging(true); handleSliderDrag(e.touches[0].clientX); }}
           >
@@ -6994,14 +7036,14 @@ export default function ModernHome() {
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
       {/* ═══ Comparison Table ═══ */}
-      <div ref={comparisonRef} className="relative z-10 px-6 md:px-20 py-20 md:py-28" style={getDragStyle('comparison')} onMouseDown={(e) => playgroundDragStart('comparison', e)} onTouchStart={(e) => playgroundDragStart('comparison', e)}>
-        <div className="max-w-5xl mx-auto">
+      <section ref={comparisonRef} className="relative z-10 section-tight" style={getDragStyle('comparison')} onMouseDown={(e) => playgroundDragStart('comparison', e)} onTouchStart={(e) => playgroundDragStart('comparison', e)}>
+        <div className="section-inner max-w-5xl">
           <div className="text-center mb-12">
-            <span className="text-[#58A4B0] font-mono text-xs tracking-widest uppercase mb-3 block">The honest comparison</span>
-            <h2 className={`text-3xl md:text-5xl font-bold text-white tracking-tight relative inline-block ${comparisonVisible ? 'text-reveal' : 'text-reveal-hidden'}`}>
+            <span className="section-eyebrow">The honest comparison</span>
+            <h2 className={`section-title mt-3 relative inline-block ${comparisonVisible ? 'text-reveal' : 'text-reveal-hidden'}`}>
               {'Vectant vs. the rest'.split('').map((c, i) => (
                 <span key={i} style={{ animationDelay: `${i * 40}ms` }}>{c === ' ' ? '\u00A0' : c}</span>
               ))}
@@ -7018,14 +7060,14 @@ export default function ModernHome() {
               )}
             </h2>
           </div>
-          <div {...getPlaygroundItemProps('comparison-table')} className={`overflow-x-auto rounded-2xl border border-white/[0.06] transition-all duration-1000 ${comparisonVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
+          <div {...getPlaygroundItemProps('comparison-table')} className={`surface-card overflow-x-auto transition-all duration-1000 ${comparisonVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
             <table className="w-full text-left text-xs sm:text-sm min-w-[480px]">
               <thead>
-                <tr className="border-b border-white/[0.06] bg-white/[0.02]">
-                  <th className="px-6 py-4 text-slate-400 font-medium">Feature</th>
-                  <th className="px-6 py-4 text-[#58A4B0] font-semibold">Vectant</th>
-                  <th className="px-6 py-4 text-slate-400 font-medium">VS Code</th>
-                  <th className="px-6 py-4 text-slate-400 font-medium">Replit</th>
+                <tr className="border-b border-[var(--color-line)] bg-white/[0.03]">
+                  <th className="px-6 py-4 uppercase text-[11px] tracking-[0.16em] text-[var(--color-fg-dim)] font-medium">Feature</th>
+                  <th className="px-6 py-4 uppercase text-[11px] tracking-[0.16em] font-semibold"><span className="text-gradient">Vectant</span></th>
+                  <th className="px-6 py-4 uppercase text-[11px] tracking-[0.16em] text-[var(--color-fg-dim)] font-medium">VS Code</th>
+                  <th className="px-6 py-4 uppercase text-[11px] tracking-[0.16em] text-[var(--color-fg-dim)] font-medium">Replit</th>
                 </tr>
               </thead>
               <tbody>
@@ -7048,19 +7090,19 @@ export default function ModernHome() {
             </table>
           </div>
         </div>
-      </div>
+      </section>
 
       {/* ═══ Merge with Vectant - Migration Roadmap ═══ */}
-      <div ref={roadmapRef} className="relative z-10 px-6 md:px-20 py-20 md:py-28" style={getDragStyle('roadmap')} onMouseDown={(e) => playgroundDragStart('roadmap', e)} onTouchStart={(e) => playgroundDragStart('roadmap', e)}>
-        <div className="max-w-3xl mx-auto">
+      <section ref={roadmapRef} className="relative z-10 section" style={getDragStyle('roadmap')} onMouseDown={(e) => playgroundDragStart('roadmap', e)} onTouchStart={(e) => playgroundDragStart('roadmap', e)}>
+        <div className="section-inner max-w-3xl">
           <div className="text-center mb-16">
-            <span className="text-[#58A4B0] font-mono text-xs tracking-widest uppercase mb-3 block">Switch in minutes</span>
-            <h2 className={`text-3xl md:text-5xl font-bold text-white tracking-tight ${roadmapVisible ? 'text-reveal' : 'text-reveal-hidden'}`}>
+            <span className="section-eyebrow">Switch in minutes</span>
+            <h2 className={`section-title mt-3 ${roadmapVisible ? 'text-reveal' : 'text-reveal-hidden'}`}>
               {'Merge with Vectant'.split('').map((c, i) => (
                 <span key={i} style={{ animationDelay: `${i * 40}ms` }}>{c === ' ' ? '\u00A0' : c}</span>
               ))}
             </h2>
-            <p className={`text-slate-400 text-lg mt-4 transition-all duration-1000 delay-300 ${roadmapVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>Your workflow, your extensions, your settings - nothing left behind.</p>
+            <p className={`section-sub-centered transition-all duration-1000 delay-300 ${roadmapVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>Your workflow, your extensions, your settings - nothing left behind.</p>
             {/* Secret: Y2K Bug — hidden timestamp */}
             {playgroundMode && !collection.has('y2k_bug') && (
               <span
@@ -7096,19 +7138,17 @@ export default function ModernHome() {
             ))}
           </div>
         </div>
-      </div>
-
-
+      </section>
 
       {/* ═══ Who Is This For? — Persona Cards ═══ */}
-      <div ref={personasRef} className="relative z-10 px-6 md:px-20 py-20 md:py-28" style={getDragStyle('personas')} onMouseDown={(e) => playgroundDragStart('personas', e)} onTouchStart={(e) => playgroundDragStart('personas', e)}>
-        <div className="max-w-6xl mx-auto">
+      <section ref={personasRef} className="relative z-10 section" style={getDragStyle('personas')} onMouseDown={(e) => playgroundDragStart('personas', e)} onTouchStart={(e) => playgroundDragStart('personas', e)}>
+        <div className="section-inner max-w-6xl">
           <div className="text-center mb-14">
-            <span className="text-[#58A4B0] font-mono text-xs tracking-widest uppercase mb-3 block">Built for every builder</span>
-            <h2 className={`text-3xl md:text-5xl font-bold text-white tracking-tight transition-all duration-1000 ${personasVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
+            <span className="section-eyebrow">Built for every builder</span>
+            <h2 className={`section-title mt-3 transition-all duration-1000 ${personasVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
               Who is Vectant for?
             </h2>
-            <p className={`text-slate-400 text-lg mt-4 max-w-2xl mx-auto transition-all duration-1000 delay-200 ${personasVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+            <p className={`section-sub-centered transition-all duration-1000 delay-200 ${personasVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
               Whether you&apos;re shipping side projects or scaling to millions of users.
             </p>
           </div>
@@ -7116,7 +7156,7 @@ export default function ModernHome() {
             {/* Solo Devs */}
             <div
               {...getPlaygroundItemProps('persona-solo')}
-              className="pricing-card group relative bg-white/[0.03] rounded-2xl p-8"
+              className="pricing-card surface-card surface-card-hover group relative p-8"
               onMouseMove={handleCardMouseMove}
             >
               <div className="pricing-spotlight" />
@@ -7150,10 +7190,10 @@ export default function ModernHome() {
             {/* Startup Teams — featured card with animated border + 3D tilt */}
             <div
               {...getPlaygroundItemProps('persona-startup')}
-              className="pricing-card pro-card-border group relative bg-white/[0.03] rounded-2xl p-8"
+              className="pricing-card pro-card-border surface-card group relative p-8"
               onMouseMove={handleProCardMouseMove}
               onMouseLeave={handleProCardMouseLeave}
-              style={withPlaygroundStyle('persona-startup', { boxShadow: '0 0 80px -20px rgba(88, 164, 176, 0.2)', transitionDelay: personasVisible ? '100ms' : '0ms' })}
+              style={withPlaygroundStyle('persona-startup', { boxShadow: '0 30px 80px -30px rgba(88, 164, 176, 0.3)', transitionDelay: personasVisible ? '100ms' : '0ms' })}
             >
               <div className="pricing-spotlight" />
               <div className="pricing-grid" />
@@ -7189,7 +7229,7 @@ export default function ModernHome() {
             {/* Enterprise */}
             <div
               {...getPlaygroundItemProps('persona-enterprise')}
-              className="pricing-card group relative bg-white/[0.03] rounded-2xl p-8"
+              className="pricing-card surface-card surface-card-hover group relative p-8"
               onMouseMove={handleCardMouseMove}
               style={withPlaygroundStyle('persona-enterprise', { transitionDelay: personasVisible ? '200ms' : '0ms' })}
             >
@@ -7222,7 +7262,7 @@ export default function ModernHome() {
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
       {/* Command Palette Easter Egg (Ctrl+K) */}
       {showCommandPalette && (
@@ -7259,10 +7299,11 @@ export default function ModernHome() {
       )}
 
       {/* FAQ Section */}
-      <div ref={faqRef} className="relative z-10 px-6 md:px-20 py-20 md:py-32" style={getDragStyle('faq')} onMouseDown={(e) => playgroundDragStart('faq', e)} onTouchStart={(e) => playgroundDragStart('faq', e)}>
-        <div className="max-w-3xl mx-auto space-y-10">
-          <div className="text-center space-y-4">
-            <h2 className="text-3xl md:text-5xl font-bold text-white tracking-tight relative inline-block">Questions?
+      <section ref={faqRef} className="relative z-10 section" style={getDragStyle('faq')} onMouseDown={(e) => playgroundDragStart('faq', e)} onTouchStart={(e) => playgroundDragStart('faq', e)}>
+        <div className="section-inner max-w-3xl space-y-10">
+          <div className="text-center">
+            <span className="section-eyebrow">FAQ</span>
+            <h2 className="section-title mt-3 relative inline-block">Questions?
               {playgroundMode && !collection.has('four_oh_four') && (
                 <span
                   onClick={(e) => { e.stopPropagation(); collection.on404Click(); }}
@@ -7275,7 +7316,7 @@ export default function ModernHome() {
                 >?</span>
               )}
             </h2>
-            <p className="text-slate-400 text-lg">Quick answers to what you&apos;re probably wondering.</p>
+            <p className="section-sub-centered">Quick answers to what you&apos;re probably wondering.</p>
           </div>
           <div className="space-y-3">
             {[
@@ -7288,7 +7329,7 @@ export default function ModernHome() {
               <div
                 key={i}
                 {...getPlaygroundItemProps(`faq-${i}`)}
-                className="group bg-white/[0.02] border border-white/[0.06] rounded-xl overflow-hidden hover:border-[#58A4B0]/20 transition-colors duration-300 cursor-pointer"
+                className="group surface-card surface-card-hover overflow-hidden cursor-pointer"
                 onClick={() => setOpenFaq(openFaq === i ? null : i)}
                 role="button"
                 aria-expanded={openFaq === i}
@@ -7308,12 +7349,12 @@ export default function ModernHome() {
             ))}
           </div>
         </div>
-      </div>
+      </section>
 
       {/* No-tracking badge with tooltip */}
       <div className="relative z-10 flex justify-center pb-12">
         <div
-          className="badge-slide-up inline-flex items-center gap-2 bg-white/[0.03] border border-white/[0.06] rounded-full px-5 py-2.5 relative"
+          className="badge-slide-up surface-card inline-flex items-center gap-2 rounded-full px-5 py-2.5 relative"
           onMouseEnter={() => setBadgeTooltip(true)}
           onMouseLeave={() => setBadgeTooltip(false)}
         >
@@ -7359,7 +7400,7 @@ export default function ModernHome() {
 
       {/* ═══ Sticky Bottom CTA Bar ═══ */}
       <div className={`fixed bottom-0 left-0 right-0 z-40 transition-all duration-500 hidden md:block ${showStickyCta ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'}`} style={{ animation: showStickyCta ? 'stickySlideUp 0.5s ease-out' : 'none' }}>
-        <div className="bg-[#0a0a0a]/95 backdrop-blur-sm border-t border-white/[0.06]">
+        <div className="bg-[#0a0a0a]/85 backdrop-blur-xl border-t border-[var(--color-line)]">
           <div className="max-w-4xl mx-auto px-6 py-3 flex items-center justify-between gap-4">
             <span className="text-white text-sm font-medium hidden md:block">Ready to build the future?</span>
             <div className="flex-1 md:flex-none flex items-center gap-2">
@@ -7370,11 +7411,11 @@ export default function ModernHome() {
                 onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); if (stickyEmail.trim()) { handleSubmit(stickyEmail); setStickyEmail(''); } } }}
                 placeholder="your@email.com"
                 aria-label="Email for waitlist"
-                className="flex-1 md:w-56 bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-1.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#58A4B0]/40 transition-colors"
+                className="input-base flex-1 md:w-56 text-sm placeholder-slate-500"
               />
               <button
                 onClick={async () => { if (stickyEmail.trim()) { await handleSubmit(stickyEmail); setStickyEmail(''); }}}
-                className="bg-white text-black text-sm font-medium px-4 py-1.5 rounded-lg hover:opacity-90 transition-opacity flex items-center gap-1.5 whitespace-nowrap font-mono font-semibold uppercase tracking-wider"
+                className="btn btn-primary btn-sm whitespace-nowrap"
               >
                 Join <ArrowRight size={14} />
               </button>
@@ -7384,23 +7425,29 @@ export default function ModernHome() {
       </div>
 
       {/* Footer */}
-      <footer className="relative z-10 py-8 pb-20 md:pb-8 border-t border-[#E5E5E5]/10">
-        <div className="px-8 flex flex-col md:flex-row justify-between items-center text-center md:text-left gap-4">
-          <p className="text-slate-400 text-sm">
-            <span className="text-white font-semibold">Expect soon.</span> Inquiries: vectant.dev@gmail.com
-          </p>
-          <div className="flex items-center gap-4">
-            <a href="/privacy" className="text-slate-500 hover:text-slate-300 text-xs transition-colors">Privacy</a>
-            {/* LinkedIn social link */}
+      <footer className="relative z-10 border-t border-[var(--color-line)] pb-24 md:pb-10 pt-10">
+        <div className="max-w-7xl mx-auto px-6 md:px-10 lg:px-16 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+          <div className="flex flex-col gap-1">
+            <img
+              src="/Vectant-logo-full-black.svg"
+              alt="Vectant"
+              className="h-5 w-auto max-w-[120px] object-contain opacity-90"
+            />
+            <p className="text-[var(--color-fg-muted)] text-sm">
+              <span className="text-white font-medium">Expect soon.</span> Inquiries: vectant.dev@gmail.com
+            </p>
+          </div>
+          <div className="flex items-center gap-6">
+            <a href="/privacy" className="text-[var(--color-fg-muted)] hover:text-white text-xs transition-colors">Privacy</a>
             <a
               href="https://www.linkedin.com/in/amkolev"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 text-slate-400 hover:text-[#58A4B0] transition-all duration-300 hover:-translate-y-1"
+              className="flex items-center gap-2 text-[var(--color-fg-muted)] hover:text-[var(--brand)] transition-all duration-300 hover:-translate-y-0.5"
               aria-label="Follow on LinkedIn"
             >
-              <Linkedin size={20} />
-              <span className="hidden md:inline">Follow on LinkedIn</span>
+              <Linkedin size={18} />
+              <span className="hidden md:inline text-sm">LinkedIn</span>
             </a>
           </div>
         </div>
@@ -7557,7 +7604,7 @@ export default function ModernHome() {
       >
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          className="group flex items-center gap-2 bg-[#141414]/80 backdrop-blur-xl border border-white/[0.08] rounded-full pl-3 pr-4 py-2 text-slate-400 hover:text-[#58A4B0] hover:border-[#58A4B0]/30 transition-all duration-300 shadow-lg"
+          className="surface-card group flex items-center gap-2 rounded-full pl-3 pr-4 py-2 text-[var(--color-fg-muted)] hover:text-[var(--brand)] hover:border-[var(--brand)]/30 transition-all duration-300 shadow-lg"
           aria-label="Back to top"
         >
           <ArrowUp size={14} className="group-hover:-translate-y-0.5 transition-transform duration-200" />
@@ -7567,7 +7614,7 @@ export default function ModernHome() {
 
       {/* ═══ Mobile Dock Nav ═══ */}
       <div className="fixed bottom-3 left-1/2 -translate-x-1/2 z-50 md:hidden" style={{ animation: 'dockSlideUp 0.5s ease-out', opacity: scrollProgress > 3 ? 1 : 0, transition: 'opacity 0.3s' }}>
-        <div className="flex items-center gap-1 bg-[#131112]/95 backdrop-blur-sm border border-white/[0.08] rounded-full px-2 py-1.5 shadow-2xl">
+        <div className="surface-card flex items-center gap-1 rounded-full px-2 py-1.5 shadow-2xl">
           {[
             { id: 'hero', icon: Home, label: 'Home' },
             { id: 'business', icon: DollarSign, label: 'Pricing' },
