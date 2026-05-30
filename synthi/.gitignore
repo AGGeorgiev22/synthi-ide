@@ -38,3 +38,12 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# scratch / tooling artifacts
+.playwright-mcp/
+# loose screenshots dropped in the repo root during dev/verification
+/*.png
+/*.jpg
+/*.jpeg
+# prisma engine temp files left by an interrupted `prisma generate`
+src/generated/prisma/*.tmp*
+

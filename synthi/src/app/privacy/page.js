@@ -13,7 +13,7 @@ export default function PrivacyPage() {
         <div>
           <Link
             href="/"
-            className="inline-flex items-center gap-2 text-slate-500 hover:text-[#58A4B0] transition-colors text-sm mb-10"
+            className="inline-flex items-center gap-2 text-slate-500 hover:text-[#2DD4EE] transition-colors text-sm mb-10"
           >
             <ArrowLeft size={14} />
             Back to home
@@ -25,8 +25,8 @@ export default function PrivacyPage() {
         </div>
 
         {/* TL;DR banner */}
-        <div className="relative overflow-hidden rounded-xl border border-[#58A4B0]/20 bg-[#58A4B0]/[0.04] p-6">
-          <div className="absolute top-0 left-0 w-1 h-full bg-[#58A4B0]" />
+        <div className="relative overflow-hidden rounded-xl border border-[#2DD4EE]/20 bg-[#2DD4EE]/[0.04] p-6">
+          <div className="absolute top-0 left-0 w-1 h-full bg-[#2DD4EE]" />
           <p className="text-sm font-medium text-white mb-2">TL;DR</p>
           <p className="text-slate-400 text-sm leading-relaxed">
             We collect your email when you join the waitlist and use cookie-free analytics for page views.
@@ -38,8 +38,8 @@ export default function PrivacyPage() {
           {/* Our Promise */}
           <section className="space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-[#58A4B0]/10 flex items-center justify-center flex-shrink-0">
-                <Lock size={16} className="text-[#58A4B0]" />
+              <div className="w-8 h-8 rounded-lg bg-[#2DD4EE]/10 flex items-center justify-center flex-shrink-0">
+                <Lock size={16} className="text-[#2DD4EE]" />
               </div>
               <h2 className="text-xl font-semibold text-white">Our Promise</h2>
             </div>
@@ -59,8 +59,8 @@ export default function PrivacyPage() {
           {/* What We Collect */}
           <section className="space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-[#58A4B0]/10 flex items-center justify-center flex-shrink-0">
-                <Eye size={16} className="text-[#58A4B0]" />
+              <div className="w-8 h-8 rounded-lg bg-[#2DD4EE]/10 flex items-center justify-center flex-shrink-0">
+                <Eye size={16} className="text-[#2DD4EE]" />
               </div>
               <h2 className="text-xl font-semibold text-white">What We Collect</h2>
             </div>
@@ -121,8 +121,8 @@ export default function PrivacyPage() {
           {/* What We Don't Collect */}
           <section className="space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-[#58A4B0]/10 flex items-center justify-center flex-shrink-0">
-                <EyeOff size={16} className="text-[#58A4B0]" />
+              <div className="w-8 h-8 rounded-lg bg-[#2DD4EE]/10 flex items-center justify-center flex-shrink-0">
+                <EyeOff size={16} className="text-[#2DD4EE]" />
               </div>
               <h2 className="text-xl font-semibold text-white">What We Don&apos;t Collect</h2>
             </div>
@@ -155,8 +155,8 @@ export default function PrivacyPage() {
           {/* Your Code */}
           <section className="space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-[#58A4B0]/10 flex items-center justify-center flex-shrink-0">
-                <Database size={16} className="text-[#58A4B0]" />
+              <div className="w-8 h-8 rounded-lg bg-[#2DD4EE]/10 flex items-center justify-center flex-shrink-0">
+                <Database size={16} className="text-[#2DD4EE]" />
               </div>
               <h2 className="text-xl font-semibold text-white">Your Code</h2>
             </div>
@@ -219,8 +219,8 @@ export default function PrivacyPage() {
           {/* Data Retention */}
           <section className="space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-[#58A4B0]/10 flex items-center justify-center flex-shrink-0">
-                <RefreshCw size={16} className="text-[#58A4B0]" />
+              <div className="w-8 h-8 rounded-lg bg-[#2DD4EE]/10 flex items-center justify-center flex-shrink-0">
+                <RefreshCw size={16} className="text-[#2DD4EE]" />
               </div>
               <h2 className="text-xl font-semibold text-white">Data Retention</h2>
             </div>
@@ -262,8 +262,8 @@ export default function PrivacyPage() {
           {/* Security */}
           <section className="space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-[#58A4B0]/10 flex items-center justify-center flex-shrink-0">
-                <Lock size={16} className="text-[#58A4B0]" />
+              <div className="w-8 h-8 rounded-lg bg-[#2DD4EE]/10 flex items-center justify-center flex-shrink-0">
+                <Lock size={16} className="text-[#2DD4EE]" />
               </div>
               <h2 className="text-xl font-semibold text-white">Security</h2>
             </div>
@@ -282,7 +282,7 @@ export default function PrivacyPage() {
               If you discover a security vulnerability, please report it to{" "}
               <a
                 href="mailto:vectant.dev@gmail.com"
-                className="text-[#58A4B0] hover:underline"
+                className="text-[#2DD4EE] hover:underline"
               >
                 vectant.dev@gmail.com
               </a>
@@ -293,8 +293,8 @@ export default function PrivacyPage() {
           {/* Your Rights */}
           <section className="space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-[#58A4B0]/10 flex items-center justify-center flex-shrink-0">
-                <Scale size={16} className="text-[#58A4B0]" />
+              <div className="w-8 h-8 rounded-lg bg-[#2DD4EE]/10 flex items-center justify-center flex-shrink-0">
+                <Scale size={16} className="text-[#2DD4EE]" />
               </div>
               <h2 className="text-xl font-semibold text-white">Your Rights</h2>
             </div>
@@ -323,8 +323,8 @@ export default function PrivacyPage() {
           {/* Children's Privacy */}
           <section className="space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-[#58A4B0]/10 flex items-center justify-center flex-shrink-0">
-                <Baby size={16} className="text-[#58A4B0]" />
+              <div className="w-8 h-8 rounded-lg bg-[#2DD4EE]/10 flex items-center justify-center flex-shrink-0">
+                <Baby size={16} className="text-[#2DD4EE]" />
               </div>
               <h2 className="text-xl font-semibold text-white">Children&apos;s Privacy</h2>
             </div>
@@ -339,8 +339,8 @@ export default function PrivacyPage() {
           {/* Changes to This Policy */}
           <section className="space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-[#58A4B0]/10 flex items-center justify-center flex-shrink-0">
-                <RefreshCw size={16} className="text-[#58A4B0]" />
+              <div className="w-8 h-8 rounded-lg bg-[#2DD4EE]/10 flex items-center justify-center flex-shrink-0">
+                <RefreshCw size={16} className="text-[#2DD4EE]" />
               </div>
               <h2 className="text-xl font-semibold text-white">Changes to This Policy</h2>
             </div>
@@ -356,8 +356,8 @@ export default function PrivacyPage() {
           {/* Data Deletion */}
           <section className="space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-[#58A4B0]/10 flex items-center justify-center flex-shrink-0">
-                <Trash2 size={16} className="text-[#58A4B0]" />
+              <div className="w-8 h-8 rounded-lg bg-[#2DD4EE]/10 flex items-center justify-center flex-shrink-0">
+                <Trash2 size={16} className="text-[#2DD4EE]" />
               </div>
               <h2 className="text-xl font-semibold text-white">Data Deletion</h2>
             </div>
@@ -365,7 +365,7 @@ export default function PrivacyPage() {
               Want off the waitlist? Email{" "}
               <a
                 href="mailto:vectant.dev@gmail.com"
-                className="text-[#58A4B0] hover:underline"
+                className="text-[#2DD4EE] hover:underline"
               >
                 vectant.dev@gmail.com
               </a>{" "}
@@ -379,8 +379,8 @@ export default function PrivacyPage() {
           {/* Contact */}
           <section className="space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-[#58A4B0]/10 flex items-center justify-center flex-shrink-0">
-                <Mail size={16} className="text-[#58A4B0]" />
+              <div className="w-8 h-8 rounded-lg bg-[#2DD4EE]/10 flex items-center justify-center flex-shrink-0">
+                <Mail size={16} className="text-[#2DD4EE]" />
               </div>
               <h2 className="text-xl font-semibold text-white">Contact</h2>
             </div>
@@ -388,7 +388,7 @@ export default function PrivacyPage() {
               Questions about privacy? Reach us at{" "}
               <a
                 href="mailto:vectant.dev@gmail.com"
-                className="text-[#58A4B0] hover:underline"
+                className="text-[#2DD4EE] hover:underline"
               >
                 vectant.dev@gmail.com
               </a>
@@ -398,7 +398,7 @@ export default function PrivacyPage() {
               Security concerns? Contact{" "}
               <a
                 href="mailto:vectant.dev@gmail.com"
-                className="text-[#58A4B0] hover:underline"
+                className="text-[#2DD4EE] hover:underline"
               >
                 vectant.dev@gmail.com
               </a>
