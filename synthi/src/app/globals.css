@@ -346,6 +346,39 @@ body {
 /* While actively typing, hold the caret solid so it tracks the keystrokes. */
 .type-caret[data-typing="true"] { animation: none; opacity: 1; }
 
+/* ---- Brand marks: a scanning eye (observe) + a tapping pointer (act) ----
+   These animate the "eyes and hands" metaphor so the signature section reads as
+   alive: the iris sweeps as if reading the running program, a scan line passes,
+   and the pointer presses with a ripple. transform-box keeps SVG origins local.*/
+@keyframes vt-eye-scan {
+  0%, 100% { transform: translateX(-2.3px); }
+  50% { transform: translateX(2.3px); }
+}
+@keyframes vt-eye-line {
+  0%, 100% { transform: translateY(-3.4px); opacity: 0; }
+  20%, 80% { opacity: 1; }
+  50% { transform: translateY(3.4px); }
+}
+@keyframes vt-eye-pulse {
+  0%, 100% { opacity: 0.85; }
+  50% { opacity: 0.35; }
+}
+.eye-scan { transform-box: fill-box; transform-origin: center; animation: vt-eye-scan 4.2s ease-in-out infinite; }
+.eye-line { transform-box: fill-box; transform-origin: center; animation: vt-eye-line 4.2s ease-in-out infinite; }
+.eye-pulse { animation: vt-eye-pulse 2.1s ease-in-out infinite; }
+
+@keyframes vt-hand-tap {
+  0%, 62%, 100% { transform: translate(0, 0); }
+  74% { transform: translate(1.6px, 1.8px); }
+}
+@keyframes vt-hand-ripple {
+  0%, 64% { opacity: 0; transform: scale(0.35); }
+  74% { opacity: 0.7; }
+  100% { opacity: 0; transform: scale(1.5); }
+}
+.hand-tap { transform-box: fill-box; transform-origin: 70% 70%; animation: vt-hand-tap 3.6s var(--ease-out-soft) infinite; }
+.hand-ripple { transform-box: fill-box; transform-origin: center; animation: vt-hand-ripple 3.6s var(--ease-out-soft) infinite; }
+
 /* ---- Staggered word fade-up for the static headline lead-in ---- */
 @keyframes vt-word-up {
   from { opacity: 0; transform: translateY(0.42em); filter: blur(4px); }
@@ -596,7 +629,10 @@ html.light .spotlight {
   .word-up { opacity: 1 !important; animation: none !important; transform: none !important; filter: none !important; }
   .type-caret { animation: none !important; opacity: 1; }
   .float-slow, .pulse-ok, .marquee-track, .aurora, .flow-path,
-  .presence-pulse, .rise, .co-caret, .vt-rocket { animation: none !important; }
+  .presence-pulse, .rise, .co-caret, .vt-rocket,
+  .eye-scan, .eye-line, .eye-pulse, .hand-tap, .hand-ripple { animation: none !important; }
+  .eye-scan, .eye-line { transform: none !important; }
+  .eye-line, .hand-ripple { opacity: 0 !important; }
   .scan-sweep::after { animation: none; display: none; }
   .sheen::before { display: none; }
   .caret::after { animation: none; }

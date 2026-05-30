@@ -1,7 +1,8 @@
 "use client";
 
-import { Eye, Hand, Cloud } from "lucide-react";
+import { Cloud } from "lucide-react";
 import { Reveal, SectionHeading } from "@/components/Section";
+import { ScanEye, ActHand } from "@/components/BrandMarks";
 import { VectantMark } from "@/components/Logo";
 import { cn } from "@/lib/utils";
 
@@ -39,7 +40,7 @@ export function EyesAndHands() {
             <div className="pointer-events-none absolute -left-16 -top-16 h-44 w-44 accent-glow blur-2xl opacity-50" />
             <div className="mb-5 flex items-center gap-3">
               <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-cyan/30 bg-cyan/[0.06] text-cyan">
-                <Eye size={18} />
+                <ScanEye size={19} />
               </span>
               <div>
                 <h3 className="text-[17px] font-semibold text-ink">Eyes</h3>
@@ -89,7 +90,7 @@ export function EyesAndHands() {
             <div className="pointer-events-none absolute -right-16 -top-16 h-44 w-44 accent-glow blur-2xl opacity-50" />
             <div className="mb-5 flex items-center gap-3">
               <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-violet/30 bg-violet/[0.06] text-violet">
-                <Hand size={18} />
+                <ActHand size={19} />
               </span>
               <div>
                 <h3 className="text-[17px] font-semibold text-ink">Hands</h3>
