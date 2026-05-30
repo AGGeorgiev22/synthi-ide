@@ -56,7 +56,7 @@ export function StatBand() {
 
 function Stat({ value, label }) {
   return (
-    <div className="flex flex-col items-center gap-1 px-6 py-10 text-center sm:py-12">
+    <div className="flex flex-col items-center gap-1 px-6 py-12 text-center sm:py-14">
       <div className={cn("stat-num font-display text-[40px] font-semibold leading-none tracking-[-0.03em] sm:text-[52px]")}>
         {value}
       </div>

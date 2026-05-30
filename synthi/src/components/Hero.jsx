@@ -132,7 +132,7 @@ export function Hero() {
   const tailWord = tailSpace >= 0 ? tailText.slice(tailSpace + 1) : tailText;
 
   return (
-    <section id="top" className="relative overflow-hidden pt-28 sm:pt-32">
+    <section id="top" className="relative overflow-hidden pt-36 sm:pt-40">
       {/* backdrop - warm mesh + spotlight + grain, no graph-paper grid */}
       <div className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute inset-0 spotlight" />
