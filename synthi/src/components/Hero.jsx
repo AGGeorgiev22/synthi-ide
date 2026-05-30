@@ -29,6 +29,25 @@ const LANGS = [
   "C#", "Ruby", "Zig", "CUDA", "Metal", "WebGPU", "Unity", "Unreal", "WASM",
 ];
 
+// The last word of the headline tail, with a squiggle that sits directly under
+// it (so the accent tracks whichever phrase is on screen instead of a fixed
+// spot). `drawn` is controlled by the caller: true while the phrase holds, false
+// the moment it starts deleting, so the underline un-draws as the word erases.
+function HeadlineWord({ text, drawn, drawMs }) {
+  return (
+    <span className="serif-accent text-gradient relative inline-block whitespace-nowrap align-baseline">
+      {/* zero-width space keeps the box (and caret height) during the pause */}
+      {text || "​"}
+      <Squiggle
+        drawn={drawn}
+        drawMs={drawMs}
+        strokeWidth={2.6}
+        className="pointer-events-none absolute inset-x-0 top-[0.92em] h-[0.17em] text-cyan/85"
+      />
+    </span>
+  );
+}
+
 export function Hero() {
   const reduced = useReducedMotion();
   const [holderRef, active] = useActive("0px 0px -20% 0px");
@@ -106,6 +125,12 @@ export function Hero() {
     };
   }, [reduced, active]);
 
+  // Split the visible tail so the squiggle underlines only the last word.
+  const tailText = showTypewriter ? typed : "trust your agents.";
+  const tailSpace = tailText.lastIndexOf(" ");
+  const tailHead = tailSpace >= 0 ? tailText.slice(0, tailSpace + 1) : "";
+  const tailWord = tailSpace >= 0 ? tailText.slice(tailSpace + 1) : tailText;
+
   return (
     <section id="top" className="relative overflow-hidden pt-28 sm:pt-32">
       {/* backdrop - warm mesh + spotlight + grain, no graph-paper grid */}
@@ -150,19 +175,21 @@ export function Hero() {
                   the no-JS fallback); the typewriter takes over once assigned.
                   Animated text is aria-hidden; the sr-only phrase keeps the
                   H1 readable. */}
-              <span className="mt-1 block min-h-[2.05em]" aria-hidden="true">
-                {showTypewriter ? (
-                  <>
-                    <span className="serif-accent text-gradient">{typed}</span>
+              <span className="mt-1 block min-h-[2.05em] pb-[0.14em]" aria-hidden="true">
+                <span className="serif-accent text-gradient">
+                  {tailHead}
+                  <HeadlineWord
+                    text={tailWord}
+                    drawn={showTypewriter ? typeMeta.phase === "hold" : true}
+                    drawMs={showTypewriter ? 640 : 950}
+                  />
+                  {showTypewriter && (
                     <span className="type-caret" data-typing={typeMeta.typing} />
-                  </>
-                ) : (
-                  <span className="serif-accent text-gradient">trust your agents.</span>
-                )}
+                  )}
+                </span>
               </span>
               <span className="sr-only">trust your agents.</span>
             </h1>
-            <Squiggle className="-mt-1 h-2.5 w-44 text-cyan/70" />
 
             <p className="mt-6 max-w-xl text-[16px] leading-relaxed text-ink-dim sm:text-[18px]">
               A cloud workspace that gives any agent - Claude Code, Codex, or your own - real eyes

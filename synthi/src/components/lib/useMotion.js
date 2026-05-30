@@ -149,8 +149,10 @@ export function useTypewriter(text, { active = true, speed = 28, startDelay = 12
  * reads like a constant-speed ticker. Reduced motion / inactive shows the
  * first phrase in full and stops.
  *
- * Returns [text, { index, typing }] where `typing` is true while characters
- * are being added (lets the caller hide the caret-as-bar during the hold).
+ * Returns [text, { index, typing, phase }] where `typing` is true while
+ * characters are being added (lets the caller hide the caret-as-bar during the
+ * hold) and `phase` is one of "type" | "hold" | "delete" | "pause" (lets the
+ * caller draw an underline on hold and un-draw it as the phrase deletes).
  */
 export function useTypewriterCycle(
   phrases,
@@ -165,13 +167,13 @@ export function useTypewriterCycle(
   } = {}
 ) {
   const [text, setText] = useState("");
-  const [meta, setMeta] = useState({ index: 0, typing: true });
+  const [meta, setMeta] = useState({ index: 0, typing: true, phase: "type" });
 
   useEffect(() => {
     if (!active) return;
     if (reduced || !phrases.length) {
       setText(phrases[0] ?? "");
-      setMeta({ index: 0, typing: false });
+      setMeta({ index: 0, typing: false, phase: "hold" });
       return;
     }
     let cancelled = false;
@@ -188,13 +190,14 @@ export function useTypewriterCycle(
         setText(phrase.slice(0, pos));
         if (pos >= phrase.length) {
           phase = "hold";
-          setMeta({ index: i, typing: false });
+          setMeta({ index: i, typing: false, phase: "hold" });
           timer = setTimeout(tick, holdTime);
         } else {
           timer = setTimeout(tick, typeSpeed + Math.random() * 60);
         }
       } else if (phase === "hold") {
         phase = "delete";
+        setMeta({ index: i, typing: false, phase: "delete" });
         timer = setTimeout(tick, deleteSpeed);
       } else if (phase === "delete") {
         pos -= 1;
@@ -202,13 +205,14 @@ export function useTypewriterCycle(
         if (pos <= 0) {
           phase = "pause";
           i = (i + 1) % phrases.length;
+          setMeta({ index: i, typing: false, phase: "pause" });
           timer = setTimeout(tick, pauseTime);
         } else {
           timer = setTimeout(tick, deleteSpeed + Math.random() * 24);
         }
       } else {
         phase = "type";
-        setMeta({ index: i, typing: true });
+        setMeta({ index: i, typing: true, phase: "type" });
         timer = setTimeout(tick, typeSpeed);
       }
     };
