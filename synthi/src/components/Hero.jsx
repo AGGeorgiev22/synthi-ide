@@ -42,7 +42,7 @@ function HeadlineWord({ text, drawn, drawMs }) {
         drawn={drawn}
         drawMs={drawMs}
         strokeWidth={2.6}
-        className="pointer-events-none absolute inset-x-0 top-[0.92em] h-[0.17em] text-cyan/85"
+        className="pointer-events-none absolute inset-x-0 top-[0.92em] h-[0.17em] text-cyan/85 hidden"
       />
     </span>
   );

@@ -240,31 +240,27 @@ export function useTypewriterCycle(
 }
 
 /**
- * A/B assignment for the hero headline. Returns `null` until mounted (so SSR
- * and the first client paint render a stable default), then 'typewriter' |
- * 'static'. Precedence: `?headline=` URL override -> stored assignment ->
- * fresh random 50/50. The choice is persisted in localStorage so a visitor
- * stays in one bucket, and is readable later (e.g. by the waitlist form) to
- * attribute conversions. Append `?headline=static` / `?headline=typewriter`
- * to force a variant for QA.
+ * Hero headline assignment.
+ * - `?headline=typewriter` forces animated
+ * - `?headline=static` forces static
+ * - otherwise defaults to `typewriter`
+ * Stale/invalid persisted values are treated as legacy and reset to
+ * `typewriter` so legacy buckets do not lock visitors into static.
  */
 export function useHeadlineVariant() {
   const [variant, setVariant] = useState(null);
   useEffect(() => {
-    let v;
+    let v = "typewriter";
+    const parse = (value) => (value === "static" || value === "typewriter" ? value : null);
+
     try {
       const q = new URLSearchParams(window.location.search).get("headline");
-      if (q === "static" || q === "typewriter") {
-        v = q;
-      } else {
-        v = localStorage.getItem("vt-headline");
-        if (v !== "static" && v !== "typewriter") {
-          v = Math.random() < 0.5 ? "typewriter" : "static";
-        }
-      }
+      const query = parse(q);
+      const saved = localStorage.getItem("vt-headline");
+      v = query ?? (saved === "static" ? "typewriter" : parse(saved)) ?? "typewriter";
       localStorage.setItem("vt-headline", v);
     } catch {
-      v = "typewriter";
+      localStorage.removeItem?.("vt-headline");
     }
     setVariant(v);
   }, []);

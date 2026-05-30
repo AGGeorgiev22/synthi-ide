@@ -36,7 +36,7 @@ export function FAQ() {
   const [open, setOpen] = useState(0);
 
   return (
-    <section id="faq" className="relative scroll-mt-24 border-y border-line bg-bg-2/40 py-24 sm:py-32">
+    <section id="faq" className="relative scroll-mt-24 border-y border-line bg-bg-2/40 py-20 sm:py-24">
       <div className="mx-auto grid max-w-7xl gap-12 px-5 sm:px-8 lg:grid-cols-[0.8fr_1.2fr]">
         <div>
           <SectionHeading
@@ -88,3 +88,4 @@ export function FAQ() {
     </section>
   );
 }
+

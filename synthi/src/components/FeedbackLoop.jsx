@@ -88,7 +88,7 @@ export function FeedbackLoop() {
   }, [reduced, active]);
 
   return (
-    <section id="loop" className="relative scroll-mt-24 border-y border-line bg-bg-2/40 py-24 sm:py-32">
+    <section id="loop" className="relative scroll-mt-24 border-y border-line bg-bg-2/40 py-20 sm:py-24">
       <div ref={ref} className="mx-auto max-w-7xl px-5 sm:px-8">
         <SectionHeading
           eyebrow="Self-healing runtime"
@@ -166,3 +166,4 @@ export function FeedbackLoop() {
     </section>
   );
 }
+

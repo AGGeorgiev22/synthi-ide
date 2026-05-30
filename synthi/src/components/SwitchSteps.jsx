@@ -27,7 +27,7 @@ function StepCard({ n, title, desc, children, highlight }) {
 
 export function SwitchSteps() {
   return (
-    <section id="switch" className="relative scroll-mt-24 py-24 sm:py-32">
+    <section id="switch" className="relative scroll-mt-24 py-20 sm:py-24">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <SectionHeading
           eyebrow="Switching is easy"
@@ -103,3 +103,4 @@ export function SwitchSteps() {
     </section>
   );
 }
+

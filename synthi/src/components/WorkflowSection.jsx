@@ -184,7 +184,7 @@ export function WorkflowSection() {
   const Visual = t.Visual;
 
   return (
-    <section id="workflows" className="relative scroll-mt-24 py-24 sm:py-32">
+    <section id="workflows" className="relative scroll-mt-24 py-20 sm:py-24">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <SectionHeading
           eyebrow="Workflows"
@@ -242,3 +242,4 @@ export function WorkflowSection() {
     </section>
   );
 }
+

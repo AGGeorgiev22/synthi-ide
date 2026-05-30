@@ -53,3 +53,27 @@ export function ActHand({ size = 18, className }) {
     </svg>
   );
 }
+
+/** A compact verification pulse mark for proving a fix moved from signal -> state. */
+export function PulseVerify({ size = 18, className }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
+      <path
+        d="M3.5 12h3.5l2.7-7.2L12 18.2l2.3-5.8h6.7"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <circle cx="20.2" cy="9.3" r="1.6" fill="currentColor" opacity="0.75" />
+      <circle
+        cx="20.2"
+        cy="9.3"
+        r="4"
+        stroke="currentColor"
+        strokeWidth="1.2"
+        opacity="0.5"
+      />
+    </svg>
+  );
+}

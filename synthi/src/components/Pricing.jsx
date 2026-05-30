@@ -39,7 +39,7 @@ const TIERS = [
 
 export function Pricing() {
   return (
-    <section id="pricing" className="relative scroll-mt-24 py-24 sm:py-32">
+    <section id="pricing" className="relative scroll-mt-24 py-20 sm:py-24">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <SectionHeading
           eyebrow="Pricing"
@@ -105,3 +105,4 @@ export function Pricing() {
     </section>
   );
 }
+

@@ -99,7 +99,7 @@ export function CollaborationSection() {
   const act = ACTIVITY[tick];
 
   return (
-    <section id="collaborate" className="relative scroll-mt-24 border-y border-line bg-bg-2/40 py-24 sm:py-32">
+    <section id="collaborate" className="relative scroll-mt-24 border-y border-line bg-bg-2/40 py-20 sm:py-24">
       <div ref={ref} className="mx-auto max-w-7xl px-5 sm:px-8">
         <div className="grid items-center gap-12 lg:grid-cols-[0.9fr_1.1fr]">
           {/* copy */}
@@ -189,3 +189,4 @@ export function CollaborationSection() {
     </section>
   );
 }
+

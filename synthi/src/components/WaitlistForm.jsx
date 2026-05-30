@@ -89,7 +89,7 @@ export function WaitlistForm({ variant = "hero", className, autoFocus = false })
           inputMode="email"
           autoComplete="email"
           autoFocus={autoFocus}
-          placeholder="you@company.dev"
+          placeholder="hello@darkness.smile"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           className="w-full rounded-xl border border-line bg-surface-2 px-4 py-3 text-[15px] text-ink placeholder:text-ink-faint outline-none transition focus:border-cyan/50 focus:ring-2 focus:ring-cyan/20"

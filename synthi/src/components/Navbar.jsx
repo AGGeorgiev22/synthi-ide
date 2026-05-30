@@ -41,33 +41,15 @@ export function Navbar() {
           scrolled ? "border-line bg-bg/70 backdrop-blur-xl" : "border-transparent bg-transparent"
         )}
       >
-        <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 sm:px-8">
+        <nav className="mx-auto flex h-16 max-w-full transparent items-center justify-between px-5 sm:px-8">
           <a href="#top" className="flex items-center rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-cyan/50" aria-label="Vectant home">
             <AnimatedLogo expanded={!scrolled} />
           </a>
 
-          {/* center links */}
-          <div className="hidden items-center gap-1 lg:flex">
-            {LINKS.map((l) => (
-              <a
-                key={l.label}
-                href={l.href}
-                className="rounded-lg px-3 py-2 text-[13.5px] text-ink-dim transition-colors hover:text-ink focus-visible:text-ink focus-visible:ring-2 focus-visible:ring-cyan/40 outline-none"
-              >
-                {l.label}
-              </a>
-            ))}
-          </div>
 
           {/* right actions */}
           <div className="hidden items-center gap-2 md:flex">
             <ThemeToggle />
-            <a
-              href="#waitlist"
-              className="rounded-lg px-3 py-2 text-[13.5px] text-ink-dim transition-colors hover:text-ink"
-            >
-              Sign in
-            </a>
             <a
               href="#waitlist"
               className="sheen group inline-flex items-center gap-1.5 rounded-lg bg-ink px-4 py-2 text-[13.5px] font-medium text-bg transition duration-200 hover:bg-white active:scale-[0.97]"

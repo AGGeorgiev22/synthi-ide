@@ -40,7 +40,7 @@ export function DemoTimeline() {
   const count = useStagger(EVENTS.length, { active, reduced, interval: 420, startDelay: 200 });
 
   return (
-    <section id="demo" className="relative scroll-mt-24 border-y border-line bg-bg-2/40 py-24 sm:py-32">
+    <section id="demo" className="relative scroll-mt-24 border-y border-line bg-bg-2/40 py-20 sm:py-24">
       <div ref={ref} className="mx-auto max-w-5xl px-5 sm:px-8">
         <SectionHeading
           eyebrow="Demo · event stream"
@@ -121,3 +121,4 @@ export function DemoTimeline() {
     </section>
   );
 }
+

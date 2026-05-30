@@ -27,7 +27,7 @@ const AUDIT = [
 
 export function SecuritySection() {
   return (
-    <section id="security" className="relative scroll-mt-24 py-24 sm:py-32">
+    <section id="security" className="relative scroll-mt-24 py-20 sm:py-24">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <div className="grid items-start gap-12 lg:grid-cols-2">
           {/* left */}
@@ -100,3 +100,4 @@ export function SecuritySection() {
     </section>
   );
 }
+

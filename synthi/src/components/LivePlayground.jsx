@@ -225,7 +225,7 @@ export function LivePlayground() {
   };
 
   return (
-    <section id="playground" className="relative scroll-mt-24 py-24 sm:py-32">
+    <section id="playground" className="relative scroll-mt-24 py-20 sm:py-24">
       <div ref={hostRef} className="mx-auto max-w-7xl px-5 sm:px-8">
         <SectionHeading
           eyebrow="Live · cloud workspace"
@@ -357,3 +357,4 @@ export function LivePlayground() {
     </section>
   );
 }
+

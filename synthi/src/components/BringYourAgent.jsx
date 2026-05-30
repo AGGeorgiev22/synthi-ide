@@ -1,22 +1,22 @@
 "use client";
 
-import { Eye, Hand, Activity } from "lucide-react";
 import { SectionHeading, Reveal } from "@/components/Section";
 import { VectantMark } from "@/components/Logo";
 import { AGENTS } from "@/components/AgentMarks";
+import { ScanEye, ActHand, PulseVerify } from "@/components/BrandMarks";
 import { useInView } from "@/components/lib/useMotion";
 import { cn } from "@/lib/utils";
 
 const GRANTS = [
-  { Icon: Eye, label: "Sees execution", note: "logs · tests · crashes · preview" },
-  { Icon: Hand, label: "Acts in place", note: "patches the running program" },
-  { Icon: Activity, label: "Proves the fix", note: "verifies against the runtime" },
+  { Icon: ScanEye, label: "Sees execution", note: "logs · tests · crashes · preview" },
+  { Icon: ActHand, label: "Acts in place", note: "patches the running program" },
+  { Icon: PulseVerify, label: "Proves the fix", note: "verifies against the runtime" },
 ];
 
 export function BringYourAgent() {
   const [ref, inView] = useInView();
   return (
-    <section id="agents" className="relative scroll-mt-24 py-24 sm:py-32">
+    <section id="agents" className="relative scroll-mt-24 py-20 sm:py-24">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <SectionHeading
           eyebrow="Agent-agnostic"

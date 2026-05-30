@@ -41,8 +41,8 @@ export function StatBand() {
   const buildCs = useCountUp(18, active, reduced);
 
   return (
-    <section className="relative border-y border-line bg-bg-2/40">
-      <div ref={ref} className="mx-auto grid max-w-7xl grid-cols-1 divide-y divide-line px-5 sm:grid-cols-3 sm:divide-x sm:divide-y-0 sm:px-8">
+    <section className="relative bg-bg-2/40">
+      <div ref={ref} className="mx-auto grid max-w-7xl grid-cols-1 px-5 sm:grid-cols-3 sm:px-8">
         <Stat
           value={hasCount ? `${animated.toLocaleString()}+` : "Private"}
           label={hasCount ? "developers on the waitlist" : "beta - early access now open"}

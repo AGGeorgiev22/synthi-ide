@@ -1,17 +1,37 @@
 "use client";
 
 import { useCallback, useRef, useState } from "react";
-import { Cpu, Clock, Wind, Flame, AlertTriangle, CheckCircle2, GripVertical } from "lucide-react";
+import { Cpu, Wind, AlertTriangle, CheckCircle2, GripVertical } from "lucide-react";
 import { cn } from "@/lib/utils";
+
+function RuntimeClock({ size = 15, className }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
+      <circle cx="12" cy="12" r="8.4" stroke="currentColor" strokeWidth="1.5" />
+      <path d="M12 7v5l3.3 3.3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+      <circle cx="12" cy="12" r="1.1" fill="currentColor" />
+      <circle cx="15.7" cy="12.3" r="0.9" fill="currentColor" opacity="0.55" />
+    </svg>
+  );
+}
+
+function HmrPulse({ size = 15, className }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
+      <path d="M5.2 18L12 5l3.7 7.2 3.1-.6-.8 3.2 3.2 1.2-12.7 1.7Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
+      <path d="M12 5L9 9.2h3l-1 6 4.7-8.8H12" stroke="currentColor" strokeWidth="1.15" opacity="0.7" />
+    </svg>
+  );
+}
 
 const LOCAL = {
   title: "Local IDE",
   tone: "err",
   rows: [
-    { Icon: Clock, k: "Build time", v: "47.2s" },
+    { Icon: RuntimeClock, k: "Build time", v: "47.2s" },
     { Icon: Cpu, k: "CPU usage", v: "98%" },
     { Icon: Wind, k: "Cooling", v: "Jet engine" },
-    { Icon: Flame, k: "HMR", v: "Not supported" },
+    { Icon: HmrPulse, k: "HMR", v: "Not supported" },
   ],
   footer: { Icon: AlertTriangle, text: "Out of memory - restart required", cls: "text-err" },
 };
@@ -19,10 +39,10 @@ const VECTANT = {
   title: "Vectant Cloud",
   tone: "ok",
   rows: [
-    { Icon: Clock, k: "Build time", v: "0.18s" },
+    { Icon: RuntimeClock, k: "Build time", v: "0.18s" },
     { Icon: Cpu, k: "CPU usage", v: "2%" },
     { Icon: Wind, k: "Cooling", v: "Silent" },
-    { Icon: Flame, k: "HMR", v: "Instant" },
+    { Icon: HmrPulse, k: "HMR", v: "Instant" },
   ],
   footer: { Icon: CheckCircle2, text: "All systems operational", cls: "text-ok" },
 };

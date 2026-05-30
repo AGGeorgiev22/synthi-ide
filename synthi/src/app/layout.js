@@ -42,7 +42,7 @@ const satoshi = localFont({
 });
 
 export const metadata = {
-  title: "Vectant - AI that can see your code run",
+  title: "Vectant - World's First FAARE",
   description:
     "Vectant is a Fully Autonomous Agentic Runtime Environment (FAARE) - a cloud workspace where your agent observes builds, logs, crashes, tests, and GPU feedback, then patches in place and verifies fixes against the live runtime.",
   keywords: [
@@ -59,7 +59,7 @@ export const metadata = {
   authors: [{ name: "Vectant" }],
   metadataBase: new URL("https://vectant.dev"),
   openGraph: {
-    title: "Vectant - AI that can see your code run",
+    title: "Vectant - World's First FAARE",
     description:
       "Build inside the runtime. Let the agent observe, patch, and verify against real execution signals.",
     url: "https://vectant.dev",
@@ -69,7 +69,7 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Vectant - AI that can see your code run",
+    title: "Vectant - World's First FAARE",
     description:
       "A Fully Autonomous Agentic Runtime Environment. The agent observes builds, logs, crashes, tests, and GPU feedback, then patches in place and verifies.",
   },
