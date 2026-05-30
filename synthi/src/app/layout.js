@@ -1,33 +1,67 @@
-import { Geist, Geist_Mono } from "next/font/google";
-import { Roboto_Slab } from "next/font/google";
+import { Geist, Geist_Mono, Instrument_Serif, Space_Grotesk } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
-import { Toaster } from "@/components/ui/sonner"
-import { Analytics } from '@vercel/analytics/next';
+import { Toaster } from "@/components/ui/sonner";
+import { ThemeProvider } from "@/components/ThemeProvider";
+import { Analytics } from "@vercel/analytics/next";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+  display: "swap",
 });
 
-const robotoSlab = Roboto_Slab({
-  variable: "--font-roboto-slab",
-  subsets: ["latin"],
-});
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  display: "swap",
+});
+
+const serifDisplay = Instrument_Serif({
+  variable: "--font-serif-display",
+  subsets: ["latin"],
+  weight: "400",
+  style: ["normal", "italic"],
+  display: "swap",
+});
+
+// Brand display face (stands in for Aquire until licensed files are added).
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-space-grotesk",
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
+  display: "swap",
+});
+
+const satoshi = localFont({
+  src: [
+    { path: "../../fonts/Satoshi-Variable.woff2", weight: "300 900", style: "normal" },
+  ],
+  variable: "--font-satoshi",
+  display: "swap",
 });
 
 export const metadata = {
-  title: "Vectant - World's first ADE.",
+  title: "Vectant - World's First FAARE",
   description:
-    "Vectant is the world's first Autonomous Development Environment. Cloud-compiled, AI-native, and built so you can focus on ideas — not infrastructure.",
-  keywords: ["IDE", "cloud IDE", "ADE", "AI coding", "cloud compile", "developer tools", "Vectant"],
+    "Vectant is a Fully Autonomous Agentic Runtime Environment (FAARE) - a cloud workspace where your agent observes builds, logs, crashes, tests, and GPU feedback, then patches in place and verifies fixes against the live runtime.",
+  keywords: [
+    "runtime-native AI",
+    "AI development environment",
+    "cloud IDE",
+    "CUDA",
+    "ROCm",
+    "game engine development",
+    "MCP",
+    "developer tools",
+    "Vectant",
+  ],
   authors: [{ name: "Vectant" }],
   metadataBase: new URL("https://vectant.dev"),
   openGraph: {
-    title: "Vectant - World's first ADE.",
+    title: "Vectant - World's First FAARE",
     description:
-      "Cloud-compiled, AI-native development. Build at instant — regardless of your hardware.",
+      "Build inside the runtime. Let the agent observe, patch, and verify against real execution signals.",
     url: "https://vectant.dev",
     siteName: "Vectant",
     type: "website",
@@ -35,26 +69,36 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Vectant - World's first ADE.",
+    title: "Vectant - World's First FAARE",
     description:
-      "Cloud-compiled, AI-native development. Build at instant — regardless of your hardware.",
+      "A Fully Autonomous Agentic Runtime Environment. The agent observes builds, logs, crashes, tests, and GPU feedback, then patches in place and verifies.",
   },
   icons: {
     icon: "/Vectant-logo-white.svg",
     shortcut: "/Vectant-logo-white.svg",
   },
-}
+};
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${robotoSlab.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${serifDisplay.variable} ${satoshi.variable} ${spaceGrotesk.variable} antialiased`}
       >
-        <main>
+        <ThemeProvider>
           {children}
-        </main>
-        <Toaster richColors />
+          <Toaster
+            richColors
+            position="bottom-right"
+            toastOptions={{
+              style: {
+                background: "var(--color-panel)",
+                border: "1px solid var(--color-line-2)",
+                color: "var(--color-ink)",
+              },
+            }}
+          />
+        </ThemeProvider>
         <Analytics />
       </body>
     </html>
