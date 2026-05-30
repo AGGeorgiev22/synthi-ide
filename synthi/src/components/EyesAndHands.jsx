@@ -31,8 +31,8 @@ export function EyesAndHands() {
         <SectionHeading
           eyebrow="What agents are missing"
           align="center"
-          title="Most agents can read your code. Few can truly run it."
-          subtitle="Give your agents a new level of autonomy: eyes that see the runtime and hands that interact with it like a developer would. Vectant supports multi-agent and sub-agent workflows around one shared, browser-based workspace."
+          title="Observe, patch, verify."
+          subtitle="Most agents can read your code. Few can run your system as it works. Vectant gives every agent runtime vision and runtime action, then validates outcomes before moving on."
         />
 
         <div className="mt-14 grid items-stretch gap-4 lg:grid-cols-[1fr_auto_1fr]">
@@ -45,7 +45,7 @@ export function EyesAndHands() {
               </span>
               <div>
                 <h3 className="text-[17px] font-semibold text-ink">Eyes</h3>
-                <p className="text-[12.5px] text-ink-faint">Observe the entire runtime surface before acting</p>
+                <p className="text-[12.5px] text-ink-faint">Observe outputs, signals, and state transitions first</p>
               </div>
             </div>
             <ul className="space-y-2.5">
@@ -95,7 +95,7 @@ export function EyesAndHands() {
               </span>
               <div>
                 <h3 className="text-[17px] font-semibold text-ink">Hands</h3>
-                <p className="text-[12.5px] text-ink-faint">Interact with the running system, then verify results</p>
+                <p className="text-[12.5px] text-ink-faint">Act, patch, and verify inside the same runtime workspace</p>
               </div>
             </div>
             <ul className="space-y-2.5">
