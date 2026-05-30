@@ -1,14 +1,18 @@
 "use client";
 
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Binary, Cpu, Gamepad2, Server, Wrench } from "lucide-react";
 import { Reveal, Eyebrow } from "@/components/Section";
+import { cn } from "@/lib/utils";
 
-const AUDIENCE = [
-  "Compiled apps",
-  "GPU workloads",
-  "Game engines",
-  "Infrastructure",
-  "Complex developer tools",
+// Each use-case gets an icon + its own accent so the row reads as five distinct
+// kinds of serious work, not one repeated gray chip. Full class strings (not
+// interpolated) so Tailwind keeps them.
+const USE_CASES = [
+  { Icon: Binary, label: "Compiled apps", chip: "border-brand/30 bg-brand/[0.08] text-brand" },
+  { Icon: Cpu, label: "GPU workloads", chip: "border-cyan/30 bg-cyan/[0.07] text-cyan" },
+  { Icon: Gamepad2, label: "Game engines", chip: "border-violet/30 bg-violet/[0.08] text-violet" },
+  { Icon: Server, label: "Infrastructure", chip: "border-blue/30 bg-blue/[0.08] text-blue" },
+  { Icon: Wrench, label: "Complex developer tools", chip: "border-ok/30 bg-ok/[0.08] text-ok" },
 ];
 
 export function BetaSection() {
@@ -31,13 +35,18 @@ export function BetaSection() {
                 apps, GPU workloads, game engines, infrastructure, and complex developer tools.
               </p>
 
-              <div className="mt-7 flex flex-wrap justify-center gap-2">
-                {AUDIENCE.map((a) => (
+              <div className="mt-8 flex flex-wrap justify-center gap-2.5">
+                {USE_CASES.map(({ Icon, label, chip }) => (
                   <span
-                    key={a}
-                    className="rounded-full border border-line bg-surface-2 px-3.5 py-1.5 text-[12.5px] text-ink-dim"
+                    key={label}
+                    className="group inline-flex items-center gap-2.5 rounded-xl border border-line bg-surface px-3.5 py-2 transition-colors duration-200 hover:border-line-2"
                   >
-                    {a}
+                    <span className={cn("flex h-6 w-6 items-center justify-center rounded-md border transition-transform duration-200 group-hover:scale-110", chip)}>
+                      <Icon size={13} strokeWidth={1.75} />
+                    </span>
+                    <span className="text-[13px] font-medium text-ink-dim transition-colors group-hover:text-ink">
+                      {label}
+                    </span>
                   </span>
                 ))}
               </div>

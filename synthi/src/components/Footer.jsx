@@ -22,34 +22,23 @@ const COLUMNS = [
       { label: "Contact", href: "mailto:info@vectant.dev" },
     ],
   },
-  {
-    title: "Company",
-    links: [
-      { label: "About", href: "#product" },
-      { label: "LinkedIn", href: "https://www.linkedin.com", external: true },
-      { label: "X", href: "https://x.com", external: true },
-      { label: "Privacy", href: "/privacy" },
-    ],
-  },
 ];
 
 export function Footer() {
   return (
     <footer className="relative border-t border-line">
       <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8">
-        <div className="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
+        <div className="grid gap-10 md:grid-cols-[1.8fr_1fr_1fr]">
           {/* brand */}
-          <div className="max-w-xs">
+          <div className="max-w-sm">
             <Logo />
             <p className="mt-4 text-[13.5px] leading-relaxed text-ink-faint">
               A runtime-native development environment. Build inside the runtime - let the agent
               observe, patch, and verify.
             </p>
-            <div className="mt-5">
-              <span className="inline-flex items-center gap-2 rounded-full border border-line bg-surface-2 px-3 py-1.5 font-mono text-[11px] text-ink-faint">
-                <span className="h-1.5 w-1.5 rounded-full bg-cyan shadow-[0_0_8px_#2dd4ee]" />
-                Private beta · early access
-              </span>
+            <div className="mt-5 inline-flex items-center gap-2 font-mono text-[11px] text-ink-faint">
+              <span className="h-1.5 w-1.5 rounded-full bg-cyan shadow-[0_0_8px_#2dd4ee]" />
+              Private beta · early access
             </div>
           </div>
 
@@ -105,6 +94,9 @@ export function Footer() {
             © {new Date().getFullYear()} Vectant. All rights reserved.
           </p>
           <div className="flex items-center gap-5">
+            <Link href="/privacy" className="text-[12.5px] text-ink-dim transition-colors hover:text-ink">
+              Privacy
+            </Link>
             <span className="text-[12.5px] text-ink-faint">No tracking · cookie-free analytics</span>
             <a
               href="#top"
