@@ -151,8 +151,12 @@ export function useTypewriter(text, { active = true, speed = 28, startDelay = 12
  *
  * Returns [text, { index, typing, phase }] where `typing` is true while
  * characters are being added (lets the caller hide the caret-as-bar during the
- * hold) and `phase` is one of "type" | "hold" | "delete" | "pause" (lets the
- * caller draw an underline on hold and un-draw it as the phrase deletes).
+ * hold) and `phase` is one of "type" | "hold" | "erase" | "delete" | "pause".
+ *
+ * The dedicated "erase" phase matters: it keeps the *complete* last word on
+ * screen while an underline un-draws, and only then starts removing characters.
+ * Without it the erase animation outlives the full word and bleeds onto the
+ * second-to-last word as the text shrinks underneath it.
  */
 export function useTypewriterCycle(
   phrases,
@@ -161,7 +165,8 @@ export function useTypewriterCycle(
     reduced = false,
     typeSpeed = 56,
     deleteSpeed = 30,
-    holdTime = 1900,
+    holdTime = 1700,
+    eraseTime = 340,
     pauseTime = 480,
     startDelay = 550,
   } = {}
@@ -196,6 +201,13 @@ export function useTypewriterCycle(
           timer = setTimeout(tick, typeSpeed + Math.random() * 60);
         }
       } else if (phase === "hold") {
+        // keep the full word on screen and let the underline un-draw before
+        // any character is removed (so the squiggle never lands on a shrinking
+        // word). drawn is gated on phase === "hold", so this flips it off.
+        phase = "erase";
+        setMeta({ index: i, typing: false, phase: "erase" });
+        timer = setTimeout(tick, eraseTime);
+      } else if (phase === "erase") {
         phase = "delete";
         setMeta({ index: i, typing: false, phase: "delete" });
         timer = setTimeout(tick, deleteSpeed);
@@ -222,7 +234,7 @@ export function useTypewriterCycle(
       cancelled = true;
       clearTimeout(timer);
     };
-  }, [active, reduced, phrases, typeSpeed, deleteSpeed, holdTime, pauseTime, startDelay]);
+  }, [active, reduced, phrases, typeSpeed, deleteSpeed, holdTime, eraseTime, pauseTime, startDelay]);
 
   return [text, meta];
 }
