@@ -248,8 +248,8 @@ export function LivePlayground() {
                 type="button"
                 onClick={() => switchLang(l)}
                 className={cn(
-                  "shrink-0 rounded-md px-2.5 py-1 font-mono text-[11px] transition-colors",
-                  l === lang ? "bg-cyan/10 text-cyan" : "text-ink-faint hover:text-ink-dim"
+                  "shrink-0 rounded-md border border-transparent px-2.5 py-1 font-mono text-[11px] transition-colors",
+                  l === lang ? "border-cyan/40 bg-transparent text-cyan" : "text-ink-faint hover:text-ink-dim"
                 )}
               >
                 {l}

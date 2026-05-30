@@ -125,7 +125,7 @@ export function BuildCompare() {
           aria-valuenow={Math.round(pos)}
           aria-valuemin={0}
           aria-valuemax={100}
-          className="absolute top-1/2 left-1/2 flex h-9 w-9 -translate-x-1/2 -translate-y-1/2 cursor-ew-resize items-center justify-center rounded-full border border-white/30 bg-bg/90 text-ink shadow-lg backdrop-blur outline-none focus-visible:ring-2 focus-visible:ring-brand/60"
+          className="absolute top-1/2 left-1/2 flex h-9 w-9 -translate-x-1/2 -translate-y-1/2 cursor-ew-resize items-center justify-center rounded-full border border-white/30 bg-transparent text-ink shadow-lg backdrop-blur outline-none focus-visible:ring-2 focus-visible:ring-brand/60"
         >
           <GripVertical size={15} />
         </button>

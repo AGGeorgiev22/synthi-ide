@@ -43,10 +43,10 @@ export function BetaSection() {
               </div>
 
               <div className="mt-8 flex flex-col items-center gap-3">
-                <a
-                  href="#waitlist"
-                  className="group inline-flex items-center gap-2 rounded-xl bg-ink px-5 py-3 text-[15px] font-medium text-bg transition hover:bg-white"
-                >
+              <a
+                href="#waitlist"
+                className="group inline-flex items-center gap-2 rounded-xl border border-line bg-transparent px-5 py-3 text-[15px] font-medium text-ink transition hover:border-line-2 hover:bg-transparent"
+              >
                   Join the private beta
                   <ArrowRight size={16} className="transition-transform group-hover:translate-x-0.5" />
                 </a>

@@ -213,7 +213,7 @@ export function WorkflowSection() {
                 className={cn(
                   "inline-flex items-center gap-2 rounded-full border px-4 py-2 text-[13.5px] font-medium transition-colors",
                   on
-                    ? "border-cyan/40 bg-cyan/[0.08] text-ink"
+                    ? "border-cyan/40 bg-transparent text-ink"
                     : "border-line bg-surface text-ink-dim hover:border-line-2 hover:text-ink"
                 )}
               >

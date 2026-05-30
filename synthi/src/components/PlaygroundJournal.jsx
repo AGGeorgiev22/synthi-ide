@@ -84,8 +84,8 @@ export default function PlaygroundJournal({ snapshot, canSeeRareHints, canSeeEpi
             onClick={() => setTab(t.key)}
             className={`px-2.5 py-1 rounded-lg text-[10px] font-mono border transition-colors ${
               tab === t.key
-                ? 'border-[#58A4B0]/40 bg-[#58A4B0]/10 text-[#58A4B0]'
-                : 'border-white/8 text-slate-500 hover:text-slate-300 hover:border-white/15'
+                ? 'border-[#58A4B0]/40 bg-transparent text-[#58A4B0]'
+                : 'border-white/8 bg-transparent text-slate-500 hover:text-slate-300 hover:border-white/15'
             }`}
             data-playground-control
           >
