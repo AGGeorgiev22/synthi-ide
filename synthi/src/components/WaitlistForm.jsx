@@ -120,7 +120,7 @@ export function WaitlistForm({ variant = "hero", className, autoFocus = false })
           "inline-flex w-full items-center justify-center gap-2 rounded-xl border border-line/80 bg-transparent px-5 py-3 text-[15px] font-medium text-ink transition duration-200",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan/30",
           "hover:border-line-2 active:scale-[0.985] active:brightness-95 disabled:opacity-60 disabled:bg-transparent",
-          isHero ? "sm:w-auto sm:min-w-[170px] sheen" : "sheen"
+          isHero ? "sm:w-auto sm:min-w-[170px] sheen" : "sm:w-auto sm:min-w-[155px] sheen"
         )}
       >
         {status === "loading" ? (

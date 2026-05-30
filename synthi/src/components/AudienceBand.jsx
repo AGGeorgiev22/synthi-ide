@@ -79,7 +79,7 @@ const PERSONAS = [
 
 export function AudienceBand() {
   return (
-    <section className="relative scroll-mt-24 border-y border-line bg-bg-2/40 py-16 sm:py-20">
+    <section className="relative scroll-mt-24 border-y border-line/50 py-16 sm:py-20">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <Reveal>
           <p className="text-center font-mono text-[10.5px] uppercase tracking-[0.2em] text-ink-faint">
@@ -97,7 +97,7 @@ export function AudienceBand() {
             const a = ACCENTS[p.accent];
             return (
               <Reveal key={p.label} delay={i * 70}>
-                <div className="lift group relative flex h-full flex-col items-center gap-2 overflow-hidden rounded-2xl border border-line bg-surface px-4 py-5 text-center">
+                <div className="lift group relative flex h-full flex-col items-center gap-2 overflow-hidden rounded-2xl border border-line/60 bg-transparent px-4 py-5 text-center transition-colors duration-200 hover:border-line">
                   <span className={cn("pointer-events-none absolute -top-10 left-1/2 h-20 w-20 -translate-x-1/2 rounded-full opacity-0 blur-2xl transition-opacity duration-300 group-hover:opacity-100", a.glow)} />
                   <span className={cn("relative flex h-9 w-9 items-center justify-center rounded-lg border transition-transform duration-300 group-hover:scale-110", a.chip)}>
                     <Icon size={16} />
