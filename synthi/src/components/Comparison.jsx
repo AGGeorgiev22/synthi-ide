@@ -118,9 +118,24 @@ export function Comparison() {
           </div>
         </Reveal>
 
-        <p className="mx-auto mt-6 max-w-xl text-center text-[12.5px] text-ink-faint">
-          Partial = possible with manual wiring or extra tooling. Vectant does it in one workspace.
-        </p>
+        <div className="mx-auto mt-7 flex max-w-2xl flex-col items-center gap-3.5">
+          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2.5 text-[12.5px] text-ink-dim">
+            <span className="inline-flex items-center gap-2">
+              <Mark value="yes" /> Built in
+            </span>
+            <span className="inline-flex items-center gap-2">
+              <Mark value="partial" /> Possible with manual wiring
+            </span>
+            <span className="inline-flex items-center gap-2">
+              <Mark value="no" /> Not available
+            </span>
+          </div>
+          <p className="text-balance text-center text-[13.5px] leading-relaxed text-ink-dim">
+            Everything else needs plugins, glue code, and a setup that drifts.{" "}
+            <span className="text-ink">Vectant does it all in one workspace</span> - so the loop
+            stays closed and you stay in flow.
+          </p>
+        </div>
       </div>
     </section>
   );

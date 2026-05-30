@@ -52,7 +52,7 @@ export function Navbar() {
             <ThemeToggle />
             <a
               href="#waitlist"
-              className="sheen group inline-flex items-center gap-1.5 rounded-lg bg-ink px-4 py-2 text-[13.5px] font-medium text-bg transition duration-200 hover:bg-white active:scale-[0.97]"
+              className="sheen group inline-flex items-center gap-1.5 rounded-lg border border-line bg-transparent px-4 py-2 text-[13.5px] font-medium text-ink transition duration-200 hover:border-line-2 active:scale-[0.97]"
             >
               Join waitlist
               <ArrowUpRight size={15} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
@@ -88,7 +88,7 @@ export function Navbar() {
               key={l.label}
               href={l.href}
               onClick={() => setOpen(false)}
-              className="rounded-lg px-3 py-3 text-[15px] text-ink-dim transition-colors hover:bg-surface-2 hover:text-ink"
+              className="rounded-lg border border-transparent px-3 py-3 text-[15px] text-ink-dim transition-colors hover:border-line-2 hover:text-ink"
             >
               {l.label}
             </a>
@@ -104,7 +104,7 @@ export function Navbar() {
             <a
               href="#waitlist"
               onClick={() => setOpen(false)}
-              className="rounded-lg bg-ink px-4 py-3 text-center text-[15px] font-medium text-bg"
+              className="rounded-lg border border-line/80 bg-transparent px-4 py-3 text-center text-[15px] font-medium text-ink"
             >
               Join waitlist
             </a>

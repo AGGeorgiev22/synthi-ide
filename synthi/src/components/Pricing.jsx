@@ -86,8 +86,10 @@ export function Pricing() {
                 <a
                   href="#waitlist"
                   className={cn(
-                    "sheen group mt-7 inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-[14.5px] font-medium transition",
-                    t.highlight ? "bg-brand text-white hover:brightness-110" : "border border-line bg-bg/40 text-ink hover:border-line-2"
+                    "sheen group mt-7 inline-flex items-center justify-center gap-2 rounded-xl border px-5 py-3 text-[14.5px] font-medium transition",
+                    t.highlight
+                      ? "border-brand/50 bg-transparent text-brand hover:border-brand/70"
+                      : "border-line bg-transparent text-ink hover:border-line-2"
                   )}
                 >
                   {t.cta}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Gauge, Cpu, Gamepad2, Bot } from "lucide-react";
 import { SectionHeading } from "@/components/Section";
 import {
@@ -175,6 +175,222 @@ const TABS = [
   },
 ];
 
+/* ---------- Text tabs with a cursor-tracking viewfinder crosshair ----------
+   Plain text labels (no pills) framed by the brand's viewfinder brackets (the
+   same four gradient corners as the logo). A thin crosshair line tracks the
+   pointer with an rAF eased-lerp (the project's Figma-style smooth-cursor
+   convention, not CSS keyframes), and the frame settles onto the active label
+   on leave. Degrades to a static frame on the active label for touch /
+   reduced-motion. */
+const BRACKETS = [
+  { x: "left", y: "top", color: "#ff3dbe" },
+  { x: "right", y: "top", color: "#ff5c2a" },
+  { x: "left", y: "bottom", color: "#22d3ee" },
+  { x: "right", y: "bottom", color: "#7c5cff" },
+];
+
+function cornerStyle({ x, y, color }) {
+  const s = {
+    position: "absolute",
+    height: 11,
+    width: 11,
+    borderColor: color,
+    borderStyle: "solid",
+    borderTopWidth: y === "top" ? 1.5 : 0,
+    borderBottomWidth: y === "bottom" ? 1.5 : 0,
+    borderLeftWidth: x === "left" ? 1.5 : 0,
+    borderRightWidth: x === "right" ? 1.5 : 0,
+  };
+  s[x] = -4;
+  s[y] = -4;
+  s[`border${y === "top" ? "Top" : "Bottom"}${x === "left" ? "Left" : "Right"}Radius`] = 4;
+  return s;
+}
+
+function TabRail({ tabs, active, setActive, reduced }) {
+  const railRef = useRef(null);
+  const pillRefs = useRef([]);
+  const frameRef = useRef(null);
+  const lineRef = useRef(null);
+  const metrics = useRef([]);
+  const pointer = useRef({ x: 0, inside: false });
+  const activeRef = useRef(active);
+  const reducedRef = useRef(reduced);
+  activeRef.current = active;
+  reducedRef.current = reduced;
+  const [enabled, setEnabled] = useState(false);
+
+  const placeStatic = useCallback(() => {
+    const m = metrics.current[activeRef.current];
+    if (m && frameRef.current) {
+      frameRef.current.style.transform = `translate(${m.left}px, ${m.top}px)`;
+      frameRef.current.style.width = `${m.w}px`;
+      frameRef.current.style.height = `${m.h}px`;
+    }
+    if (m && lineRef.current) lineRef.current.style.transform = `translateX(${m.cx}px)`;
+  }, []);
+
+  const measure = useCallback(() => {
+    const rail = railRef.current;
+    if (!rail) return;
+    const rb = rail.getBoundingClientRect();
+    metrics.current = pillRefs.current.map((el) => {
+      if (!el) return null;
+      const b = el.getBoundingClientRect();
+      return {
+        left: b.left - rb.left,
+        top: b.top - rb.top,
+        w: b.width,
+        h: b.height,
+        cx: b.left - rb.left + b.width / 2,
+      };
+    });
+    if (reducedRef.current) placeStatic();
+  }, [placeStatic]);
+
+  // Cursor tracking only for fine pointers on wider screens (no touch hijack).
+  useEffect(() => {
+    if (reduced) { setEnabled(false); return; }
+    const mq = window.matchMedia("(hover: hover) and (pointer: fine) and (min-width: 640px)");
+    const apply = () => setEnabled(mq.matches);
+    apply();
+    mq.addEventListener("change", apply);
+    return () => mq.removeEventListener("change", apply);
+  }, [reduced]);
+
+  // Measure pill geometry on mount, on resize, and once more after fonts settle.
+  useEffect(() => {
+    measure();
+    const ro = new ResizeObserver(measure);
+    if (railRef.current) ro.observe(railRef.current);
+    window.addEventListener("resize", measure);
+    const t = setTimeout(measure, 260);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", measure);
+      clearTimeout(t);
+    };
+  }, [measure]);
+
+  // Reduced motion / static: snap the frame to the active pill on selection.
+  useEffect(() => {
+    if (reduced) placeStatic();
+  }, [active, reduced, placeStatic]);
+
+  // Persistent eased-lerp loop (non-reduced): glides the frame toward the
+  // targeted pill and the crosshair toward the live pointer.
+  useEffect(() => {
+    if (reduced) return;
+    let raf = 0;
+    const a = { fx: null, fy: 0, fw: 0, fh: 0, lx: 0 };
+    const tick = () => {
+      const m = metrics.current;
+      const act = m[activeRef.current];
+      if (act) {
+        let target = act;
+        if (pointer.current.inside) {
+          let best = act;
+          let bestD = Infinity;
+          for (const p of m) {
+            if (!p) continue;
+            const d = Math.abs(p.cx - pointer.current.x);
+            if (d < bestD) { bestD = d; best = p; }
+          }
+          target = best;
+        }
+        if (a.fx == null) {
+          a.fx = target.left; a.fy = target.top; a.fw = target.w; a.fh = target.h; a.lx = act.cx;
+        }
+        a.fx += (target.left - a.fx) * 0.22;
+        a.fy += (target.top - a.fy) * 0.22;
+        a.fw += (target.w - a.fw) * 0.22;
+        a.fh += (target.h - a.fh) * 0.22;
+        const lt = pointer.current.inside ? pointer.current.x : act.cx;
+        a.lx += (lt - a.lx) * 0.3;
+        if (frameRef.current) {
+          frameRef.current.style.transform = `translate(${a.fx}px, ${a.fy}px)`;
+          frameRef.current.style.width = `${a.fw}px`;
+          frameRef.current.style.height = `${a.fh}px`;
+        }
+        if (lineRef.current) lineRef.current.style.transform = `translateX(${a.lx}px)`;
+      }
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [reduced]);
+
+  const onMove = (e) => {
+    if (!enabled) return;
+    const rb = railRef.current.getBoundingClientRect();
+    pointer.current.x = e.clientX - rb.left;
+    pointer.current.inside = true;
+    if (lineRef.current) lineRef.current.style.opacity = "1";
+  };
+  const onLeave = () => {
+    pointer.current.inside = false;
+    if (lineRef.current) lineRef.current.style.opacity = "0";
+  };
+  const onKey = (e) => {
+    if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+      e.preventDefault();
+      setActive((active + 1) % tabs.length);
+    }
+    if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+      e.preventDefault();
+      setActive((active - 1 + tabs.length) % tabs.length);
+    }
+  };
+
+  return (
+    <div
+      ref={railRef}
+      role="tablist"
+      aria-label="Workflows"
+      onPointerMove={onMove}
+      onPointerLeave={onLeave}
+      onKeyDown={onKey}
+      className="relative mx-auto mt-12 flex w-fit max-w-full flex-wrap items-center justify-center gap-x-7 gap-y-3 px-6 py-3 sm:gap-x-9"
+    >
+      {/* crosshair scan line — tracks the cursor while hovering */}
+      <span
+        ref={lineRef}
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-y-1 left-0 w-px bg-gradient-to-b from-transparent via-cyan/55 to-transparent opacity-0 transition-opacity duration-300"
+        style={{ transform: "translateX(0px)" }}
+      />
+
+      {/* viewfinder focus frame — the logo's four gradient corner brackets */}
+      <span ref={frameRef} aria-hidden="true" className="pointer-events-none absolute left-0 top-0" style={{ width: 0, height: 0 }}>
+        {BRACKETS.map((b, i) => (
+          <i key={i} style={cornerStyle(b)} />
+        ))}
+      </span>
+
+      {tabs.map((tab, i) => {
+        const on = i === active;
+        return (
+          <button
+            key={tab.id}
+            ref={(el) => (pillRefs.current[i] = el)}
+            type="button"
+            role="tab"
+            aria-selected={on}
+            tabIndex={on ? 0 : -1}
+            onClick={() => setActive(i)}
+            className={cn(
+              "relative z-10 px-1.5 py-1.5 text-[14px] tracking-tight transition-colors duration-200 outline-none",
+              on ? "font-semibold text-ink" : "font-medium text-ink-faint hover:text-ink-dim"
+            )}
+          >
+            {tab.tab}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
 export function WorkflowSection() {
   const reduced = useReducedMotion();
   const [panelRef, inView] = useActive("0px 0px -15% 0px");
@@ -198,31 +414,8 @@ export function WorkflowSection() {
           subtitle="The same runtime-native loop adapts to whatever you run. These are examples, not an allow-list - if your project has a runtime, Vectant can watch it."
         />
 
-        {/* tab strip */}
-        <div role="tablist" aria-label="Workflows" className="mt-12 flex flex-wrap justify-center gap-2">
-          {TABS.map((tab, i) => {
-            const on = i === active;
-            const Icon = tab.Icon;
-            return (
-              <button
-                key={tab.id}
-                type="button"
-                role="tab"
-                aria-selected={on}
-                onClick={() => setActive(i)}
-                className={cn(
-                  "inline-flex items-center gap-2 rounded-full border px-4 py-2 text-[13.5px] font-medium transition-colors",
-                  on
-                    ? "border-cyan/40 bg-cyan/[0.08] text-ink"
-                    : "border-line bg-surface text-ink-dim hover:border-line-2 hover:text-ink"
-                )}
-              >
-                <Icon size={15} className={on ? "text-cyan" : "text-ink-faint"} />
-                {tab.tab}
-              </button>
-            );
-          })}
-        </div>
+        {/* tab rail with cursor-tracking viewfinder crosshair */}
+        <TabRail tabs={TABS} active={active} setActive={setActive} reduced={reduced} />
 
         {/* active panel */}
         <div ref={panelRef} className="mt-10 grid items-center gap-8 lg:grid-cols-[0.82fr_1.18fr] lg:gap-12">
