@@ -561,24 +561,23 @@ html.light .spotlight {
   filter: blur(36px);
 }
 
-/* ---- Product "scene" perspective + reflection (Cursor-style hero shot) ----
-   NOTE: these are plain classes (not Tailwind utilities), so they must be used
-   WITHOUT responsive prefixes. The desktop-only 3D tilt is gated by a media
-   query here instead of a `lg:` variant (which silently produced nothing). */
-.scene-perspective { perspective: 2400px; }
+/* ---- Product "scene": flat & crisp at rest, mouse-parallax tilt on pointer ----
+   IMPORTANT: no `will-change: transform` and no `-webkit-box-reflect` here.
+   Both forced the browser to cache a low-res raster of the big, text-heavy
+   mockup and then scale it under the perspective - that is what made the
+   tilted scene look pixelated, and the reflection doubled it. The scene now
+   rests at a flat 0deg transform (so the layer re-rasterises crisply) and the
+   parallax tilt is set inline from JS (Hero.jsx), >=1024px pointer only.
+   The custom `.scene-*` classes are plain CSS, so never add `sm/lg:` prefixes
+   to them - gate responsiveness in JS or a media query instead. */
+.scene-perspective { perspective: 1500px; perspective-origin: 50% 38%; }
 .scene-tilt {
-  transform-origin: left center;
-  transition: transform 0.9s var(--ease-out-soft);
-  will-change: transform;
+  transform-origin: center center;
+  transition: transform 0.3s var(--ease-out-soft);
+  backface-visibility: hidden;
 }
-.reflect-down { -webkit-box-reflect: below 12px linear-gradient(transparent 60%, rgba(0, 0, 0, 0.18)); }
-
-@media (min-width: 1024px) {
-  .scene-tilt { transform: perspective(2400px) rotateY(-7deg) rotateX(2.5deg) rotate(0.3deg); }
-  .scene-perspective:hover .scene-tilt {
-    transform: perspective(2400px) rotateY(-2.5deg) rotateX(1deg) rotate(0deg);
-  }
-}
+/* soft ground shadow so the flat scene still reads as a floating panel */
+.scene-shadow { box-shadow: 0 40px 80px -32px rgba(0, 0, 0, 0.65); border-radius: 16px; }
 @media (prefers-reduced-motion: reduce) {
   .scene-tilt { transform: none !important; transition: none; }
 }

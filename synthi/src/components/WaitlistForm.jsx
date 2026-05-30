@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { toast } from "sonner";
+import { track } from "@vercel/analytics";
 import { ArrowRight, Loader2, Rocket } from "lucide-react";
 import { useReducedMotion } from "@/components/lib/useMotion";
 import { cn } from "@/lib/utils";
@@ -54,6 +55,11 @@ export function WaitlistForm({ variant = "hero", className, autoFocus = false })
         setAlready(isAlready);
         setJoined(true);
         setEmail("");
+        // Attribute the conversion to the hero A/B bucket (set by useHeadlineVariant).
+        try {
+          const variant = localStorage.getItem("vt-headline") || "unknown";
+          track("waitlist_join", { variant, already: isAlready });
+        } catch {}
         return isAlready ? "You're already on the waitlist." : "You're on the list. We'll be in touch.";
       },
       error: (err) => {

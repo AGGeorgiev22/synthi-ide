@@ -224,6 +224,38 @@ export function useTypewriterCycle(
 }
 
 /**
+ * A/B assignment for the hero headline. Returns `null` until mounted (so SSR
+ * and the first client paint render a stable default), then 'typewriter' |
+ * 'static'. Precedence: `?headline=` URL override -> stored assignment ->
+ * fresh random 50/50. The choice is persisted in localStorage so a visitor
+ * stays in one bucket, and is readable later (e.g. by the waitlist form) to
+ * attribute conversions. Append `?headline=static` / `?headline=typewriter`
+ * to force a variant for QA.
+ */
+export function useHeadlineVariant() {
+  const [variant, setVariant] = useState(null);
+  useEffect(() => {
+    let v;
+    try {
+      const q = new URLSearchParams(window.location.search).get("headline");
+      if (q === "static" || q === "typewriter") {
+        v = q;
+      } else {
+        v = localStorage.getItem("vt-headline");
+        if (v !== "static" && v !== "typewriter") {
+          v = Math.random() < 0.5 ? "typewriter" : "static";
+        }
+      }
+      localStorage.setItem("vt-headline", v);
+    } catch {
+      v = "typewriter";
+    }
+    setVariant(v);
+  }, []);
+  return variant;
+}
+
+/**
  * Scroll progress (0..1) of a tall section relative to the viewport.
  * Drives pinned / scroll-driven storytelling. rAF-throttled.
  */

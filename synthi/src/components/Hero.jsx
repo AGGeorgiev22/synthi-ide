@@ -1,12 +1,15 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { track } from "@vercel/analytics";
 import { Play, Check } from "lucide-react";
 import { HeroWorkspaceMockup, HERO_STEP_COUNT } from "@/components/HeroWorkspaceMockup";
 import { WaitlistForm } from "@/components/WaitlistForm";
 import { WaitlistCount } from "@/components/WaitlistCount";
 import { Squiggle } from "@/components/Squiggle";
-import { useReducedMotion, useActive, useTypewriterCycle } from "@/components/lib/useMotion";
+import { useReducedMotion, useActive, useTypewriterCycle, useHeadlineVariant } from "@/components/lib/useMotion";
+
+const clamp = (n, lo, hi) => Math.min(hi, Math.max(lo, n));
 
 const DWELL = [1100, 1100, 1200, 1600, 1400, 1500, 1500, 1500, 1500, 3400];
 
@@ -31,7 +34,57 @@ export function Hero() {
   const [holderRef, active] = useActive("0px 0px -20% 0px");
   const [step, setStep] = useState(0);
   const timer = useRef(null);
-  const [typed, typeMeta] = useTypewriterCycle(HEADLINE_PHRASES, { reduced });
+  const sceneRef = useRef(null);
+
+  // A/B: 'typewriter' vs 'static' headline (null until mounted -> SSR-stable).
+  const variant = useHeadlineVariant();
+  const showTypewriter = variant === "typewriter";
+  const [typed, typeMeta] = useTypewriterCycle(HEADLINE_PHRASES, {
+    reduced,
+    active: showTypewriter,
+  });
+
+  // Fire the A/B exposure event once the bucket is known.
+  useEffect(() => {
+    if (!variant) return;
+    try {
+      track("headline_variant", { variant });
+    } catch {}
+  }, [variant]);
+
+  // Mouse-parallax tilt for the product scene. Flat (crisp) at rest; follows
+  // the cursor on >=1024px pointer devices. Gated per-move on width (so it
+  // keeps working across resizes) and skipped for reduced motion / touch.
+  useEffect(() => {
+    if (reduced) return;
+    const holder = holderRef.current;
+    const el = sceneRef.current;
+    if (!holder || !el) return;
+
+    const wide = () => window.matchMedia("(min-width: 1024px)").matches;
+    let raf = 0;
+    const onMove = (e) => {
+      if (e.pointerType === "touch" || !wide()) return;
+      const r = holder.getBoundingClientRect();
+      const px = (e.clientX - r.left) / r.width - 0.5;
+      const py = (e.clientY - r.top) / r.height - 0.5;
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        el.style.transform = `rotateY(${clamp(-px * 11, -8, 8)}deg) rotateX(${clamp(py * 7, -5, 5)}deg)`;
+      });
+    };
+    const onLeave = () => {
+      cancelAnimationFrame(raf);
+      el.style.transform = "";
+    };
+    holder.addEventListener("pointermove", onMove);
+    holder.addEventListener("pointerleave", onLeave);
+    return () => {
+      cancelAnimationFrame(raf);
+      holder.removeEventListener("pointermove", onMove);
+      holder.removeEventListener("pointerleave", onLeave);
+    };
+  }, [reduced, holderRef]);
 
   useEffect(() => {
     if (reduced) {
@@ -91,12 +144,21 @@ export function Hero() {
                   </span>
                 ))}
               </span>
-              {/* typewriter tail - height reserved for up to two lines so the
-                  scene next to it never shifts as phrases swap. Animated text
-                  is aria-hidden; the sr-only phrase keeps the H1 readable. */}
+              {/* headline tail - A/B between a cycling typewriter and a static
+                  phrase. Height reserved for two lines so the scene beside it
+                  never shifts. SSR/first paint renders the static phrase (also
+                  the no-JS fallback); the typewriter takes over once assigned.
+                  Animated text is aria-hidden; the sr-only phrase keeps the
+                  H1 readable. */}
               <span className="mt-1 block min-h-[2.05em]" aria-hidden="true">
-                <span className="serif-accent text-gradient">{typed}</span>
-                <span className="type-caret" data-typing={typeMeta.typing} />
+                {showTypewriter ? (
+                  <>
+                    <span className="serif-accent text-gradient">{typed}</span>
+                    <span className="type-caret" data-typing={typeMeta.typing} />
+                  </>
+                ) : (
+                  <span className="serif-accent text-gradient">trust your agents.</span>
+                )}
               </span>
               <span className="sr-only">trust your agents.</span>
             </h1>
@@ -134,9 +196,13 @@ export function Hero() {
             </div>
           </div>
 
-          {/* right: live workspace as a tilted, reflected product scene */}
+          {/* right: live workspace as a crisp product scene with mouse-parallax
+              depth (flat at rest, tilts toward the cursor) */}
           <div ref={holderRef} className="reveal in-view relative scene-perspective lg:h-full">
-            <div className="relative mx-auto w-full max-w-2xl scene-tilt reflect-down lg:mx-0 lg:w-[720px] lg:max-w-none xl:w-[800px]">
+            <div
+              ref={sceneRef}
+              className="scene-tilt scene-shadow relative mx-auto w-full max-w-2xl lg:mx-0 lg:w-[720px] lg:max-w-none xl:w-[800px]"
+            >
               <HeroWorkspaceMockup step={step} />
             </div>
           </div>
