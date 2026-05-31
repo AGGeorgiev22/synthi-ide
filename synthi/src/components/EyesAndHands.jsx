@@ -12,7 +12,7 @@ const EYES = [
   "Crashes & panics",
   "Test results",
   "GPU / kernel feedback",
-  "Live preview & state",
+  "Live preview & state transitions",
 ];
 
 const HANDS = [
@@ -20,7 +20,8 @@ const HANDS = [
   "Propose a patch",
   "Hot-reload changes",
   "Re-run the tests",
-  "Verify the fix",
+  "Verify the fix end-to-end",
+  "Hand off to sub-agents",
 ];
 
 export function EyesAndHands() {
@@ -30,8 +31,8 @@ export function EyesAndHands() {
         <SectionHeading
           eyebrow="What agents are missing"
           align="center"
-          title="Most agents code blind, and empty-handed."
-          subtitle="They read files and guess. They can't watch the program run, and they can't act on what it does. Vectant gives the agent eyes and hands inside one cloud workspace."
+          title="Most agents code blind, and empty-handed.."
+          subtitle="Most agents code blind and empty-handed. They read files and guess. They can't watch the program run or act on what it does. Vectant gives agents eyes and hands inside a cloud workspace, so they can observe, intervene, and verify outcomes before moving on."
         />
 
         <div className="mt-14 grid items-stretch gap-4 lg:grid-cols-[1fr_auto_1fr]">
@@ -44,7 +45,7 @@ export function EyesAndHands() {
               </span>
               <div>
                 <h3 className="text-[17px] font-semibold text-ink">Eyes</h3>
-                <p className="text-[12.5px] text-ink-faint">Observe the program as it runs</p>
+                <p className="text-[12.5px] text-ink-faint">Observe outputs, signals, and state transitions first</p>
               </div>
             </div>
             <ul className="space-y-2.5">
@@ -94,7 +95,7 @@ export function EyesAndHands() {
               </span>
               <div>
                 <h3 className="text-[17px] font-semibold text-ink">Hands</h3>
-                <p className="text-[12.5px] text-ink-faint">Act on what it sees, then prove it</p>
+                <p className="text-[12.5px] text-ink-faint">Act, patch, and verify inside the same runtime workspace</p>
               </div>
             </div>
             <ul className="space-y-2.5">
@@ -121,4 +122,3 @@ export function EyesAndHands() {
     </section>
   );
 }
-

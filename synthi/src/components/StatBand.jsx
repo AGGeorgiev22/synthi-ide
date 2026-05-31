@@ -37,18 +37,20 @@ export function StatBand() {
 
   const animated = useCountUp(count, active, reduced);
   const hasCount = count > 0;
-  // 0.18s tracked in hundredths so it can ease up like the waitlist figure
-  const buildCs = useCountUp(18, active, reduced);
-
+  // 7.4s tracked in hundredths so it can ease up like the waitlist figure
+  const buildCs = useCountUp(740, active, reduced);
+  
   return (
     <section className="relative bg-bg-2/40">
-      <div ref={ref} className="mx-auto grid max-w-7xl grid-cols-1 px-5 sm:grid-cols-3 sm:px-8">
+      <div ref={ref} className="mx-auto grid max-w-7xl grid-cols-1 px-5 sm:grid-cols-4 sm:px-8">
         <Stat
           value={hasCount ? `${animated.toLocaleString()}+` : "Private"}
           label={hasCount ? "developers on the waitlist" : "beta - early access now open"}
         />
         <Stat value={`${(buildCs / 100).toFixed(2)}s`} label="median cloud build, not minutes" />
         <Stat value="Any" label="agent, language, or runtime" />
+        <Stat value="Instant." label="iteration speed" />
+        
       </div>
     </section>
   );

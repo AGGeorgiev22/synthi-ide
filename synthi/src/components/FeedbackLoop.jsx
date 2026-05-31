@@ -91,16 +91,16 @@ export function FeedbackLoop() {
     <section id="loop" className="relative scroll-mt-24 border-y border-line bg-bg-2/40 py-20 sm:py-24">
       <div ref={ref} className="mx-auto max-w-7xl px-5 sm:px-8">
         <SectionHeading
-          eyebrow="Self-healing runtime"
+          eyebrow="Runtime execution loop"
           align="center"
           maxWidth="max-w-3xl"
           title={
             <>
-              We don&rsquo;t rebuild. We patch the program{" "}
-              <span className="serif-accent text-ink-dim">while it runs.</span>
+              We don&rsquo;t guess from snapshots. We patch{" "}
+              <span className="serif-accent text-ink-dim">the live runtime.</span>
             </>
           }
-          subtitle="Vectant observes the live runtime, predicts failures before they surface, and patches in place - state preserved, no restart, no lost context. A loop that closes itself."
+          subtitle="Vectant watches builds, logs, tests, previews, and GPU/runtime signals, then applies minimal edits and re-verifies before continuing. State is preserved; no full restart required."
         />
 
         <div className="mt-14 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
@@ -149,9 +149,9 @@ export function FeedbackLoop() {
           })}
         </div>
 
-        {/* continuous self-healing indicator */}
+        {/* continuous execution indicator */}
         <div className="mt-8 flex items-center gap-3">
-          <span className="font-mono text-[10.5px] uppercase tracking-[0.18em] text-ink-faint">self-healing</span>
+          <span className="font-mono text-[10.5px] uppercase tracking-[0.18em] text-ink-faint">runtime loop</span>
           <div className="relative h-px flex-1 overflow-hidden bg-line">
             <div
               className="absolute inset-y-0 left-0 bg-gradient-to-r from-cyan to-violet transition-[width] duration-500"
@@ -159,7 +159,7 @@ export function FeedbackLoop() {
             />
           </div>
           <span className="inline-flex items-center gap-1.5 font-mono text-[10.5px] text-ink-faint">
-            <Repeat size={11} className="text-cyan" /> closes itself
+            <Repeat size={11} className="text-cyan" /> closes by evidence
           </span>
         </div>
       </div>
