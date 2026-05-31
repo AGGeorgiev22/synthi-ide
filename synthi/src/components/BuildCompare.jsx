@@ -30,7 +30,7 @@ function HmrPulse({ size = 15, className }) {
    runtimes out as fixed columns (Local in red on the left, Vectant in green on
    the tinted right) so the difference reads at a glance. */
 const METRICS = [
-  { Icon: RuntimeClock, k: "Build time", local: "47.2s", vt: "0.18s" },
+  { Icon: RuntimeClock, k: "Build time", local: "47.2s", vt: "7.4s" },
   { Icon: Cpu, k: "CPU usage", local: "98%", vt: "2%" },
   { Icon: Wind, k: "Cooling", local: "Jet engine", vt: "Silent" },
   { Icon: HmrPulse, k: "Hot reload", local: "Not supported", vt: "Instant" },
