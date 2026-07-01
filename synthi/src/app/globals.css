@@ -3510,8 +3510,8 @@ html.light .spotlight {
 @media (min-width: 1120px) {
   .hero-main-grid {
     align-items: start;
-    min-height: 104dvh;
-    padding-top: clamp(28px, 5vh, 58px);
+    min-height: clamp(660px, 84dvh, 900px);
+    padding-top: clamp(20px, 3.6vh, 46px);
   }
 
   .hero-product-float {
@@ -3521,7 +3521,7 @@ html.light .spotlight {
   }
 
   .hero-title {
-    font-size: 72px;
+    font-size: 68px;
   }
 
   .runtime-lede h2,
@@ -3545,7 +3545,7 @@ html.light .spotlight {
 
 @media (min-width: 1440px) {
   .hero-title {
-    font-size: 80px;
+    font-size: 76px;
   }
 
   .runtime-lede h2,
