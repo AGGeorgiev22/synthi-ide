@@ -183,9 +183,9 @@ export function VectantMotion() {
         ScrollTrigger.create({
           trigger: onramp,
           start: "top 92px",
-          end: "bottom bottom",
+          end: "+=160%",
           pin: onrampGrid,
-          pinSpacing: false,
+          pinSpacing: true,
           anticipatePin: 1,
         });
       }

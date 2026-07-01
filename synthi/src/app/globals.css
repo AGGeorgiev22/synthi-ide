@@ -2095,21 +2095,57 @@ html.light .spotlight {
 }
 
 .agent-onramp-line-shell {
-  height: 1px;
+  position: relative;
+  height: 58px;
   transform-origin: left center;
   background: rgba(255, 247, 239, 0.1);
+  border-bottom: 1px solid var(--campaign-line);
+  overflow: hidden;
 }
 
 .agent-onramp-line {
-  height: 100%;
+  position: absolute;
+  inset: 0;
   transform-origin: left center;
-  background: linear-gradient(90deg, #ff8a61, #55d8ef);
+  background: linear-gradient(90deg, rgba(255, 138, 97, 0.28), rgba(85, 216, 239, 0.22));
+}
+
+.agent-onramp-rail-labels {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  height: 100%;
+}
+
+.agent-onramp-rail-step {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px solid rgba(255, 247, 239, 0.1);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  color: rgba(255, 247, 239, 0.38);
+  transition:
+    color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.agent-onramp-rail-step:last-child {
+  border-right: 0;
+}
+
+.agent-onramp-rail-step-active {
+  color: #fff7ef;
+  background: rgba(255, 247, 239, 0.035);
 }
 
 .agent-onramp-step-stage {
   position: relative;
   min-height: 430px;
   overflow: hidden;
+  perspective: 1200px;
 }
 
 .agent-onramp-step-card {
@@ -2124,7 +2160,31 @@ html.light .spotlight {
     radial-gradient(78% 68% at 82% 0%, rgba(255, 106, 61, 0.13), transparent 72%),
     linear-gradient(180deg, rgba(255, 255, 255, 0.038), rgba(255, 255, 255, 0.012)),
     #101011;
+  pointer-events: none;
+  transform-origin: center bottom;
   will-change: transform, opacity;
+}
+
+.agent-onramp-step-card-active {
+  pointer-events: auto;
+}
+
+.agent-onramp-reduced .agent-onramp-step-stage {
+  display: grid;
+  min-height: auto;
+  overflow: visible;
+  perspective: none;
+}
+
+.agent-onramp-reduced .agent-onramp-step-card {
+  position: relative;
+  min-height: auto;
+  border-bottom: 1px solid var(--campaign-line);
+  transform: none !important;
+}
+
+.agent-onramp-reduced .agent-onramp-step-card:last-child {
+  border-bottom: 0;
 }
 
 .agent-onramp-step-card span {

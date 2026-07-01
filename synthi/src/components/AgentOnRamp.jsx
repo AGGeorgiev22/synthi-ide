@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { AnimatePresence, motion, useMotionValueEvent, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { motion, useMotionValueEvent, useReducedMotion, useScroll, useTransform } from "framer-motion";
 
 const STEPS = [
   {
@@ -21,17 +21,32 @@ const STEPS = [
   },
 ];
 
-function StepCard({ step, index, reduce }) {
+function StepCard({ step, index, activeIndex, reduce }) {
+  const isActive = index === activeIndex;
+  const isPast = index < activeIndex;
+
   return (
     <motion.article
       key={step.verb}
-      className="agent-onramp-step-card"
-      initial={reduce ? false : { opacity: 0, y: 72, scale: 0.975 }}
-      animate={reduce ? { opacity: 1, y: 0, scale: 1 } : { opacity: 1, y: 0, scale: 1 }}
-      exit={reduce ? { opacity: 0 } : { opacity: 0, y: -72, scale: 0.985 }}
-      transition={{ duration: reduce ? 0 : 0.54, ease: [0.16, 1, 0.3, 1] }}
+      className={`agent-onramp-step-card ${isActive ? "agent-onramp-step-card-active" : ""}`}
+      aria-hidden={!isActive}
+      initial={false}
+      animate={
+        reduce
+          ? { opacity: 1, y: 0, scale: 1, rotateX: 0 }
+          : isActive
+            ? { opacity: 1, y: 0, scale: 1, rotateX: 0 }
+            : {
+                opacity: isPast ? 0 : 0.28,
+                y: isPast ? -58 : 58,
+                scale: isPast ? 0.975 : 0.94,
+                rotateX: isPast ? 5 : -7,
+              }
+      }
+      transition={{ duration: reduce ? 0 : 0.72, ease: [0.16, 1, 0.3, 1] }}
+      style={{ zIndex: isActive ? 3 : isPast ? 1 : 2 }}
     >
-      <span>Step {index + 1} / 3</span>
+      <span>{step.verb}</span>
       <h3>{step.title}</h3>
       <p>{step.copy}</p>
     </motion.article>
@@ -50,7 +65,7 @@ export function AgentOnRamp() {
   const y = useTransform(scrollYProgress, [0, 1], [24, -20]);
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
     if (reduce) return;
-    const nextIndex = latest < 0.24 ? 0 : latest < 0.55 ? 1 : 2;
+    const nextIndex = Math.min(STEPS.length - 1, Math.floor(Math.min(latest, 0.999) * STEPS.length));
     setActiveIndex((current) => (current === nextIndex ? current : nextIndex));
   });
 
@@ -78,11 +93,27 @@ export function AgentOnRamp() {
             </div>
             <div className="agent-onramp-line-shell" aria-hidden="true">
               <motion.div className="agent-onramp-line" style={{ scaleX: reduce ? 1 : scaleX }} />
+              <div className="agent-onramp-rail-labels">
+                {STEPS.map((step, index) => (
+                  <span
+                    key={step.verb}
+                    className={index <= activeIndex ? "agent-onramp-rail-step agent-onramp-rail-step-active" : "agent-onramp-rail-step"}
+                  >
+                    {step.verb}
+                  </span>
+                ))}
+              </div>
             </div>
             <div className="agent-onramp-step-stage">
-              <AnimatePresence mode="wait" initial={false}>
-                <StepCard step={STEPS[activeIndex]} index={activeIndex} reduce={reduce} />
-              </AnimatePresence>
+              {STEPS.map((step, index) => (
+                <StepCard
+                  key={step.verb}
+                  step={step}
+                  index={index}
+                  activeIndex={reduce ? index : activeIndex}
+                  reduce={reduce}
+                />
+              ))}
             </div>
           </motion.div>
         </div>
