@@ -382,10 +382,10 @@ const SURFACES = [
 ];
 
 const DOGFOOD_ITEMS = [
-  ["runtime", "This page ships from the same cloud workspace loop we sell: repo, browser, terminal, agents, proof, and reload state."],
-  ["vectant", "Agent changes move through Vectant clearances, no-fly zones, proof packets, and handoff evidence."],
-  ["evidence", "The product surfaces are captures from running Vectant workspaces. Not stock dashboards. Not abstract mockups."],
-  ["hard repo", "We use the loop on our own product before asking you to connect the repo your team is afraid to let an agent touch."],
+  ["runtime", "Built in the same cloud loop: repo, terminal, browser, agents, reload state, and proof."],
+  ["vectant", "Every agent change carries clearance, no-fly boundaries, evidence, and handoff context."],
+  ["evidence", "Screenshots come from running Vectant workspaces, not placeholder dashboard art."],
+  ["hard repo", "We test the loop on Vectant before asking for your guarded repo."],
 ];
 
 const PILOT_ITEMS = [
@@ -503,12 +503,12 @@ function Hero() {
       <div className="campaign-atmosphere" aria-hidden="true" />
       <div className="hero-main-grid mx-auto grid max-w-[1540px] gap-12 px-4 pb-16 sm:px-6 lg:grid-cols-[0.92fr_1.08fr] lg:items-center lg:px-8 lg:pb-24">
         <div className="max-w-[880px]" data-reveal>
-          <p className="hero-kicker"><span>World's first fully autonomous agentic runtime environment</span></p>
+          <p className="hero-kicker"><span>Cloud runtime control plane for autonomous coding</span></p>
           <h1 className="hero-title">
-            Agent infrastructure for hard repos.
+            Let agents work where proof matters.
           </h1>
           <p className="hero-copy">
-            Run agents inside live workspaces with scoped authority, VS Code extension paths, GPU hot reload, and proof packets reviewers can replay.
+            Run them in live cloud workspaces with scoped leases, VS Code paths, MCP control, GPU HMR, and replayable proof.
           </p>
           <div className="mt-8 max-w-2xl">
             <WaitlistForm
@@ -519,7 +519,7 @@ function Hero() {
           </div>
           <div className="mt-5 flex flex-wrap gap-3">
             <PrimaryCta href="#waitlist">Run the hard repo</PrimaryCta>
-            <SecondaryCta href="#gpu-hmr">See GPU reload proof</SecondaryCta>
+            <SecondaryCta href="#proof">See runtime evidence</SecondaryCta>
           </div>
         </div>
         <HeroProductFloat />
@@ -550,9 +550,9 @@ function ComparisonSection() {
     <section id="runtime" className="runtime-campaign surface-dark scroll-mt-16 bg-[#070708] py-24 text-white md:py-36">
       <div className="mx-auto max-w-[1500px] px-4 sm:px-6 lg:px-8">
         <div className="runtime-lede" data-reveal>
-          <h2>The bottleneck is peaceful production mutation.</h2>
+          <h2>Code is easy. Safe mutation is the bottleneck.</h2>
           <p>
-            Today's tools can produce code at frightening speed. The expensive part starts after the diff: was the agent allowed to touch that file, did the app run, did state survive, and can a reviewer replay the evidence without trusting a paragraph?
+            Today's tools produce plausible diffs fast. The expensive part starts after the edit: was the agent allowed to touch that file, did state survive, and can a reviewer replay the evidence?
           </p>
         </div>
 
@@ -572,16 +572,16 @@ function ComparisonSection() {
               "Agents",
               "do",
               "not",
-              "finish.",
+              "merge.",
               "They",
-              "request",
+              "earn",
               "landing.",
               "Every",
               "serious",
               "claim",
-              "has",
+              "carries",
               "an",
-              "artifact.",
+              "proof.",
             ].map((word, index) => (
               <span key={`${word}-${index}`} className="scrub-word">
                 {word}{" "}
@@ -599,9 +599,9 @@ function RuntimeControlSection() {
     <section id="capabilities" className="runtime-campaign surface-dark scroll-mt-16 bg-[#070708] py-24 text-white md:py-36">
       <div className="mx-auto max-w-[1500px] px-4 sm:px-6 lg:px-8">
         <div className="section-lede max-w-[1040px]" data-reveal>
-          <h2>The control plane between vibe coding and production.</h2>
+          <h2>The control plane between agent speed and production risk.</h2>
           <p>
-            Vectant is not chat over a repo. It is execution, observation, access control, policy, replay, and proof around the running system, with every VS Code extension path and MCP tool inside the same runtime truth.
+            Vectant is not chat over a repo. It is execution, observation, access control, policy, replay, and proof around the running system, with VS Code extension paths and MCP tools inside the same runtime truth.
           </p>
         </div>
 
@@ -645,11 +645,11 @@ function DogfoodSection() {
           <div className="dogfood-copy">
             <div className="dogfood-status">
               <span>vectant/self</span>
-              <strong>runtime eating its own proof</strong>
+              <strong>built inside the runtime</strong>
             </div>
-            <h2>Don't take our word for it. We use Vectant to build Vectant.</h2>
+            <h2>Vectant ships through its own control plane.</h2>
             <p>
-              The same runtime that hosts the product, coordinates agents, records evidence, and reloads proof surfaces is the runtime behind this page. If Vectant cannot survive its own gates, reload loops, and agent handoffs, it does not get to ask for your production repo.
+              The workspace behind this page contains repo, browser, terminal, agents, HMR state, clearance, and proof. The screenshots are captured product surfaces, not concept art.
             </p>
             <div className="dogfood-proof-line" aria-label="Vectant self-build proof path">
               <span>workspace</span>
@@ -772,9 +772,9 @@ function CodeSiteProofSection() {
     <section id="proof" className="runtime-campaign surface-dark scroll-mt-16 bg-[#070708] py-24 text-white md:py-36">
       <div className="mx-auto max-w-[1500px] px-4 sm:px-6 lg:px-8">
         <div className="section-lede max-w-[1110px]" data-reveal>
-          <h2>Vectant makes every agent landing inspectable.</h2>
+          <h2>Every agent landing leaves a black box.</h2>
           <p>
-            An agent does not simply write and hope. It files a flight plan, receives a MutationLease, respects no-fly zones, watches conflict forecasts, passes landing inspection, and leaves a black-box handoff. If it writes outside managed clearance, the runtime can quarantine before it reaches the repo.
+            Before a diff reaches the repo, Vectant records the route, lease, no-fly zones, conflicts, checks, replay, and output evidence. Review the change by opening the proof packet, not by trusting a summary.
           </p>
         </div>
 
@@ -794,12 +794,12 @@ function DojoSection() {
       <div className="mx-auto max-w-[1500px] px-4 sm:px-6 lg:px-8">
         <div className="dojo-stage">
           <div className="dojo-copy" data-reveal>
-            <h2>Vectant turns demos into licenses.</h2>
+            <h2>Teach once. License only what survives checkrides.</h2>
             <p>
-              Today's tools can replay a transcript. Vectant turns a demonstrated workflow into a source-aware, testable, proof-carrying capability with bounded authority.
+              Demonstrations become source-aware skills with selectors, boundaries, negative cases, and success evidence.
             </p>
             <p>
-              Vectant extracts the steps, makes the skill practice, proves the behavior, and decides where that capability is allowed to land.
+              Vivarium rehearses the workflow. Vectant grants a narrow license only where replay and proof pass.
             </p>
           </div>
 
@@ -834,9 +834,9 @@ function TrustSystemsSection() {
       <div className="mx-auto max-w-[1500px] px-4 sm:px-6 lg:px-8">
         <div className="grid gap-12 lg:grid-cols-[0.82fr_1.18fr] lg:items-start">
           <div className="sticky top-24 self-start" data-reveal>
-            <h2 className="trust-headline">Vibe coding becomes production work when authority is earned.</h2>
+            <h2 className="trust-headline">Production authority has to be earned.</h2>
             <p className="trust-copy">
-              Vectant turns trust into explicit systems: route clearance, proof bundles, skill licenses, counterfactual memory, causal replay, and deterministic evidence load.
+              Clearance, leases, licenses, causal replay, and evidence load decide what an agent can touch, when it can act, and when it gets revoked.
             </p>
           </div>
 
@@ -881,10 +881,10 @@ function FeatureSystemsSection() {
 
         <div className="feature-cta-strip" data-reveal>
           <div>
-            <h3>Try the rest inside Vectant.</h3>
-            <p>Whatever you dream of building is possible when the agent has a runtime, not just a chat box.</p>
+            <h3>Bring the loop that currently scares reviewers.</h3>
+            <p>Vectant attaches runtime state, policy, replay, and proof before the agent asks to land work.</p>
           </div>
-          <PrimaryCta href="#waitlist">Start today</PrimaryCta>
+          <PrimaryCta href="#waitlist">Request pilot access</PrimaryCta>
         </div>
       </div>
     </section>
@@ -897,9 +897,9 @@ function BeyondSitesSection() {
       <div className="mx-auto max-w-[1500px] px-4 sm:px-6 lg:px-8">
         <div className="grid gap-12 lg:grid-cols-[0.86fr_1.14fr] lg:items-start">
           <div data-reveal>
-          <h2 className="surface-headline">Whatever you dream of building should be runnable in Vectant.</h2>
+          <h2 className="surface-headline">The real wedge is any system that must keep running.</h2>
           <p className="surface-copy">
-              Websites are the obvious demo. The real wedge is any system that can compile, run, render, stream, log, or be driven through browser, terminal, GPU, mobile, GUI, or service channels.
+              Websites are the obvious demo. Vectant is built for systems that compile, render, stream, log, or need browser, terminal, GPU, mobile, GUI, or service control.
           </p>
           </div>
           <div className="surface-list" data-reveal>
@@ -921,9 +921,9 @@ function PricingSection() {
     <section id="pricing" className="runtime-campaign surface-dark scroll-mt-16 bg-[#070708] py-24 text-white md:py-36">
       <div className="mx-auto grid max-w-[1500px] gap-10 px-4 sm:px-6 lg:grid-cols-[0.88fr_1.12fr] lg:px-8">
         <div data-reveal>
-          <h2 className="pilot-headline">Run the pilot on the work that breaks today's tools.</h2>
+          <h2 className="pilot-headline">Run the pilot on the repo your agent is not allowed to touch.</h2>
           <p className="pilot-copy">
-            Large-scale ML infra. Enterprise codebases. GPU-heavy edit loops. Robotics and simulation. Extension-dependent teams. Multi-agent production changes. Work where "the agent said it passed" is not good enough.
+            Bring the compiled loop, enterprise extension stack, browser workflow, or multi-agent change that breaks today's tools. Vectant returns the runtime trace, proof packet, and clearance boundary.
           </p>
         </div>
 
@@ -993,14 +993,14 @@ function FinalCta() {
             className="final-cta-logo h-auto w-[240px] sm:w-[300px] md:w-[340px]"
           />
         </div>
-        <h2>Bring the agent you trust. Give it a runtime you can trust.</h2>
+        <h2>Bring the hard repo. Leave with proof.</h2>
         <p>
-          Move from code suggestions to a cloud runtime where agents can see, act, reload, recover, collaborate, earn authority, remember near-misses, and ship evidence for serious software.
+          Run a pilot inside a cloud workspace with your tools, your extensions, your runtime signals, and evidence your reviewers can inspect.
         </p>
         <div className="mx-auto mt-9 max-w-2xl">
           <WaitlistForm
             variant="hero"
-            buttonLabel="Get pilot access"
+            buttonLabel="Request pilot access"
             className="w-full border-white/12 bg-white/[0.035]"
           />
         </div>
