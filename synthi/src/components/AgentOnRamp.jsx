@@ -6,53 +6,72 @@ import { motion, useMotionValueEvent, useReducedMotion, useScroll, useTransform 
 const STEPS = [
   {
     verb: "Bring",
+    state: "agent attached",
     title: "Bring the agent you already trust.",
     copy: "Keep your CLI agent, MCP tools, VS Code extensions, and the workflows your team already believes in.",
+    signal: "repo, tools, browser, terminal",
+    accent: "#ff3dbe",
+    accent2: "#ff6a3d",
+    tracks: ["CLI agent", "MCP tools", "VS Code path"],
   },
   {
     verb: "License",
+    state: "authority scoped",
     title: "Make its authority explicit.",
     copy: "Vectant gives the agent scoped leases, Dojo Cortex licenses, runtime context, and evidence gates.",
+    signal: "leases, policy, no-fly zones",
+    accent: "#ff9f43",
+    accent2: "#ffd166",
+    tracks: ["MutationLease", "Dojo license", "policy gate"],
   },
   {
     verb: "Ship",
+    state: "proof ready",
     title: "Let serious work land.",
     copy: "Vectant lands production-bound changes with replay, line provenance, preserved state, CodeSite clearance, and reviewable output.",
+    signal: "replay, proof, landing",
+    accent: "#22d3ee",
+    accent2: "#8b7bff",
+    tracks: ["line proof", "black box", "review packet"],
   },
 ];
 
-function StepCard({ step, index, activeIndex, reduce, progress }) {
+function ChromaStep({ step, index, activeIndex, reduce }) {
   const isActive = index === activeIndex;
   const isPast = index < activeIndex;
-  const state = isPast ? "sealed" : isActive ? "active" : "queued";
-  const cardProgress = useTransform(progress, [index / STEPS.length, (index + 1) / STEPS.length], [0, 1], { clamp: true });
-  const activeLift = useTransform(cardProgress, [0, 1], [18, -8]);
-  const activeScale = useTransform(cardProgress, [0, 1], [0.965, 1]);
+  const status = isPast ? "sealed" : isActive ? "active" : "queued";
 
   return (
     <motion.article
       key={step.verb}
-      className={`agent-onramp-step-card agent-onramp-step-card-${state} ${isActive ? "agent-onramp-step-card-active" : ""}`}
-      aria-hidden={!isActive}
+      className={`agent-onramp-chroma-step agent-onramp-chroma-step-${status}`}
+      style={{ "--step-accent": step.accent, "--step-accent-2": step.accent2 }}
       initial={false}
       animate={
         reduce
-          ? { opacity: 1, y: 0, scale: 1, rotateX: 0 }
+          ? { opacity: 1, y: 0, scale: 1 }
           : isActive
-            ? { opacity: 1, rotateX: 0 }
+            ? { opacity: 1, y: -8, scale: 1 }
             : {
-                opacity: isPast ? 0.34 : 0.22,
-                y: isPast ? -36 - index * 8 : 62 + index * 12,
-                scale: isPast ? 0.91 : 0.94,
-                rotateX: isPast ? 4 : -6,
+                opacity: isPast ? 0.58 : 0.42,
+                y: isPast ? -4 : 6,
+                scale: 0.97,
               }
       }
-      transition={{ duration: reduce ? 0 : 0.82, ease: [0.16, 1, 0.3, 1] }}
-      style={isActive && !reduce ? { y: activeLift, scale: activeScale, zIndex: 3 } : { zIndex: isPast ? 1 : 2 }}
+      transition={{ duration: reduce ? 0 : 0.5, ease: [0.16, 1, 0.3, 1] }}
     >
-      <span>{step.verb} / {state}</span>
+      <div className="agent-onramp-chroma-step-top">
+        <span>{step.verb}</span>
+        <strong>{isActive ? step.state : status}</strong>
+      </div>
       <h3>{step.title}</h3>
       <p>{step.copy}</p>
+      <div className="agent-onramp-chroma-tracks" aria-label={`${step.verb} runtime tracks`}>
+        {step.tracks.map((track) => (
+          <span key={track}>{track}</span>
+        ))}
+      </div>
+      <small>{step.signal}</small>
     </motion.article>
   );
 }
@@ -66,7 +85,7 @@ export function AgentOnRamp() {
     offset: ["start start", "end end"],
   });
   const y = useTransform(scrollYProgress, [0, 1], [24, -20]);
-  const spineY = useTransform(scrollYProgress, [0, 1], [0, 220]);
+  const chromaY = useTransform(scrollYProgress, [0, 1], [0, 348]);
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
     if (reduce) return;
     const phase = Math.min(2.999, Math.max(0, latest * STEPS.length));
@@ -94,31 +113,19 @@ export function AgentOnRamp() {
           <motion.div className={`agent-onramp-panel ${reduce ? "agent-onramp-reduced" : ""}`} style={reduce ? undefined : { y }}>
             <div className="agent-onramp-panel-top">
               <span>Up and running, one step at a time</span>
-              <strong>real repo required</strong>
+              <strong>live authority rail</strong>
             </div>
-            <div className="agent-onramp-authority-spine" aria-hidden="true">
-              <motion.div className="agent-onramp-spine-cursor" style={reduce ? undefined : { y: spineY }} />
-              <div className="agent-onramp-spine-steps">
-                {STEPS.map((step, index) => (
-                  <span
-                    key={step.verb}
-                    className={index < activeIndex ? "agent-onramp-spine-step agent-onramp-spine-step-sealed" : index === activeIndex ? "agent-onramp-spine-step agent-onramp-spine-step-active" : "agent-onramp-spine-step"}
-                  >
-                    <b>{step.verb}</b>
-                    <em>{index < activeIndex ? "sealed" : index === activeIndex ? "active" : "queued"}</em>
-                  </span>
-                ))}
-              </div>
-            </div>
-            <div className="agent-onramp-step-stage">
+            <div className="agent-onramp-chroma-stage">
+              <motion.div className="agent-onramp-chroma-cursor" style={reduce ? undefined : { y: chromaY }} aria-hidden="true">
+                <span />
+              </motion.div>
               {STEPS.map((step, index) => (
-                <StepCard
+                <ChromaStep
                   key={step.verb}
                   step={step}
                   index={index}
                   activeIndex={reduce ? index : activeIndex}
                   reduce={reduce}
-                  progress={scrollYProgress}
                 />
               ))}
             </div>

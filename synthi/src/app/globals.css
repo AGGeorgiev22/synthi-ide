@@ -2100,7 +2100,7 @@ html.light .spotlight {
 .agent-onramp {
   position: relative;
   overflow: visible;
-  min-height: 220dvh;
+  min-height: 180dvh;
 }
 
 .agent-onramp::before {
@@ -2155,8 +2155,10 @@ html.light .spotlight {
   border: 1px solid var(--campaign-line);
   border-radius: 12px;
   background:
-    radial-gradient(76% 70% at 85% 0%, rgba(45, 212, 238, 0.09), transparent 70%),
-    linear-gradient(135deg, rgba(255, 106, 61, 0.11), transparent 48%),
+    radial-gradient(58% 48% at 14% 8%, rgba(255, 61, 190, 0.18), transparent 70%),
+    radial-gradient(62% 52% at 95% 2%, rgba(34, 211, 238, 0.14), transparent 70%),
+    radial-gradient(66% 58% at 72% 100%, rgba(139, 123, 255, 0.12), transparent 72%),
+    linear-gradient(135deg, rgba(255, 106, 61, 0.08), transparent 48%),
     #0c0c0d;
   box-shadow: 0 34px 90px rgba(0, 0, 0, 0.3);
 }
@@ -2190,6 +2192,172 @@ html.light .spotlight {
 .agent-onramp-panel-top strong {
   font-weight: 650;
   color: rgba(255, 247, 239, 0.5);
+}
+
+.agent-onramp-chroma-stage {
+  position: relative;
+  display: grid;
+  gap: 14px;
+  min-height: 560px;
+  padding: clamp(18px, 2.6vw, 28px);
+  overflow: hidden;
+}
+
+.agent-onramp-chroma-stage::before {
+  content: "";
+  position: absolute;
+  inset: 22px auto 22px 31px;
+  width: 1px;
+  background: linear-gradient(180deg, transparent, rgba(255, 247, 239, 0.18), transparent);
+  pointer-events: none;
+}
+
+.agent-onramp-chroma-cursor {
+  position: absolute;
+  left: 22px;
+  top: 45px;
+  z-index: 5;
+  width: 19px;
+  height: 148px;
+  border-radius: 9999px;
+  background: linear-gradient(180deg, #ff3dbe, #ff6a3d 38%, #ffd166 58%, #22d3ee 78%, #8b7bff);
+  box-shadow:
+    0 0 34px rgba(255, 61, 190, 0.35),
+    0 0 46px rgba(34, 211, 238, 0.2);
+  will-change: transform;
+}
+
+.agent-onramp-chroma-cursor span {
+  position: absolute;
+  inset: 7px 5px;
+  border-radius: inherit;
+  background: rgba(255, 255, 255, 0.58);
+  opacity: 0.56;
+  animation: onramp-cursor-bob 2.1s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+.agent-onramp-chroma-step {
+  position: relative;
+  display: grid;
+  gap: 14px;
+  min-height: 158px;
+  margin-left: 36px;
+  border: 1px solid rgba(255, 247, 239, 0.12);
+  border-radius: 12px;
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--step-accent) 14%, transparent), transparent 40%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.058), rgba(255, 255, 255, 0.016)),
+    rgba(8, 8, 9, 0.72);
+  padding: clamp(18px, 2.4vw, 26px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 22px 62px rgba(0, 0, 0, 0.28);
+  transition:
+    border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.agent-onramp-chroma-step::before,
+.agent-onramp-chroma-step::after {
+  content: "";
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border-color: var(--step-accent);
+  opacity: 0.72;
+  pointer-events: none;
+}
+
+.agent-onramp-chroma-step::before {
+  left: -1px;
+  top: -1px;
+  border-left: 2px solid var(--step-accent);
+  border-top: 2px solid var(--step-accent);
+  border-top-left-radius: 12px;
+}
+
+.agent-onramp-chroma-step::after {
+  right: -1px;
+  bottom: -1px;
+  border-right: 2px solid var(--step-accent-2);
+  border-bottom: 2px solid var(--step-accent-2);
+  border-bottom-right-radius: 12px;
+}
+
+.agent-onramp-chroma-step-active {
+  border-color: color-mix(in srgb, var(--step-accent) 48%, rgba(255, 247, 239, 0.14));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 26px 74px rgba(0, 0, 0, 0.38),
+    0 0 46px color-mix(in srgb, var(--step-accent) 22%, transparent);
+}
+
+.agent-onramp-chroma-step-sealed {
+  border-color: rgba(34, 211, 238, 0.2);
+}
+
+.agent-onramp-chroma-step-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+}
+
+.agent-onramp-chroma-step-top span {
+  color: #fff7ef;
+}
+
+.agent-onramp-chroma-step-top strong {
+  font-weight: 650;
+  color: color-mix(in srgb, var(--step-accent) 72%, white);
+}
+
+.agent-onramp-chroma-step h3 {
+  max-width: 26ch;
+  font-family: var(--font-satoshi), ui-sans-serif, system-ui, sans-serif;
+  font-size: clamp(24px, 2.7vw, 38px);
+  font-weight: 760;
+  line-height: 1;
+  letter-spacing: 0;
+  color: var(--campaign-ink);
+}
+
+.agent-onramp-chroma-step p {
+  max-width: 64ch;
+  font-size: 14px;
+  line-height: 1.58;
+  color: var(--campaign-muted);
+}
+
+.agent-onramp-chroma-step small {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: rgba(255, 247, 239, 0.42);
+}
+
+.agent-onramp-chroma-tracks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.agent-onramp-chroma-tracks span {
+  display: inline-flex;
+  border: 1px solid color-mix(in srgb, var(--step-accent) 32%, rgba(255, 247, 239, 0.12));
+  border-radius: 5px;
+  background: color-mix(in srgb, var(--step-accent) 8%, transparent);
+  padding: 6px 8px;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  color: rgba(255, 247, 239, 0.68);
+}
+
+@keyframes onramp-cursor-bob {
+  0%, 100% { transform: translateY(0); opacity: 0.46; }
+  50% { transform: translateY(-10px); opacity: 0.76; }
 }
 
 .agent-onramp-line-shell {
