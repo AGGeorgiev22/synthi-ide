@@ -85,7 +85,6 @@ export function AgentOnRamp() {
     offset: ["start start", "end end"],
   });
   const y = useTransform(scrollYProgress, [0, 1], [24, -20]);
-  const chromaY = useTransform(scrollYProgress, [0, 1], [0, 348]);
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
     if (reduce) return;
     const phase = Math.min(2.999, Math.max(0, latest * STEPS.length));
@@ -116,7 +115,6 @@ export function AgentOnRamp() {
               <strong>live authority rail</strong>
             </div>
             <div className="agent-onramp-chroma-stage">
-              <motion.div className="agent-onramp-chroma-border" style={reduce ? undefined : { y: chromaY }} aria-hidden="true" />
               {STEPS.map((step, index) => (
                 <ChromaStep
                   key={step.verb}
