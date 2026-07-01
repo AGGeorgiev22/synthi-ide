@@ -1955,15 +1955,74 @@ html.light .spotlight {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   overflow: hidden;
-  border: 1px solid var(--campaign-line);
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(255, 247, 239, 0.18);
+  border-radius: 20px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.064), rgba(255, 255, 255, 0.018)),
+    #09090a;
+  box-shadow:
+    0 32px 90px rgba(0, 0, 0, 0.42),
+    0 0 0 1px rgba(255, 247, 239, 0.035),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.78);
 }
 
 .hero-proof-cell {
+  position: relative;
   min-height: 118px;
   padding: 22px;
-  border-right: 1px solid var(--campaign-line);
+  border-right: 1px solid rgba(255, 247, 239, 0.11);
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.034), rgba(255, 255, 255, 0)),
+    rgba(255, 255, 255, 0.012);
+  overflow: hidden;
+  transition:
+    transform 0.68s cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 0.68s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.68s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hero-proof-cell::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 3px;
+  background: linear-gradient(180deg, #ff3dbe, #ff6a3d 42%, #55d8ef);
+  opacity: 0.28;
+  transform: scaleY(0.42);
+  transform-origin: top center;
+  transition:
+    opacity 0.68s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.68s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hero-proof-cell::after {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  border-radius: 0;
+  background: linear-gradient(125deg, rgba(255, 247, 239, 0.09), transparent 28%);
+  opacity: 0;
+  transition: opacity 0.68s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+.hero-proof-cell:hover {
+  z-index: 1;
+  transform: translateY(-3px);
+  background-color: rgba(255, 255, 255, 0.026);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 24px 58px rgba(0, 0, 0, 0.34);
+}
+
+.hero-proof-cell:hover::before {
+  opacity: 0.86;
+  transform: scaleY(1);
+}
+
+.hero-proof-cell:hover::after {
+  opacity: 1;
 }
 
 .hero-proof-cell:last-child {
@@ -1981,6 +2040,7 @@ html.light .spotlight {
   font-weight: 760;
   line-height: 1;
   color: var(--campaign-ink);
+  transition: transform 0.68s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .hero-proof-cell span {
@@ -1988,6 +2048,15 @@ html.light .spotlight {
   font-size: 13px;
   line-height: 1.55;
   color: var(--campaign-faint);
+  transition: color 0.68s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hero-proof-cell:hover strong {
+  transform: translateY(-2px);
+}
+
+.hero-proof-cell:hover span {
+  color: rgba(255, 247, 239, 0.68);
 }
 
 .proof-marquee {
