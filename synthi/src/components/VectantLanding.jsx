@@ -779,8 +779,8 @@ function CodeSiteProofSection() {
         </div>
 
         <div className="proof-gallery" data-reveal>
-          {PROOF_GALLERY.map((shot) => (
-            <ProductFrame key={`${shot.title}-${shot.src}`} shot={shot} className={`proof-gallery-card ${shot.span || ""}`} />
+          {PROOF_GALLERY.map((shot, index) => (
+            <ProductFrame key={`${shot.title}-${index}-${shot.src}`} shot={shot} className={`proof-gallery-card ${shot.span || ""}`} />
           ))}
         </div>
       </div>
