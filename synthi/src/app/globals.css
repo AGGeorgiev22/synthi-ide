@@ -3845,6 +3845,12 @@ html.light .spotlight {
     margin-top: 0;
   }
 
+  .hero-product-sticky {
+    position: relative;
+    top: auto;
+    min-height: auto;
+  }
+
   .hero-proof-strip,
   .runtime-pillar-grid,
   .deep-feature-grid {
