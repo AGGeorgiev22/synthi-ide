@@ -11,7 +11,8 @@ gsap.registerPlugin(ScrollTrigger, useGSAP);
 export function VectantMotion() {
   useEffect(() => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce) return undefined;
+    const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+    if (reduce || !finePointer) return undefined;
 
     const lenis = new Lenis({
       duration: 0.78,
@@ -177,7 +178,8 @@ export function VectantMotion() {
 
       const onramp = document.querySelector(".agent-onramp");
       const onrampGrid = document.querySelector(".agent-onramp-grid");
-      if (onramp && onrampGrid) {
+      const canPinOnramp = window.matchMedia("(min-width: 1181px)").matches;
+      if (canPinOnramp && onramp && onrampGrid) {
         ScrollTrigger.create({
           trigger: onramp,
           start: "top 92px",

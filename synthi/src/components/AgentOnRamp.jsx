@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion, useMotionValueEvent, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
+import { motion, useMotionValueEvent, useReducedMotion, useScroll, useTransform } from "framer-motion";
 
 const STEPS = [
   {
@@ -36,11 +36,10 @@ const STEPS = [
   },
 ];
 
-const DEFAULT_BORDER_METRICS = [
-  { top: 28, height: 158 },
-  { top: 200, height: 158 },
-  { top: 372, height: 158 },
-];
+const DEFAULT_BORDER_METRICS = {
+  tops: [28, 200, 372],
+  height: 158,
+};
 
 function ChromaStep({ step, index, activeIndex, reduce }) {
   const isActive = index === activeIndex;
@@ -95,27 +94,20 @@ export function AgentOnRamp() {
   });
   const y = useTransform(scrollYProgress, [0, 1], [24, -20]);
   const stepStops = STEPS.map((_, index) => index / (STEPS.length - 1));
-  const borderTop = useTransform(
+  const borderY = useTransform(
     scrollYProgress,
     stepStops,
-    borderMetrics.map((metric) => metric.top),
+    borderMetrics.tops,
   );
-  const borderHeight = useTransform(
-    scrollYProgress,
-    stepStops,
-    borderMetrics.map((metric) => metric.height),
-  );
-  const borderY = useSpring(borderTop, { stiffness: 210, damping: 30, mass: 0.42 });
-  const borderH = useSpring(borderHeight, { stiffness: 210, damping: 30, mass: 0.42 });
-  const borderAngle = useTransform(scrollYProgress, [0, 1], ["-80deg", "280deg"]);
 
   useEffect(() => {
     const stage = stageRef.current;
     if (!stage) return undefined;
+    let frame = 0;
 
     const measure = () => {
       const stageRect = stage.getBoundingClientRect();
-      const nextMetrics = Array.from(stage.querySelectorAll("[data-onramp-step]")).map((node) => {
+      const measured = Array.from(stage.querySelectorAll("[data-onramp-step]")).map((node) => {
         const rect = node.getBoundingClientRect();
         return {
           top: rect.top - stageRect.top,
@@ -123,33 +115,38 @@ export function AgentOnRamp() {
         };
       });
 
-      if (nextMetrics.length !== STEPS.length) return;
+      if (measured.length !== STEPS.length) return;
+
+      const nextMetrics = {
+        tops: measured.map((metric) => metric.top),
+        height: Math.max(...measured.map((metric) => metric.height)),
+      };
 
       setBorderMetrics((current) => {
-        const unchanged = nextMetrics.every((metric, index) => {
-          const previous = current[index];
-          return previous && Math.abs(previous.top - metric.top) < 0.5 && Math.abs(previous.height - metric.height) < 0.5;
-        });
+        const unchanged =
+          Math.abs(current.height - nextMetrics.height) < 0.5 &&
+          nextMetrics.tops.every((top, index) => Math.abs((current.tops[index] ?? 0) - top) < 0.5);
         return unchanged ? current : nextMetrics;
       });
     };
 
-    measure();
-    const resizeObserver = new ResizeObserver(measure);
-    resizeObserver.observe(stage);
-    Array.from(stage.querySelectorAll("[data-onramp-step]")).forEach((node) => resizeObserver.observe(node));
-    window.addEventListener("resize", measure);
+    const scheduleMeasure = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(measure);
+    };
+
+    scheduleMeasure();
+    window.addEventListener("resize", scheduleMeasure);
 
     return () => {
-      resizeObserver.disconnect();
-      window.removeEventListener("resize", measure);
+      cancelAnimationFrame(frame);
+      window.removeEventListener("resize", scheduleMeasure);
     };
   }, []);
 
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
     if (reduce) return;
-    const phase = Math.min(2.999, Math.max(0, latest * STEPS.length));
-    const nextIndex = Math.min(STEPS.length - 1, Math.floor(phase));
+    const nextIndex = Math.min(STEPS.length - 1, Math.max(0, Math.round(latest * (STEPS.length - 1))));
     setActiveIndex((current) => (current === nextIndex ? current : nextIndex));
   });
 
@@ -182,13 +179,12 @@ export function AgentOnRamp() {
                 style={
                   reduce
                     ? {
-                        y: borderMetrics[0]?.top ?? DEFAULT_BORDER_METRICS[0].top,
-                        height: borderMetrics[0]?.height ?? DEFAULT_BORDER_METRICS[0].height,
+                        y: borderMetrics.tops[0] ?? DEFAULT_BORDER_METRICS.tops[0],
+                        height: borderMetrics.height ?? DEFAULT_BORDER_METRICS.height,
                       }
                     : {
                         y: borderY,
-                        height: borderH,
-                        "--onramp-border-angle": borderAngle,
+                        height: borderMetrics.height,
                       }
                 }
               />
