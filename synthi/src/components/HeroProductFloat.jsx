@@ -34,28 +34,28 @@ export function HeroProductFloat() {
   const prefersReducedMotion = useReducedMotion();
   const { scrollYProgress } = useScroll({
     target: ref,
-    offset: ["start 125%", "end -85%"],
+    offset: ["start 104%", "end 4%"],
   });
-  const spring = { stiffness: 88, damping: 25, mass: 0.72 };
+  const spring = { stiffness: 132, damping: 23, mass: 0.56 };
 
-  const mainX = useSpring(useTransform(scrollYProgress, [0, 0.54, 1], [18, -14, -58]), spring);
-  const mainY = useSpring(useTransform(scrollYProgress, [0, 0.54, 1], [48, 2, -34]), spring);
-  const mainScale = useSpring(useTransform(scrollYProgress, [0, 0.54, 1], [0.92, 1, 1.04]), spring);
-  const mainRotateX = useSpring(useTransform(scrollYProgress, [0, 1], [3, -1]), spring);
-  const mainRotateZ = useSpring(useTransform(scrollYProgress, [0, 1], [0.8, -0.4]), spring);
-  const observeY = useSpring(useTransform(scrollYProgress, [0, 0.58, 1], [-18, -42, -72]), spring);
-  const observeX = useSpring(useTransform(scrollYProgress, [0, 0.58, 1], [112, 38, -8]), spring);
-  const observeScale = useSpring(useTransform(scrollYProgress, [0, 0.58, 1], [0.74, 0.92, 1]), spring);
-  const observeOpacity = useSpring(useTransform(scrollYProgress, [0, 0.28, 1], [0.28, 0.84, 0.98]), spring);
-  const gpuY = useSpring(useTransform(scrollYProgress, [0, 0.58, 1], [134, 72, 16]), spring);
-  const gpuX = useSpring(useTransform(scrollYProgress, [0, 0.58, 1], [-96, -70, -52]), spring);
-  const gpuScale = useSpring(useTransform(scrollYProgress, [0, 0.58, 1], [0.72, 0.88, 0.98]), spring);
-  const gpuOpacity = useSpring(useTransform(scrollYProgress, [0, 0.34, 1], [0.2, 0.78, 0.96]), spring);
-  const collabY = useSpring(useTransform(scrollYProgress, [0, 0.6, 1], [86, 24, -10]), spring);
-  const collabX = useSpring(useTransform(scrollYProgress, [0, 0.6, 1], [42, 10, -4]), spring);
-  const collabScale = useSpring(useTransform(scrollYProgress, [0, 0.6, 1], [0.82, 0.96, 1]), spring);
-  const collabOpacity = useSpring(useTransform(scrollYProgress, [0, 0.2, 0.72, 1], [0, 0.72, 0.96, 1]), spring);
-  const collabRotateZ = useSpring(useTransform(scrollYProgress, [0, 1], [1.8, -0.35]), spring);
+  const mainX = useSpring(useTransform(scrollYProgress, [0, 0.5, 1], [4, -10, -34]), spring);
+  const mainY = useSpring(useTransform(scrollYProgress, [0, 0.5, 1], [20, -2, -18]), spring);
+  const mainScale = useSpring(useTransform(scrollYProgress, [0, 0.5, 1], [0.96, 1.01, 1.035]), spring);
+  const mainRotateX = useSpring(useTransform(scrollYProgress, [0, 1], [2, -0.8]), spring);
+  const mainRotateZ = useSpring(useTransform(scrollYProgress, [0, 1], [0.45, -0.28]), spring);
+  const observeY = useSpring(useTransform(scrollYProgress, [0, 0.5, 1], [18, -30, -54]), spring);
+  const observeX = useSpring(useTransform(scrollYProgress, [0, 0.5, 1], [78, 24, -8]), spring);
+  const observeScale = useSpring(useTransform(scrollYProgress, [0, 0.5, 1], [0.82, 0.96, 1]), spring);
+  const observeOpacity = useSpring(useTransform(scrollYProgress, [0, 0.2, 1], [0.62, 0.95, 1]), spring);
+  const gpuY = useSpring(useTransform(scrollYProgress, [0, 0.5, 1], [112, 52, 10]), spring);
+  const gpuX = useSpring(useTransform(scrollYProgress, [0, 0.5, 1], [-68, -48, -24]), spring);
+  const gpuScale = useSpring(useTransform(scrollYProgress, [0, 0.5, 1], [0.78, 0.92, 0.99]), spring);
+  const gpuOpacity = useSpring(useTransform(scrollYProgress, [0, 0.24, 1], [0.54, 0.9, 1]), spring);
+  const collabY = useSpring(useTransform(scrollYProgress, [0, 0.52, 1], [58, 12, -8]), spring);
+  const collabX = useSpring(useTransform(scrollYProgress, [0, 0.52, 1], [34, 8, -4]), spring);
+  const collabScale = useSpring(useTransform(scrollYProgress, [0, 0.52, 1], [0.86, 0.97, 1]), spring);
+  const collabOpacity = useSpring(useTransform(scrollYProgress, [0, 0.18, 0.72, 1], [0.34, 0.82, 0.98, 1]), spring);
+  const collabRotateZ = useSpring(useTransform(scrollYProgress, [0, 1], [1.2, -0.25]), spring);
 
   const mainStyle = prefersReducedMotion ? undefined : { x: mainX, y: mainY, scale: mainScale, rotateX: mainRotateX, rotateZ: mainRotateZ };
   const observeStyle = prefersReducedMotion

@@ -1423,15 +1423,15 @@ html.light .spotlight {
 }
 
 .hero-product-float {
-  min-height: clamp(780px, 142dvh, 1240px);
+  min-height: clamp(660px, 118dvh, 980px);
   perspective: 1600px;
   transform-style: preserve-3d;
 }
 
 .hero-product-sticky {
   position: sticky;
-  top: 88px;
-  min-height: 650px;
+  top: 76px;
+  min-height: 620px;
   perspective: 1600px;
   transform-style: preserve-3d;
 }
@@ -1442,7 +1442,7 @@ html.light .spotlight {
 
 .hero-product-main {
   position: relative;
-  z-index: 2;
+  z-index: 5;
   transform-origin: 50% 58%;
   transform-style: preserve-3d;
   will-change: transform;
@@ -1487,11 +1487,15 @@ html.light .spotlight {
 
 .hero-product-card {
   position: absolute;
-  z-index: 4;
+  z-index: 8;
   overflow: hidden;
   padding: 6px;
   transform-origin: 50% 50%;
+  transform-style: preserve-3d;
   will-change: transform, opacity;
+  box-shadow:
+    0 44px 110px rgba(0, 0, 0, 0.56),
+    0 0 0 1px rgba(255, 247, 239, 0.055);
 }
 
 .hero-product-card::after {
@@ -1605,7 +1609,7 @@ html.light .spotlight {
   position: absolute;
   right: clamp(8px, 2vw, 24px);
   bottom: 28px;
-  z-index: 6;
+  z-index: 9;
   width: min(360px, 42%);
   overflow: hidden;
   border: 1px solid rgba(255, 247, 239, 0.2);
@@ -1745,15 +1749,15 @@ html.light .spotlight {
 }
 
 .hero-product-card-observe {
-  top: 4px;
-  right: 0;
-  width: min(380px, 43%);
+  top: -16px;
+  right: -12px;
+  width: min(390px, 44%);
 }
 
 .hero-product-card-gpu {
-  left: 0;
-  bottom: 22px;
-  width: min(305px, 34%);
+  left: -12px;
+  bottom: 38px;
+  width: min(322px, 36%);
 }
 
 .hero-floating-proof {
