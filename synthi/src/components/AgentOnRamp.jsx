@@ -21,32 +21,36 @@ const STEPS = [
   },
 ];
 
-function StepCard({ step, index, activeIndex, reduce }) {
+function StepCard({ step, index, activeIndex, reduce, progress }) {
   const isActive = index === activeIndex;
   const isPast = index < activeIndex;
+  const state = isPast ? "sealed" : isActive ? "active" : "queued";
+  const cardProgress = useTransform(progress, [index / STEPS.length, (index + 1) / STEPS.length], [0, 1], { clamp: true });
+  const activeLift = useTransform(cardProgress, [0, 1], [18, -8]);
+  const activeScale = useTransform(cardProgress, [0, 1], [0.965, 1]);
 
   return (
     <motion.article
       key={step.verb}
-      className={`agent-onramp-step-card ${isActive ? "agent-onramp-step-card-active" : ""}`}
+      className={`agent-onramp-step-card agent-onramp-step-card-${state} ${isActive ? "agent-onramp-step-card-active" : ""}`}
       aria-hidden={!isActive}
       initial={false}
       animate={
         reduce
           ? { opacity: 1, y: 0, scale: 1, rotateX: 0 }
           : isActive
-            ? { opacity: 1, y: 0, scale: 1, rotateX: 0 }
+            ? { opacity: 1, rotateX: 0 }
             : {
-                opacity: isPast ? 0 : 0.28,
-                y: isPast ? -58 : 58,
-                scale: isPast ? 0.975 : 0.94,
-                rotateX: isPast ? 5 : -7,
+                opacity: isPast ? 0.34 : 0.22,
+                y: isPast ? -36 - index * 8 : 62 + index * 12,
+                scale: isPast ? 0.91 : 0.94,
+                rotateX: isPast ? 4 : -6,
               }
       }
-      transition={{ duration: reduce ? 0 : 0.72, ease: [0.16, 1, 0.3, 1] }}
-      style={{ zIndex: isActive ? 3 : isPast ? 1 : 2 }}
+      transition={{ duration: reduce ? 0 : 0.82, ease: [0.16, 1, 0.3, 1] }}
+      style={isActive && !reduce ? { y: activeLift, scale: activeScale, zIndex: 3 } : { zIndex: isPast ? 1 : 2 }}
     >
-      <span>{step.verb}</span>
+      <span>{step.verb} / {state}</span>
       <h3>{step.title}</h3>
       <p>{step.copy}</p>
     </motion.article>
@@ -61,11 +65,12 @@ export function AgentOnRamp() {
     target: ref,
     offset: ["start start", "end end"],
   });
-  const scaleX = useTransform(scrollYProgress, [0, 1], [0.12, 1]);
   const y = useTransform(scrollYProgress, [0, 1], [24, -20]);
+  const spineY = useTransform(scrollYProgress, [0, 1], [0, 220]);
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
     if (reduce) return;
-    const nextIndex = latest < 0.44 ? 0 : latest < 0.72 ? 1 : 2;
+    const phase = Math.min(2.999, Math.max(0, latest * STEPS.length));
+    const nextIndex = Math.min(STEPS.length - 1, Math.floor(phase));
     setActiveIndex((current) => (current === nextIndex ? current : nextIndex));
   });
 
@@ -91,15 +96,16 @@ export function AgentOnRamp() {
               <span>Up and running, one step at a time</span>
               <strong>real repo required</strong>
             </div>
-            <div className="agent-onramp-line-shell" aria-hidden="true">
-              <motion.div className="agent-onramp-line" style={{ scaleX: reduce ? 1 : scaleX }} />
-              <div className="agent-onramp-rail-labels">
+            <div className="agent-onramp-authority-spine" aria-hidden="true">
+              <motion.div className="agent-onramp-spine-cursor" style={reduce ? undefined : { y: spineY }} />
+              <div className="agent-onramp-spine-steps">
                 {STEPS.map((step, index) => (
                   <span
                     key={step.verb}
-                    className={index <= activeIndex ? "agent-onramp-rail-step agent-onramp-rail-step-active" : "agent-onramp-rail-step"}
+                    className={index < activeIndex ? "agent-onramp-spine-step agent-onramp-spine-step-sealed" : index === activeIndex ? "agent-onramp-spine-step agent-onramp-spine-step-active" : "agent-onramp-spine-step"}
                   >
-                    {step.verb}
+                    <b>{step.verb}</b>
+                    <em>{index < activeIndex ? "sealed" : index === activeIndex ? "active" : "queued"}</em>
                   </span>
                 ))}
               </div>
@@ -112,6 +118,7 @@ export function AgentOnRamp() {
                   index={index}
                   activeIndex={reduce ? index : activeIndex}
                   reduce={reduce}
+                  progress={scrollYProgress}
                 />
               ))}
             </div>

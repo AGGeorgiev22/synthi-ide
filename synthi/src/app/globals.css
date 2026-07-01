@@ -2149,6 +2149,17 @@ html.light .spotlight {
   box-shadow: 0 34px 90px rgba(0, 0, 0, 0.3);
 }
 
+.agent-onramp-panel::after {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  border-radius: 11px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.82);
+  pointer-events: none;
+}
+
 .agent-onramp-panel-top {
   display: flex;
   align-items: center;
@@ -2216,6 +2227,113 @@ html.light .spotlight {
   background: rgba(255, 247, 239, 0.035);
 }
 
+.agent-onramp-authority-spine {
+  position: absolute;
+  top: 72px;
+  right: 18px;
+  bottom: 18px;
+  z-index: 5;
+  width: 118px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 247, 239, 0.14);
+  border-radius: 14px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.052), rgba(255, 255, 255, 0.016)),
+    #080809;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.72),
+    0 22px 54px rgba(0, 0, 0, 0.28);
+}
+
+.agent-onramp-authority-spine::before {
+  content: "";
+  position: absolute;
+  left: 16px;
+  top: 18px;
+  bottom: 18px;
+  width: 1px;
+  background: rgba(255, 247, 239, 0.12);
+}
+
+.agent-onramp-spine-cursor {
+  position: absolute;
+  left: 12px;
+  top: 22px;
+  z-index: 1;
+  width: 9px;
+  height: 76px;
+  border-radius: 9999px;
+  background: linear-gradient(180deg, #ff3dbe, #ff6a3d 45%, #55d8ef);
+  box-shadow: 0 0 28px rgba(255, 106, 61, 0.34);
+}
+
+.agent-onramp-spine-steps {
+  position: absolute;
+  inset: 14px 10px 14px 28px;
+  display: grid;
+  grid-template-rows: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.agent-onramp-spine-step {
+  position: relative;
+  display: grid;
+  align-content: center;
+  gap: 5px;
+  min-width: 0;
+  border: 1px solid rgba(255, 247, 239, 0.1);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.02);
+  padding: 9px 8px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  transition:
+    background-color 0.62s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.62s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.62s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.agent-onramp-spine-step b,
+.agent-onramp-spine-step em {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  font-style: normal;
+  line-height: 1;
+}
+
+.agent-onramp-spine-step b {
+  font-size: 10px;
+  color: rgba(255, 247, 239, 0.62);
+}
+
+.agent-onramp-spine-step em {
+  font-size: 9px;
+  color: rgba(255, 247, 239, 0.34);
+}
+
+.agent-onramp-spine-step-active {
+  border-color: rgba(255, 138, 97, 0.34);
+  background: rgba(255, 106, 61, 0.07);
+  transform: translateX(-3px);
+}
+
+.agent-onramp-spine-step-active b,
+.agent-onramp-spine-step-sealed b {
+  color: #fff7ef;
+}
+
+.agent-onramp-spine-step-sealed {
+  border-color: rgba(85, 216, 239, 0.22);
+  background: rgba(85, 216, 239, 0.045);
+}
+
+.agent-onramp-spine-step-sealed em {
+  color: #9be7f5;
+}
+
 .agent-onramp-step-stage {
   position: relative;
   min-height: 430px;
@@ -2225,7 +2343,7 @@ html.light .spotlight {
 
 .agent-onramp-step-card {
   position: absolute;
-  inset: 0;
+  inset: 0 126px 0 0;
   display: flex;
   min-height: 430px;
   flex-direction: column;
@@ -2238,6 +2356,15 @@ html.light .spotlight {
   pointer-events: none;
   transform-origin: center bottom;
   will-change: transform, opacity;
+}
+
+.agent-onramp-step-card::after {
+  content: "";
+  position: absolute;
+  inset: auto 24px 24px 24px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 247, 239, 0.28), transparent);
+  opacity: 0.34;
 }
 
 .agent-onramp-step-card-active {
@@ -3820,6 +3947,38 @@ html.light .spotlight {
 
   .agent-onramp-panel-top {
     display: grid;
+  }
+
+  .agent-onramp-authority-spine {
+    position: relative;
+    top: auto;
+    right: auto;
+    bottom: auto;
+    width: auto;
+    border-radius: 0;
+    border-left: 0;
+    border-right: 0;
+    border-top: 0;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  }
+
+  .agent-onramp-authority-spine::before,
+  .agent-onramp-spine-cursor {
+    display: none;
+  }
+
+  .agent-onramp-spine-steps {
+    position: relative;
+    inset: auto;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-rows: none;
+    gap: 0;
+    padding: 10px;
+  }
+
+  .agent-onramp-spine-step {
+    border-radius: 8px;
   }
 
   .agent-onramp-step-stage {
