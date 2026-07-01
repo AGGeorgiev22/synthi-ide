@@ -45,13 +45,13 @@ export function HeroProductFloat() {
   const mainRotateZ = useSpring(useTransform(scrollYProgress, [0, 1], [0.45, -0.28]), spring);
   const observeY = useSpring(useTransform(scrollYProgress, [0, 0.5, 1], [8, -28, -44]), spring);
   const observeX = useSpring(useTransform(scrollYProgress, [0, 0.5, 1], [28, 10, -2]), spring);
-  const observeScale = useSpring(useTransform(scrollYProgress, [0, 0.5, 1], [0.91, 0.98, 1]), spring);
+  const observeScale = useSpring(useTransform(scrollYProgress, [0, 0.5, 1], [0.86, 0.93, 0.96]), spring);
   const gpuY = useSpring(useTransform(scrollYProgress, [0, 0.5, 1], [62, 34, 10]), spring);
   const gpuX = useSpring(useTransform(scrollYProgress, [0, 0.5, 1], [-46, -36, -24]), spring);
-  const gpuScale = useSpring(useTransform(scrollYProgress, [0, 0.5, 1], [0.88, 0.95, 0.99]), spring);
+  const gpuScale = useSpring(useTransform(scrollYProgress, [0, 0.5, 1], [0.84, 0.91, 0.95]), spring);
   const collabY = useSpring(useTransform(scrollYProgress, [0, 0.52, 1], [36, 12, -4]), spring);
   const collabX = useSpring(useTransform(scrollYProgress, [0, 0.52, 1], [24, 8, -4]), spring);
-  const collabScale = useSpring(useTransform(scrollYProgress, [0, 0.52, 1], [0.91, 0.98, 1]), spring);
+  const collabScale = useSpring(useTransform(scrollYProgress, [0, 0.52, 1], [0.86, 0.93, 0.96]), spring);
   const collabRotateZ = useSpring(useTransform(scrollYProgress, [0, 1], [1.2, -0.25]), spring);
 
   const mainStyle = prefersReducedMotion ? undefined : { x: mainX, y: mainY, scale: mainScale, rotateX: mainRotateX, rotateZ: mainRotateZ };
@@ -140,8 +140,9 @@ export function HeroProductFloat() {
               </span>
               <span className="hero-code-row hero-code-row-pink">
                 <em>3</em>
-                <span>
-                  rt.observe().broadcast(); <strong className="hero-code-pill hero-code-pill-pink">Devon</strong>
+                <span className="hero-code-typing-line">
+                  <span className="hero-code-typewrite">rt.observe().broadcast();</span>
+                  <strong className="hero-code-pill hero-code-pill-pink">Devon</strong>
                 </span>
               </span>
               <span className="hero-code-row">

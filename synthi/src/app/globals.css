@@ -1610,7 +1610,7 @@ html.light .spotlight {
   right: clamp(-18px, -1.2vw, -6px);
   bottom: 18px;
   z-index: 9;
-  width: min(620px, 64%);
+  width: min(560px, 58%);
   overflow: hidden;
   border: 1px solid rgba(255, 247, 239, 0.16);
   border-radius: 20px;
@@ -1788,6 +1788,23 @@ html.light .spotlight {
   text-overflow: ellipsis;
 }
 
+.hero-code-typing-line {
+  display: inline-flex;
+  min-width: 0;
+  align-items: center;
+}
+
+.hero-code-typewrite {
+  display: inline-block;
+  width: 0;
+  max-width: 23ch;
+  overflow: hidden;
+  border-right: 1px solid #ff62ad;
+  color: rgba(255, 237, 247, 0.96);
+  white-space: nowrap;
+  animation: hero-code-live-type 5.2s steps(23, end) infinite;
+}
+
 .hero-code-row-blue {
   color: rgba(236, 244, 255, 0.96);
   background: linear-gradient(90deg, rgba(68, 133, 255, 0.27), rgba(68, 133, 255, 0.08) 52%, transparent 88%);
@@ -1835,6 +1852,7 @@ html.light .spotlight {
 
 .hero-code-pill-pink {
   background: linear-gradient(135deg, #ff4ea8, #ff8ac8);
+  animation: hero-code-pill-live 5.2s cubic-bezier(0.16, 1, 0.3, 1) infinite;
 }
 
 .hero-code-status {
@@ -1898,15 +1916,15 @@ html.light .spotlight {
 }
 
 .hero-product-card-observe {
-  top: -16px;
-  right: -12px;
-  width: min(390px, 44%);
+  top: -10px;
+  right: -4px;
+  width: min(340px, 38%);
 }
 
 .hero-product-card-gpu {
   left: -12px;
   bottom: 38px;
-  width: min(322px, 36%);
+  width: min(290px, 32%);
 }
 
 .hero-floating-proof {
@@ -4052,6 +4070,29 @@ html.light .spotlight {
   84%, 100% { width: 0; }
 }
 
+@keyframes hero-code-live-type {
+  0%, 10% {
+    width: 0;
+  }
+  42%, 72% {
+    width: 23ch;
+  }
+  92%, 100% {
+    width: 0;
+  }
+}
+
+@keyframes hero-code-pill-live {
+  0%, 36%, 94%, 100% {
+    opacity: 0;
+    transform: translateX(-6px) scale(0.96);
+  }
+  44%, 78% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
 @keyframes hero-squiggle-draw {
   from {
     transform: scaleX(0);
@@ -4566,6 +4607,17 @@ html.light .spotlight {
 
   .hero-code-type {
     width: auto !important;
+    animation: none !important;
+  }
+
+  .hero-code-typewrite {
+    width: auto !important;
+    animation: none !important;
+  }
+
+  .hero-code-pill-pink {
+    opacity: 1 !important;
+    transform: none !important;
     animation: none !important;
   }
 }
