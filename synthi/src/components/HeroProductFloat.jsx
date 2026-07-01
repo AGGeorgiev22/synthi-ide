@@ -70,83 +70,85 @@ export function HeroProductFloat() {
 
   return (
     <div ref={ref} className="hero-visual hero-product-float">
-      <div className="hero-product-depth" aria-hidden="true" />
+      <div className="hero-product-sticky">
+        <div className="hero-product-depth" aria-hidden="true" />
 
-      <motion.div className="hero-product-main" style={mainStyle}>
-        <div className="hero-browser-shell hero-product-shell">
-          <div className="hero-browser-bar">
-            <span />
-            <span />
-            <span />
-            <strong>codesite / autonomous runtime</strong>
+        <motion.div className="hero-product-main" style={mainStyle}>
+          <div className="hero-browser-shell hero-product-shell">
+            <div className="hero-browser-bar">
+              <span />
+              <span />
+              <span />
+              <strong>codesite / autonomous runtime</strong>
+            </div>
+            <Image
+              src={SHOTS.primary.src}
+              alt={`${SHOTS.primary.title}: ${SHOTS.primary.detail}`}
+              width={SHOTS.primary.width}
+              height={SHOTS.primary.height}
+              priority
+              sizes="(min-width: 1280px) 48vw, (min-width: 768px) 82vw, 100vw"
+              className="h-auto w-full"
+            />
           </div>
+        </motion.div>
+
+        <motion.figure className="hero-product-card hero-product-card-observe" style={observeStyle}>
           <Image
-            src={SHOTS.primary.src}
-            alt={`${SHOTS.primary.title}: ${SHOTS.primary.detail}`}
-            width={SHOTS.primary.width}
-            height={SHOTS.primary.height}
+            src={SHOTS.observe.src}
+            alt={`${SHOTS.observe.title}: ${SHOTS.observe.detail}`}
+            width={SHOTS.observe.width}
+            height={SHOTS.observe.height}
             priority
-            sizes="(min-width: 1280px) 48vw, (min-width: 768px) 82vw, 100vw"
+            sizes="360px"
             className="h-auto w-full"
           />
-        </div>
-      </motion.div>
+          <figcaption>
+            <strong>MCP eyes and hands</strong>
+            <span>browser, terminal, replay, workflow state</span>
+          </figcaption>
+        </motion.figure>
 
-      <motion.figure className="hero-product-card hero-product-card-observe" style={observeStyle}>
-        <Image
-          src={SHOTS.observe.src}
-          alt={`${SHOTS.observe.title}: ${SHOTS.observe.detail}`}
-          width={SHOTS.observe.width}
-          height={SHOTS.observe.height}
-          priority
-          sizes="360px"
-          className="h-auto w-full"
-        />
-        <figcaption>
-          <strong>MCP eyes and hands</strong>
-          <span>browser, terminal, replay, workflow state</span>
-        </figcaption>
-      </motion.figure>
+        <motion.figure className="hero-code-collab-card" style={collabStyle} aria-label="Live collaboration code edits">
+          <div className="hero-code-collab-top">
+            <span>live collab</span>
+            <strong>src/runtime/lease.ts</strong>
+          </div>
+          <pre>
+            <code>
+              <span className="hero-code-line">if (hotPath.accepted) {"{"}</span>
+              <span className="hero-code-line hero-code-line-edit hero-code-line-human">
+                <span className="hero-code-cursor" />
+                <b>Priya</b>
+                <span className="hero-code-type hero-code-type-a">lease.require("gpu-hmr");</span>
+              </span>
+              <span className="hero-code-line hero-code-line-edit hero-code-line-agent">
+                <span className="hero-code-cursor" />
+                <b>agent</b>
+                <span className="hero-code-type hero-code-type-b">proof.attach(diff.oracle);</span>
+              </span>
+              <span className="hero-code-line">  return landing.allow();</span>
+              <span className="hero-code-line">{"}"}</span>
+            </code>
+          </pre>
+        </motion.figure>
 
-      <motion.figure className="hero-code-collab-card" style={collabStyle} aria-label="Live collaboration code edits">
-        <div className="hero-code-collab-top">
-          <span>live collab</span>
-          <strong>src/runtime/lease.ts</strong>
-        </div>
-        <pre>
-          <code>
-            <span className="hero-code-line">if (hotPath.accepted) {"{"}</span>
-            <span className="hero-code-line hero-code-line-edit hero-code-line-human">
-              <span className="hero-code-cursor" />
-              <b>Priya</b>
-              <span className="hero-code-type hero-code-type-a">lease.require("gpu-hmr");</span>
-            </span>
-            <span className="hero-code-line hero-code-line-edit hero-code-line-agent">
-              <span className="hero-code-cursor" />
-              <b>agent</b>
-              <span className="hero-code-type hero-code-type-b">proof.attach(diff.oracle);</span>
-            </span>
-            <span className="hero-code-line">  return landing.allow();</span>
-            <span className="hero-code-line">{"}"}</span>
-          </code>
-        </pre>
-      </motion.figure>
-
-      <motion.figure className="hero-product-card hero-product-card-gpu" style={gpuStyle}>
-        <Image
-          src={SHOTS.gpu.src}
-          alt={`${SHOTS.gpu.title}: ${SHOTS.gpu.detail}`}
-          width={SHOTS.gpu.width}
-          height={SHOTS.gpu.height}
-          priority
-          sizes="300px"
-          className="h-auto w-full"
-        />
-        <figcaption>
-          <strong>Sub-100ms GPU HMR path</strong>
-          <span>accepted when state, ABI, oracle, and ledger gates pass</span>
-        </figcaption>
-      </motion.figure>
+        <motion.figure className="hero-product-card hero-product-card-gpu" style={gpuStyle}>
+          <Image
+            src={SHOTS.gpu.src}
+            alt={`${SHOTS.gpu.title}: ${SHOTS.gpu.detail}`}
+            width={SHOTS.gpu.width}
+            height={SHOTS.gpu.height}
+            priority
+            sizes="300px"
+            className="h-auto w-full"
+          />
+          <figcaption>
+            <strong>Sub-100ms GPU HMR path</strong>
+            <span>accepted when state, ABI, oracle, and ledger gates pass</span>
+          </figcaption>
+        </motion.figure>
+      </div>
     </div>
   );
 }

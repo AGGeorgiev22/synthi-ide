@@ -1423,6 +1423,14 @@ html.light .spotlight {
 }
 
 .hero-product-float {
+  min-height: clamp(780px, 142dvh, 1240px);
+  perspective: 1600px;
+  transform-style: preserve-3d;
+}
+
+.hero-product-sticky {
+  position: sticky;
+  top: 88px;
   min-height: 650px;
   perspective: 1600px;
   transform-style: preserve-3d;
@@ -3739,8 +3747,8 @@ html.light .spotlight {
 
   .hero-product-float {
     align-self: start;
-    position: sticky;
-    top: 88px;
+    position: relative;
+    top: auto;
   }
 
   .hero-title {
