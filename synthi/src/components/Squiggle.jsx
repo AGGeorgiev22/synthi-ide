@@ -33,7 +33,7 @@ export function Squiggle({ className, strokeWidth = 2.4, drawn, drawMs = 1100 })
     >
       <svg viewBox="0 0 120 12" preserveAspectRatio="none" fill="none" className="h-full w-full">
         <path
-          d="M2 7 Q 9 1 17 6 T 32 6 T 47 6 T 62 6 T 77 6 T 92 6 T 107 6 T 118 6"
+          d="M2 7.2 C16 3.5 28 3.7 40 6.6 C53 9.7 65 9.3 78 6.2 C92 2.9 105 3.5 118 6.6"
           stroke="currentColor"
           strokeWidth={strokeWidth}
           strokeLinecap="round"
