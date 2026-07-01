@@ -2461,16 +2461,37 @@ html.light .spotlight {
 .feature-tag,
 .trust-system-code,
 .dojo-step-mark {
+  position: relative;
   width: fit-content;
-  border: 1px solid rgba(255, 247, 239, 0.14);
-  border-radius: 5px;
-  background: rgba(255, 255, 255, 0.032);
-  padding: 6px 8px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 247, 239, 0.18);
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.018)),
+    #0a0a0b;
+  padding: 7px 9px 7px 13px;
   font-family: var(--font-mono);
   font-size: 10px;
   font-weight: 700;
   line-height: 1;
   color: #ffb199;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.09),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.72),
+    0 12px 28px rgba(0, 0, 0, 0.18);
+}
+
+.system-mark::before,
+.feature-tag::before,
+.trust-system-code::before,
+.dojo-step-mark::before {
+  content: "";
+  position: absolute;
+  inset: 3px auto 3px 4px;
+  width: 3px;
+  border-radius: 9999px;
+  background: linear-gradient(180deg, #ff3dbe, #ff6a3d 48%, #55d8ef);
+  opacity: 0.72;
 }
 
 .runtime-pillar > span {
