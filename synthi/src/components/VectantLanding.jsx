@@ -206,33 +206,29 @@ const TOOL_COMPARISON = [
 const COMPILED_WORKFLOWS = [
   {
     title: "ROCm / HIP proof runs",
-    copy: "Edit a `.hip` device artifact, compile the sidecar, publish a new epoch, and accept only when oracle and visual proof pass.",
+    copy: "Compile the sidecar, publish a new epoch, and accept only when device, oracle, and visual proof pass.",
   },
   {
     title: "CUDA-oriented workflows",
-    copy: "Use the same architecture for `.cu` teams: keep the compile loop, lose the restart loop, and require hardware-backed validation before promotion.",
+    copy: "CUDA teams use the same gated route after hardware-backed validation proves the hot path is safe.",
   },
   {
     title: "Native module boundaries",
-    copy: "Vectant searches for the smallest safe compiled hot path, then refuses reload when ABI, binding, or runtime preservation proof is missing.",
+    copy: "Find the smallest safe compiled path. Refuse reload when ABI, binding, or state proof is missing.",
   },
   {
     title: "Rendering loops",
-    copy: "Before, diff, after evidence gives reviewers the output story while the ledger records compile, dispatch, epoch, and preservation signals.",
+    copy: "Before, diff, and after evidence show the output while the ledger records compile, dispatch, and preservation signals.",
   },
 ];
 
 const GPU_HMR_MARKETS = [
-  "large-scale ML infra",
-  "enterprise codebases",
-  "GPU / rendering / simulation",
-  "CUDA and ROCm workflows",
-  "ML kernels",
-  "robotics",
+  "ML infrastructure",
+  "CUDA / ROCm loops",
+  "rendering",
+  "simulation",
   "game engines",
-  "large C++ / Rust systems",
-  "agentic coding environments",
-  "complex multi-service apps",
+  "large C++ / Rust",
 ];
 
 const LEGACY_BRAND_SHOT = /(codesite|senior-real)/i;
@@ -243,12 +239,12 @@ const COLLABORATION_WEDGES = [
     copy: "Invite the right humans and agents, scope who can see or act inside the workspace, and revoke access without losing the session trail.",
   },
   {
-    title: "Instant shared presence",
-    copy: "Edits, cursors, selections, runtime state, and handoff context move with Google Docs-level immediacy.",
+    title: "Low-latency shared presence",
+    copy: "Edits, cursors, selections, runtime state, and handoff context move through one shared session.",
   },
   {
     title: "Agent rooms, not agent chaos",
-    copy: "Independent agents in the same Vectant session coordinate like teammates in Slack: routes, claims, conflicts, and handoffs are visible.",
+    copy: "Independent agents coordinate routes, claims, conflicts, and handoffs inside the same governed runtime.",
   },
   {
     title: "Humans stay in control",
@@ -285,8 +281,8 @@ const RUNTIME_PILLARS = [
 
 const DOJO_STEPS = [
   ["Demonstrate", "A human or agent teaches the workflow inside the real workspace."],
-  ["Distill", "Cortex extracts source-aware steps, boundaries, selectors, and success evidence."],
-  ["Practice", "Vivarium runs checkrides, negative cases, and replay trials before authority expands."],
+  ["Distill", "Vectant extracts source-aware steps, boundaries, selectors, and success evidence."],
+  ["Practice", "The rehearsal environment runs checkrides, negative cases, and replay trials before authority expands."],
   ["License", "The runtime grants a narrow, proof-carrying capability that can expire, be revoked, and be re-tested."],
 ];
 
@@ -295,13 +291,13 @@ const TRUST_SYSTEMS = [
     code: "clearance",
     title: "Vectant Clearance",
     line: "Serializable isolation for AI-generated code changes.",
-    copy: "Vectant makes agents file flight plans, receive MutationLeases, avoid no-fly zones, pass inspections, and leave a black box.",
+    copy: "Vectant makes agents request mutation scope, receive MutationLeases, avoid protected paths, pass inspections, and leave a replay ledger.",
   },
   {
     code: "license",
     title: "Vectant Licenses",
     line: "Teach a workflow once, then make it earn production authority.",
-    copy: "Vectant turns demonstrations into source-aware skills that practice in Vivarium, pass checkrides, and ship as bounded licenses.",
+    copy: "Vectant turns demonstrations into source-aware skills that rehearse, pass checkrides, and ship as bounded licenses.",
   },
   {
     code: "memory",
@@ -333,7 +329,7 @@ const DEEP_FEATURES = [
   {
     tag: "GPU",
     title: "GPU HMR",
-    copy: "Vectant permits sub-100ms reloads for arbitrary compiled projects only when state, ABI, oracle, and ledger gates pass.",
+    copy: "Vectant promotes compiled hot reload only when state, ABI, oracle, and ledger gates pass.",
   },
   {
     tag: "CLOUD",
@@ -348,7 +344,7 @@ const DEEP_FEATURES = [
   {
     tag: "LIVE",
     title: "Live Collaboration",
-    copy: "Vectant gives teams instant CRDT editing, presence, cursors, workspace access control, and Google Docs-speed human-agent sessions.",
+    copy: "Vectant gives teams CRDT editing, presence, cursors, workspace access control, and governed human-agent sessions.",
   },
   {
     tag: "APK",
@@ -383,7 +379,7 @@ const SURFACES = [
 
 const DOGFOOD_ITEMS = [
   ["runtime", "Built in the same cloud loop: repo, terminal, browser, agents, reload state, and proof."],
-  ["vectant", "Every agent change carries clearance, no-fly boundaries, evidence, and handoff context."],
+  ["vectant", "Every agent change carries clearance, protected-path boundaries, evidence, and handoff context."],
   ["evidence", "Screenshots come from running Vectant workspaces, not placeholder dashboard art."],
   ["hard repo", "We test the loop on Vectant before asking for your guarded repo."],
 ];
@@ -405,7 +401,7 @@ const FAQ = [
   },
   {
     q: "What exactly is the GPU HMR claim?",
-    a: "Bring the real compiled project, not a toy benchmark. Vectant profiles native GPU hot paths, supports CUDA/ROCm/HIP architecture, and promotes sub-100ms reload only when state preservation, ABI, epoch, oracle, and ledger gates pass. Current local proof is ROCm/HIP.",
+    a: "Bring the real compiled project, not a toy benchmark. Vectant profiles native GPU hot paths, supports CUDA/ROCm/HIP architecture, and promotes reload only when state preservation, ABI, epoch, oracle, and ledger gates pass. Current local proof is ROCm/HIP.",
   },
   {
     q: "Why would senior engineers trust autonomous agents here?",
@@ -477,7 +473,7 @@ function ProofMarquee() {
     "instant live collab",
     "workspace access control",
     "multi-agent Vectant rooms",
-    "Vectant black box",
+    "Vectant replay ledger",
     "Vectant checkrides",
     "counterfactual memory",
     "causal replay",
@@ -503,12 +499,12 @@ function Hero() {
       <div className="campaign-atmosphere" aria-hidden="true" />
       <div className="hero-main-grid mx-auto grid max-w-[1540px] gap-12 px-4 pb-16 sm:px-6 lg:grid-cols-[0.92fr_1.08fr] lg:items-center lg:px-8 lg:pb-24">
         <div className="max-w-[880px]" data-reveal>
-          <p className="hero-kicker"><span>Cloud runtime control plane for autonomous coding</span></p>
+          <p className="hero-kicker"><span>World's first fully autonomous agentic runtime for production repos</span></p>
           <h1 className="hero-title">
-            Let agents work where proof matters.
+            Autonomous agents need runtime authority.
           </h1>
           <p className="hero-copy">
-            Run them in live cloud workspaces with scoped leases, VS Code paths, MCP control, GPU HMR, and replayable proof.
+            Give agents a live production-shaped workspace with mutation leases, MCP action channels, GPU HMR, replay, and reviewable evidence.
           </p>
           <div className="mt-8 max-w-2xl">
             <WaitlistForm
@@ -518,7 +514,7 @@ function Hero() {
             />
           </div>
           <div className="mt-5 flex flex-wrap gap-3">
-            <PrimaryCta href="#waitlist">Run the hard repo</PrimaryCta>
+            <PrimaryCta href="#waitlist">Pilot on a production repo</PrimaryCta>
             <SecondaryCta href="#proof">See runtime evidence</SecondaryCta>
           </div>
         </div>
@@ -528,10 +524,10 @@ function Hero() {
       <div className="mx-auto max-w-[1540px] px-4 pb-16 sm:px-6 lg:px-8">
         <div className="hero-proof-strip" data-reveal>
           {[
-            ["Vectant licenses", "skills earn scoped authority before they touch production"],
-            ["Vectant leases", "flight plans, no-fly zones, landing inspection, black box"],
+            ["Vectant licenses", "agents earn scoped authority before production mutation"],
+            ["Vectant leases", "mutation scope, protected paths, landing inspection, replay ledger"],
             ["MCP eyes and hands", "browser, terminal, editor, screenshots, network, replay"],
-            ["GPU HMR", "sub-100ms arbitrary compiled reloads with preserved state"],
+            ["GPU HMR", "proof-gated compiled reloads with preserved runtime state"],
           ].map(([title, copy]) => (
             <div key={title} className="hero-proof-cell">
               <strong>{title}</strong>
@@ -580,7 +576,6 @@ function ComparisonSection() {
               "serious",
               "claim",
               "carries",
-              "an",
               "proof.",
             ].map((word, index) => (
               <span key={`${word}-${index}`} className="scrub-word">
@@ -699,10 +694,10 @@ function LiveCollaborationSection() {
           <div className="collab-console-copy">
             <h2>One workspace. Humans, agents, access control, and Vectant in the same room.</h2>
             <p>
-              Vectant collaboration feels instant like Google Docs, but it is built for software operations: permissions, presence, cursors, selections, runtime state, and agent action all share the same session.
+              Vectant collaboration is low-latency shared workspace state for software operations: permissions, presence, cursors, selections, runtime state, and agent action all share the same session.
             </p>
             <p>
-              Vectant turns independent agents into visible teammates. They can coordinate routes, claim work, negotiate conflicts, and hand off context the way engineers coordinate in Slack, except every move is scoped, leased, and replayable.
+              Independent agents coordinate routes, claim work, negotiate conflicts, and hand off context inside the same governed runtime. Every move is scoped, leased, and replayable.
             </p>
           </div>
 
@@ -733,15 +728,12 @@ function GpuSection() {
         <div className="gpu-stage" data-reveal>
           <div className="gpu-copy">
             <p className="section-mark">Proof-gated GPU HMR</p>
-            <h2>Stop restarting the world for one compiled change.</h2>
+            <h2>Hot-swap compiled changes without losing runtime state.</h2>
             <p>
-              Vectant compresses the edit-run-observe loop across arbitrary software while preserving state. The value is immediate in systems where every rebuild forces you to wait, restart, rehydrate state, and reproduce context.
+              Vectant profiles the compiled hot path, preserves the running session, swaps the changed artifact, and promotes reload only when ABI, hardware validation, oracle output, ledger, and state-preservation checks pass.
             </p>
             <p>
-              For GPU, rendering, simulation, ML kernels, game engines, robotics, and large C++ or Rust systems, Vectant isolates the safe hot path, preserves the running session, compiles the changed artifact, swaps it into place, and promotes a sub-100ms reload path only when hardware validation, ABI proof, dispatch evidence, output oracle, ledger, and state preservation all agree.
-            </p>
-            <p>
-              The strongest proof today is ROCm/HIP. CUDA follows the same route: accelerated workflows, strict gates, no blind hot swap.
+              Current proof: ROCm/HIP. CUDA-oriented workflows use the same gated architecture and promote only after hardware-backed validation.
             </p>
             <div className="gpu-market-strip" aria-label="Best-fit GPU HMR markets">
               {GPU_HMR_MARKETS.map((market) => (
@@ -767,14 +759,14 @@ function GpuSection() {
   );
 }
 
-function CodeSiteProofSection() {
+function ProofSection() {
   return (
     <section id="proof" className="runtime-campaign surface-dark scroll-mt-16 bg-[#070708] py-24 text-white md:py-36">
       <div className="mx-auto max-w-[1500px] px-4 sm:px-6 lg:px-8">
         <div className="section-lede max-w-[1110px]" data-reveal>
-          <h2>Every agent landing leaves a black box.</h2>
+          <h2>Every agent landing leaves a replay ledger.</h2>
           <p>
-            Before a diff reaches the repo, Vectant records the route, lease, no-fly zones, conflicts, checks, replay, and output evidence. Review the change by opening the proof packet, not by trusting a summary.
+            Before a diff reaches the repo, Vectant records the route, lease, protected paths, conflicts, checks, replay, and output evidence. Review the change by opening the proof packet, not by trusting a summary.
           </p>
         </div>
 
@@ -799,7 +791,7 @@ function DojoSection() {
               Demonstrations become source-aware skills with selectors, boundaries, negative cases, and success evidence.
             </p>
             <p>
-              Vivarium rehearses the workflow. Vectant grants a narrow license only where replay and proof pass.
+              The rehearsal environment runs the workflow. Vectant grants a narrow license only where replay and proof pass.
             </p>
           </div>
 
@@ -995,7 +987,7 @@ function FinalCta() {
         </div>
         <h2>Bring the hard repo. Leave with proof.</h2>
         <p>
-          Run a pilot inside a cloud workspace with your tools, your extensions, your runtime signals, and evidence your reviewers can inspect.
+          Run a pilot inside an autonomous runtime with your tools, your extension paths, your runtime signals, and evidence your reviewers can inspect.
         </p>
         <div className="mx-auto mt-9 max-w-2xl">
           <WaitlistForm
@@ -1020,7 +1012,7 @@ export function VectantLanding() {
       <DogfoodSection />
       <LiveCollaborationSection />
       <GpuSection />
-      <CodeSiteProofSection />
+      <ProofSection />
       <DojoSection />
       <TrustSystemsSection />
       <FeatureSystemsSection />

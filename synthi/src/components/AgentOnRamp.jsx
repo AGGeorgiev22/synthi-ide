@@ -5,34 +5,34 @@ import { motion, useMotionValueEvent, useReducedMotion, useScroll, useTransform 
 
 const STEPS = [
   {
-    verb: "Bring",
+    verb: "Attach",
     state: "agent attached",
-    title: "Bring the tools your team already trusts.",
-    copy: "CLI agents, MCP tools, VS Code extensions, repo, browser, and terminal attach to one cloud runtime.",
+    title: "Attach any coding agent to the runtime.",
+    copy: "CLI agents, MCP tools, editor paths, repo, browser, and terminal share one autonomous runtime environment.",
     signal: "repo, tools, browser, terminal",
     accent: "#ff3dbe",
     accent2: "#ff6a3d",
     tracks: ["CLI agent", "MCP tools", "VS Code path"],
   },
   {
-    verb: "License",
+    verb: "Constrain",
     state: "authority scoped",
-    title: "Give every action a boundary.",
-    copy: "MutationLeases define files, routes, inputs, no-fly zones, and proof requirements before the agent mutates code.",
-    signal: "leases, policy, no-fly zones",
+    title: "Constrain every mutation before it starts.",
+    copy: "MutationLeases define files, routes, inputs, protected paths, and proof requirements before the agent mutates code.",
+    signal: "leases, policy, protected paths",
     accent: "#ff9f43",
     accent2: "#ffd166",
     tracks: ["MutationLease", "Vectant license", "policy gate"],
   },
   {
-    verb: "Ship",
+    verb: "Land",
     state: "proof ready",
-    title: "Land work with evidence attached.",
+    title: "Land work only with evidence attached.",
     copy: "Review replay, line provenance, preserved state, clearance, and output proof before production-bound changes merge.",
     signal: "replay, proof, landing",
     accent: "#22d3ee",
     accent2: "#8b7bff",
-    tracks: ["line proof", "black box", "review packet"],
+    tracks: ["line proof", "replay ledger", "review packet"],
   },
 ];
 
@@ -161,15 +161,15 @@ export function AgentOnRamp() {
             viewport={{ once: true, amount: 0.34 }}
             transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
           >
-            <h2>Keep your agent. Put it under runtime authority.</h2>
+            <h2>Attach any coding agent to governed runtime authority.</h2>
             <p>
-              Vectant wraps CLI agents, MCP tools, and VS Code extensions with MutationLeases, proof gates, preserved state, and revocable licenses.
+              Vectant wraps agents, tools, repo state, browser state, terminal, and proof policy inside one autonomous runtime environment.
             </p>
           </motion.div>
 
           <motion.div className={`agent-onramp-panel ${reduce ? "agent-onramp-reduced" : ""}`} style={reduce ? undefined : { y }}>
             <div className="agent-onramp-panel-top">
-              <span>Up and running, one step at a time</span>
+              <span>agent runtime authorization path</span>
               <strong>live authority rail</strong>
             </div>
             <div ref={stageRef} className="agent-onramp-chroma-stage">

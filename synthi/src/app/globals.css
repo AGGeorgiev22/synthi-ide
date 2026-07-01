@@ -3461,9 +3461,10 @@ html.light .spotlight {
 
 .gpu-copy {
   display: flex;
-  min-height: 620px;
+  min-height: 560px;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
+  gap: clamp(20px, 3vw, 34px);
   border-radius: 8px;
   background: var(--campaign-accent);
   padding: 32px;
@@ -3489,7 +3490,8 @@ html.light .spotlight {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  max-width: 640px;
+  margin-top: auto;
+  max-width: 520px;
 }
 
 .gpu-market-strip span {
@@ -3701,7 +3703,7 @@ html.light .spotlight {
 }
 
 .compiled-workflow-grid article {
-  min-height: 180px;
+  min-height: 152px;
   border: 1px solid var(--campaign-line);
   border-radius: 8px;
   background:
@@ -3721,7 +3723,7 @@ html.light .spotlight {
 .compiled-workflow-grid p {
   margin-top: 14px;
   font-size: 12.5px;
-  line-height: 1.6;
+  line-height: 1.5;
   color: var(--campaign-faint);
 }
 
