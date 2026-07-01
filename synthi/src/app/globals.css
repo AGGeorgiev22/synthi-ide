@@ -1595,10 +1595,10 @@ html.light .spotlight {
 
 .hero-code-collab-card {
   position: absolute;
-  right: -28px;
-  bottom: 12px;
+  right: clamp(8px, 2vw, 24px);
+  bottom: 28px;
   z-index: 6;
-  width: min(386px, 46%);
+  width: min(360px, 42%);
   overflow: hidden;
   border: 1px solid rgba(255, 247, 239, 0.2);
   border-radius: 18px;
@@ -1611,7 +1611,7 @@ html.light .spotlight {
     0 0 0 1px rgba(255, 247, 239, 0.04),
     inset 0 1px 0 rgba(255, 255, 255, 0.1),
     inset 0 -1px 0 rgba(0, 0, 0, 0.82);
-  transform-origin: 88% 92%;
+  transform-origin: 100% 100%;
   will-change: transform, opacity;
 }
 

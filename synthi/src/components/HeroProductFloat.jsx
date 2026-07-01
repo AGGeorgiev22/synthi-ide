@@ -34,7 +34,7 @@ export function HeroProductFloat() {
   const prefersReducedMotion = useReducedMotion();
   const { scrollYProgress } = useScroll({
     target: ref,
-    offset: ["start 98%", "end -12%"],
+    offset: ["start 125%", "end -85%"],
   });
   const spring = { stiffness: 88, damping: 25, mass: 0.72 };
 
@@ -51,11 +51,11 @@ export function HeroProductFloat() {
   const gpuX = useSpring(useTransform(scrollYProgress, [0, 0.58, 1], [-96, -70, -52]), spring);
   const gpuScale = useSpring(useTransform(scrollYProgress, [0, 0.58, 1], [0.72, 0.88, 0.98]), spring);
   const gpuOpacity = useSpring(useTransform(scrollYProgress, [0, 0.34, 1], [0.2, 0.78, 0.96]), spring);
-  const collabY = useSpring(useTransform(scrollYProgress, [0, 0.6, 1], [142, 48, -12]), spring);
-  const collabX = useSpring(useTransform(scrollYProgress, [0, 0.6, 1], [96, 24, -16]), spring);
-  const collabScale = useSpring(useTransform(scrollYProgress, [0, 0.6, 1], [0.74, 0.94, 1.02]), spring);
-  const collabOpacity = useSpring(useTransform(scrollYProgress, [0, 0.24, 0.72, 1], [0, 0.74, 0.96, 1]), spring);
-  const collabRotateZ = useSpring(useTransform(scrollYProgress, [0, 1], [3.2, -0.8]), spring);
+  const collabY = useSpring(useTransform(scrollYProgress, [0, 0.6, 1], [86, 24, -10]), spring);
+  const collabX = useSpring(useTransform(scrollYProgress, [0, 0.6, 1], [42, 10, -4]), spring);
+  const collabScale = useSpring(useTransform(scrollYProgress, [0, 0.6, 1], [0.82, 0.96, 1]), spring);
+  const collabOpacity = useSpring(useTransform(scrollYProgress, [0, 0.2, 0.72, 1], [0, 0.72, 0.96, 1]), spring);
+  const collabRotateZ = useSpring(useTransform(scrollYProgress, [0, 1], [1.8, -0.35]), spring);
 
   const mainStyle = prefersReducedMotion ? undefined : { x: mainX, y: mainY, scale: mainScale, rotateX: mainRotateX, rotateZ: mainRotateZ };
   const observeStyle = prefersReducedMotion
