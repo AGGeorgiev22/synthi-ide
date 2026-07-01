@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import Image from "next/image";
-import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { motion, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
 
 const SHOTS = {
   primary: {
@@ -34,26 +34,30 @@ export function HeroProductFloat() {
   const prefersReducedMotion = useReducedMotion();
   const { scrollYProgress } = useScroll({
     target: ref,
-    offset: ["start 70%", "end 18%"],
+    offset: ["start 98%", "end -12%"],
   });
+  const spring = { stiffness: 88, damping: 25, mass: 0.72 };
 
-  const mainX = useTransform(scrollYProgress, [0, 1], [0, -48]);
-  const mainY = useTransform(scrollYProgress, [0, 1], [20, -24]);
-  const mainScale = useTransform(scrollYProgress, [0, 1], [0.965, 1.035]);
-  const observeY = useTransform(scrollYProgress, [0, 1], [8, -54]);
-  const observeX = useTransform(scrollYProgress, [0, 1], [42, -8]);
-  const observeScale = useTransform(scrollYProgress, [0, 1], [0.86, 1]);
-  const observeOpacity = useTransform(scrollYProgress, [0, 0.42, 1], [0.56, 0.86, 0.98]);
-  const gpuY = useTransform(scrollYProgress, [0, 1], [72, 12]);
-  const gpuX = useTransform(scrollYProgress, [0, 1], [-42, -58]);
-  const gpuScale = useTransform(scrollYProgress, [0, 1], [0.84, 0.98]);
-  const gpuOpacity = useTransform(scrollYProgress, [0, 0.42, 1], [0.5, 0.82, 0.96]);
-  const collabY = useTransform(scrollYProgress, [0, 1], [-4, -76]);
-  const collabX = useTransform(scrollYProgress, [0, 1], [26, -18]);
-  const collabScale = useTransform(scrollYProgress, [0, 1], [0.88, 1.02]);
-  const collabOpacity = useTransform(scrollYProgress, [0, 0.36, 1], [0.48, 0.84, 1]);
+  const mainX = useSpring(useTransform(scrollYProgress, [0, 0.54, 1], [18, -14, -58]), spring);
+  const mainY = useSpring(useTransform(scrollYProgress, [0, 0.54, 1], [48, 2, -34]), spring);
+  const mainScale = useSpring(useTransform(scrollYProgress, [0, 0.54, 1], [0.92, 1, 1.04]), spring);
+  const mainRotateX = useSpring(useTransform(scrollYProgress, [0, 1], [3, -1]), spring);
+  const mainRotateZ = useSpring(useTransform(scrollYProgress, [0, 1], [0.8, -0.4]), spring);
+  const observeY = useSpring(useTransform(scrollYProgress, [0, 0.58, 1], [-18, -42, -72]), spring);
+  const observeX = useSpring(useTransform(scrollYProgress, [0, 0.58, 1], [112, 38, -8]), spring);
+  const observeScale = useSpring(useTransform(scrollYProgress, [0, 0.58, 1], [0.74, 0.92, 1]), spring);
+  const observeOpacity = useSpring(useTransform(scrollYProgress, [0, 0.28, 1], [0.28, 0.84, 0.98]), spring);
+  const gpuY = useSpring(useTransform(scrollYProgress, [0, 0.58, 1], [134, 72, 16]), spring);
+  const gpuX = useSpring(useTransform(scrollYProgress, [0, 0.58, 1], [-96, -70, -52]), spring);
+  const gpuScale = useSpring(useTransform(scrollYProgress, [0, 0.58, 1], [0.72, 0.88, 0.98]), spring);
+  const gpuOpacity = useSpring(useTransform(scrollYProgress, [0, 0.34, 1], [0.2, 0.78, 0.96]), spring);
+  const collabY = useSpring(useTransform(scrollYProgress, [0, 0.6, 1], [142, 48, -12]), spring);
+  const collabX = useSpring(useTransform(scrollYProgress, [0, 0.6, 1], [96, 24, -16]), spring);
+  const collabScale = useSpring(useTransform(scrollYProgress, [0, 0.6, 1], [0.74, 0.94, 1.02]), spring);
+  const collabOpacity = useSpring(useTransform(scrollYProgress, [0, 0.24, 0.72, 1], [0, 0.74, 0.96, 1]), spring);
+  const collabRotateZ = useSpring(useTransform(scrollYProgress, [0, 1], [3.2, -0.8]), spring);
 
-  const mainStyle = prefersReducedMotion ? undefined : { x: mainX, y: mainY, scale: mainScale };
+  const mainStyle = prefersReducedMotion ? undefined : { x: mainX, y: mainY, scale: mainScale, rotateX: mainRotateX, rotateZ: mainRotateZ };
   const observeStyle = prefersReducedMotion
     ? undefined
     : { x: observeX, y: observeY, scale: observeScale, opacity: observeOpacity };
@@ -62,7 +66,7 @@ export function HeroProductFloat() {
     : { x: gpuX, y: gpuY, scale: gpuScale, opacity: gpuOpacity };
   const collabStyle = prefersReducedMotion
     ? undefined
-    : { x: collabX, y: collabY, scale: collabScale, opacity: collabOpacity };
+    : { x: collabX, y: collabY, scale: collabScale, opacity: collabOpacity, rotateZ: collabRotateZ };
 
   return (
     <div ref={ref} className="hero-visual hero-product-float">
