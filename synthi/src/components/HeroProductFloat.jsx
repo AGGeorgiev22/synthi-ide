@@ -6,7 +6,7 @@ import { motion, useReducedMotion, useScroll, useSpring, useTransform } from "fr
 
 const SHOTS = {
   primary: {
-    title: "CodeSite loaded workflow",
+    title: "Vectant loaded workflow",
     detail:
       "A real agent coordination surface with no-fly zones, collision forecast, scoped leases, risk, and proof-ready handoff.",
     src: "/product-proof/senior-real-codesite-ui-desktop-loaded.png",
@@ -76,7 +76,7 @@ export function HeroProductFloat() {
               <span />
               <span />
               <span />
-              <strong>codesite / autonomous runtime</strong>
+              <strong>vectant / autonomous runtime</strong>
             </div>
             <Image
               src={SHOTS.primary.src}

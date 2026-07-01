@@ -5,7 +5,6 @@ import { HeroProductFloat } from "@/components/HeroProductFloat";
 import { VectantMotion } from "@/components/VectantMotion";
 import { GpuBeforeAfter } from "@/components/GpuBeforeAfter";
 import { WaitlistForm } from "@/components/WaitlistForm";
-import { AnimatedLogo } from "@/components/Logo";
 
 const BROWSER_SHOT = {
   title: "Browser workflow observe",
@@ -16,15 +15,15 @@ const BROWSER_SHOT = {
 };
 
 const DOJO_SHOT = {
-  title: "CodeSite senior workflow proof",
-  detail: "A complete proof packet for a multi-step agent workflow: API steps, events, artifacts, checks, and Dojo clearance.",
+  title: "Vectant senior workflow proof",
+  detail: "A complete proof packet for a multi-step agent workflow: API steps, events, artifacts, checks, and Vectant clearance.",
   src: "/product-proof/senior-real-codesite-workflow-proof.png",
   width: 1440,
   height: 1708,
 };
 
 const CODESITE_SHOT = {
-  title: "CodeSite full workflow",
+  title: "Vectant full workflow",
   detail: "Flights, leases, no-fly zones, conflict forecast, active claims, and tower timeline for agent mutation control.",
   src: "/product-proof/codesite-full-workflow-ui.png",
   width: 1440,
@@ -56,8 +55,8 @@ const PROOF_GALLERY = [
     height: 1000,
   },
   {
-    title: "CodeSite workflow",
-    detail: "Live tower view for active agent changes.",
+    title: "Vectant workflow",
+    detail: "Live control view for active agent changes.",
     src: "/product-proof/codesite-full-workflow-ui.png",
     width: 1440,
     height: 1100,
@@ -65,7 +64,7 @@ const PROOF_GALLERY = [
   },
   {
     title: "Senior workflow proof",
-    detail: "A full Dojo-cleared evidence packet.",
+    detail: "A full Vectant-cleared evidence packet.",
     src: "/product-proof/senior-real-codesite-workflow-proof.png",
     width: 1440,
     height: 1708,
@@ -151,8 +150,8 @@ const PROOF_GALLERY = [
     height: 600,
   },
   {
-    title: "CodeSite radar",
-    detail: "Curated radar proof view.",
+    title: "Vectant radar",
+    detail: "Curated proof view.",
     src: "/codesite-proof/codesite-radar-desktop.png",
     width: 1440,
     height: 1973,
@@ -200,7 +199,7 @@ const TOOL_COMPARISON = [
   {
     tool: "Browser automation",
     current: "It can replay a recipe, but it does not understand source mutation, leases, conflicts, or production risk.",
-    vectant: "Dojo, CodeSite, and MCP turn workflows into bounded capabilities that act on real code only after they earn clearance.",
+    vectant: "Vectant and MCP turn workflows into bounded capabilities that act on real code only after they earn clearance.",
   },
 ];
 
@@ -247,7 +246,7 @@ const COLLABORATION_WEDGES = [
   },
   {
     title: "Agent rooms, not agent chaos",
-    copy: "Independent agents in the same CodeSite session coordinate like teammates in Slack: routes, claims, conflicts, and handoffs are visible.",
+    copy: "Independent agents in the same Vectant session coordinate like teammates in Slack: routes, claims, conflicts, and handoffs are visible.",
   },
   {
     title: "Humans stay in control",
@@ -272,7 +271,7 @@ const RUNTIME_PILLARS = [
     mark: "prove",
     title: "Reviewable proof",
     signal: "ledgers / line provenance / output oracles",
-    copy: "Vectant turns CodeSite packets, line provenance, output oracles, and ledgers into review material.",
+    copy: "Vectant turns proof packets, line provenance, output oracles, and ledgers into review material.",
   },
   {
     mark: "remember",
@@ -292,13 +291,13 @@ const DOJO_STEPS = [
 const TRUST_SYSTEMS = [
   {
     code: "clearance",
-    title: "CodeSite",
+    title: "Vectant Clearance",
     line: "Serializable isolation for AI-generated code changes.",
     copy: "Vectant makes agents file flight plans, receive MutationLeases, avoid no-fly zones, pass inspections, and leave a black box.",
   },
   {
     code: "license",
-    title: "Agent Dojo Cortex",
+    title: "Vectant Licenses",
     line: "Teach a workflow once, then make it earn production authority.",
     copy: "Vectant turns demonstrations into source-aware skills that practice in Vivarium, pass checkrides, and ship as bounded licenses.",
   },
@@ -382,7 +381,7 @@ const SURFACES = [
 
 const DOGFOOD_ITEMS = [
   ["runtime", "This page ships from the same cloud workspace loop we sell: repo, browser, terminal, agents, proof, and reload state."],
-  ["codesite", "Agent changes move through CodeSite clearances, no-fly zones, proof packets, and handoff evidence."],
+  ["vectant", "Agent changes move through Vectant clearances, no-fly zones, proof packets, and handoff evidence."],
   ["evidence", "The product surfaces are captures from running Vectant workspaces. Not stock dashboards. Not abstract mockups."],
   ["hard repo", "We use the loop on our own product before asking you to connect the repo your team is afraid to let an agent touch."],
 ];
@@ -391,9 +390,9 @@ const PILOT_ITEMS = [
   "Profile sub-100ms GPU HMR on a real compiled project",
   "Run CUDA or ROCm/HIP workflows with state preservation proof",
   "Connect the VS Code extensions your enterprise repo actually needs",
-  "Review CodeSite proof packets from production-bound agent work",
+  "Review Vectant proof packets from production-bound agent work",
   "Open a live collaboration room with humans and independent agents",
-  "Teach a workflow through Dojo and inspect the license boundary",
+  "Teach a workflow through Vectant and inspect the license boundary",
   "Connect browser automation through MCP eyes and hands",
 ];
 
@@ -416,7 +415,7 @@ const FAQ = [
   },
   {
     q: "Can humans and agents collaborate in one workspace?",
-    a: "Yes. Live collaboration is built around instant presence, workspace access controls, and CodeSite sessions where independent agents can coordinate routes, claims, conflicts, and handoffs in the same shared room.",
+    a: "Yes. Live collaboration is built around instant presence, workspace access controls, and Vectant sessions where independent agents can coordinate routes, claims, conflicts, and handoffs in the same shared room.",
   },
 ];
 
@@ -472,9 +471,9 @@ function ProofMarquee() {
     "ROCm / HIP proof",
     "instant live collab",
     "workspace access control",
-    "multi-agent CodeSite rooms",
-    "CodeSite black box",
-    "Dojo checkrides",
+    "multi-agent Vectant rooms",
+    "Vectant black box",
+    "Vectant checkrides",
     "counterfactual memory",
     "causal replay",
     "mobile compile",
@@ -524,8 +523,8 @@ function Hero() {
       <div className="mx-auto max-w-[1540px] px-4 pb-16 sm:px-6 lg:px-8">
         <div className="hero-proof-strip" data-reveal>
           {[
-            ["Dojo licenses", "skills earn scoped authority before they touch production"],
-            ["CodeSite leases", "flight plans, no-fly zones, landing inspection, black box"],
+            ["Vectant licenses", "skills earn scoped authority before they touch production"],
+            ["Vectant leases", "flight plans, no-fly zones, landing inspection, black box"],
             ["MCP eyes and hands", "browser, terminal, editor, screenshots, network, replay"],
             ["GPU HMR", "sub-100ms arbitrary compiled reloads with preserved state"],
           ].map(([title, copy]) => (
@@ -645,13 +644,13 @@ function DogfoodSection() {
             </div>
             <h2>Don't take our word for it. We use Vectant to build Vectant.</h2>
             <p>
-              The same runtime that hosts the product, coordinates agents, records evidence, and reloads proof surfaces is the runtime behind this page. If Vectant cannot survive its own CodeSite gates, reload loops, and agent handoffs, it does not get to ask for your production repo.
+              The same runtime that hosts the product, coordinates agents, records evidence, and reloads proof surfaces is the runtime behind this page. If Vectant cannot survive its own gates, reload loops, and agent handoffs, it does not get to ask for your production repo.
             </p>
             <div className="dogfood-proof-line" aria-label="Vectant self-build proof path">
               <span>workspace</span>
               <span>agents</span>
               <span>hmr</span>
-              <span>codesite</span>
+              <span>vectant</span>
               <span>ship</span>
             </div>
           </div>
@@ -666,7 +665,7 @@ function DogfoodSection() {
               />
               <Image
                 src="/product-proof/codesite-full-workflow-ui.png"
-                alt="CodeSite workflow proving agent coordination while building Vectant."
+                alt="Vectant workflow proving agent coordination while building Vectant."
                 width={1440}
                 height={1100}
                 sizes="(min-width: 1024px) 34vw, 100vw"
@@ -693,12 +692,12 @@ function LiveCollaborationSection() {
       <div className="mx-auto max-w-[1500px] px-4 sm:px-6 lg:px-8">
         <div className="collab-console" data-reveal>
           <div className="collab-console-copy">
-            <h2>One workspace. Humans, agents, access control, and CodeSite in the same room.</h2>
+            <h2>One workspace. Humans, agents, access control, and Vectant in the same room.</h2>
             <p>
               Vectant collaboration feels instant like Google Docs, but it is built for software operations: permissions, presence, cursors, selections, runtime state, and agent action all share the same session.
             </p>
             <p>
-              CodeSite turns independent agents into visible teammates. They can coordinate routes, claim work, negotiate conflicts, and hand off context the way engineers coordinate in Slack, except every move is scoped, leased, and replayable.
+              Vectant turns independent agents into visible teammates. They can coordinate routes, claim work, negotiate conflicts, and hand off context the way engineers coordinate in Slack, except every move is scoped, leased, and replayable.
             </p>
           </div>
 
@@ -768,7 +767,7 @@ function CodeSiteProofSection() {
     <section id="proof" className="runtime-campaign surface-dark scroll-mt-16 bg-[#070708] py-24 text-white md:py-36">
       <div className="mx-auto max-w-[1500px] px-4 sm:px-6 lg:px-8">
         <div className="section-lede max-w-[1110px]" data-reveal>
-          <h2>CodeSite makes every agent landing inspectable.</h2>
+          <h2>Vectant makes every agent landing inspectable.</h2>
           <p>
             An agent does not simply write and hope. It files a flight plan, receives a MutationLease, respects no-fly zones, watches conflict forecasts, passes landing inspection, and leaves a black-box handoff. If it writes outside managed clearance, the runtime can quarantine before it reaches the repo.
           </p>
@@ -790,12 +789,12 @@ function DojoSection() {
       <div className="mx-auto max-w-[1500px] px-4 sm:px-6 lg:px-8">
         <div className="dojo-stage">
           <div className="dojo-copy" data-reveal>
-            <h2>Dojo Cortex turns demos into licenses.</h2>
+            <h2>Vectant turns demos into licenses.</h2>
             <p>
-              Today's tools can replay a transcript. Dojo turns a demonstrated workflow into a source-aware, testable, proof-carrying capability with bounded authority.
+              Today's tools can replay a transcript. Vectant turns a demonstrated workflow into a source-aware, testable, proof-carrying capability with bounded authority.
             </p>
             <p>
-              Cortex extracts the steps. Vivarium makes the skill practice. Checkrides prove the behavior. CodeSite decides where that capability is allowed to land.
+              Vectant extracts the steps, makes the skill practice, proves the behavior, and decides where that capability is allowed to land.
             </p>
           </div>
 
@@ -980,7 +979,14 @@ function FinalCta() {
     <section id="waitlist" className="runtime-campaign surface-dark scroll-mt-16 bg-[#070708] px-4 py-24 text-white md:py-36">
       <div className="final-cta mx-auto max-w-[1160px]" data-reveal>
         <div className="final-cta-icon">
-          <AnimatedLogo expanded className="final-cta-logo" />
+          <Image
+            src="/Vectant_v3_nobg.png"
+            alt="Vectant"
+            width={1043}
+            height={239}
+            sizes="(min-width: 768px) 340px, 240px"
+            className="final-cta-logo h-auto w-[240px] sm:w-[300px] md:w-[340px]"
+          />
         </div>
         <h2>Bring the agent you trust. Give it a runtime you can trust.</h2>
         <p>
