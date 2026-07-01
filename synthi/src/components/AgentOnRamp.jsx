@@ -116,9 +116,7 @@ export function AgentOnRamp() {
               <strong>live authority rail</strong>
             </div>
             <div className="agent-onramp-chroma-stage">
-              <motion.div className="agent-onramp-chroma-cursor" style={reduce ? undefined : { y: chromaY }} aria-hidden="true">
-                <span />
-              </motion.div>
+              <motion.div className="agent-onramp-chroma-border" style={reduce ? undefined : { y: chromaY }} aria-hidden="true" />
               {STEPS.map((step, index) => (
                 <ChromaStep
                   key={step.verb}

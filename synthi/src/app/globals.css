@@ -2363,10 +2363,11 @@ html.light .spotlight {
 
 .agent-onramp-chroma-stage {
   position: relative;
+  --onramp-pad: clamp(18px, 2.6vw, 28px);
   display: grid;
   gap: 14px;
   min-height: 560px;
-  padding: clamp(18px, 2.6vw, 28px);
+  padding: var(--onramp-pad);
   overflow: hidden;
 }
 
@@ -2379,28 +2380,41 @@ html.light .spotlight {
   pointer-events: none;
 }
 
-.agent-onramp-chroma-cursor {
+.agent-onramp-chroma-border {
   position: absolute;
-  left: 22px;
-  top: 45px;
+  top: var(--onramp-pad);
+  right: var(--onramp-pad);
+  left: calc(var(--onramp-pad) + 36px);
   z-index: 5;
-  width: 19px;
-  height: 148px;
-  border-radius: 9999px;
-  background: linear-gradient(180deg, #ff3dbe, #ff6a3d 38%, #ffd166 58%, #22d3ee 78%, #8b7bff);
+  height: calc((100% - 84px) / 3);
+  border-radius: 12px;
+  padding: 2px;
+  background: linear-gradient(120deg, #ff3dbe, #ff6a3d 32%, #ffd166 49%, #22d3ee 68%, #8b7bff 84%, #ff3dbe);
+  background-size: 220% 220%;
   box-shadow:
-    0 0 34px rgba(255, 61, 190, 0.35),
-    0 0 46px rgba(34, 211, 238, 0.2);
+    0 0 32px rgba(255, 61, 190, 0.2),
+    0 0 42px rgba(34, 211, 238, 0.14);
   will-change: transform;
+  animation: onramp-border-flow 3.4s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+  pointer-events: none;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
 }
 
-.agent-onramp-chroma-cursor span {
+.agent-onramp-chroma-border::after {
+  content: "";
   position: absolute;
-  inset: 7px 5px;
-  border-radius: inherit;
-  background: rgba(255, 255, 255, 0.58);
-  opacity: 0.56;
-  animation: onramp-cursor-bob 2.1s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+  inset: -10px;
+  border-radius: 18px;
+  background: radial-gradient(circle at 50% 50%, rgba(255, 61, 190, 0.18), transparent 64%);
+  opacity: 0.6;
+  pointer-events: none;
 }
 
 .agent-onramp-chroma-step {
@@ -2522,9 +2536,13 @@ html.light .spotlight {
   color: rgba(255, 247, 239, 0.68);
 }
 
-@keyframes onramp-cursor-bob {
-  0%, 100% { transform: translateY(0); opacity: 0.46; }
-  50% { transform: translateY(-10px); opacity: 0.76; }
+@keyframes onramp-border-flow {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
 }
 
 .agent-onramp-line-shell {
@@ -4618,6 +4636,10 @@ html.light .spotlight {
   .hero-code-pill-pink {
     opacity: 1 !important;
     transform: none !important;
+    animation: none !important;
+  }
+
+  .agent-onramp-chroma-border {
     animation: none !important;
   }
 }
