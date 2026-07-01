@@ -17,7 +17,7 @@ const STEPS = [
   {
     verb: "Ship",
     title: "Let serious work land.",
-    copy: "Production-bound changes move with replay, line provenance, preserved state, CodeSite clearance, and reviewable output.",
+    copy: "Vectant lands production-bound changes with replay, line provenance, preserved state, CodeSite clearance, and reviewable output.",
   },
 ];
 

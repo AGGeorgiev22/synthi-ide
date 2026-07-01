@@ -260,25 +260,25 @@ const RUNTIME_PILLARS = [
     mark: "observe",
     title: "Runtime visibility",
     signal: "screenshots / console / network / source",
-    copy: "MCP resources expose screenshots, HMR status, console, network, source, events, and running program state.",
+    copy: "Vectant exposes screenshots, HMR status, console, network, source, events, and running program state through MCP.",
   },
   {
     mark: "act",
     title: "Guarded action",
     signal: "mouse / keyboard / terminal / editor",
-    copy: "Browser, keyboard, mouse, terminal, editor, and replay actions go through leases and runtime gates.",
+    copy: "Vectant routes browser, keyboard, mouse, terminal, editor, and replay actions through leases and runtime gates.",
   },
   {
     mark: "prove",
     title: "Reviewable proof",
     signal: "ledgers / line provenance / output oracles",
-    copy: "CodeSite packets, line provenance, output oracles, and ledgers turn agent work into review material.",
+    copy: "Vectant turns CodeSite packets, line provenance, output oracles, and ledgers into review material.",
   },
   {
     mark: "remember",
     title: "Counterfactual memory",
     signal: "near-misses / causal twins / regret traces",
-    copy: "Counterfactual traces, regret memory, and causal twins make near-misses part of the next decision.",
+    copy: "Vectant keeps counterfactual traces, regret memory, and causal twins so near-misses improve the next decision.",
   },
 ];
 
@@ -294,37 +294,37 @@ const TRUST_SYSTEMS = [
     code: "clearance",
     title: "CodeSite",
     line: "Serializable isolation for AI-generated code changes.",
-    copy: "Agents file flight plans, receive MutationLeases, avoid no-fly zones, pass inspections, and leave a black box.",
+    copy: "Vectant makes agents file flight plans, receive MutationLeases, avoid no-fly zones, pass inspections, and leave a black box.",
   },
   {
     code: "license",
     title: "Agent Dojo Cortex",
     line: "Teach a workflow once, then make it earn production authority.",
-    copy: "Demonstrations become source-aware skills, practice in Vivarium, pass checkrides, and ship as bounded licenses.",
+    copy: "Vectant turns demonstrations into source-aware skills that practice in Vivarium, pass checkrides, and ship as bounded licenses.",
   },
   {
     code: "memory",
     title: "Counterfactual Memory",
     line: "The rejected branch still pays rent.",
-    copy: "Near-misses become comparable choice scenes with evidence, policy deltas, and regret signals for the next run.",
+    copy: "Vectant converts near-misses into comparable choice scenes with evidence, policy deltas, and regret signals for the next run.",
   },
   {
     code: "replay",
     title: "Causal Twin",
     line: "Fork the past, change one variable, replay the outcome.",
-    copy: "Captured change context can be varied in an isolated twin and reported with confidence, coverage, and proof.",
+    copy: "Vectant varies captured change context in an isolated twin, then reports confidence, coverage, and proof.",
   },
   {
     code: "load",
     title: "Allostatic Evidence",
     line: "Authority adapts to the load the system can prove.",
-    copy: "Clean landings, replay, and checkrides lower restrictions. Failures increase load through deterministic evidence.",
+    copy: "Vectant lowers restrictions after clean landings, replay, and checkrides. Failures raise load through deterministic evidence.",
   },
   {
     code: "probe",
     title: "Therapeutic Tomography",
     line: "Diagnose with minimum effective authority.",
-    copy: "Small probes first, uncertainty visible, escalation justified, and mutation kept separate from investigation.",
+    copy: "Vectant starts with small probes, keeps uncertainty visible, justifies escalation, and separates investigation from mutation.",
   },
 ];
 
@@ -332,42 +332,42 @@ const DEEP_FEATURES = [
   {
     tag: "GPU",
     title: "GPU HMR",
-    copy: "Sub-100ms reload paths for arbitrary compiled projects when state preservation, ABI, oracle, and ledger gates pass.",
+    copy: "Vectant permits sub-100ms reloads for arbitrary compiled projects only when state, ABI, oracle, and ledger gates pass.",
   },
   {
     tag: "CLOUD",
     title: "Cloud Runtime",
-    copy: "Compiler, Git, agent, browser, ports, services, logs, and evidence share one source of truth in the cloud runtime.",
+    copy: "Vectant keeps compiler, Git, agent, browser, ports, services, logs, and evidence on one cloud runtime truth.",
   },
   {
     tag: "EXT",
     title: "VS Code Extension Path",
-    copy: "Bring every VS Code extension your workflow depends on. Extension hosts run inside the same governed environment.",
+    copy: "Vectant brings every VS Code extension your workflow depends on into the same governed extension host path.",
   },
   {
     tag: "LIVE",
     title: "Live Collaboration",
-    copy: "Instant CRDT editing, presence, cursors, workspace access control, and human-agent sessions that feel as live as Google Docs.",
+    copy: "Vectant gives teams instant CRDT editing, presence, cursors, workspace access control, and Google Docs-speed human-agent sessions.",
   },
   {
     tag: "APK",
     title: "Mobile Compile",
-    copy: "Flutter-first Android build flows: detect, build APK, install, launch, capture logs, record video, and drive input channels.",
+    copy: "Vectant drives Flutter-first Android flows: detect, build APK, install, launch, capture logs, record video, and drive input channels.",
   },
   {
     tag: "REPAIR",
     title: "Self-Healing Runtime",
-    copy: "Targeted repair episodes for compile and runtime failures with policy, verification, rollback, and confidence gates.",
+    copy: "Vectant runs targeted repair episodes for compile and runtime failures with policy, verification, rollback, and confidence gates.",
   },
   {
     tag: "ANALYZE",
     title: "Proactive Analysis",
-    copy: "Static checks under 100ms, semantic checks under 500ms, and rate-limited AI analysis before the compiler wastes your loop.",
+    copy: "Vectant runs static checks under 100ms, semantic checks under 500ms, and rate-limited AI analysis before the compiler wastes your loop.",
   },
   {
     tag: "MCP",
     title: "MCP Tools",
-    copy: "Screenshots, locate, click, type, wait-HMR, console, network, source, frame gates, and brokered input leases.",
+    copy: "Vectant exposes screenshots, locate, click, type, wait-HMR, console, network, source, frame gates, and brokered input leases.",
   },
 ];
 
@@ -497,14 +497,14 @@ function Hero() {
   return (
     <section id="top" className="runtime-campaign runtime-hero-v2 surface-dark relative isolate overflow-visible bg-[#070708] pt-24 text-white">
       <div className="campaign-atmosphere" aria-hidden="true" />
-      <div className="hero-main-grid mx-auto grid max-w-[1540px] gap-12 px-4 pb-16 sm:px-6 lg:grid-cols-[0.82fr_1.18fr] lg:items-center lg:px-8 lg:pb-24">
-        <div className="max-w-[760px]" data-reveal>
+      <div className="hero-main-grid mx-auto grid max-w-[1540px] gap-12 px-4 pb-16 sm:px-6 lg:grid-cols-[0.92fr_1.08fr] lg:items-center lg:px-8 lg:pb-24">
+        <div className="max-w-[880px]" data-reveal>
           <p className="hero-kicker"><span>World's first fully autonomous agentic runtime environment</span></p>
           <h1 className="hero-title">
-            Make vibe coding trustworthy.
+            Build serious software faster with agents you can trust.
           </h1>
           <p className="hero-copy">
-            Vectant is the cloud runtime where trusted agents see the running system, preserve state, collaborate live, and land production changes only after leases, checks, and replayable proof.
+            Vectant is the cloud runtime around agents you already trust. It keeps the running system alive, supports your VS Code extension path, reloads accepted compiled GPU hot paths in under 100ms, and turns production-bound work into proof.
           </p>
           <div className="mt-8 max-w-2xl">
             <WaitlistForm
@@ -859,9 +859,9 @@ function FeatureSystemsSection() {
     <section className="runtime-campaign surface-dark bg-[#070708] py-24 text-white md:py-36">
       <div className="mx-auto max-w-[1500px] px-4 sm:px-6 lg:px-8">
         <div className="section-lede max-w-[1120px]" data-reveal>
-          <h2>Here are some of the systems inside Vectant.</h2>
+          <h2>Vectant wraps the hard parts of agent work in one runtime loop.</h2>
           <p>
-            Not a checklist. A runtime loop: observe the system, let the agent act with scoped authority, preserve state, reload fast, repair failures, and prove what changed.
+            Start with the systems that make autonomous work believable on real codebases, not only greenfield web apps. Then try everything else inside Vectant.
           </p>
         </div>
 
