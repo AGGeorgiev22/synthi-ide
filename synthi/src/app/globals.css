@@ -1592,6 +1592,144 @@ html.light .spotlight {
   animation: hero-live-type-b 6.8s steps(18, end) infinite;
 }
 
+.hero-code-collab-card {
+  position: absolute;
+  top: 86px;
+  right: -18px;
+  z-index: 5;
+  width: min(370px, 44%);
+  overflow: hidden;
+  border: 1px solid rgba(255, 247, 239, 0.15);
+  border-radius: 14px;
+  background: #0b0b0c;
+  padding: 9px;
+  box-shadow:
+    0 34px 92px rgba(0, 0, 0, 0.52),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  transform-origin: 80% 15%;
+  will-change: transform, opacity;
+}
+
+.hero-code-collab-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.16), transparent 30%),
+    linear-gradient(180deg, transparent 60%, rgba(0, 0, 0, 0.24));
+  opacity: 0.42;
+  pointer-events: none;
+}
+
+.hero-code-collab-top {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid rgba(255, 247, 239, 0.1);
+  padding: 7px 8px 10px;
+  font-family: var(--font-mono);
+}
+
+.hero-code-collab-top span {
+  font-size: 10px;
+  font-weight: 700;
+  color: #ffb199;
+}
+
+.hero-code-collab-top strong {
+  overflow: hidden;
+  font-size: 10px;
+  font-weight: 600;
+  color: rgba(255, 247, 239, 0.48);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.hero-code-collab-card pre {
+  position: relative;
+  z-index: 1;
+  margin: 10px 0 0;
+  overflow: hidden;
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.035);
+  padding: 10px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  line-height: 1.55;
+  color: rgba(255, 247, 239, 0.55);
+}
+
+.hero-code-collab-card code {
+  display: grid;
+  gap: 5px;
+}
+
+.hero-code-line {
+  display: block;
+  min-width: 0;
+  white-space: nowrap;
+}
+
+.hero-code-line-edit {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 28px;
+  border: 1px solid rgba(255, 247, 239, 0.11);
+  border-radius: 6px;
+  padding: 5px 8px 5px 28px;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.hero-code-line-edit b {
+  flex: 0 0 auto;
+  font-size: 9.5px;
+  font-weight: 700;
+  color: rgba(255, 247, 239, 0.55);
+}
+
+.hero-code-line-human {
+  color: #ffb199;
+}
+
+.hero-code-line-agent {
+  color: #9be7f5;
+}
+
+.hero-code-cursor {
+  position: absolute;
+  left: 9px;
+  top: 7px;
+  display: block;
+  width: 10px;
+  height: 14px;
+  flex: 0 0 auto;
+  background: currentColor;
+  clip-path: polygon(0 0, 0 100%, 72% 73%, 50% 58%, 100% 58%);
+  filter: drop-shadow(0 7px 12px rgba(0, 0, 0, 0.45));
+}
+
+.hero-code-type {
+  display: inline-block;
+  min-width: 0;
+  overflow: hidden;
+  border-right: 1px solid currentColor;
+  white-space: nowrap;
+}
+
+.hero-code-type-a {
+  animation: hero-code-type-a 7.4s steps(25, end) infinite;
+}
+
+.hero-code-type-b {
+  animation: hero-code-type-b 7.4s steps(26, end) infinite;
+}
+
 .hero-product-card-observe {
   top: 4px;
   right: 0;
@@ -3251,6 +3389,18 @@ html.light .spotlight {
   82%, 100% { width: 0; }
 }
 
+@keyframes hero-code-type-a {
+  0%, 8% { width: 0; }
+  29%, 56% { width: 25ch; }
+  76%, 100% { width: 0; }
+}
+
+@keyframes hero-code-type-b {
+  0%, 16% { width: 0; }
+  39%, 64% { width: 26ch; }
+  84%, 100% { width: 0; }
+}
+
 @keyframes hero-squiggle-draw {
   from {
     transform: scaleX(0);
@@ -3356,6 +3506,7 @@ html.light .spotlight {
 
   .hero-floating-proof,
   .hero-product-card,
+  .hero-code-collab-card,
   .hero-product-depth {
     display: none;
   }
@@ -3720,6 +3871,11 @@ html.light .spotlight {
   }
 
   .hero-collab-type {
+    width: auto !important;
+    animation: none !important;
+  }
+
+  .hero-code-type {
     width: auto !important;
     animation: none !important;
   }

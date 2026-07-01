@@ -48,6 +48,10 @@ export function HeroProductFloat() {
   const gpuX = useTransform(scrollYProgress, [0, 1], [-42, -58]);
   const gpuScale = useTransform(scrollYProgress, [0, 1], [0.84, 0.98]);
   const gpuOpacity = useTransform(scrollYProgress, [0, 0.42, 1], [0.5, 0.82, 0.96]);
+  const collabY = useTransform(scrollYProgress, [0, 1], [-4, -76]);
+  const collabX = useTransform(scrollYProgress, [0, 1], [26, -18]);
+  const collabScale = useTransform(scrollYProgress, [0, 1], [0.88, 1.02]);
+  const collabOpacity = useTransform(scrollYProgress, [0, 0.36, 1], [0.48, 0.84, 1]);
 
   const mainStyle = prefersReducedMotion ? undefined : { x: mainX, y: mainY, scale: mainScale };
   const observeStyle = prefersReducedMotion
@@ -56,6 +60,9 @@ export function HeroProductFloat() {
   const gpuStyle = prefersReducedMotion
     ? undefined
     : { x: gpuX, y: gpuY, scale: gpuScale, opacity: gpuOpacity };
+  const collabStyle = prefersReducedMotion
+    ? undefined
+    : { x: collabX, y: collabY, scale: collabScale, opacity: collabOpacity };
 
   return (
     <div ref={ref} className="hero-visual hero-product-float">
@@ -91,22 +98,34 @@ export function HeroProductFloat() {
           sizes="360px"
           className="h-auto w-full"
         />
-        <div className="hero-collab-typing" aria-hidden="true">
-          <div className="hero-collab-line hero-collab-line-human">
-            <span className="hero-collab-cursor" />
-            <span className="hero-collab-name">Priya</span>
-            <span className="hero-collab-type hero-collab-type-a">adds lease guard</span>
-          </div>
-          <div className="hero-collab-line hero-collab-line-agent">
-            <span className="hero-collab-cursor" />
-            <span className="hero-collab-name">agent</span>
-            <span className="hero-collab-type hero-collab-type-b">rewrites proof hook</span>
-          </div>
-        </div>
         <figcaption>
           <strong>MCP eyes and hands</strong>
           <span>browser, terminal, replay, workflow state</span>
         </figcaption>
+      </motion.figure>
+
+      <motion.figure className="hero-code-collab-card" style={collabStyle} aria-label="Live collaboration code edits">
+        <div className="hero-code-collab-top">
+          <span>live collab</span>
+          <strong>src/runtime/lease.ts</strong>
+        </div>
+        <pre>
+          <code>
+            <span className="hero-code-line">if (hotPath.accepted) {"{"}</span>
+            <span className="hero-code-line hero-code-line-edit hero-code-line-human">
+              <span className="hero-code-cursor" />
+              <b>Priya</b>
+              <span className="hero-code-type hero-code-type-a">lease.require("gpu-hmr");</span>
+            </span>
+            <span className="hero-code-line hero-code-line-edit hero-code-line-agent">
+              <span className="hero-code-cursor" />
+              <b>agent</b>
+              <span className="hero-code-type hero-code-type-b">proof.attach(diff.oracle);</span>
+            </span>
+            <span className="hero-code-line">  return landing.allow();</span>
+            <span className="hero-code-line">{"}"}</span>
+          </code>
+        </pre>
       </motion.figure>
 
       <motion.figure className="hero-product-card hero-product-card-gpu" style={gpuStyle}>
