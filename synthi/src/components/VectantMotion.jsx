@@ -44,17 +44,16 @@ export function VectantMotion() {
       gsap.utils.toArray("[data-reveal]").forEach((node) => {
         gsap.fromTo(
           node,
-          { y: 34, opacity: 0.72 },
+          { y: 14, opacity: 0.9 },
           {
             y: 0,
             opacity: 1,
-            duration: 1,
-            ease: "power4.out",
-            immediateRender: false,
+            ease: "none",
             scrollTrigger: {
               trigger: node,
-              start: "top 82%",
-              toggleActions: "play none none reverse",
+              start: "top 98%",
+              end: "top 72%",
+              scrub: 0.45,
             },
           }
         );
@@ -107,17 +106,16 @@ export function VectantMotion() {
       gsap.utils.toArray(".proof-frame, .runtime-pillar, .deep-feature, .trust-system, .surface-list article, .faq-card, .comparison-ledger-row").forEach((node) => {
         gsap.fromTo(
           node,
-          { y: 26, opacity: 0.76 },
+          { y: 14, opacity: 0.9 },
           {
             y: 0,
             opacity: 1,
-            duration: 0.9,
-            ease: "power4.out",
-            immediateRender: false,
+            ease: "none",
             scrollTrigger: {
               trigger: node,
-              start: "top 86%",
-              toggleActions: "play none none reverse",
+              start: "top 98%",
+              end: "top 72%",
+              scrub: 0.45,
             },
           }
         );
@@ -126,7 +124,7 @@ export function VectantMotion() {
       gsap.utils.toArray(".proof-frame").forEach((node) => {
         gsap.fromTo(
           node,
-          { scale: 0.965 },
+          { scale: 0.985 },
           {
             scale: 1,
             ease: "none",
@@ -144,38 +142,38 @@ export function VectantMotion() {
       gsap.utils.toArray(".proof-gallery-card").forEach((node, index) => {
         gsap.fromTo(
           node,
-          { y: 30 + (index % 3) * 12, opacity: 0.76 },
+          { y: 14 + (index % 3) * 4, opacity: 0.9 },
           {
             y: 0,
             opacity: 1,
-            duration: 0.85,
-            ease: "power4.out",
-            immediateRender: false,
+            ease: "none",
             scrollTrigger: {
               trigger: node,
-              start: "top 88%",
-              toggleActions: "play none none reverse",
+              start: "top 98%",
+              end: "top 72%",
+              scrub: 0.45,
             },
           }
         );
       });
 
-      gsap.fromTo(
-        ".gpu-compare-shell, .compiled-workflow-grid article",
-        { y: 36, opacity: 0.76 },
-        {
-          y: 0,
-          opacity: 1,
-          stagger: 0.12,
-          duration: 0.95,
-          ease: "power4.out",
-          immediateRender: false,
-          scrollTrigger: {
-            trigger: ".gpu-stage",
-            start: "top 78%",
-          },
-        }
-      );
+      gsap.utils.toArray(".gpu-compare-shell, .compiled-workflow-grid article").forEach((node) => {
+        gsap.fromTo(
+          node,
+          { y: 16, opacity: 0.9 },
+          {
+            y: 0,
+            opacity: 1,
+            ease: "none",
+            scrollTrigger: {
+              trigger: node,
+              start: "top 98%",
+              end: "top 72%",
+              scrub: 0.45,
+            },
+          }
+        );
+      });
 
       const onramp = document.querySelector(".agent-onramp");
       const onrampGrid = document.querySelector(".agent-onramp-grid");
