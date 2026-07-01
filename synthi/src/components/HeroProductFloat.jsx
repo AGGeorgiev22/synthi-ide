@@ -106,28 +106,64 @@ export function HeroProductFloat() {
           </figcaption>
         </motion.figure>
 
-        <motion.figure className="hero-code-collab-card" style={collabStyle} aria-label="Live collaboration code edits">
-          <div className="hero-code-collab-top">
-            <span>live collab</span>
-            <strong>src/runtime/lease.ts</strong>
+        <motion.figure className="hero-code-collab-card" style={collabStyle} aria-label="Shared runtime collaboration">
+          <div className="hero-code-window-top">
+            <div className="hero-code-window-title">
+              <span className="hero-code-window-dots" aria-hidden="true">
+                <i />
+                <i />
+                <i />
+              </span>
+              <strong>vectant / runtime/session.rs</strong>
+            </div>
+            <div className="hero-code-presence" aria-label="Mira and Devon are active">
+              <span>MK</span>
+              <span>DV</span>
+              <i aria-hidden="true" />
+              <em>2 here</em>
+            </div>
           </div>
-          <pre>
+          <pre className="hero-code-editor">
             <code>
-              <span className="hero-code-line">if (hotPath.accepted) {"{"}</span>
-              <span className="hero-code-line hero-code-line-edit hero-code-line-human">
-                <span className="hero-code-cursor" />
-                <b>Priya</b>
-                <span className="hero-code-type hero-code-type-a">lease.require("gpu-hmr");</span>
+              <span className="hero-code-row">
+                <em>1</em>
+                <span>
+                  <b className="hero-code-purple">pub fn</b> <b className="hero-code-cyan">spawn</b>(cfg:{" "}
+                  <b className="hero-code-blue">Config</b>) -&gt; <b className="hero-code-blue">Session</b> {"{"}
+                </span>
               </span>
-              <span className="hero-code-line hero-code-line-edit hero-code-line-agent">
-                <span className="hero-code-cursor" />
-                <b>agent</b>
-                <span className="hero-code-type hero-code-type-b">proof.attach(diff.oracle);</span>
+              <span className="hero-code-row hero-code-row-blue">
+                <em>2</em>
+                <span>
+                  let rt = Runtime::shared(cfg); <strong className="hero-code-pill hero-code-pill-blue">Mira</strong>
+                </span>
               </span>
-              <span className="hero-code-line">  return landing.allow();</span>
-              <span className="hero-code-line">{"}"}</span>
+              <span className="hero-code-row hero-code-row-pink">
+                <em>3</em>
+                <span>
+                  rt.observe().broadcast(); <strong className="hero-code-pill hero-code-pill-pink">Devon</strong>
+                </span>
+              </span>
+              <span className="hero-code-row">
+                <em>4</em>
+                <span>
+                  <b className="hero-code-blue">Session</b>::live(rt)
+                </span>
+              </span>
+              <span className="hero-code-row">
+                <em>5</em>
+                <span>{"}"}</span>
+              </span>
             </code>
           </pre>
+          <div className="hero-code-status">
+            <span className="hero-code-room">2 here + agent</span>
+            <strong>
+              <i aria-hidden="true" />
+              Devon <span>is typing in session.rs</span>
+            </strong>
+            <em>shared runtime</em>
+          </div>
         </motion.figure>
 
         <motion.figure className="hero-product-card hero-product-card-gpu" style={gpuStyle}>
