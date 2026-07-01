@@ -68,7 +68,7 @@ const PROOF_GALLERY = [
     src: "/product-proof/investor-demo-export-handoff.png",
     width: 1440,
     height: 1000,
-    span: "proof-tall",
+    span: "proof-large",
   },
   {
     title: "Runtime workspace",
@@ -77,22 +77,6 @@ const PROOF_GALLERY = [
     width: 1440,
     height: 1000,
     span: "proof-wide",
-  },
-  {
-    title: "Export handoff",
-    detail: "Proof leaves the runtime as an inspectable packet.",
-    src: "/product-proof/investor-demo-export-handoff.png",
-    width: 1440,
-    height: 1000,
-    span: "proof-large",
-  },
-  {
-    title: "Runtime workflows",
-    detail: "Observe, trace, contract, replay, and publish in the IDE.",
-    src: "/product-proof/investor-demo-workflows.png",
-    width: 1440,
-    height: 1000,
-    span: "proof-large",
   },
   {
     title: "GPU diff",
