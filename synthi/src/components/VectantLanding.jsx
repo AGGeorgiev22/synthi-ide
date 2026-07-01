@@ -501,7 +501,7 @@ function Hero() {
         <div className="max-w-[880px]" data-reveal>
           <p className="hero-kicker"><span>World's first fully autonomous agentic runtime environment</span></p>
           <h1 className="hero-title">
-            Build serious software faster with agents you can trust.
+            Build serious software faster.
           </h1>
           <p className="hero-copy">
             Vectant is the cloud runtime around agents you already trust. It keeps the running system alive, supports your VS Code extension path, reloads accepted compiled GPU hot paths in under 100ms, and turns production-bound work into proof.
