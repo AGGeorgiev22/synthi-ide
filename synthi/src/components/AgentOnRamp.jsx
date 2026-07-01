@@ -65,7 +65,7 @@ export function AgentOnRamp() {
   const y = useTransform(scrollYProgress, [0, 1], [24, -20]);
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
     if (reduce) return;
-    const nextIndex = Math.min(STEPS.length - 1, Math.floor(Math.min(latest, 0.999) * STEPS.length));
+    const nextIndex = latest < 0.44 ? 0 : latest < 0.72 ? 1 : 2;
     setActiveIndex((current) => (current === nextIndex ? current : nextIndex));
   });
 
