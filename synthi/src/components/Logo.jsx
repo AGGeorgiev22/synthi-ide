@@ -5,7 +5,13 @@ import { cn } from "@/lib/utils";
  * Reproduces /public/Vectant-logo-white.svg as scalable JSX so we can
  * control color and size. Gradient id is unique to allow multiple instances.
  */
-export function VectantMark({ className, gradientId = "vt-mark" }) {
+export function VectantMark({ className, gradientId = "vt-mark", monochrome = false }) {
+  const cornerA = monochrome ? "currentColor" : "#FF3DBE";
+  const cornerB = monochrome ? "currentColor" : "#FF5C2A";
+  const cornerC = monochrome ? "currentColor" : "#22D3EE";
+  const cornerD = monochrome ? "currentColor" : "#7C5CFF";
+  const veeStroke = monochrome ? "currentColor" : `url(#${gradientId})`;
+
   return (
     <svg
       viewBox="16 0 72 64"
@@ -24,11 +30,11 @@ export function VectantMark({ className, gradientId = "vt-mark" }) {
       </defs>
       <path d="M30 12 H24 V52 H30" stroke="currentColor" strokeWidth="4" strokeLinecap="square" />
       <path d="M74 12 H80 V52 H74" stroke="currentColor" strokeWidth="4" strokeLinecap="square" />
-      <path d="M18 6 H24 M18 6 V12" stroke="#FF3DBE" strokeWidth="2" strokeLinecap="square" />
-      <path d="M86 6 H80 M86 6 V12" stroke="#FF5C2A" strokeWidth="2" strokeLinecap="square" />
-      <path d="M18 58 H24 M18 58 V52" stroke="#22D3EE" strokeWidth="2" strokeLinecap="square" />
-      <path d="M86 58 H80 M86 58 V52" stroke="#7C5CFF" strokeWidth="2" strokeLinecap="square" />
-      <path d={`M38 18 L52 44 L66 18`} stroke={`url(#${gradientId})`} strokeWidth="6" strokeLinecap="square" />
+      <path d="M18 6 H24 M18 6 V12" stroke={cornerA} strokeWidth="2" strokeLinecap="square" />
+      <path d="M86 6 H80 M86 6 V12" stroke={cornerB} strokeWidth="2" strokeLinecap="square" />
+      <path d="M18 58 H24 M18 58 V52" stroke={cornerC} strokeWidth="2" strokeLinecap="square" />
+      <path d="M86 58 H80 M86 58 V52" stroke={cornerD} strokeWidth="2" strokeLinecap="square" />
+      <path d={`M38 18 L52 44 L66 18`} stroke={veeStroke} strokeWidth="6" strokeLinecap="square" />
     </svg>
   );
 }

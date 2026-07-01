@@ -1,18 +1,19 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Menu, X, ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, List, X } from "@phosphor-icons/react";
 import { AnimatedLogo } from "@/components/Logo";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { cn } from "@/lib/utils";
 
 const LINKS = [
-  { label: "Product", href: "#product" },
-  { label: "Agents", href: "#agents" },
-  { label: "Workflows", href: "#workflows" },
-  { label: "Compare", href: "#compare" },
-  { label: "Pricing", href: "#pricing" },
-  { label: "FAQ", href: "#faq" },
+  { label: "Runtime", href: "#runtime" },
+  { label: "Collab", href: "#collaboration" },
+  { label: "GPU HMR", href: "#gpu-hmr" },
+  { label: "CodeSite", href: "#proof" },
+  { label: "Dojo", href: "#dojo" },
+  { label: "Trust", href: "#trust" },
+  { label: "Pilot", href: "#pricing" },
 ];
 
 export function Navbar() {
@@ -20,10 +21,18 @@ export function Navbar() {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 12);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    const target = document.getElementById("top");
+    if (!target) {
+      setScrolled(window.scrollY > 12);
+      return undefined;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setScrolled(!entry.isIntersecting),
+      { rootMargin: "-12px 0px 0px 0px", threshold: 0 }
+    );
+    observer.observe(target);
+    return () => observer.disconnect();
   }, []);
 
   useEffect(() => {
@@ -34,42 +43,55 @@ export function Navbar() {
   }, [open]);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50">
+    <header className="surface-dark fixed inset-x-0 top-3 z-50 px-3 sm:px-5">
       <div
         className={cn(
-          "border-b transition-colors duration-300",
-          scrolled ? "border-line bg-bg/70 backdrop-blur-xl" : "border-transparent bg-transparent"
+          "mx-auto max-w-[1376px] rounded-[10px] border transition-[background-color,border-color,box-shadow] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
+          scrolled
+            ? "border-white/12 bg-[#070708]/86 shadow-[0_16px_54px_rgba(0,0,0,0.32)] backdrop-blur-xl"
+            : "border-white/8 bg-[#070708]/34 backdrop-blur-md"
         )}
       >
-        <nav className="mx-auto flex h-16 max-w-full transparent items-center justify-between px-5 sm:px-8">
-          <a href="#top" className="flex items-center rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-cyan/50" aria-label="Vectant home">
+        <nav className="mx-auto flex h-14 max-w-full transparent items-center justify-between px-4 sm:px-5">
+          <a href="#top" className="flex items-center rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan/50" aria-label="Vectant home">
             <AnimatedLogo expanded={!scrolled} />
           </a>
 
+          <div className="hidden items-center gap-1 lg:flex">
+            {LINKS.map((l) => (
+              <a
+                key={l.label}
+                href={l.href}
+                className="rounded-sm px-3 py-2 text-[13px] text-white/60 transition-[background-color,color,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-0.5 hover:bg-white/[0.04] hover:text-white"
+              >
+                {l.label}
+              </a>
+            ))}
+          </div>
 
           {/* right actions */}
-          <div className="hidden items-center gap-2 md:flex">
+          <div className="hidden items-center gap-2 lg:flex">
             <ThemeToggle />
             <a
               href="#waitlist"
-              className="sheen group inline-flex items-center gap-1.5 rounded-lg border border-line bg-transparent px-4 py-2 text-[13.5px] font-medium text-ink transition duration-200 hover:border-line-2 active:scale-[0.97]"
+              className="sheen group inline-flex items-center gap-1.5 rounded-sm border border-white/12 bg-transparent px-4 py-2 text-[13.5px] font-medium text-white/80 transition-[border-color,color,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-0.5 hover:border-white/28 hover:text-white active:scale-[0.97]"
             >
-              Join waitlist
-              <ArrowUpRight size={15} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              Request pilot
+              <ArrowUpRight size={15} weight="bold" className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </a>
           </div>
 
           {/* mobile actions */}
-          <div className="flex items-center gap-2 md:hidden">
+          <div className="flex items-center gap-2 lg:hidden">
             <ThemeToggle />
             <button
               type="button"
               onClick={() => setOpen((v) => !v)}
-              className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-line text-ink-dim"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-sm border border-white/12 text-white/72 transition-[border-color,color,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] active:scale-[0.97]"
               aria-label={open ? "Close menu" : "Open menu"}
               aria-expanded={open}
             >
-              {open ? <X size={18} /> : <Menu size={18} />}
+              {open ? <X size={18} weight="bold" /> : <List size={18} weight="bold" />}
             </button>
           </div>
         </nav>
@@ -78,7 +100,7 @@ export function Navbar() {
       {/* mobile sheet */}
       <div
         className={cn(
-          "fixed inset-x-0 top-16 z-40 origin-top border-b border-line bg-bg/95 backdrop-blur-xl transition-all duration-300 md:hidden",
+          "fixed inset-x-3 top-20 z-40 origin-top rounded-[10px] border border-line bg-bg/95 backdrop-blur-xl transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] lg:hidden",
           open ? "pointer-events-auto opacity-100" : "pointer-events-none -translate-y-2 opacity-0"
         )}
       >
@@ -88,7 +110,7 @@ export function Navbar() {
               key={l.label}
               href={l.href}
               onClick={() => setOpen(false)}
-              className="rounded-lg border border-transparent px-3 py-3 text-[15px] text-ink-dim transition-colors hover:border-line-2 hover:text-ink"
+              className="rounded-sm border border-transparent px-3 py-3 text-[15px] text-ink-dim transition-[border-color,color,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:translate-x-1 hover:border-line-2 hover:text-ink"
             >
               {l.label}
             </a>
@@ -97,16 +119,9 @@ export function Navbar() {
             <a
               href="#waitlist"
               onClick={() => setOpen(false)}
-              className="rounded-lg border border-line px-4 py-3 text-center text-[15px] text-ink"
+              className="rounded-sm border border-line/80 bg-transparent px-4 py-3 text-center text-[15px] font-medium text-ink"
             >
-              Sign in
-            </a>
-            <a
-              href="#waitlist"
-              onClick={() => setOpen(false)}
-              className="rounded-lg border border-line/80 bg-transparent px-4 py-3 text-center text-[15px] font-medium text-ink"
-            >
-              Join waitlist
+              Request pilot
             </a>
           </div>
         </div>

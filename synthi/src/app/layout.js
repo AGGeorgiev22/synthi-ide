@@ -42,16 +42,22 @@ const satoshi = localFont({
 });
 
 export const metadata = {
-  title: "Vectant - The Agentic Environment",
+  title: "Vectant - Proof-Gated Runtime for Production Agents",
   description:
-    "Vectant is a Fully Autonomous Agentic Runtime Environment (FAARE) - a cloud workspace where your agent observes builds, logs, crashes, tests, and GPU feedback, then patches in place and verifies fixes against the live runtime.",
+    "Vectant is the cloud runtime where trusted agents run real software, preserve state, prove native GPU hot paths, earn authority, collaborate live, and ship replayable evidence.",
   keywords: [
-    "runtime-native AI",
-    "AI development environment",
     "cloud IDE",
-    "CUDA",
-    "ROCm",
-    "game engine development",
+    "AI development environment",
+    "VS Code extension support",
+    "bring your own agent",
+    "agent infrastructure",
+    "CodeSite",
+    "Causal Twin",
+    "counterfactual telemetry",
+    "Agent Dojo",
+    "allostatic evidence",
+    "GPU HMR",
+    "minimum authority",
     "MCP",
     "developer tools",
     "Vectant",
@@ -59,9 +65,9 @@ export const metadata = {
   authors: [{ name: "Vectant" }],
   metadataBase: new URL("https://vectant.dev"),
   openGraph: {
-    title: "Vectant - The Agentic Environment",
+    title: "Vectant - Proof-Gated Runtime for Production Agents",
     description:
-      "Build inside the runtime. Let the agent observe, patch, and verify against real execution signals.",
+      "The cloud runtime where autonomous agents see the app, run the build, preserve state, prove GPU hot paths, earn scoped authority, and ship replayable evidence.",
     url: "https://vectant.dev",
     siteName: "Vectant",
     type: "website",
@@ -69,9 +75,9 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Vectant - The Agentic Environment",
+    title: "Vectant - Proof-Gated Runtime for Production Agents",
     description:
-      "A Fully Autonomous Agentic Runtime Environment. The agent observes builds, logs, crashes, tests, and GPU feedback, then patches in place and verifies.",
+      "The cloud runtime where agents run, reload, preserve state, prove, remember, and earn authority.",
   },
   icons: {
     icon: "/Vectant-logo-white.svg",

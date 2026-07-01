@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import { toast } from "sonner";
 import { track } from "@vercel/analytics";
-import { ArrowRight, Loader2, Mail, Rocket } from "lucide-react";
+import { ArrowRight, CircleNotch, EnvelopeSimple, RocketLaunch } from "@phosphor-icons/react";
 
 import { useReducedMotion } from "@/components/lib/useMotion";
 import { cn } from "@/lib/utils";
@@ -18,9 +18,15 @@ const BURST = ["#4d5056", "#6f747d", "#8f95a0", "#5e646f", "#6d6f74", "#3f4650"]
  * from the previous site. Variants: "hero" (light field) and "inline".
  * On success it plays a one-shot celebration (drawn check + brand confetti).
  */
-export function WaitlistForm({ variant = "hero", className, autoFocus = false }) {
+export function WaitlistForm({
+  variant = "hero",
+  className,
+  autoFocus = false,
+  buttonLabel = "Request access",
+}) {
   const reduced = useReducedMotion();
   const isHero = variant === "hero";
+  const fieldId = useId();
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState("idle"); // idle | loading | done
   const [joined, setJoined] = useState(false);
@@ -81,24 +87,24 @@ export function WaitlistForm({ variant = "hero", className, autoFocus = false })
     <form
       onSubmit={handleSubmit}
       className={cn(
-        "group relative flex w-full flex-col gap-2 rounded-2xl border border-line/70 bg-surface/65 p-1 backdrop-blur-md",
-        "before:pointer-events-none before:absolute before:inset-px before:-z-10 before:rounded-[calc(1rem-2px)] before:opacity-0 before:transition before:duration-500",
+        "group relative flex w-full flex-col gap-2 rounded-sm border border-line/70 bg-surface/65 p-1 backdrop-blur-md",
+        "before:pointer-events-none before:absolute before:inset-px before:-z-10 before:rounded-[2px] before:opacity-0 before:transition before:duration-500 before:ease-[cubic-bezier(0.16,1,0.3,1)]",
         "before:bg-line/25 hover:before:opacity-100",
-        "hover:border-line/95 hover:shadow-[0_0_0_1px_rgba(120,128,145,0.18)]",
+        "transition-[border-color,box-shadow,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-0.5 hover:border-line/95 hover:shadow-[0_0_0_1px_rgba(120,128,145,0.18)]",
         isHero ? "sm:flex-row sm:items-start sm:gap-0" : "sm:flex-row sm:items-center",
         className
       )}
       noValidate
     >
-      <label htmlFor={`wl-${variant}`} className="sr-only">
+      <label htmlFor={fieldId} className="sr-only">
         Work email
       </label>
       <div className="relative flex-1">
         <span className="pointer-events-none absolute left-4 top-1/2 hidden -translate-y-1/2 text-ink-faint sm:block">
-          <Mail size={16} />
+          <EnvelopeSimple size={16} weight="bold" />
         </span>
         <input
-          id={`wl-${variant}`}
+          id={fieldId}
           type="email"
           inputMode="email"
           autoComplete="email"
@@ -107,7 +113,7 @@ export function WaitlistForm({ variant = "hero", className, autoFocus = false })
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           className={cn(
-            "w-full rounded-xl border border-line/80 bg-bg-2/90 px-4 py-3.5 text-[15px] text-ink outline-none transition placeholder:text-ink-faint",
+            "w-full rounded-sm border border-line/80 bg-bg-2/90 px-4 py-3.5 text-[15px] text-ink outline-none transition-[border-color,box-shadow,background-color] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] placeholder:text-ink-faint",
             "focus:border-cyan/55 focus:ring-2 focus:ring-cyan/20",
             isHero ? "border-transparent pl-11 sm:pl-11" : "border-line pl-11 sm:pl-11"
           )}
@@ -117,21 +123,21 @@ export function WaitlistForm({ variant = "hero", className, autoFocus = false })
         type="submit"
         disabled={status === "loading"}
         className={cn(
-          "inline-flex w-full items-center justify-center gap-2 rounded-xl border border-line/80 bg-transparent px-5 py-3 text-[15px] font-medium text-ink transition duration-200",
+          "inline-flex w-full items-center justify-center gap-2 rounded-sm border border-line/80 bg-transparent px-5 py-3 text-[15px] font-medium text-ink transition-[border-color,transform,filter] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan/30",
-          "hover:border-line-2 active:scale-[0.985] active:brightness-95 disabled:opacity-60 disabled:bg-transparent",
+          "hover:-translate-y-0.5 hover:border-line-2 active:translate-y-0 active:scale-[0.985] active:brightness-95 disabled:opacity-60 disabled:bg-transparent",
           isHero ? "sm:w-auto sm:min-w-[170px] sheen" : "sm:w-auto sm:min-w-[155px] sheen"
         )}
       >
         {status === "loading" ? (
           <>
-            <Loader2 size={16} className="animate-spin" />
+            <CircleNotch size={16} weight="bold" className="animate-spin" />
             Joining...
           </>
         ) : (
           <>
-            Join waitlist
-            <ArrowRight size={16} className="transition-transform group-hover:translate-x-0.5" />
+            {buttonLabel}
+            <ArrowRight size={16} weight="bold" className="transition-transform group-hover:translate-x-0.5" />
           </>
         )}
       </button>
@@ -164,16 +170,14 @@ function Celebration({ className, reduced, already }) {
       {!reduced && (
         <span className="vt-rocket pointer-events-none absolute left-7 top-2 z-10" aria-hidden="true">
           <span className="relative block text-line">
-            {/* lucide Rocket points up-right by default; rotate so the nose
-                faces straight up to match the vertical launch */}
-            <Rocket size={18} className="relative z-10 -rotate-45" />
+            <RocketLaunch size={18} weight="bold" className="relative z-10 -rotate-45" />
             <span className="absolute left-1/2 top-full h-5 w-[3px] -translate-x-1/2 rounded-full bg-gradient-to-b from-line/65 to-transparent blur-[1px]" />
           </span>
         </span>
       )}
       <div
         className={cn(
-          "flex w-full items-center gap-3.5 overflow-hidden rounded-xl border border-line/35 bg-bg-2/40 px-4 py-3.5 text-sm",
+          "flex w-full items-center gap-3.5 overflow-hidden rounded-sm border border-line/35 bg-bg-2/40 px-4 py-3.5 text-sm",
           !reduced && "vt-pop"
         )}
       >

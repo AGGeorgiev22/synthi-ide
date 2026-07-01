@@ -1,16 +1,17 @@
 import Link from "next/link";
-import { ArrowUp } from "lucide-react";
 import { Logo } from "@/components/Logo";
 
 const COLUMNS = [
   {
     title: "Product",
     links: [
-      { label: "Cloud Workspace", href: "#product" },
-      { label: "Bring your agent", href: "#agents" },
-      { label: "Workflows", href: "#workflows" },
-      { label: "Pricing", href: "#pricing" },
-      { label: "Compare", href: "#compare" },
+      { label: "Runtime", href: "#runtime" },
+      { label: "Collab", href: "#collaboration" },
+      { label: "GPU HMR", href: "#gpu-hmr" },
+      { label: "CodeSite", href: "#proof" },
+      { label: "Dojo", href: "#dojo" },
+      { label: "Trust", href: "#trust" },
+      { label: "Pilot", href: "#pricing" },
     ],
   },
   {
@@ -26,26 +27,24 @@ const COLUMNS = [
 
 export function Footer() {
   return (
-    <footer className="relative border-t border-line">
+    <footer className="surface-dark relative border-t border-white/10 bg-[#070708]">
       <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8">
         <div className="grid gap-10 md:grid-cols-[1.8fr_1fr_1fr]">
-          {/* brand */}
           <div className="max-w-sm">
             <Logo />
             <p className="mt-4 text-[13.5px] leading-relaxed text-ink-faint">
-              A runtime-native development environment. Build inside the runtime - let the agent
-              observe, patch, and verify.
+              A runtime control plane for AI agents that need to see, run,
+              hot-reload, recover, earn authority, and prove their work.
             </p>
             <div className="mt-5 inline-flex items-center gap-2 font-mono text-[11px] text-ink-faint">
               <span className="h-1.5 w-1.5 rounded-full bg-cyan shadow-[0_0_8px_#2dd4ee]" />
-              Private beta · early access
+              Controlled rollout / early access
             </div>
           </div>
 
-          {/* columns */}
           {COLUMNS.map((col) => (
             <div key={col.title}>
-              <h3 className="font-mono text-[11px] uppercase tracking-[0.16em] text-ink-faint">
+              <h3 className="font-mono text-[11px] uppercase tracking-[0] text-ink-faint">
                 {col.title}
               </h3>
               <ul className="mt-4 space-y-2.5">
@@ -55,14 +54,13 @@ export function Footer() {
                     <span className="inline-flex items-center gap-1.5">
                       {l.label}
                       {l.soon && (
-                        <span className="rounded border border-line px-1 py-px font-mono text-[9px] uppercase tracking-wide text-ink-faint">
+                        <span className="rounded border border-line px-1 py-px font-mono text-[9px] uppercase tracking-[0] text-ink-faint">
                           soon
                         </span>
                       )}
                     </span>
                   );
-                  const cls =
-                    "text-[13.5px] text-ink-dim transition-colors hover:text-ink";
+                  const cls = "text-[13.5px] text-ink-dim transition-colors hover:text-ink";
                   if (isInternalRoute) {
                     return (
                       <li key={l.label}>
@@ -91,19 +89,19 @@ export function Footer() {
 
         <div className="mt-14 flex flex-col items-start justify-between gap-4 border-t border-line pt-6 sm:flex-row sm:items-center">
           <p className="text-[12.5px] text-ink-faint">
-            © {new Date().getFullYear()} Vectant. All rights reserved.
+            Copyright {new Date().getFullYear()} Vectant. All rights reserved.
           </p>
           <div className="flex items-center gap-5">
             <Link href="/privacy" className="text-[12.5px] text-ink-dim transition-colors hover:text-ink">
               Privacy
             </Link>
-            <span className="text-[12.5px] text-ink-faint">No tracking · cookie-free analytics</span>
+            <span className="text-[12.5px] text-ink-faint">Cookie-free analytics</span>
             <a
               href="#top"
               className="inline-flex items-center gap-1.5 text-[12.5px] text-ink-dim transition-colors hover:text-ink"
             >
               Back to top
-              <ArrowUp size={13} />
+              <span aria-hidden="true" className="-mt-px text-[13px]">↑</span>
             </a>
           </div>
         </div>
