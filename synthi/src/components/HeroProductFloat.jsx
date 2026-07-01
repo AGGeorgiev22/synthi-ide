@@ -6,12 +6,12 @@ import { motion, useReducedMotion, useScroll, useSpring, useTransform } from "fr
 
 const SHOTS = {
   primary: {
-    title: "Vectant loaded workflow",
+    title: "Vectant runtime workflow",
     detail:
-      "A real agent coordination surface with no-fly zones, collision forecast, scoped leases, risk, and proof-ready handoff.",
-    src: "/product-proof/senior-real-codesite-ui-desktop-loaded.png",
+      "A real runtime surface with workflows, hosted browser control, terminal context, GPU state, and proof-ready handoff.",
+    src: "/product-proof/investor-demo-workflows.png",
     width: 1440,
-    height: 1100,
+    height: 1000,
   },
   observe: {
     title: "Hosted browser observe",

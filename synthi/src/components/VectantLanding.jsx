@@ -15,27 +15,27 @@ const BROWSER_SHOT = {
 };
 
 const DOJO_SHOT = {
-  title: "Vectant senior workflow proof",
-  detail: "A complete proof packet for a multi-step agent workflow: API steps, events, artifacts, checks, and Vectant clearance.",
-  src: "/product-proof/senior-real-codesite-workflow-proof.png",
+  title: "Vectant export handoff",
+  detail: "A complete proof packet leaves the runtime with events, artifacts, checks, and Vectant clearance.",
+  src: "/product-proof/investor-demo-export-handoff.png",
   width: 1440,
-  height: 1708,
+  height: 1000,
 };
 
 const CODESITE_SHOT = {
-  title: "Vectant full workflow",
-  detail: "Flights, leases, no-fly zones, conflict forecast, active claims, and tower timeline for agent mutation control.",
-  src: "/product-proof/codesite-full-workflow-ui.png",
+  title: "Vectant runtime workflow",
+  detail: "Workflows, hosted browser control, replay, terminal context, and proof actions in the Vectant runtime.",
+  src: "/product-proof/investor-demo-workflows.png",
   width: 1440,
-  height: 1100,
+  height: 1000,
 };
 
 const COUNTERFACTUAL_SHOT = {
-  title: "Counterfactual memory proof",
-  detail: "The rejected branch still teaches the system: comparable scenes, lease gates, policy deltas, and decision evidence.",
-  src: "/product-proof/codesite-counterfactual-memory-proof.png",
-  width: 1280,
-  height: 2296,
+  title: "Vectant workspace",
+  detail: "The rejected branch, live runtime, terminal, and workflow state stay in one reviewable place.",
+  src: "/product-proof/investor-demo-workspace.png",
+  width: 1440,
+  height: 1000,
 };
 
 const PROOF_GALLERY = [
@@ -57,25 +57,25 @@ const PROOF_GALLERY = [
   {
     title: "Vectant workflow",
     detail: "Live control view for active agent changes.",
-    src: "/product-proof/codesite-full-workflow-ui.png",
+    src: "/product-proof/investor-demo-workflows.png",
     width: 1440,
-    height: 1100,
+    height: 1000,
     span: "proof-large",
   },
   {
-    title: "Senior workflow proof",
+    title: "Export handoff",
     detail: "A full Vectant-cleared evidence packet.",
-    src: "/product-proof/senior-real-codesite-workflow-proof.png",
+    src: "/product-proof/investor-demo-export-handoff.png",
     width: 1440,
-    height: 1708,
+    height: 1000,
     span: "proof-tall",
   },
   {
-    title: "Counterfactual memory",
-    detail: "Decision traces from the branch that almost shipped.",
-    src: "/product-proof/codesite-counterfactual-memory-proof.png",
-    width: 1280,
-    height: 2296,
+    title: "Runtime workspace",
+    detail: "Workspace, terminal, browser, and agent state in one runtime.",
+    src: "/product-proof/investor-demo-workspace.png",
+    width: 1440,
+    height: 1000,
     span: "proof-tall",
   },
   {
@@ -93,18 +93,18 @@ const PROOF_GALLERY = [
     height: 1100,
   },
   {
-    title: "Metrics panel",
-    detail: "Evidence throughput, claims, conflicts, and proof health.",
-    src: "/product-proof/codesite-metrics-panel.png",
+    title: "Runtime command center",
+    detail: "Evidence throughput, claims, conflicts, proof health, and publish controls.",
+    src: "/product-proof/investor-demo-workflows.png",
     width: 1440,
-    height: 1100,
+    height: 1000,
   },
   {
-    title: "Loaded enterprise workflow",
-    detail: "Signup, email verification, leases, risk, and collision forecast.",
-    src: "/product-proof/senior-real-codesite-ui-desktop-loaded.png",
+    title: "Loaded Vectant runtime",
+    detail: "Hosted browser, replay, proof actions, terminal context, and workflow state.",
+    src: "/product-proof/investor-demo-workspace.png",
     width: 1440,
-    height: 1100,
+    height: 1000,
     span: "proof-wide",
   },
   {
@@ -234,6 +234,8 @@ const GPU_HMR_MARKETS = [
   "agentic coding environments",
   "complex multi-service apps",
 ];
+
+const LEGACY_BRAND_SHOT = /(codesite|senior-real)/i;
 
 const COLLABORATION_WEDGES = [
   {
@@ -439,9 +441,11 @@ function SecondaryCta({ href, children }) {
 }
 
 function ProductFrame({ shot, className = "", mediaClassName = "", priority = false }) {
+  const needsBrandOverlay = LEGACY_BRAND_SHOT.test(shot.src);
+
   return (
     <article className={`proof-frame group ${className}`} data-reveal>
-      <div className={`proof-frame-media ${mediaClassName}`}>
+      <div className={`proof-frame-media ${needsBrandOverlay ? "shot-rebrand-frame" : ""} ${mediaClassName}`}>
         <Image
           src={shot.src}
           alt={`${shot.title}: ${shot.detail}`}
@@ -451,6 +455,7 @@ function ProductFrame({ shot, className = "", mediaClassName = "", priority = fa
           sizes="(min-width: 1280px) 54vw, (min-width: 768px) 82vw, 100vw"
           className="h-full w-full object-cover object-top transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.035]"
         />
+        {needsBrandOverlay ? <span className="shot-rebrand-badge">Vectant</span> : null}
       </div>
       <div className="proof-frame-copy">
         <h3>{shot.title}</h3>
@@ -664,10 +669,10 @@ function DogfoodSection() {
                 sizes="(min-width: 1024px) 34vw, 100vw"
               />
               <Image
-                src="/product-proof/codesite-full-workflow-ui.png"
+                src="/product-proof/investor-demo-workflows.png"
                 alt="Vectant workflow proving agent coordination while building Vectant."
                 width={1440}
-                height={1100}
+                height={1000}
                 sizes="(min-width: 1024px) 34vw, 100vw"
               />
             </div>
