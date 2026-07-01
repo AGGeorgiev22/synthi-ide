@@ -15,14 +15,14 @@ const BROWSER_SHOT = {
 };
 
 const DOJO_SHOT = {
-  title: "Vectant export handoff",
-  detail: "A complete proof packet leaves the runtime with events, artifacts, checks, and Vectant clearance.",
-  src: "/product-proof/investor-demo-export-handoff.png",
-  width: 1440,
+  title: "Workflow observe",
+  detail: "A workflow is taught and checked against browser, terminal, replay, and runtime state.",
+  src: "/product-proof/browser-workflow-observe-ui.png",
+  width: 1500,
   height: 1000,
 };
 
-const CODESITE_SHOT = {
+const RUNTIME_WORKFLOW_SHOT = {
   title: "Vectant runtime workflow",
   detail: "Workflows, hosted browser control, replay, terminal context, and proof actions in the Vectant runtime.",
   src: "/product-proof/investor-demo-workflows.png",
@@ -32,7 +32,7 @@ const CODESITE_SHOT = {
 
 const COUNTERFACTUAL_SHOT = {
   title: "Vectant workspace",
-  detail: "The rejected branch, live runtime, terminal, and workflow state stay in one reviewable place.",
+  detail: "Live workspace, terminal, browser, and workflow state stay in one reviewable place.",
   src: "/product-proof/investor-demo-workspace.png",
   width: 1440,
   height: 1000,
@@ -76,35 +76,6 @@ const PROOF_GALLERY = [
     src: "/product-proof/investor-demo-workspace.png",
     width: 1440,
     height: 1000,
-    span: "proof-tall",
-  },
-  {
-    title: "Shadow simulator",
-    detail: "Schema coordination before broader authority.",
-    src: "/product-proof/codesite-shadow-simulator-ui-desktop.png",
-    width: 1440,
-    height: 1100,
-  },
-  {
-    title: "Line inspector",
-    detail: "The changed line keeps process ancestry and proof refs.",
-    src: "/product-proof/codesite-line-inspector-ui-desktop.png",
-    width: 1440,
-    height: 1100,
-  },
-  {
-    title: "Runtime command center",
-    detail: "Evidence throughput, claims, conflicts, proof health, and publish controls.",
-    src: "/product-proof/investor-demo-workflows.png",
-    width: 1440,
-    height: 1000,
-  },
-  {
-    title: "Loaded Vectant runtime",
-    detail: "Hosted browser, replay, proof actions, terminal context, and workflow state.",
-    src: "/product-proof/investor-demo-workspace.png",
-    width: 1440,
-    height: 1000,
     span: "proof-wide",
   },
   {
@@ -113,6 +84,7 @@ const PROOF_GALLERY = [
     src: "/product-proof/investor-demo-export-handoff.png",
     width: 1440,
     height: 1000,
+    span: "proof-large",
   },
   {
     title: "Runtime workflows",
@@ -120,63 +92,14 @@ const PROOF_GALLERY = [
     src: "/product-proof/investor-demo-workflows.png",
     width: 1440,
     height: 1000,
-  },
-  {
-    title: "Investor workspace",
-    detail: "The runtime control plane in the actual cloud workspace.",
-    src: "/product-proof/investor-demo-workspace.png",
-    width: 1440,
-    height: 1000,
-  },
-  {
-    title: "GPU before",
-    detail: "Before HMR.",
-    src: "/product-proof/gpu-hmr-before.png",
-    width: 800,
-    height: 600,
+    span: "proof-large",
   },
   {
     title: "GPU diff",
-    detail: "Visual proof of the hot swap.",
+    detail: "A single supporting proof frame from the compiled HMR path.",
     src: "/product-proof/gpu-hmr-diff.png",
     width: 800,
     height: 600,
-  },
-  {
-    title: "GPU after",
-    detail: "After HMR.",
-    src: "/product-proof/gpu-hmr-after.png",
-    width: 800,
-    height: 600,
-  },
-  {
-    title: "Vectant radar",
-    detail: "Curated proof view.",
-    src: "/codesite-proof/codesite-radar-desktop.png",
-    width: 1440,
-    height: 1973,
-    span: "proof-tall",
-  },
-  {
-    title: "Black box handover",
-    detail: "Replayable handoff with event stream and proof digest.",
-    src: "/codesite-proof/codesite-black-box-desktop.png",
-    width: 1440,
-    height: 1313,
-  },
-  {
-    title: "Landing inspection",
-    detail: "Inspection results before an agent lands work.",
-    src: "/codesite-proof/codesite-landing-desktop.png",
-    width: 1440,
-    height: 1199,
-  },
-  {
-    title: "Line provenance",
-    detail: "Source line, transaction, proof, reason, and ancestry.",
-    src: "/codesite-proof/codesite-line-provenance-desktop.png",
-    width: 1440,
-    height: 1100,
   },
 ];
 
@@ -230,8 +153,6 @@ const GPU_HMR_MARKETS = [
   "game engines",
   "large C++ / Rust",
 ];
-
-const LEGACY_BRAND_SHOT = /(codesite|senior-real)/i;
 
 const COLLABORATION_WEDGES = [
   {
@@ -437,11 +358,9 @@ function SecondaryCta({ href, children }) {
 }
 
 function ProductFrame({ shot, className = "", mediaClassName = "", priority = false }) {
-  const needsBrandOverlay = LEGACY_BRAND_SHOT.test(shot.src);
-
   return (
     <article className={`proof-frame group ${className}`} data-reveal>
-      <div className={`proof-frame-media ${needsBrandOverlay ? "shot-rebrand-frame" : ""} ${mediaClassName}`}>
+      <div className={`proof-frame-media ${mediaClassName}`}>
         <Image
           src={shot.src}
           alt={`${shot.title}: ${shot.detail}`}
@@ -451,7 +370,6 @@ function ProductFrame({ shot, className = "", mediaClassName = "", priority = fa
           sizes="(min-width: 1280px) 54vw, (min-width: 768px) 82vw, 100vw"
           className="h-full w-full object-cover object-top transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.035]"
         />
-        {needsBrandOverlay ? <span className="shot-rebrand-badge">Vectant</span> : null}
       </div>
       <div className="proof-frame-copy">
         <h3>{shot.title}</h3>
@@ -811,7 +729,7 @@ function DojoSection() {
         <div className="mt-14 grid gap-4 lg:grid-cols-[0.95fr_1.05fr]">
           <ProductFrame shot={DOJO_SHOT} className="dojo-proof-tall" />
           <div className="grid gap-4">
-            <ProductFrame shot={CODESITE_SHOT} />
+            <ProductFrame shot={RUNTIME_WORKFLOW_SHOT} />
             <ProductFrame shot={COUNTERFACTUAL_SHOT} className="counter-proof" />
           </div>
         </div>
