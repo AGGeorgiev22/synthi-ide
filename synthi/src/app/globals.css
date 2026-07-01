@@ -2378,28 +2378,39 @@ html.light .spotlight {
   left: calc(var(--onramp-pad) + 36px);
   z-index: 4;
   isolation: isolate;
-  border: 2px solid transparent;
+  --onramp-border-width: 2px;
   border-radius: 12px;
-  background:
-    linear-gradient(180deg, transparent, transparent) padding-box,
-    conic-gradient(
-      from var(--onramp-border-angle, -80deg),
-      rgba(255, 61, 190, 0.2),
-      #ff3dbe 10%,
-      #ff9f43 24%,
-      #ffd166 37%,
-      #22d3ee 54%,
-      #8b7bff 72%,
-      #ff3dbe 88%,
-      rgba(255, 61, 190, 0.2)
-    )
-    border-box;
   box-shadow:
     0 0 0 1px rgba(255, 247, 239, 0.05),
     0 0 40px rgba(255, 61, 190, 0.16),
     0 0 58px rgba(34, 211, 238, 0.1);
   pointer-events: none;
   will-change: transform, height;
+}
+
+.agent-onramp-scroll-border::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: var(--onramp-border-width);
+  background: conic-gradient(
+    from var(--onramp-border-angle, -80deg),
+    rgba(255, 61, 190, 0.22),
+    #ff3dbe 10%,
+    #ff9f43 24%,
+    #ffd166 37%,
+    #22d3ee 54%,
+    #8b7bff 72%,
+    #ff3dbe 88%,
+    rgba(255, 61, 190, 0.22)
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
 }
 
 .agent-onramp-scroll-border::before {
