@@ -4612,6 +4612,26 @@ html.light .spotlight {
   }
 }
 
+@media (min-width: 1120px) {
+  .hero-title {
+    font-size: 60px;
+  }
+
+  .gpu-copy h2 {
+    font-size: 62px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .hero-title {
+    font-size: 62px;
+  }
+
+  .gpu-copy h2 {
+    font-size: 66px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .proof-marquee-track {
     animation: none !important;

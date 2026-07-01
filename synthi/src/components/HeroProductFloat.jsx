@@ -178,7 +178,7 @@ export function HeroProductFloat() {
             className="h-auto w-full"
           />
           <figcaption>
-            <strong>Sub-100ms GPU HMR path</strong>
+            <strong>Proof-gated GPU HMR path</strong>
             <span>accepted when state, ABI, oracle, and ledger gates pass</span>
           </figcaption>
         </motion.figure>

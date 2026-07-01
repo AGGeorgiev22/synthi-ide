@@ -290,7 +290,7 @@ const DOGFOOD_ITEMS = [
 ];
 
 const PILOT_ITEMS = [
-  "Profile sub-100ms GPU HMR on a real compiled project",
+  "Profile GPU HMR on a real compiled project",
   "Run CUDA or ROCm/HIP workflows with state preservation proof",
   "Connect the VS Code extensions your enterprise repo actually needs",
   "Review Vectant proof packets from production-bound agent work",
@@ -630,7 +630,7 @@ function GpuSection() {
         <div className="gpu-stage" data-reveal>
           <div className="gpu-copy">
             <p className="section-mark">Proof-gated GPU HMR</p>
-            <h2>Hot-swap compiled changes without losing runtime state.</h2>
+            <h2>Hot-swap compiled code. Keep runtime state.</h2>
             <p>
               Vectant profiles the compiled hot path, preserves the running session, swaps the changed artifact, and promotes reload only when ABI, hardware validation, oracle output, ledger, and state-preservation checks pass.
             </p>
