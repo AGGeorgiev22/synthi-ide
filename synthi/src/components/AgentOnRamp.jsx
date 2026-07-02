@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { motion, useMotionValueEvent, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
+import { motion, useMotionValueEvent, useReducedMotion, useScroll } from "framer-motion";
 
 const STEPS = [
   {
@@ -61,6 +61,14 @@ function ChromaStep({ step, index, activeIndex, reduce }) {
       }
       transition={{ duration: reduce ? 0 : 0.18, ease: [0.16, 1, 0.3, 1] }}
     >
+      {isActive ? (
+        <span className="agent-onramp-card-brackets" aria-hidden="true">
+          <i />
+          <i />
+          <i />
+          <i />
+        </span>
+      ) : null}
       <div className="agent-onramp-chroma-step-top">
         <span>{step.verb}</span>
         <strong>{isActive ? step.state : status}</strong>
@@ -85,12 +93,6 @@ export function AgentOnRamp() {
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start start", "end end"],
-  });
-  const bracketProgress = useTransform(scrollYProgress, [0.08, 0.5, 0.92], [0, 1, 2]);
-  const bracketIndex = useSpring(bracketProgress, {
-    stiffness: 520,
-    damping: 54,
-    mass: 0.46,
   });
 
   const setStepFromProgress = (latest) => {
@@ -127,17 +129,6 @@ export function AgentOnRamp() {
               <strong>scoped / replayable / revocable</strong>
             </div>
             <div className="agent-onramp-chroma-stage">
-              <motion.span
-                className="agent-onramp-card-brackets"
-                aria-hidden="true"
-                initial={false}
-                style={{ "--onramp-active-index": reduce ? activeIndex : bracketIndex }}
-              >
-                <i />
-                <i />
-                <i />
-                <i />
-              </motion.span>
               {STEPS.map((step, index) => (
                 <ChromaStep
                   key={step.verb}
