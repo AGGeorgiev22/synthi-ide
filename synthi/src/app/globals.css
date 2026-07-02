@@ -2241,6 +2241,17 @@ html.light .hero-product-card {
     inset 0 -1px 0 rgba(0, 0, 0, 0.78);
 }
 
+html.light .hero-proof-strip {
+  border-color: rgba(18, 21, 27, 0.14);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(246, 248, 251, 0.9)),
+    #ffffff;
+  box-shadow:
+    0 28px 74px rgba(18, 21, 27, 0.08),
+    0 0 0 1px rgba(18, 21, 27, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.84);
+}
+
 .hero-proof-cell {
   position: relative;
   min-height: 118px;
@@ -2254,6 +2265,13 @@ html.light .hero-product-card {
     transform 0.68s cubic-bezier(0.16, 1, 0.3, 1),
     background-color 0.68s cubic-bezier(0.16, 1, 0.3, 1),
     box-shadow 0.68s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html.light .hero-proof-cell {
+  border-right-color: rgba(18, 21, 27, 0.1);
+  background:
+    linear-gradient(145deg, rgba(216, 75, 42, 0.045), rgba(255, 255, 255, 0)),
+    rgba(255, 255, 255, 0.46);
 }
 
 .hero-proof-cell::before {
@@ -2281,6 +2299,10 @@ html.light .hero-product-card {
   pointer-events: none;
 }
 
+html.light .hero-proof-cell::after {
+  background: linear-gradient(125deg, rgba(18, 21, 27, 0.055), transparent 28%);
+}
+
 .hero-proof-cell:hover {
   z-index: 1;
   transform: translateY(-3px);
@@ -2288,6 +2310,13 @@ html.light .hero-product-card {
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.12),
     0 24px 58px rgba(0, 0, 0, 0.34);
+}
+
+html.light .hero-proof-cell:hover {
+  background-color: rgba(255, 255, 255, 0.78);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.94),
+    0 20px 48px rgba(18, 21, 27, 0.1);
 }
 
 .hero-proof-cell:hover::before {
@@ -2331,6 +2360,10 @@ html.light .hero-product-card {
 
 .hero-proof-cell:hover span {
   color: rgba(255, 247, 239, 0.68);
+}
+
+html.light .hero-proof-cell:hover span {
+  color: rgba(18, 21, 27, 0.68);
 }
 
 .proof-marquee {
