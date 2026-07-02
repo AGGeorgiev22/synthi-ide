@@ -286,7 +286,7 @@ const DOGFOOD_ITEMS = [
   ["runtime", "Built in the same cloud loop: repo, terminal, browser, agents, reload state, and proof."],
   ["vectant", "Every agent change carries clearance, protected-path boundaries, evidence, and handoff context."],
   ["evidence", "Screenshots come from running Vectant workspaces, not placeholder dashboard art."],
-  ["hard repo", "We test the loop on Vectant before asking for your guarded repo."],
+  ["hard repo", "We run the loop on Vectant before asking you to connect guarded production code."],
 ];
 
 const PILOT_ITEMS = [
@@ -310,7 +310,7 @@ const FAQ = [
   },
   {
     q: "Why would senior engineers trust autonomous agents here?",
-    a: "Because Vectant treats trust as runtime infrastructure: scoped leases, proof packets, replay, line provenance, checkrides, counterfactual memory, causal twins, and evidence-backed authority.",
+    a: "Because trust is enforced by the runtime: scoped leases before mutation, replay after action, provenance for review, and proof before authority expands.",
   },
   {
     q: "Do teams have to replace their tools?",
@@ -401,12 +401,12 @@ function Hero() {
       <div className="campaign-atmosphere" aria-hidden="true" />
       <div className="hero-main-grid mx-auto grid max-w-[1540px] gap-12 px-4 pb-16 sm:px-6 lg:grid-cols-[0.92fr_1.08fr] lg:items-center lg:px-8 lg:pb-24">
         <div className="max-w-[880px]" data-reveal>
-          <p className="hero-kicker"><span>World's first fully autonomous agentic runtime for production repos</span></p>
+          <p className="hero-kicker"><span>World's first fully autonomous agentic runtime environment for production code</span></p>
           <h1 className="hero-title">
-            Autonomous agents need runtime authority.
+            The runtime where autonomous agents earn authority.
           </h1>
           <p className="hero-copy">
-            Give agents a live production-shaped workspace with mutation leases, MCP action channels, GPU HMR, replay, and reviewable evidence.
+            Run agents inside a live workspace where every action is leased, observed, replayed, and proven before it reaches production.
           </p>
           <div className="mt-8 max-w-2xl">
             <WaitlistForm
@@ -496,9 +496,9 @@ function RuntimeControlSection() {
     <section id="capabilities" className="runtime-campaign surface-dark scroll-mt-16 bg-[#070708] py-24 text-white md:py-36">
       <div className="mx-auto max-w-[1500px] px-4 sm:px-6 lg:px-8">
         <div className="section-lede max-w-[1040px]" data-reveal>
-          <h2>The control plane between agent speed and production risk.</h2>
+          <h2>Autonomy is only useful when the runtime can govern it.</h2>
           <p>
-            Vectant is not chat over a repo. It is execution, observation, access control, policy, replay, and proof around the running system, with VS Code extension paths and MCP tools inside the same runtime truth.
+            Vectant is not chat over a repo. It is the execution environment around the running system: tools, policies, browser state, logs, leases, replay, and proof in one place.
           </p>
         </div>
 
@@ -594,7 +594,7 @@ function LiveCollaborationSection() {
       <div className="mx-auto max-w-[1500px] px-4 sm:px-6 lg:px-8">
         <div className="collab-console" data-reveal>
           <div className="collab-console-copy">
-            <h2>One workspace. Humans, agents, access control, and Vectant in the same room.</h2>
+            <h2>One live room for humans, agents, permissions, and proof.</h2>
             <p>
               Vectant collaboration is low-latency shared workspace state for software operations: permissions, presence, cursors, selections, runtime state, and agent action all share the same session.
             </p>
@@ -897,7 +897,7 @@ function FinalCta() {
             className="final-cta-logo h-auto w-[240px] sm:w-[300px] md:w-[340px]"
           />
         </div>
-        <h2>Bring the hard repo. Leave with proof.</h2>
+        <h2>Bring the repo your agent cannot safely touch yet.</h2>
         <p>
           Run a pilot inside an autonomous runtime with your tools, your extension paths, your runtime signals, and evidence your reviewers can inspect.
         </p>
