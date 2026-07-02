@@ -3515,7 +3515,9 @@ html.light .agent-onramp-panel {
   height: 430px;
   overflow: hidden;
   border-radius: 12px;
-  background: #050505;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255, 247, 239, 0.06), transparent 42%),
+    #050505;
 }
 
 .proof-frame-copy {

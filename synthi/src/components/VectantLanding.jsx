@@ -16,11 +16,11 @@ const BROWSER_SHOT = {
 };
 
 const DOJO_SHOT = {
-  title: "Workflow observe",
-  detail: "A workflow is taught and checked against browser, terminal, replay, and runtime state.",
-  src: "/product-proof/browser-workflow-observe-ui.png",
-  width: 1500,
-  height: 1000,
+  title: "Agent Dojo checkride",
+  detail: "CodeSite workflow UI proving selectors, protected paths, proof gates, and repeatable agent authority before a license expands.",
+  src: "/product-proof/codesite-full-workflow-ui.png",
+  width: 1440,
+  height: 1100,
 };
 
 const RUNTIME_WORKFLOW_SHOT = {
@@ -32,11 +32,11 @@ const RUNTIME_WORKFLOW_SHOT = {
 };
 
 const COUNTERFACTUAL_SHOT = {
-  title: "Vectant workspace",
-  detail: "Live workspace, terminal, browser, and workflow state stay in one reviewable place.",
-  src: "/product-proof/investor-demo-workspace.png",
-  width: 1440,
-  height: 1000,
+  title: "Counterfactual memory",
+  detail: "Replayable memory traces show what changed, what would have happened, and why a landing did or did not earn authority.",
+  src: "/product-proof/codesite-counterfactual-memory-proof.png",
+  width: 1280,
+  height: 2296,
 };
 
 const PROOF_GALLERY = [
@@ -354,7 +354,7 @@ function ProductFrame({ shot, className = "", mediaClassName = "", priority = fa
           height={shot.height}
           priority={priority}
           sizes="(min-width: 1280px) 54vw, (min-width: 768px) 82vw, 100vw"
-          className="h-full w-full object-cover object-top transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.035]"
+          className="h-full w-full object-contain object-top transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.012]"
         />
       </div>
       <div className="proof-frame-copy">
