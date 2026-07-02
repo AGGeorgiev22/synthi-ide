@@ -87,10 +87,10 @@ export function HeroProductFloat() {
     variants: {
       hidden: {
         opacity: 0,
-        y: 34,
-        z: -90,
-        scale: 0.78,
-        rotateX: 10,
+        y: 42,
+        z: -140,
+        scale: 0.7,
+        rotateX: 13,
       },
       show: {
         opacity: 1,
@@ -99,7 +99,7 @@ export function HeroProductFloat() {
         scale: 1,
         rotateX: 0,
         transition: {
-          duration: prefersReducedMotion ? 0 : 0.42,
+          duration: prefersReducedMotion ? 0 : 0.62,
           delay: prefersReducedMotion ? 0 : delay,
           ease: [0.16, 1, 0.3, 1],
         },
@@ -113,7 +113,7 @@ export function HeroProductFloat() {
         <div className="hero-product-depth" aria-hidden="true" />
 
         <motion.div className="hero-product-main" style={mainStyle}>
-          <motion.div className="hero-card-pop-inner" {...cardReveal(0.02)}>
+          <motion.div className="hero-card-pop-inner" data-hero-card="workspace" {...cardReveal(0.04)}>
             <div className="hero-browser-shell hero-product-shell">
               <div className="hero-browser-bar">
                 <span />
@@ -135,7 +135,7 @@ export function HeroProductFloat() {
         </motion.div>
 
         <motion.div className="hero-product-card-anchor hero-product-card-observe" style={observeStyle}>
-          <motion.figure className="hero-product-card" {...cardReveal(0.16)}>
+          <motion.figure className="hero-product-card" data-hero-card="workflow" {...cardReveal(0.28)}>
             <div className="hero-card-pop-inner">
               <Image
                 src={SHOTS.observe.src}
@@ -157,8 +157,9 @@ export function HeroProductFloat() {
         <motion.div className="hero-product-card-anchor hero-code-collab-anchor" style={collabStyle}>
           <motion.figure
             className="hero-code-collab-card"
+            data-hero-card="collab"
             aria-label="Shared runtime collaboration"
-            {...cardReveal(0.3)}
+            {...cardReveal(0.52)}
           >
             <div className="hero-card-pop-inner">
               <div className="hero-code-window-top">
@@ -224,7 +225,7 @@ export function HeroProductFloat() {
         </motion.div>
 
         <motion.div className="hero-product-card-anchor hero-product-card-gpu" style={gpuStyle}>
-          <motion.figure className="hero-product-card" {...cardReveal(0.44)}>
+          <motion.figure className="hero-product-card" data-hero-card="gpu" {...cardReveal(0.76)}>
             <div className="hero-card-pop-inner">
               <Image
                 src={SHOTS.gpu.src}
