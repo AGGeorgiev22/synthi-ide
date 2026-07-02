@@ -16,10 +16,11 @@ export function SmoothScroll() {
     let lenis;
     let rafId = 0;
     let onClick;
+    let offScrollTrigger;
     let cancelled = false;
 
-    import("lenis")
-      .then(({ default: Lenis }) => {
+    Promise.all([import("lenis"), import("gsap/ScrollTrigger")])
+      .then(([{ default: Lenis }, { ScrollTrigger }]) => {
         if (cancelled) return;
         lenis = new Lenis({
           lerp: 0.09,
@@ -27,6 +28,8 @@ export function SmoothScroll() {
           wheelMultiplier: 1,
           touchMultiplier: 1.5,
         });
+
+        offScrollTrigger = lenis.on("scroll", ScrollTrigger.update);
 
         const raf = (time) => {
           lenis.raf(time);
@@ -54,6 +57,7 @@ export function SmoothScroll() {
       cancelled = true;
       cancelAnimationFrame(rafId);
       if (onClick) document.removeEventListener("click", onClick);
+      if (offScrollTrigger) offScrollTrigger();
       if (lenis) lenis.destroy();
     };
   }, []);
