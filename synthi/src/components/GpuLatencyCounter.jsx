@@ -49,7 +49,7 @@ export function GpuLatencyCounter() {
       setCounter(0);
 
       const tick = (now) => {
-        const elapsed = Math.min(1, (now - start) / DURATION_MS);
+        const elapsed = Math.max(0, Math.min(1, (now - start) / DURATION_MS));
         const nextValue = Math.round(TARGET_MS * easeOutCubic(elapsed));
 
         if (nextValue !== lastValue) {
@@ -70,9 +70,14 @@ export function GpuLatencyCounter() {
       frameRef.current = requestAnimationFrame(tick);
     };
 
+    const observedNodes = [
+      node,
+      node.closest("#gpu-hmr") || document.querySelector("#gpu-hmr"),
+    ].filter(Boolean);
+
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
           visibleRef.current = true;
           runCounter();
         } else {
@@ -80,10 +85,10 @@ export function GpuLatencyCounter() {
           stopCounter();
         }
       },
-      { rootMargin: "0px 0px -12%", threshold: 0.16 },
+      { rootMargin: "20% 0px 20%", threshold: 0.01 },
     );
 
-    observer.observe(node);
+    observedNodes.forEach((observedNode) => observer.observe(observedNode));
 
     return () => {
       observer.disconnect();
