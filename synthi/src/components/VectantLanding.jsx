@@ -631,11 +631,21 @@ function GpuSection() {
           <div className="gpu-copy">
             <p className="section-mark">Proof-gated GPU HMR</p>
             <h2>Hot-swap compiled code. Keep runtime state.</h2>
+            <div className="gpu-latency-counter" aria-label="Sub 90ms GPU HMR edit to visual, no matter the size of your project">
+              <span>GPU HMR edit to visual</span>
+              <strong>
+                <span>sub</span>
+                <span className="gpu-latency-value">
+                  90<span className="gpu-latency-unit">ms</span>
+                </span>
+              </strong>
+              <p>No matter the size of your project.</p>
+            </div>
             <p>
-              Vectant profiles the compiled hot path, preserves the running session, swaps the changed artifact, and promotes reload only when ABI, hardware validation, oracle output, ledger, and state-preservation checks pass.
+              Vectant swaps the compiled artifact without dropping the running session, then promotes only after ABI, hardware, oracle, ledger, and state checks pass.
             </p>
             <p>
-              Current proof: ROCm/HIP. CUDA-oriented workflows use the same gated architecture and promote only after hardware-backed validation.
+              Current proof: ROCm/HIP. CUDA-oriented workflows follow the same gated route after hardware-backed validation.
             </p>
             <div className="gpu-market-strip" aria-label="Best-fit GPU HMR markets">
               {GPU_HMR_MARKETS.map((market) => (
