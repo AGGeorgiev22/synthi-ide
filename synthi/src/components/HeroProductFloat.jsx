@@ -108,28 +108,30 @@ export function HeroProductFloat() {
       <motion.div className="hero-product-sticky" style={stickyStyle}>
         <div className="hero-product-depth" aria-hidden="true" />
 
-        <motion.div className="hero-product-main" style={mainStyle}>
-          <div className="hero-browser-shell hero-product-shell">
-            <div className="hero-browser-bar">
-              <span />
-              <span />
-              <span />
-              <strong>vectant / autonomous runtime</strong>
+        <motion.div className="hero-product-main" style={mainStyle} {...cardMask(0.02)}>
+          <motion.div className="hero-card-pop-inner" {...cardPop(0.02)}>
+            <div className="hero-browser-shell hero-product-shell">
+              <div className="hero-browser-bar">
+                <span />
+                <span />
+                <span />
+                <strong>vectant / autonomous runtime</strong>
+              </div>
+              <Image
+                src={SHOTS.primary.src}
+                alt={`${SHOTS.primary.title}: ${SHOTS.primary.detail}`}
+                width={SHOTS.primary.width}
+                height={SHOTS.primary.height}
+                priority
+                sizes="(min-width: 1280px) 48vw, (min-width: 768px) 82vw, 100vw"
+                className="h-auto w-full"
+              />
             </div>
-            <Image
-              src={SHOTS.primary.src}
-              alt={`${SHOTS.primary.title}: ${SHOTS.primary.detail}`}
-              width={SHOTS.primary.width}
-              height={SHOTS.primary.height}
-              priority
-              sizes="(min-width: 1280px) 48vw, (min-width: 768px) 82vw, 100vw"
-              className="h-auto w-full"
-            />
-          </div>
+          </motion.div>
         </motion.div>
 
-        <motion.figure className="hero-product-card hero-product-card-observe" style={observeStyle} {...cardMask(0.16)}>
-          <motion.div className="hero-card-pop-inner" {...cardPop(0.16)}>
+        <motion.figure className="hero-product-card hero-product-card-observe" style={observeStyle} {...cardMask(0.22)}>
+          <motion.div className="hero-card-pop-inner" {...cardPop(0.22)}>
             <Image
               src={SHOTS.observe.src}
               alt={`${SHOTS.observe.title}: ${SHOTS.observe.detail}`}
@@ -150,9 +152,9 @@ export function HeroProductFloat() {
           className="hero-code-collab-card"
           style={collabStyle}
           aria-label="Shared runtime collaboration"
-          {...cardMask(0.3)}
+          {...cardMask(0.4)}
         >
-          <motion.div className="hero-card-pop-inner" {...cardPop(0.3)}>
+          <motion.div className="hero-card-pop-inner" {...cardPop(0.4)}>
             <div className="hero-code-window-top">
               <div className="hero-code-window-title">
                 <span className="hero-code-window-dots" aria-hidden="true">
@@ -214,8 +216,8 @@ export function HeroProductFloat() {
           </motion.div>
         </motion.figure>
 
-        <motion.figure className="hero-product-card hero-product-card-gpu" style={gpuStyle} {...cardMask(0.44)}>
-          <motion.div className="hero-card-pop-inner" {...cardPop(0.44)}>
+        <motion.figure className="hero-product-card hero-product-card-gpu" style={gpuStyle} {...cardMask(0.58)}>
+          <motion.div className="hero-card-pop-inner" {...cardPop(0.58)}>
             <Image
               src={SHOTS.gpu.src}
               alt={`${SHOTS.gpu.title}: ${SHOTS.gpu.detail}`}
