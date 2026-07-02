@@ -186,6 +186,55 @@ const RUNTIME_PILLARS = [
   },
 ];
 
+const RUNTIME_PROOF_PATH = [
+  {
+    step: "Request",
+    title: "The agent asks for authority first.",
+    copy: "Vectant turns intent into a MutationLease with files, routes, protected paths, and required evidence before code changes.",
+    signal: "scope before write",
+    shot: {
+      title: "Lease request",
+      detail: "Workflow authority is visible before the agent touches the repo.",
+      src: "/product-proof/investor-demo-workflows.png",
+      width: 1440,
+      height: 1000,
+    },
+  },
+  {
+    step: "Observe",
+    title: "The runtime watches the real system.",
+    copy: "Browser, terminal, workflow state, screenshots, HMR status, and replay context stay inside one cloud workspace.",
+    signal: "runtime truth",
+    shot: BROWSER_SHOT,
+  },
+  {
+    step: "Constrain",
+    title: "The landing is checked against risk.",
+    copy: "Protected paths, collision zones, no-fly zones, and evidence gates decide whether a mutation can continue.",
+    signal: "risk gates",
+    shot: {
+      title: "Clearance surface",
+      detail: "Protected paths, risk classes, leases, and inspection lanes stay inspectable.",
+      src: "/product-proof/codesite-full-workflow-ui.png",
+      width: 1440,
+      height: 1100,
+    },
+  },
+  {
+    step: "Prove",
+    title: "Reviewers open evidence, not a story.",
+    copy: "Replay, line provenance, output proof, and commit context travel with the change before production-bound work merges.",
+    signal: "proof packet",
+    shot: {
+      title: "Replay ledger",
+      detail: "Line provenance and black-box replay turn agent output into review material.",
+      src: "/codesite-proof/codesite-line-provenance-desktop.png",
+      width: 1440,
+      height: 1100,
+    },
+  },
+];
+
 const LICENSE_STEPS = [
   ["Demonstrate", "A human or agent teaches the workflow inside the real workspace."],
   ["Distill", "Vectant extracts source-aware steps, boundaries, selectors, and success evidence."],
@@ -511,6 +560,58 @@ function ComparisonSection() {
               </span>
             ))}
           </p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function RuntimeProofPathSection() {
+  return (
+    <section id="runtime-path" className="runtime-campaign runtime-proof-path scroll-mt-16 py-24 md:py-36">
+      <div className="runtime-path-shell mx-auto max-w-[1500px] px-4 sm:px-6 lg:px-8">
+        <div className="runtime-path-copy" data-reveal>
+          <p className="section-mark">Autonomous runtime path</p>
+          <h2>The runtime makes every agent earn its next move.</h2>
+          <p>
+            Vectant is the control plane between autonomous agents and production code. The story is not chat, promise, merge. It is request, observe, constrain, prove.
+          </p>
+
+          <div className="runtime-path-steps" aria-label="Vectant runtime proof path">
+            {RUNTIME_PROOF_PATH.map(({ step, title, copy, signal }, index) => (
+              <article key={step} data-runtime-step>
+                <span>{String(index + 1).padStart(2, "0")}</span>
+                <div>
+                  <strong>{step}</strong>
+                  <h3>{title}</h3>
+                  <p>{copy}</p>
+                  <small>{signal}</small>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+
+        <div className="runtime-path-visual" aria-label="Vectant product proof path">
+          {RUNTIME_PROOF_PATH.map(({ step, shot }) => (
+            <article key={`${step}-${shot.src}`} className="runtime-path-panel" data-runtime-panel>
+              <div className="runtime-path-panel-media">
+                <Image
+                  src={shot.src}
+                  alt={`${shot.title}: ${shot.detail}`}
+                  width={shot.width}
+                  height={shot.height}
+                  loading="eager"
+                  sizes="(min-width: 1280px) 52vw, (min-width: 900px) 48vw, 100vw"
+                  className="h-full w-full object-contain object-top"
+                />
+              </div>
+              <div className="runtime-path-panel-copy">
+                <strong>{shot.title}</strong>
+                <span>{shot.detail}</span>
+              </div>
+            </article>
+          ))}
         </div>
       </div>
     </section>
@@ -934,6 +1035,7 @@ export function VectantLanding() {
       <Hero />
       <AgentOnRamp />
       <ComparisonSection />
+      <RuntimeProofPathSection />
       <RuntimeControlSection />
       <DogfoodSection />
       <LiveCollaborationSection />

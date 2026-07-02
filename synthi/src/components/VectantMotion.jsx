@@ -114,6 +114,82 @@ export function VectantMotion() {
         );
       }
 
+      const runtimePathShell = document.querySelector(".runtime-path-shell");
+      if (runtimePathShell && window.innerWidth >= 900) {
+        const runtimePathSteps = gsap.utils.toArray("[data-runtime-step]", runtimePathShell);
+        const runtimePathPanels = gsap.utils.toArray("[data-runtime-panel]", runtimePathShell);
+
+        if (runtimePathSteps.length && runtimePathSteps.length === runtimePathPanels.length) {
+          gsap.set(runtimePathSteps, { opacity: 0.46, y: 8 });
+          gsap.set(runtimePathSteps[0], { opacity: 1, y: 0 });
+          gsap.set(runtimePathPanels, { autoAlpha: 0, y: 34, scale: 0.965 });
+          gsap.set(runtimePathPanels[0], { autoAlpha: 1, y: 0, scale: 1 });
+
+          const runtimePathTimeline = gsap.timeline({
+            scrollTrigger: {
+              trigger: runtimePathShell,
+              start: "top top+=74",
+              end: () => `+=${Math.max(window.innerHeight * 2.35, 1700)}`,
+              pin: true,
+              scrub: true,
+              anticipatePin: 1,
+              invalidateOnRefresh: true,
+            },
+          });
+
+          runtimePathSteps.forEach((step, index) => {
+            if (index === 0) return;
+            const at = index;
+
+            runtimePathTimeline
+              .to(
+                runtimePathPanels[index - 1],
+                {
+                  autoAlpha: 0,
+                  y: -26,
+                  scale: 0.985,
+                  duration: 0.42,
+                  ease: "none",
+                },
+                at - 0.32,
+              )
+              .to(
+                runtimePathPanels[index],
+                {
+                  autoAlpha: 1,
+                  y: 0,
+                  scale: 1,
+                  duration: 0.55,
+                  ease: "none",
+                },
+                at - 0.18,
+              )
+              .to(
+                runtimePathSteps[index - 1],
+                {
+                  opacity: 0.48,
+                  y: -6,
+                  duration: 0.38,
+                  ease: "none",
+                },
+                at - 0.28,
+              )
+              .to(
+                step,
+                {
+                  opacity: 1,
+                  y: 0,
+                  duration: 0.4,
+                  ease: "none",
+                },
+                at - 0.24,
+              );
+          });
+
+          runtimePathTimeline.to({}, { duration: 0.55 });
+        }
+      }
+
       gsap.utils.toArray(".hero-floating-proof-a, .hero-floating-proof-b, .hero-shot-a, .hero-shot-b").forEach((node, index) => {
         gsap.to(node, {
           y: index % 2 === 0 ? -16 : 14,

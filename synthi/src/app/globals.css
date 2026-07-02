@@ -3020,6 +3020,202 @@ html.light .agent-onramp-panel {
   text-wrap: balance;
 }
 
+.runtime-proof-path {
+  position: relative;
+  overflow: clip;
+}
+
+.runtime-path-shell {
+  display: grid;
+  grid-template-columns: minmax(0, 0.98fr) minmax(0, 1.02fr);
+  gap: clamp(30px, 5vw, 78px);
+  align-items: center;
+  min-height: calc(100dvh - 96px);
+}
+
+.runtime-path-copy {
+  display: grid;
+  align-content: center;
+}
+
+.runtime-path-copy h2 {
+  margin-top: 22px;
+  max-width: 840px;
+  font-family: var(--font-satoshi), ui-sans-serif, system-ui, sans-serif;
+  font-size: clamp(42px, 4.2vw, 64px);
+  font-weight: 800;
+  line-height: 0.98;
+  letter-spacing: 0;
+  color: var(--campaign-ink);
+  text-wrap: balance;
+}
+
+.runtime-path-copy > p:not(.section-mark) {
+  margin-top: 24px;
+  max-width: 64ch;
+  font-size: 17px;
+  line-height: 1.72;
+  color: var(--campaign-muted);
+}
+
+.runtime-path-steps {
+  display: grid;
+  gap: 10px;
+  margin-top: 34px;
+}
+
+.runtime-path-steps article {
+  position: relative;
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  gap: 16px;
+  min-height: 82px;
+  overflow: hidden;
+  border: 1px solid var(--campaign-line);
+  border-radius: 10px;
+  background:
+    linear-gradient(135deg, rgba(255, 106, 61, 0.08), transparent 42%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.036), rgba(255, 255, 255, 0.012)),
+    var(--campaign-panel);
+  padding: 12px 16px;
+  opacity: 0.54;
+  transform: translate3d(0, 8px, 0);
+  will-change: transform, opacity;
+}
+
+.runtime-path-steps article::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 3px;
+  background: linear-gradient(180deg, #ff4bd8, #ff6a3d 44%, #5ee7ff 72%, #8b7bff);
+  opacity: 0.44;
+}
+
+.runtime-path-steps article > span {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 750;
+  color: var(--campaign-faint);
+}
+
+.runtime-path-steps strong {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 760;
+  color: #ffb199;
+}
+
+.runtime-path-steps h3 {
+  margin-top: 8px;
+  font-family: var(--font-satoshi), ui-sans-serif, system-ui, sans-serif;
+  font-size: 18px;
+  font-weight: 760;
+  line-height: 1;
+  letter-spacing: 0;
+  color: var(--campaign-ink);
+}
+
+.runtime-path-steps p {
+  display: -webkit-box;
+  margin-top: 8px;
+  max-width: 62ch;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--campaign-faint);
+}
+
+.runtime-path-steps small {
+  display: block;
+  margin-top: 9px;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  color: var(--campaign-faint);
+}
+
+.runtime-path-visual {
+  position: relative;
+  min-height: min(520px, calc(100dvh - 224px));
+  overflow: hidden;
+  border: 1px solid rgba(255, 247, 239, 0.14);
+  border-radius: 16px;
+  background:
+    radial-gradient(70% 64% at 16% 0%, rgba(255, 61, 190, 0.12), transparent 70%),
+    radial-gradient(78% 70% at 96% 12%, rgba(34, 211, 238, 0.11), transparent 74%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.052), rgba(255, 255, 255, 0.016)),
+    #070708;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 40px 110px rgba(0, 0, 0, 0.36);
+}
+
+.runtime-path-visual::before {
+  content: "";
+  position: absolute;
+  inset: 10px 10px auto;
+  z-index: 3;
+  height: 38px;
+  border-bottom: 1px solid rgba(255, 247, 239, 0.08);
+  background:
+    radial-gradient(circle at 18px 50%, #ff5f56 0 5px, transparent 6px),
+    radial-gradient(circle at 42px 50%, #ffbd2e 0 5px, transparent 6px),
+    radial-gradient(circle at 66px 50%, #27c93f 0 5px, transparent 6px);
+  pointer-events: none;
+}
+
+.runtime-path-panel {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  padding: 56px 10px 10px;
+  opacity: 0;
+  transform: translate3d(0, 28px, 0) scale(0.965);
+  will-change: transform, opacity;
+}
+
+.runtime-path-panel:first-child {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+.runtime-path-panel-media {
+  min-height: 0;
+  overflow: hidden;
+  border: 1px solid rgba(255, 247, 239, 0.09);
+  border-radius: 12px;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255, 247, 239, 0.06), transparent 38%),
+    #020204;
+}
+
+.runtime-path-panel-copy {
+  display: grid;
+  grid-template-columns: minmax(160px, 0.32fr) minmax(0, 0.68fr);
+  gap: 18px;
+  align-items: start;
+  padding: 16px 8px 4px;
+}
+
+.runtime-path-panel-copy strong {
+  font-family: var(--font-satoshi), ui-sans-serif, system-ui, sans-serif;
+  font-size: 20px;
+  font-weight: 760;
+  line-height: 1;
+  color: #fff7ef;
+}
+
+.runtime-path-panel-copy span {
+  max-width: 58ch;
+  font-size: 13px;
+  line-height: 1.6;
+  color: rgba(255, 247, 239, 0.58);
+}
+
 .runtime-pillar-grid,
 .deep-feature-grid,
 .faq-grid {
@@ -4426,6 +4622,15 @@ html.light .agent-onramp-panel {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .runtime-path-shell {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+
+  .runtime-path-visual {
+    min-height: 640px;
+  }
+
   .agent-onramp-grid {
     grid-template-columns: 1fr;
     position: relative;
@@ -4565,6 +4770,48 @@ html.light .agent-onramp-panel {
 
   .comparison-ledger-row {
     gap: 10px;
+  }
+
+  .runtime-path-copy h2 {
+    font-size: 48px;
+  }
+
+  .runtime-path-steps article {
+    grid-template-columns: 34px minmax(0, 1fr);
+  }
+
+  .runtime-path-visual {
+    display: grid;
+    gap: 14px;
+    min-height: auto;
+    overflow: visible;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .runtime-path-visual::before {
+    display: none;
+  }
+
+  .runtime-path-panel,
+  .runtime-path-panel:first-child {
+    position: relative;
+    opacity: 1 !important;
+    transform: none !important;
+    border: 1px solid rgba(255, 247, 239, 0.12);
+    border-radius: 12px;
+    background: #080809;
+    padding: 8px;
+  }
+
+  .runtime-path-panel-media {
+    height: 320px;
+  }
+
+  .runtime-path-panel-copy {
+    grid-template-columns: 1fr;
+    padding: 14px 8px 6px;
   }
 
   .agent-onramp-panel-top {
