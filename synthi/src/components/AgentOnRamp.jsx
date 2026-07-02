@@ -1,12 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { motion, useReducedMotion } from "framer-motion";
-
-gsap.registerPlugin(ScrollTrigger, useGSAP);
+import { LayoutGroup, motion, useMotionValueEvent, useReducedMotion, useScroll } from "framer-motion";
 
 const STEPS = [
   {
@@ -66,6 +61,24 @@ function ChromaStep({ step, index, activeIndex, reduce }) {
       }
       transition={{ duration: reduce ? 0 : 0.24, ease: [0.16, 1, 0.3, 1] }}
     >
+      {isActive ? (
+        <motion.span
+          layoutId="agent-onramp-active-brackets"
+          className="agent-onramp-card-brackets"
+          aria-hidden="true"
+          transition={{
+            type: "spring",
+            stiffness: 520,
+            damping: 48,
+            mass: 0.8,
+          }}
+        >
+          <i />
+          <i />
+          <i />
+          <i />
+        </motion.span>
+      ) : null}
       <div className="agent-onramp-chroma-step-top">
         <span>{step.verb}</span>
         <strong>{isActive ? step.state : status}</strong>
@@ -84,10 +97,13 @@ function ChromaStep({ step, index, activeIndex, reduce }) {
 
 export function AgentOnRamp() {
   const ref = useRef(null);
-  const bracketRef = useRef(null);
   const activeIndexRef = useRef(0);
   const [activeIndex, setActiveIndex] = useState(0);
   const reduce = useReducedMotion();
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start start", "end end"],
+  });
 
   const setStepFromProgress = (latest) => {
     if (reduce) return;
@@ -98,64 +114,7 @@ export function AgentOnRamp() {
     }
   };
 
-  useGSAP(
-    () => {
-      if (reduce || !ref.current || !bracketRef.current) return undefined;
-
-      const section = ref.current;
-      const bracket = bracketRef.current;
-      const cards = gsap.utils.toArray("[data-onramp-step]", section);
-      if (cards.length < 2) return undefined;
-
-      const getMetrics = () => {
-        const first = cards[0];
-        const last = cards[cards.length - 1];
-        return {
-          x: first.offsetLeft,
-          width: first.offsetWidth,
-          height: first.offsetHeight,
-          startY: first.offsetTop,
-          endY: last.offsetTop,
-        };
-      };
-
-      const syncFrame = (progress = 0) => {
-        const metrics = getMetrics();
-        gsap.set(bracket, {
-          x: metrics.x,
-          y: gsap.utils.interpolate(metrics.startY, metrics.endY, progress),
-          width: metrics.width,
-          height: metrics.height,
-        });
-      };
-
-      syncFrame();
-
-      const tween = gsap.fromTo(
-        bracket,
-        { y: () => getMetrics().startY, force3D: true },
-        {
-          y: () => getMetrics().endY,
-          ease: "none",
-          scrollTrigger: {
-            trigger: section,
-            start: "top top",
-            end: "bottom bottom",
-            scrub: true,
-            invalidateOnRefresh: true,
-            onRefresh: (self) => syncFrame(self.progress),
-            onUpdate: (self) => setStepFromProgress(self.progress),
-          },
-        },
-      );
-
-      return () => {
-        tween.scrollTrigger?.kill();
-        tween.kill();
-      };
-    },
-    { scope: ref, dependencies: [reduce] },
-  );
+  useMotionValueEvent(scrollYProgress, "change", setStepFromProgress);
 
   return (
     <section id="bring-agent" ref={ref} className="runtime-campaign agent-onramp scroll-mt-32 py-24 md:py-36">
@@ -179,23 +138,19 @@ export function AgentOnRamp() {
               <span>agent authority path</span>
               <strong>scoped / replayable / revocable</strong>
             </div>
-            <div className="agent-onramp-chroma-stage">
-              <span ref={bracketRef} className="agent-onramp-card-brackets" aria-hidden="true">
-                <i />
-                <i />
-                <i />
-                <i />
-              </span>
-              {STEPS.map((step, index) => (
-                <ChromaStep
-                  key={step.verb}
-                  step={step}
-                  index={index}
-                  activeIndex={activeIndex}
-                  reduce={reduce}
-                />
-              ))}
-            </div>
+            <LayoutGroup id="agent-onramp-bracket-group">
+              <div className="agent-onramp-chroma-stage">
+                {STEPS.map((step, index) => (
+                  <ChromaStep
+                    key={step.verb}
+                    step={step}
+                    index={index}
+                    activeIndex={activeIndex}
+                    reduce={reduce}
+                  />
+                ))}
+              </div>
+            </LayoutGroup>
           </motion.div>
         </div>
       </div>
