@@ -6,18 +6,18 @@ import { motion, useReducedMotion, useScroll, useSpring, useTransform } from "fr
 
 const SHOTS = {
   primary: {
-    title: "Vectant runtime workflow",
+    title: "Vectant governed workspace",
     detail:
-      "A real runtime surface with workflows, hosted browser control, terminal context, GPU state, and proof-ready handoff.",
-    src: "/product-proof/investor-demo-workflows.png",
-    width: 1440,
+      "A live cloud runtime with workflow authority, terminal context, GPU state, and proof-ready session state.",
+    src: "/product-proof/browser-workflow-observe-ui.png",
+    width: 1500,
     height: 1000,
   },
   observe: {
-    title: "Hosted browser observe",
-    detail: "Runtime, browser state, workflow steps, terminal context, and replay surface in one cloud environment.",
-    src: "/product-proof/browser-workflow-observe-ui.png",
-    width: 1500,
+    title: "Runtime workflow proof",
+    detail: "A real Vectant workflow with hosted browser attachment, observed screenshots, trace, contract, and replay steps.",
+    src: "/product-proof/investor-demo-workflows.png",
+    width: 1440,
     height: 1000,
   },
   gpu: {
@@ -147,8 +147,8 @@ export function HeroProductFloat() {
                 className="h-auto w-full"
               />
               <figcaption>
-                <strong>MCP eyes and hands</strong>
-                <span>browser, terminal, replay, workflow state</span>
+                <strong>Workflow proof rail</strong>
+                <span>browser attach, observe, trace, contract, replay</span>
               </figcaption>
             </div>
           </motion.figure>
