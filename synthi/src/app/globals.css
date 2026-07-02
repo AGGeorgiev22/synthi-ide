@@ -1195,9 +1195,22 @@ html.light .spotlight {
   --campaign-line-strong: rgba(255, 247, 239, 0.2);
   --campaign-accent: #ff6a3d;
   --campaign-accent-soft: rgba(255, 106, 61, 0.12);
+  background: var(--campaign-bg);
   color: var(--campaign-ink);
   scroll-margin-top: 112px;
   text-wrap: pretty;
+}
+
+html.light .runtime-campaign {
+  --campaign-bg: #f6f8fb;
+  --campaign-panel: #ffffff;
+  --campaign-ink: #12151b;
+  --campaign-muted: rgba(18, 21, 27, 0.68);
+  --campaign-faint: rgba(18, 21, 27, 0.48);
+  --campaign-line: rgba(18, 21, 27, 0.14);
+  --campaign-line-strong: rgba(18, 21, 27, 0.24);
+  --campaign-accent: #d84b2a;
+  --campaign-accent-soft: rgba(216, 75, 42, 0.12);
 }
 
 .runtime-hero-v2 {
@@ -1206,6 +1219,8 @@ html.light .spotlight {
 
 .vectant-landing-root {
   overflow-x: clip;
+  background: var(--color-bg);
+  color: var(--color-ink);
 }
 
 .campaign-atmosphere {
@@ -1214,6 +1229,13 @@ html.light .spotlight {
   z-index: -1;
   overflow: hidden;
   background: #070708;
+}
+
+html.light .campaign-atmosphere {
+  background:
+    radial-gradient(circle at 20% 0%, rgba(216, 75, 42, 0.12), transparent 34%),
+    radial-gradient(circle at 92% 12%, rgba(0, 119, 168, 0.1), transparent 30%),
+    #f6f8fb;
 }
 
 .campaign-atmosphere::after {
@@ -1247,6 +1269,10 @@ html.light .spotlight {
   line-height: 1.35;
   letter-spacing: 0;
   color: rgba(255, 247, 239, 0.74);
+}
+
+html.light .hero-kicker {
+  color: rgba(18, 21, 27, 0.72);
 }
 
 .hero-kicker-copy {
@@ -1352,6 +1378,12 @@ html.light .spotlight {
   background: rgba(255, 255, 255, 0.035);
 }
 
+html.light .secondary-cta {
+  border-color: rgba(18, 21, 27, 0.22);
+  color: rgba(18, 21, 27, 0.82);
+  background: rgba(18, 21, 27, 0.035);
+}
+
 .primary-cta:hover,
 .secondary-cta:hover {
   transform: translateY(-4px);
@@ -1372,6 +1404,12 @@ html.light .spotlight {
   border-color: rgba(255, 247, 239, 0.38);
   color: #fff7ef;
   background: rgba(255, 255, 255, 0.04);
+}
+
+html.light .secondary-cta:hover {
+  border-color: rgba(18, 21, 27, 0.34);
+  color: #12151b;
+  background: rgba(18, 21, 27, 0.06);
 }
 
 .hero-visual {
@@ -1514,6 +1552,14 @@ html.light .spotlight {
   box-shadow:
     0 44px 110px rgba(0, 0, 0, 0.56),
     0 0 0 1px rgba(255, 247, 239, 0.055);
+}
+
+html.light .hero-product-card {
+  border-color: rgba(255, 247, 239, 0.16);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.018)),
+    #111113;
+  color: #fff7ef;
 }
 
 .hero-product-card::after {

@@ -157,7 +157,7 @@ export function AgentOnRamp() {
   });
 
   return (
-    <section id="bring-agent" ref={ref} className="runtime-campaign agent-onramp surface-dark scroll-mt-32 bg-[#070708] py-24 text-white md:py-36">
+    <section id="bring-agent" ref={ref} className="runtime-campaign agent-onramp scroll-mt-32 py-24 md:py-36">
       <div className="agent-onramp-track mx-auto max-w-[1500px] px-4 sm:px-6 lg:px-8">
         <div className="agent-onramp-grid">
           <motion.div

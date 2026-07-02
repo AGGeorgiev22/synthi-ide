@@ -43,13 +43,13 @@ export function Navbar() {
   }, [open]);
 
   return (
-    <header className="surface-dark fixed inset-x-0 top-3 z-50 px-3 sm:px-5">
+    <header className="fixed inset-x-0 top-3 z-50 px-3 sm:px-5">
       <div
         className={cn(
           "mx-auto max-w-[1376px] rounded-[10px] border transition-[background-color,border-color,box-shadow] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
           scrolled
-            ? "border-white/12 bg-[#070708]/86 shadow-[0_16px_54px_rgba(0,0,0,0.32)] backdrop-blur-xl"
-            : "border-white/8 bg-[#070708]/34 backdrop-blur-md"
+            ? "border-line-2 bg-bg/86 shadow-[0_16px_54px_rgba(0,0,0,0.18)] backdrop-blur-xl"
+            : "border-line bg-bg/58 backdrop-blur-md"
         )}
       >
         <nav className="mx-auto flex h-14 max-w-full transparent items-center justify-between px-4 sm:px-5">
@@ -62,7 +62,7 @@ export function Navbar() {
               <a
                 key={l.label}
                 href={l.href}
-                className="rounded-sm px-3 py-2 text-[13px] text-white/60 transition-[background-color,color,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-0.5 hover:bg-white/[0.04] hover:text-white"
+                className="rounded-sm px-3 py-2 text-[13px] text-ink-dim transition-[background-color,color,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-0.5 hover:bg-surface-2 hover:text-ink"
               >
                 {l.label}
               </a>
@@ -74,7 +74,7 @@ export function Navbar() {
             <ThemeToggle />
             <a
               href="#waitlist"
-              className="sheen group inline-flex items-center gap-1.5 rounded-sm border border-white/12 bg-transparent px-4 py-2 text-[13.5px] font-medium text-white/80 transition-[border-color,color,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-0.5 hover:border-white/28 hover:text-white active:scale-[0.97]"
+              className="sheen group inline-flex items-center gap-1.5 rounded-sm border border-line bg-transparent px-4 py-2 text-[13.5px] font-medium text-ink-dim transition-[border-color,color,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-0.5 hover:border-line-2 hover:text-ink active:scale-[0.97]"
             >
               Request pilot
               <ArrowUpRight size={15} weight="bold" className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
@@ -87,7 +87,7 @@ export function Navbar() {
             <button
               type="button"
               onClick={() => setOpen((v) => !v)}
-              className="inline-flex h-10 w-10 items-center justify-center rounded-sm border border-white/12 text-white/72 transition-[border-color,color,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] active:scale-[0.97]"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-sm border border-line text-ink-dim transition-[border-color,color,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:border-line-2 hover:text-ink active:scale-[0.97]"
               aria-label={open ? "Close menu" : "Open menu"}
               aria-expanded={open}
             >

@@ -398,7 +398,7 @@ function ProofMarquee() {
 
 function Hero() {
   return (
-    <section id="top" className="runtime-campaign runtime-hero-v2 surface-dark relative isolate overflow-visible bg-[#070708] pt-24 text-white">
+    <section id="top" className="runtime-campaign runtime-hero-v2 relative isolate overflow-visible pt-24">
       <div className="campaign-atmosphere" aria-hidden="true" />
       <div className="hero-main-grid mx-auto grid max-w-[1540px] gap-12 px-4 pb-16 sm:px-6 lg:grid-cols-[0.92fr_1.08fr] lg:items-center lg:px-8 lg:pb-24">
         <div className="max-w-[880px]" data-reveal>
@@ -436,7 +436,7 @@ function Hero() {
             <WaitlistForm
               variant="hero"
               buttonLabel="Start proof pilot"
-              className="w-full border-white/12 bg-white/[0.035]"
+              className="w-full border-line bg-surface/65"
             />
           </div>
           <div className="mt-5 flex flex-wrap gap-3">
@@ -469,7 +469,7 @@ function Hero() {
 
 function ComparisonSection() {
   return (
-    <section id="runtime" className="runtime-campaign surface-dark scroll-mt-16 bg-[#070708] py-24 text-white md:py-36">
+    <section id="runtime" className="runtime-campaign scroll-mt-16 py-24 md:py-36">
       <div className="mx-auto max-w-[1500px] px-4 sm:px-6 lg:px-8">
         <div className="runtime-lede" data-reveal>
           <h2>Code is easy. Safe mutation is the bottleneck.</h2>
@@ -517,7 +517,7 @@ function ComparisonSection() {
 
 function RuntimeControlSection() {
   return (
-    <section id="capabilities" className="runtime-campaign surface-dark scroll-mt-16 bg-[#070708] py-24 text-white md:py-36">
+    <section id="capabilities" className="runtime-campaign scroll-mt-16 py-24 md:py-36">
       <div className="mx-auto max-w-[1500px] px-4 sm:px-6 lg:px-8">
         <div className="section-lede max-w-[1040px]" data-reveal>
           <h2>Autonomy is only useful when the runtime can govern it.</h2>
@@ -560,7 +560,7 @@ function RuntimeControlSection() {
 
 function DogfoodSection() {
   return (
-    <section id="dogfood" className="runtime-campaign surface-dark scroll-mt-32 bg-[#070708] py-24 text-white md:py-36">
+    <section id="dogfood" className="runtime-campaign scroll-mt-32 py-24 md:py-36">
       <div className="mx-auto max-w-[1500px] px-4 sm:px-6 lg:px-8">
         <div className="dogfood-panel" data-reveal>
           <div className="dogfood-copy">
@@ -614,7 +614,7 @@ function DogfoodSection() {
 
 function LiveCollaborationSection() {
   return (
-    <section id="collaboration" className="runtime-campaign surface-dark scroll-mt-16 bg-[#070708] py-24 text-white md:py-36">
+    <section id="collaboration" className="runtime-campaign scroll-mt-16 py-24 md:py-36">
       <div className="mx-auto max-w-[1500px] px-4 sm:px-6 lg:px-8">
         <div className="collab-console" data-reveal>
           <div className="collab-console-copy">
@@ -649,7 +649,7 @@ function LiveCollaborationSection() {
 
 function GpuSection() {
   return (
-    <section id="gpu-hmr" className="runtime-campaign surface-dark scroll-mt-16 overflow-hidden bg-[#070708] py-24 text-white md:py-36">
+    <section id="gpu-hmr" className="runtime-campaign scroll-mt-16 overflow-hidden py-24 md:py-36">
       <div className="mx-auto max-w-[1500px] px-4 sm:px-6 lg:px-8">
         <div className="gpu-stage" data-reveal>
           <div className="gpu-copy">
@@ -688,7 +688,7 @@ function GpuSection() {
 
 function ProofSection() {
   return (
-    <section id="proof" className="runtime-campaign surface-dark scroll-mt-16 bg-[#070708] py-24 text-white md:py-36">
+    <section id="proof" className="runtime-campaign scroll-mt-16 py-24 md:py-36">
       <div className="mx-auto max-w-[1500px] px-4 sm:px-6 lg:px-8">
         <div className="section-lede max-w-[1110px]" data-reveal>
           <h2>Every agent landing leaves a replay ledger.</h2>
@@ -709,7 +709,7 @@ function ProofSection() {
 
 function DojoSection() {
   return (
-    <section id="dojo" className="runtime-campaign surface-dark scroll-mt-16 bg-[#070708] py-24 text-white md:py-36">
+    <section id="dojo" className="runtime-campaign scroll-mt-16 py-24 md:py-36">
       <div className="mx-auto max-w-[1500px] px-4 sm:px-6 lg:px-8">
         <div className="dojo-stage">
           <div className="dojo-copy" data-reveal>
@@ -749,7 +749,7 @@ function DojoSection() {
 
 function TrustSystemsSection() {
   return (
-    <section id="trust" className="runtime-campaign surface-dark scroll-mt-16 bg-[#070708] py-24 text-white md:py-36">
+    <section id="trust" className="runtime-campaign scroll-mt-16 py-24 md:py-36">
       <div className="mx-auto max-w-[1500px] px-4 sm:px-6 lg:px-8">
         <div className="grid gap-12 lg:grid-cols-[0.82fr_1.18fr] lg:items-start">
           <div className="sticky top-24 self-start" data-reveal>
@@ -779,7 +779,7 @@ function TrustSystemsSection() {
 
 function FeatureSystemsSection() {
   return (
-    <section className="runtime-campaign surface-dark bg-[#070708] py-24 text-white md:py-36">
+    <section className="runtime-campaign py-24 md:py-36">
       <div className="mx-auto max-w-[1500px] px-4 sm:px-6 lg:px-8">
         <div className="section-lede max-w-[1120px]" data-reveal>
           <h2>Vectant wraps the hard parts of agent work in one runtime loop.</h2>
@@ -812,7 +812,7 @@ function FeatureSystemsSection() {
 
 function BeyondSitesSection() {
   return (
-    <section className="runtime-campaign surface-dark bg-[#070708] py-24 text-white md:py-36">
+    <section className="runtime-campaign py-24 md:py-36">
       <div className="mx-auto max-w-[1500px] px-4 sm:px-6 lg:px-8">
         <div className="grid gap-12 lg:grid-cols-[0.86fr_1.14fr] lg:items-start">
           <div data-reveal>
@@ -837,7 +837,7 @@ function BeyondSitesSection() {
 
 function PricingSection() {
   return (
-    <section id="pricing" className="runtime-campaign surface-dark scroll-mt-16 bg-[#070708] py-24 text-white md:py-36">
+    <section id="pricing" className="runtime-campaign scroll-mt-16 py-24 md:py-36">
       <div className="mx-auto grid max-w-[1500px] gap-10 px-4 sm:px-6 lg:grid-cols-[0.88fr_1.12fr] lg:px-8">
         <div data-reveal>
           <h2 className="pilot-headline">Run the pilot on the repo your agent is not allowed to touch.</h2>
@@ -866,7 +866,7 @@ function PricingSection() {
             <WaitlistForm
               variant="hero"
               buttonLabel="Start proof run"
-              className="w-full border-white/12 bg-white/[0.035]"
+              className="w-full border-line bg-surface/65"
             />
           </div>
         </div>
@@ -877,7 +877,7 @@ function PricingSection() {
 
 function FaqSection() {
   return (
-    <section id="faq" className="runtime-campaign surface-dark scroll-mt-16 bg-[#070708] py-24 text-white md:py-36">
+    <section id="faq" className="runtime-campaign scroll-mt-16 py-24 md:py-36">
       <div className="mx-auto max-w-[1500px] px-4 sm:px-6 lg:px-8">
         <div className="section-lede max-w-[980px]" data-reveal>
           <h2>Strong claims. Clear boundaries.</h2>
@@ -900,7 +900,7 @@ function FaqSection() {
 
 function FinalCta() {
   return (
-    <section id="waitlist" className="runtime-campaign surface-dark scroll-mt-16 bg-[#070708] px-4 py-24 text-white md:py-36">
+    <section id="waitlist" className="runtime-campaign scroll-mt-16 px-4 py-24 md:py-36">
       <div className="final-cta mx-auto max-w-[1160px]" data-reveal>
         <div className="final-cta-icon">
           <img
@@ -920,7 +920,7 @@ function FinalCta() {
           <WaitlistForm
             variant="hero"
             buttonLabel="Request pilot access"
-            className="w-full border-white/12 bg-white/[0.035]"
+            className="w-full border-line bg-surface/65"
           />
         </div>
       </div>
@@ -930,7 +930,7 @@ function FinalCta() {
 
 export function VectantLanding() {
   return (
-    <main className="vectant-landing-root surface-dark w-full max-w-full bg-[#070708]">
+    <main className="vectant-landing-root w-full max-w-full">
       <VectantMotion />
       <Hero />
       <AgentOnRamp />
