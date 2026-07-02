@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { motion, useMotionValueEvent, useReducedMotion, useScroll } from "framer-motion";
+import { motion, useMotionValueEvent, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
 
 const STEPS = [
   {
@@ -86,10 +86,16 @@ export function AgentOnRamp() {
     target: ref,
     offset: ["start start", "end end"],
   });
+  const bracketProgress = useTransform(scrollYProgress, [0.08, 0.5, 0.92], [0, 1, 2]);
+  const bracketIndex = useSpring(bracketProgress, {
+    stiffness: 520,
+    damping: 54,
+    mass: 0.46,
+  });
 
   const setStepFromProgress = (latest) => {
     if (reduce) return;
-    const nextIndex = latest < 0.34 ? 0 : latest < 0.67 ? 1 : 2;
+    const nextIndex = latest < 0.3 ? 0 : latest < 0.62 ? 1 : 2;
     if (nextIndex !== activeIndexRef.current) {
       activeIndexRef.current = nextIndex;
       setActiveIndex(nextIndex);
@@ -109,9 +115,9 @@ export function AgentOnRamp() {
             viewport={{ once: true, amount: 0.34 }}
             transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
           >
-            <h2>Bring your agents into a governed runtime.</h2>
+            <h2>Bring every agent through the same authority path.</h2>
             <p>
-              Keep your CLI agents, MCP tools, editor paths, repo, browser, and terminal. Vectant makes authority explicit with leases before mutation, proof before landing, and revocation when evidence fails.
+              Keep CLI agents, MCP tools, editor, browser, terminal, and repo state. Vectant turns each run into request, observe, constrain, prove.
             </p>
           </motion.div>
 
@@ -125,17 +131,7 @@ export function AgentOnRamp() {
                 className="agent-onramp-card-brackets"
                 aria-hidden="true"
                 initial={false}
-                animate={{ "--onramp-active-index": activeIndex }}
-                transition={
-                  reduce
-                    ? { duration: 0 }
-                    : {
-                        type: "spring",
-                        stiffness: 230,
-                        damping: 30,
-                        mass: 0.78,
-                      }
-                }
+                style={{ "--onramp-active-index": reduce ? activeIndex : bracketIndex }}
               >
                 <i />
                 <i />
