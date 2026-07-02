@@ -5,7 +5,6 @@ import { useReducedMotion } from "framer-motion";
 
 const TARGET_MS = 90;
 const DURATION_MS = 1280;
-const REPLAY_DELAY_MS = 1800;
 
 function easeOutCubic(progress) {
   return 1 - Math.pow(1 - progress, 3);
@@ -15,8 +14,8 @@ export function GpuLatencyCounter() {
   const ref = useRef(null);
   const valueRef = useRef(null);
   const frameRef = useRef(0);
-  const timeoutRef = useRef(0);
   const visibleRef = useRef(false);
+  const completedRef = useRef(false);
   const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
@@ -34,6 +33,7 @@ export function GpuLatencyCounter() {
     if (prefersReducedMotion) {
       setCounter(TARGET_MS);
       setDone(true);
+      completedRef.current = true;
       return undefined;
     }
 
@@ -43,10 +43,15 @@ export function GpuLatencyCounter() {
 
     const stopCounter = () => {
       cancelAnimationFrame(frameRef.current);
-      clearTimeout(timeoutRef.current);
     };
 
     const runCounter = () => {
+      if (completedRef.current) {
+        setCounter(TARGET_MS);
+        setDone(true);
+        return;
+      }
+
       stopCounter();
       const start = performance.now();
       let lastValue = -1;
@@ -67,9 +72,7 @@ export function GpuLatencyCounter() {
         } else {
           setCounter(TARGET_MS);
           setDone(true);
-          if (visibleRef.current) {
-            timeoutRef.current = window.setTimeout(runCounter, REPLAY_DELAY_MS);
-          }
+          completedRef.current = true;
         }
       };
 
@@ -80,7 +83,9 @@ export function GpuLatencyCounter() {
       (entries) => {
         if (entries.some((entry) => entry.isIntersecting)) {
           visibleRef.current = true;
-          runCounter();
+          if (!completedRef.current) {
+            runCounter();
+          }
         } else {
           visibleRef.current = false;
           stopCounter();
