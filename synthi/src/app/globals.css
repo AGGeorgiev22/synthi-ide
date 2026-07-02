@@ -4632,11 +4632,12 @@ html.light .agent-onramp-panel {
   }
 
   .hero-floating-proof,
-  .hero-product-card-anchor,
-  .hero-product-card,
-  .hero-code-collab-card,
   .hero-product-depth {
     display: none;
+  }
+
+  .hero-product-float {
+    min-height: auto;
   }
 
   .hero-product-shell {
@@ -4646,7 +4647,38 @@ html.light .agent-onramp-panel {
   .hero-product-sticky {
     position: relative;
     top: auto;
+    display: grid;
+    gap: 14px;
     min-height: auto;
+  }
+
+  .hero-product-main,
+  .hero-product-card-anchor,
+  .hero-code-collab-anchor {
+    display: block;
+    position: relative;
+    inset: auto;
+    width: 100%;
+    transform: none !important;
+  }
+
+  .hero-product-main {
+    margin-inline: 0;
+  }
+
+  .hero-product-card-anchor .hero-product-card,
+  .hero-code-collab-anchor .hero-code-collab-card {
+    position: relative;
+    inset: auto;
+    display: block;
+    width: 100%;
+    transform: none !important;
+  }
+
+  .hero-code-collab-card {
+    right: auto;
+    bottom: auto;
+    border-radius: 16px;
   }
 
   .hero-proof-strip,
@@ -4761,6 +4793,57 @@ html.light .agent-onramp-panel {
 
   .hero-copy {
     font-size: 16px;
+  }
+
+  .hero-code-window-top {
+    gap: 10px;
+    min-height: 52px;
+    padding: 0 14px;
+  }
+
+  .hero-code-window-title {
+    gap: 10px;
+  }
+
+  .hero-code-window-title strong,
+  .hero-code-presence em,
+  .hero-code-room,
+  .hero-code-status strong,
+  .hero-code-status em {
+    font-size: 12px;
+  }
+
+  .hero-code-presence span {
+    width: 25px;
+    height: 25px;
+    font-size: 10px;
+  }
+
+  .hero-code-editor {
+    padding: 16px 0;
+    font-size: 11px;
+  }
+
+  .hero-code-row {
+    grid-template-columns: 36px minmax(0, 1fr);
+    min-height: 32px;
+    padding-right: 14px;
+  }
+
+  .hero-code-pill {
+    margin-left: 6px;
+    padding-inline: 7px;
+  }
+
+  .hero-code-status {
+    grid-template-columns: 1fr;
+    min-height: auto;
+    gap: 8px;
+    padding: 12px 14px;
+  }
+
+  .hero-code-status em {
+    justify-self: start;
   }
 
   .hero-proof-strip,
