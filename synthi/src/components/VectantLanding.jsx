@@ -16,25 +16,25 @@ const BROWSER_SHOT = {
 };
 
 const LICENSE_SHOT = {
-  title: "Vectant workflow checkride",
-  detail: "Workflow steps, runtime status, replay validation, export, and manifest actions stay inside the Vectant control plane.",
-  src: "/product-proof/investor-demo-workflows.png",
+  title: "Export checkride",
+  detail: "Replay validation, manifest generation, export, and publish actions stay inside the same Vectant control plane.",
+  src: "/product-proof/investor-demo-export-handoff.png",
   width: 1440,
   height: 1000,
 };
 
 const RUNTIME_WORKFLOW_SHOT = {
-  title: "Vectant runtime workflow",
-  detail: "Workflows, hosted browser control, replay, terminal context, and proof actions in the Vectant runtime.",
-  src: "/product-proof/investor-demo-workflows.png",
-  width: 1440,
+  title: "Loaded workspace state",
+  detail: "Editor, terminal, GPU status, command surface, and runtime controls stay in the same cloud workspace.",
+  src: "/product-proof/browser-workspace-loaded.png",
+  width: 1500,
   height: 1000,
 };
 
 const COUNTERFACTUAL_SHOT = {
-  title: "Export handoff",
-  detail: "Compile, validate, export, manifest, and publish actions stay attached to the same live workspace state.",
-  src: "/product-proof/investor-demo-export-handoff.png",
+  title: "Runtime workspace loop",
+  detail: "Repo, terminal, editor, runtime controls, and status proof stay attached to the workspace that ran the agent.",
+  src: "/product-proof/investor-demo-workspace.png",
   width: 1440,
   height: 1000,
 };
@@ -191,10 +191,10 @@ const RUNTIME_PROOF_PATH = [
     copy: "Vectant turns intent into a MutationLease with files, routes, protected paths, and required evidence before code changes.",
     signal: "scope before write",
     shot: {
-      title: "Lease request",
-      detail: "Workflow authority is visible before the agent touches the repo.",
-      src: "/product-proof/investor-demo-workflows.png",
-      width: 1440,
+      title: "Workspace authority request",
+      detail: "The request begins inside the same editor, terminal, browser, and runtime surface reviewers inspect later.",
+      src: "/product-proof/browser-workspace-loaded.png",
+      width: 1500,
       height: 1000,
     },
   },
@@ -689,8 +689,8 @@ function DogfoodSection() {
                 sizes="(min-width: 1024px) 34vw, 100vw"
               />
               <Image
-                src="/product-proof/investor-demo-workflows.png"
-                alt="Vectant workflow proving agent coordination while building Vectant."
+                src="/product-proof/investor-demo-export-handoff.png"
+                alt="Vectant export handoff proof while building Vectant."
                 width={1440}
                 height={1000}
                 sizes="(min-width: 1024px) 34vw, 100vw"
