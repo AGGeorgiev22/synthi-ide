@@ -2492,33 +2492,6 @@ html.light .agent-onramp-panel {
   overflow: hidden;
 }
 
-.agent-onramp-scroll-border {
-  position: absolute;
-  top: 0;
-  right: var(--onramp-pad);
-  left: calc(var(--onramp-pad) + 36px);
-  z-index: 4;
-  border-radius: 12px;
-  background:
-    linear-gradient(90deg, #ff4bd8, #ff6a3d) left top / 42px 2px no-repeat,
-    linear-gradient(180deg, #ff4bd8, #ff6a3d) left top / 2px 42px no-repeat,
-    linear-gradient(90deg, #ff6a3d, #ffd166) right top / 42px 2px no-repeat,
-    linear-gradient(180deg, #ff6a3d, #ffd166) right top / 2px 42px no-repeat,
-    linear-gradient(90deg, #5ee7ff, #8b7bff) left bottom / 42px 2px no-repeat,
-    linear-gradient(0deg, #5ee7ff, #8b7bff) left bottom / 2px 42px no-repeat,
-    linear-gradient(90deg, #22d3ee, #8b7bff) right bottom / 42px 2px no-repeat,
-    linear-gradient(0deg, #22d3ee, #8b7bff) right bottom / 2px 42px no-repeat;
-  opacity: 0.98;
-  filter: drop-shadow(0 0 14px rgba(255, 61, 190, 0.16)) drop-shadow(0 0 16px rgba(34, 211, 238, 0.12));
-  pointer-events: none;
-  will-change: transform;
-}
-
-.agent-onramp-scroll-border::before,
-.agent-onramp-scroll-border::after {
-  content: none;
-}
-
 .agent-onramp-chroma-stage::before {
   content: "";
   position: absolute;
@@ -2552,30 +2525,56 @@ html.light .agent-onramp-panel {
 
 .agent-onramp-chroma-step::before,
 .agent-onramp-chroma-step::after {
-  content: "";
+  content: none;
+}
+
+.agent-onramp-card-brackets {
   position: absolute;
-  width: 18px;
-  height: 18px;
-  border-color: var(--step-accent);
-  opacity: 0.18;
+  inset: -1px;
+  z-index: 2;
+  border-radius: inherit;
+  opacity: 0;
   pointer-events: none;
-  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 0.18s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.agent-onramp-chroma-step::before {
-  left: -1px;
-  top: -1px;
-  border-left: 2px solid var(--step-accent);
-  border-top: 2px solid var(--step-accent);
-  border-top-left-radius: 12px;
+.agent-onramp-card-brackets i {
+  position: absolute;
+  width: 42px;
+  height: 42px;
+  filter: drop-shadow(0 0 12px rgba(255, 61, 190, 0.14)) drop-shadow(0 0 14px rgba(34, 211, 238, 0.12));
 }
 
-.agent-onramp-chroma-step::after {
-  right: -1px;
-  bottom: -1px;
-  border-right: 2px solid var(--step-accent-2);
-  border-bottom: 2px solid var(--step-accent-2);
-  border-bottom-right-radius: 12px;
+.agent-onramp-card-brackets i:nth-child(1) {
+  top: 0;
+  left: 0;
+  background:
+    linear-gradient(90deg, #ff4bd8, #ff6a3d) left top / 42px 2px no-repeat,
+    linear-gradient(180deg, #ff4bd8, #ff6a3d) left top / 2px 42px no-repeat;
+}
+
+.agent-onramp-card-brackets i:nth-child(2) {
+  top: 0;
+  right: 0;
+  background:
+    linear-gradient(90deg, #ff6a3d, #ffd166) right top / 42px 2px no-repeat,
+    linear-gradient(180deg, #ff6a3d, #ffd166) right top / 2px 42px no-repeat;
+}
+
+.agent-onramp-card-brackets i:nth-child(3) {
+  bottom: 0;
+  left: 0;
+  background:
+    linear-gradient(90deg, #5ee7ff, #8b7bff) left bottom / 42px 2px no-repeat,
+    linear-gradient(0deg, #5ee7ff, #8b7bff) left bottom / 2px 42px no-repeat;
+}
+
+.agent-onramp-card-brackets i:nth-child(4) {
+  right: 0;
+  bottom: 0;
+  background:
+    linear-gradient(90deg, #22d3ee, #8b7bff) right bottom / 42px 2px no-repeat,
+    linear-gradient(0deg, #22d3ee, #8b7bff) right bottom / 2px 42px no-repeat;
 }
 
 .agent-onramp-chroma-step-active {
@@ -2588,7 +2587,11 @@ html.light .agent-onramp-panel {
 
 .agent-onramp-chroma-step-active::before,
 .agent-onramp-chroma-step-active::after {
-  opacity: 0;
+  content: none;
+}
+
+.agent-onramp-chroma-step-active .agent-onramp-card-brackets {
+  opacity: 1;
 }
 
 .agent-onramp-chroma-step-sealed {

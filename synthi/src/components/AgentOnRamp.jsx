@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { motion, useMotionValue, useMotionValueEvent, useReducedMotion, useScroll, useSpring } from "framer-motion";
+import { useRef, useState } from "react";
+import { LayoutGroup, motion, useMotionValueEvent, useReducedMotion, useScroll } from "framer-motion";
 
 const STEPS = [
   {
@@ -36,11 +36,6 @@ const STEPS = [
   },
 ];
 
-const DEFAULT_BORDER_METRICS = {
-  tops: [28, 200, 372],
-  height: 158,
-};
-
 function ChromaStep({ step, index, activeIndex, reduce }) {
   const isActive = index === activeIndex;
   const isPast = index < activeIndex;
@@ -64,8 +59,21 @@ function ChromaStep({ step, index, activeIndex, reduce }) {
                 scale: 0.97,
               }
       }
-      transition={{ duration: reduce ? 0 : 0.5, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: reduce ? 0 : 0.24, ease: [0.16, 1, 0.3, 1] }}
     >
+      {isActive && (
+        <motion.span
+          layoutId="agent-onramp-active-brackets"
+          className="agent-onramp-card-brackets"
+          aria-hidden="true"
+          transition={{ duration: reduce ? 0 : 0.14, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <i />
+          <i />
+          <i />
+          <i />
+        </motion.span>
+      )}
       <div className="agent-onramp-chroma-step-top">
         <span>{step.verb}</span>
         <strong>{isActive ? step.state : status}</strong>
@@ -84,65 +92,13 @@ function ChromaStep({ step, index, activeIndex, reduce }) {
 
 export function AgentOnRamp() {
   const ref = useRef(null);
-  const stageRef = useRef(null);
   const activeIndexRef = useRef(0);
   const [activeIndex, setActiveIndex] = useState(0);
-  const [borderMetrics, setBorderMetrics] = useState(DEFAULT_BORDER_METRICS);
   const reduce = useReducedMotion();
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start start", "end end"],
   });
-  const borderTargetY = useMotionValue(DEFAULT_BORDER_METRICS.tops[0]);
-  const borderY = useSpring(borderTargetY, { stiffness: 360, damping: 34, mass: 0.28 });
-
-  useEffect(() => {
-    const stage = stageRef.current;
-    if (!stage) return undefined;
-    let frame = 0;
-
-    const measure = () => {
-      const stageRect = stage.getBoundingClientRect();
-      const measured = Array.from(stage.querySelectorAll("[data-onramp-step]")).map((node) => {
-        const rect = node.getBoundingClientRect();
-        return {
-          top: rect.top - stageRect.top,
-          height: rect.height,
-        };
-      });
-
-      if (measured.length !== STEPS.length) return;
-
-      const nextMetrics = {
-        tops: measured.map((metric) => metric.top),
-        height: Math.max(...measured.map((metric) => metric.height)),
-      };
-
-      setBorderMetrics((current) => {
-        const unchanged =
-          Math.abs(current.height - nextMetrics.height) < 0.5 &&
-          nextMetrics.tops.every((top, index) => Math.abs((current.tops[index] ?? 0) - top) < 0.5);
-        return unchanged ? current : nextMetrics;
-      });
-    };
-
-    const scheduleMeasure = () => {
-      cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(measure);
-    };
-
-    scheduleMeasure();
-    window.addEventListener("resize", scheduleMeasure);
-
-    return () => {
-      cancelAnimationFrame(frame);
-      window.removeEventListener("resize", scheduleMeasure);
-    };
-  }, []);
-
-  useEffect(() => {
-    borderTargetY.set(borderMetrics.tops[activeIndex] ?? DEFAULT_BORDER_METRICS.tops[0]);
-  }, [activeIndex, borderMetrics, borderTargetY]);
 
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
     if (reduce) return;
@@ -175,32 +131,19 @@ export function AgentOnRamp() {
               <span>agent authority path</span>
               <strong>scoped / replayable / revocable</strong>
             </div>
-            <div ref={stageRef} className="agent-onramp-chroma-stage">
-              <motion.div
-                className="agent-onramp-scroll-border"
-                aria-hidden="true"
-                style={
-                  reduce
-                    ? {
-                        y: borderMetrics.tops[0] ?? DEFAULT_BORDER_METRICS.tops[0],
-                        height: borderMetrics.height ?? DEFAULT_BORDER_METRICS.height,
-                      }
-                    : {
-                        y: borderY,
-                        height: borderMetrics.height,
-                      }
-                }
-              />
-              {STEPS.map((step, index) => (
-                <ChromaStep
-                  key={step.verb}
-                  step={step}
-                  index={index}
-                  activeIndex={reduce ? index : activeIndex}
-                  reduce={reduce}
-                />
-              ))}
-            </div>
+            <LayoutGroup id="agent-onramp-brackets">
+              <div className="agent-onramp-chroma-stage">
+                {STEPS.map((step, index) => (
+                  <ChromaStep
+                    key={step.verb}
+                    step={step}
+                    index={index}
+                    activeIndex={activeIndex}
+                    reduce={reduce}
+                  />
+                ))}
+              </div>
+            </LayoutGroup>
           </motion.div>
         </div>
       </div>
