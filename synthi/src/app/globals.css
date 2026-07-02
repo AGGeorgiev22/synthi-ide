@@ -1524,6 +1524,14 @@ html.light .spotlight {
   pointer-events: none;
 }
 
+.hero-card-pop-inner {
+  position: relative;
+  z-index: 1;
+  display: block;
+  transform-origin: 50% 58%;
+  will-change: transform, opacity;
+}
+
 .hero-product-card figcaption {
   position: relative;
   z-index: 1;

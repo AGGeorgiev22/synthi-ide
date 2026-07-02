@@ -86,6 +86,22 @@ export function HeroProductFloat() {
   const collabStyle = prefersReducedMotion
     ? undefined
     : { x: collabX, y: collabY, z: collabZ, scale: collabScale, opacity: collabOpacity, rotateZ: collabRotateZ };
+  const cardMask = (delay) =>
+    prefersReducedMotion
+      ? {}
+      : {
+          initial: { clipPath: "inset(36% 42% 36% 42% round 18px)" },
+          animate: { clipPath: "inset(0% 0% 0% 0% round 18px)" },
+          transition: { duration: 0.64, delay, ease: [0.16, 1, 0.3, 1] },
+        };
+  const cardPop = (delay) =>
+    prefersReducedMotion
+      ? {}
+      : {
+          initial: { opacity: 0, y: 18, scale: 0.9 },
+          animate: { opacity: 1, y: 0, scale: 1 },
+          transition: { duration: 0.58, delay: delay + 0.04, ease: [0.16, 1, 0.3, 1] },
+        };
 
   return (
     <div ref={ref} className="hero-visual hero-product-float">
@@ -112,97 +128,108 @@ export function HeroProductFloat() {
           </div>
         </motion.div>
 
-        <motion.figure className="hero-product-card hero-product-card-observe" style={observeStyle}>
-          <Image
-            src={SHOTS.observe.src}
-            alt={`${SHOTS.observe.title}: ${SHOTS.observe.detail}`}
-            width={SHOTS.observe.width}
-            height={SHOTS.observe.height}
-            priority
-            sizes="360px"
-            className="h-auto w-full"
-          />
-          <figcaption>
-            <strong>MCP eyes and hands</strong>
-            <span>browser, terminal, replay, workflow state</span>
-          </figcaption>
+        <motion.figure className="hero-product-card hero-product-card-observe" style={observeStyle} {...cardMask(0.16)}>
+          <motion.div className="hero-card-pop-inner" {...cardPop(0.16)}>
+            <Image
+              src={SHOTS.observe.src}
+              alt={`${SHOTS.observe.title}: ${SHOTS.observe.detail}`}
+              width={SHOTS.observe.width}
+              height={SHOTS.observe.height}
+              priority
+              sizes="360px"
+              className="h-auto w-full"
+            />
+            <figcaption>
+              <strong>MCP eyes and hands</strong>
+              <span>browser, terminal, replay, workflow state</span>
+            </figcaption>
+          </motion.div>
         </motion.figure>
 
-        <motion.figure className="hero-code-collab-card" style={collabStyle} aria-label="Shared runtime collaboration">
-          <div className="hero-code-window-top">
-            <div className="hero-code-window-title">
-              <span className="hero-code-window-dots" aria-hidden="true">
-                <i />
-                <i />
-                <i />
-              </span>
-              <strong>vectant / runtime/session.rs</strong>
+        <motion.figure
+          className="hero-code-collab-card"
+          style={collabStyle}
+          aria-label="Shared runtime collaboration"
+          {...cardMask(0.3)}
+        >
+          <motion.div className="hero-card-pop-inner" {...cardPop(0.3)}>
+            <div className="hero-code-window-top">
+              <div className="hero-code-window-title">
+                <span className="hero-code-window-dots" aria-hidden="true">
+                  <i />
+                  <i />
+                  <i />
+                </span>
+                <strong>vectant / runtime/session.rs</strong>
+              </div>
+              <div className="hero-code-presence" aria-label="Mira and Devon are active">
+                <span>MK</span>
+                <span>DV</span>
+                <i aria-hidden="true" />
+                <em>2 here</em>
+              </div>
             </div>
-            <div className="hero-code-presence" aria-label="Mira and Devon are active">
-              <span>MK</span>
-              <span>DV</span>
-              <i aria-hidden="true" />
-              <em>2 here</em>
+            <pre className="hero-code-editor">
+              <code>
+                <span className="hero-code-row">
+                  <em>1</em>
+                  <span>
+                    <b className="hero-code-purple">pub fn</b> <b className="hero-code-cyan">spawn</b>(cfg:{" "}
+                    <b className="hero-code-blue">Config</b>) -&gt; <b className="hero-code-blue">Session</b> {"{"}
+                  </span>
+                </span>
+                <span className="hero-code-row hero-code-row-blue">
+                  <em>2</em>
+                  <span>
+                    let rt = Runtime::shared(cfg); <strong className="hero-code-pill hero-code-pill-blue">Mira</strong>
+                  </span>
+                </span>
+                <span className="hero-code-row hero-code-row-pink">
+                  <em>3</em>
+                  <span className="hero-code-typing-line">
+                    <span className="hero-code-typewrite">rt.observe().broadcast();</span>
+                    <strong className="hero-code-pill hero-code-pill-pink">Devon</strong>
+                  </span>
+                </span>
+                <span className="hero-code-row">
+                  <em>4</em>
+                  <span>
+                    <b className="hero-code-blue">Session</b>::live(rt)
+                  </span>
+                </span>
+                <span className="hero-code-row">
+                  <em>5</em>
+                  <span>{"}"}</span>
+                </span>
+              </code>
+            </pre>
+            <div className="hero-code-status">
+              <span className="hero-code-room">2 here + agent</span>
+              <strong>
+                <i aria-hidden="true" />
+                Devon <span>is typing in session.rs</span>
+              </strong>
+              <em>shared runtime</em>
             </div>
-          </div>
-          <pre className="hero-code-editor">
-            <code>
-              <span className="hero-code-row">
-                <em>1</em>
-                <span>
-                  <b className="hero-code-purple">pub fn</b> <b className="hero-code-cyan">spawn</b>(cfg:{" "}
-                  <b className="hero-code-blue">Config</b>) -&gt; <b className="hero-code-blue">Session</b> {"{"}
-                </span>
-              </span>
-              <span className="hero-code-row hero-code-row-blue">
-                <em>2</em>
-                <span>
-                  let rt = Runtime::shared(cfg); <strong className="hero-code-pill hero-code-pill-blue">Mira</strong>
-                </span>
-              </span>
-              <span className="hero-code-row hero-code-row-pink">
-                <em>3</em>
-                <span className="hero-code-typing-line">
-                  <span className="hero-code-typewrite">rt.observe().broadcast();</span>
-                  <strong className="hero-code-pill hero-code-pill-pink">Devon</strong>
-                </span>
-              </span>
-              <span className="hero-code-row">
-                <em>4</em>
-                <span>
-                  <b className="hero-code-blue">Session</b>::live(rt)
-                </span>
-              </span>
-              <span className="hero-code-row">
-                <em>5</em>
-                <span>{"}"}</span>
-              </span>
-            </code>
-          </pre>
-          <div className="hero-code-status">
-            <span className="hero-code-room">2 here + agent</span>
-            <strong>
-              <i aria-hidden="true" />
-              Devon <span>is typing in session.rs</span>
-            </strong>
-            <em>shared runtime</em>
-          </div>
+          </motion.div>
         </motion.figure>
 
-        <motion.figure className="hero-product-card hero-product-card-gpu" style={gpuStyle}>
-          <Image
-            src={SHOTS.gpu.src}
-            alt={`${SHOTS.gpu.title}: ${SHOTS.gpu.detail}`}
-            width={SHOTS.gpu.width}
-            height={SHOTS.gpu.height}
-            priority
-            sizes="300px"
-            className="h-auto w-full"
-          />
-          <figcaption>
-            <strong>Proof-gated GPU HMR path</strong>
-            <span>accepted when state, ABI, oracle, and ledger gates pass</span>
-          </figcaption>
+        <motion.figure className="hero-product-card hero-product-card-gpu" style={gpuStyle} {...cardMask(0.44)}>
+          <motion.div className="hero-card-pop-inner" {...cardPop(0.44)}>
+            <Image
+              src={SHOTS.gpu.src}
+              alt={`${SHOTS.gpu.title}: ${SHOTS.gpu.detail}`}
+              width={SHOTS.gpu.width}
+              height={SHOTS.gpu.height}
+              priority
+              sizes="300px"
+              className="h-auto w-full"
+            />
+            <figcaption>
+              <strong>Proof-gated GPU HMR path</strong>
+              <span>accepted when state, ABI, oracle, and ledger gates pass</span>
+            </figcaption>
+          </motion.div>
         </motion.figure>
       </motion.div>
     </div>
