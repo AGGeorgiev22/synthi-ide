@@ -2442,6 +2442,14 @@ html.light .proof-marquee span {
   box-shadow: 0 34px 90px rgba(0, 0, 0, 0.3);
 }
 
+html.light .agent-onramp-panel {
+  --campaign-ink: #fff7ef;
+  --campaign-muted: rgba(255, 247, 239, 0.66);
+  --campaign-faint: rgba(255, 247, 239, 0.44);
+  --campaign-line: rgba(255, 247, 239, 0.12);
+  --campaign-line-strong: rgba(255, 247, 239, 0.2);
+}
+
 .agent-onramp-panel::after {
   content: "";
   position: absolute;
@@ -2491,39 +2499,24 @@ html.light .proof-marquee span {
   left: calc(var(--onramp-pad) + 36px);
   z-index: 4;
   border-radius: 12px;
-  background: transparent;
+  background:
+    linear-gradient(90deg, #ff4bd8, #ff6a3d) left top / 42px 2px no-repeat,
+    linear-gradient(180deg, #ff4bd8, #ff6a3d) left top / 2px 42px no-repeat,
+    linear-gradient(90deg, #ff6a3d, #ffd166) right top / 42px 2px no-repeat,
+    linear-gradient(180deg, #ff6a3d, #ffd166) right top / 2px 42px no-repeat,
+    linear-gradient(90deg, #5ee7ff, #8b7bff) left bottom / 42px 2px no-repeat,
+    linear-gradient(0deg, #5ee7ff, #8b7bff) left bottom / 2px 42px no-repeat,
+    linear-gradient(90deg, #22d3ee, #8b7bff) right bottom / 42px 2px no-repeat,
+    linear-gradient(0deg, #22d3ee, #8b7bff) right bottom / 2px 42px no-repeat;
   opacity: 0.98;
+  filter: drop-shadow(0 0 14px rgba(255, 61, 190, 0.16)) drop-shadow(0 0 16px rgba(34, 211, 238, 0.12));
   pointer-events: none;
   will-change: transform;
 }
 
 .agent-onramp-scroll-border::before,
 .agent-onramp-scroll-border::after {
-  content: "";
-  position: absolute;
-  top: -2px;
-  bottom: -2px;
-  width: 32px;
-  border-radius: 13px;
-  opacity: 0.96;
-  filter: drop-shadow(0 0 16px rgba(255, 61, 190, 0.18)) drop-shadow(0 0 18px rgba(34, 211, 238, 0.14));
-  pointer-events: none;
-}
-
-.agent-onramp-scroll-border::before {
-  left: -16px;
-  background:
-    linear-gradient(180deg, #ff4bd8 0%, #ff6a3d 46%, #5ee7ff 100%) left / 2px 100% no-repeat,
-    linear-gradient(90deg, #ff4bd8, rgba(255, 106, 61, 0.86)) left top / 28px 2px no-repeat,
-    linear-gradient(90deg, #5ee7ff, rgba(139, 123, 255, 0.88)) left bottom / 28px 2px no-repeat;
-}
-
-.agent-onramp-scroll-border::after {
-  right: -16px;
-  background:
-    linear-gradient(180deg, #ff6a3d 0%, #5ee7ff 50%, #8b7bff 100%) right / 2px 100% no-repeat,
-    linear-gradient(90deg, rgba(255, 106, 61, 0.86), #8b7bff) right top / 28px 2px no-repeat,
-    linear-gradient(90deg, rgba(94, 231, 255, 0.9), #8b7bff) right bottom / 28px 2px no-repeat;
+  content: none;
 }
 
 .agent-onramp-chroma-stage::before {
@@ -2564,8 +2557,9 @@ html.light .proof-marquee span {
   width: 18px;
   height: 18px;
   border-color: var(--step-accent);
-  opacity: 0.72;
+  opacity: 0.18;
   pointer-events: none;
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .agent-onramp-chroma-step::before {
@@ -2590,6 +2584,11 @@ html.light .proof-marquee span {
     linear-gradient(135deg, color-mix(in srgb, var(--step-accent) 20%, transparent), transparent 44%),
     linear-gradient(180deg, rgba(255, 255, 255, 0.088), rgba(255, 255, 255, 0.026)),
     rgba(10, 10, 11, 0.92);
+}
+
+.agent-onramp-chroma-step-active::before,
+.agent-onramp-chroma-step-active::after {
+  opacity: 0;
 }
 
 .agent-onramp-chroma-step-sealed {

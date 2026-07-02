@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion, useMotionValueEvent, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
+import { motion, useMotionValue, useMotionValueEvent, useReducedMotion, useScroll, useSpring } from "framer-motion";
 
 const STEPS = [
   {
@@ -57,10 +57,10 @@ function ChromaStep({ step, index, activeIndex, reduce }) {
         reduce
           ? { opacity: 1, y: 0, scale: 1 }
           : isActive
-            ? { opacity: 1, y: -8, scale: 1 }
+            ? { opacity: 1, y: 0, scale: 1 }
             : {
                 opacity: isPast ? 0.58 : 0.42,
-                y: isPast ? -4 : 6,
+                y: 0,
                 scale: 0.97,
               }
       }
@@ -93,15 +93,8 @@ export function AgentOnRamp() {
     target: ref,
     offset: ["start start", "end end"],
   });
-  const stepStops = STEPS.map((_, index) => index / (STEPS.length - 1));
-  const borderY = useSpring(
-    useTransform(
-      scrollYProgress,
-      stepStops,
-      borderMetrics.tops,
-    ),
-    { stiffness: 170, damping: 26, mass: 0.42 },
-  );
+  const borderTargetY = useMotionValue(DEFAULT_BORDER_METRICS.tops[0]);
+  const borderY = useSpring(borderTargetY, { stiffness: 360, damping: 34, mass: 0.28 });
 
   useEffect(() => {
     const stage = stageRef.current;
@@ -146,6 +139,10 @@ export function AgentOnRamp() {
       window.removeEventListener("resize", scheduleMeasure);
     };
   }, []);
+
+  useEffect(() => {
+    borderTargetY.set(borderMetrics.tops[activeIndex] ?? DEFAULT_BORDER_METRICS.tops[0]);
+  }, [activeIndex, borderMetrics, borderTargetY]);
 
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
     if (reduce) return;
