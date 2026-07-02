@@ -1554,6 +1554,21 @@ html.light .secondary-cta:hover {
     0 0 0 1px rgba(255, 247, 239, 0.055);
 }
 
+.hero-product-card-anchor {
+  position: absolute;
+  z-index: 8;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  will-change: transform;
+}
+
+.hero-product-card-anchor .hero-product-card,
+.hero-code-collab-anchor .hero-code-collab-card {
+  position: relative;
+  inset: auto;
+  width: 100%;
+}
+
 html.light .hero-product-card {
   border-color: rgba(255, 247, 239, 0.16);
   background:
@@ -1999,6 +2014,13 @@ html.light .hero-product-card {
   left: 1%;
   bottom: 8%;
   width: min(240px, 28%);
+}
+
+.hero-code-collab-anchor {
+  right: 1%;
+  bottom: 5%;
+  z-index: 9;
+  width: min(430px, 46%);
 }
 
 .hero-floating-proof {
@@ -4404,6 +4426,7 @@ html.light .agent-onramp-panel {
   }
 
   .hero-floating-proof,
+  .hero-product-card-anchor,
   .hero-product-card,
   .hero-code-collab-card,
   .hero-product-depth {
