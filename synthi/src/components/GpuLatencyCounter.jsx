@@ -97,7 +97,7 @@ export function GpuLatencyCounter() {
   }, [prefersReducedMotion]);
 
   return (
-    <div ref={ref} className="gpu-latency-counter" aria-label="Sub 90ms GPU HMR edit to visual, no matter the size of your project">
+    <div ref={ref} className="gpu-latency-counter" aria-label="Sub 90ms GPU HMR edit to visual on validated proof runs">
       <span>GPU HMR edit to visual</span>
       <strong>
         <span>sub</span>
@@ -108,7 +108,7 @@ export function GpuLatencyCounter() {
           <span className="gpu-latency-unit">ms</span>
         </span>
       </strong>
-      <p>No matter the size of your project.</p>
+      <p>Measured on validated compiled proof runs.</p>
     </div>
   );
 }
