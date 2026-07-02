@@ -4147,10 +4147,9 @@ html.light .agent-onramp-panel {
 }
 
 .gpu-latency-counter {
-  --gpu-counter-progress: 0;
   display: grid;
   max-width: 520px;
-  gap: 10px;
+  gap: 8px;
   border: 1px solid rgba(19, 11, 8, 0.24);
   border-radius: 10px;
   background:
@@ -4171,8 +4170,9 @@ html.light .agent-onramp-panel {
 }
 
 .gpu-latency-counter strong {
-  display: flex;
+  display: inline-flex;
   min-width: 0;
+  width: fit-content;
   align-items: baseline;
   gap: 9px;
   font-family: var(--font-satoshi), ui-sans-serif, system-ui, sans-serif;
@@ -4204,27 +4204,28 @@ html.light .agent-onramp-panel {
   text-align: right;
 }
 
-.gpu-latency-rail {
-  position: relative;
+.gpu-latency-underline {
   display: block;
-  height: 8px;
-  overflow: hidden;
-  border: 1px solid rgba(19, 11, 8, 0.18);
-  border-radius: 9999px;
-  background: rgba(19, 11, 8, 0.12);
+  width: min(360px, 100%);
+  height: 24px;
+  margin-top: -4px;
+  overflow: visible;
 }
 
-.gpu-latency-rail i {
-  display: block;
-  width: 100%;
-  height: 100%;
-  border-radius: inherit;
-  background:
-    linear-gradient(90deg, rgba(19, 11, 8, 0.86), rgba(255, 247, 239, 0.76), rgba(19, 11, 8, 0.9));
-  box-shadow: 0 0 18px rgba(255, 247, 239, 0.36);
-  transform: scaleX(var(--gpu-counter-progress));
-  transform-origin: left center;
-  transition: transform 90ms linear;
+.gpu-latency-underline path {
+  fill: none;
+  stroke: #130b08;
+  stroke-width: 7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  opacity: 0;
+  filter: drop-shadow(0 7px 12px rgba(89, 31, 10, 0.18));
+}
+
+.gpu-latency-counter[data-counter-done="true"] .gpu-latency-underline path {
+  animation: gpu-latency-underline-draw 720ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .gpu-latency-counter p {
@@ -4234,6 +4235,29 @@ html.light .agent-onramp-panel {
   font-size: 12px;
   font-weight: 700;
   color: rgba(19, 11, 8, 0.64);
+}
+
+@keyframes gpu-latency-underline-draw {
+  from {
+    opacity: 0;
+    stroke-dashoffset: 1;
+    transform: translate3d(-4px, 0, 0);
+  }
+
+  to {
+    opacity: 0.92;
+    stroke-dashoffset: 0;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gpu-latency-counter[data-counter-done="true"] .gpu-latency-underline path {
+    animation: none;
+    opacity: 0.92;
+    stroke-dashoffset: 0;
+    transform: none;
+  }
 }
 
 .gpu-market-strip {

@@ -20,23 +20,23 @@ export function GpuLatencyCounter() {
   const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
+    const node = ref.current;
     const valueNode = valueRef.current;
     const setCounter = (nextValue) => {
       if (valueNode) {
         valueNode.textContent = String(nextValue);
       }
     };
-    const setProgress = (progress) => {
-      ref.current?.style.setProperty("--gpu-counter-progress", String(progress));
+    const setDone = (isDone) => {
+      node?.setAttribute("data-counter-done", isDone ? "true" : "false");
     };
 
     if (prefersReducedMotion) {
       setCounter(TARGET_MS);
-      ref.current?.style.setProperty("--gpu-counter-progress", "1");
+      setDone(true);
       return undefined;
     }
 
-    const node = ref.current;
     if (!node) {
       return undefined;
     }
@@ -51,12 +51,11 @@ export function GpuLatencyCounter() {
       const start = performance.now();
       let lastValue = -1;
       setCounter(0);
-      setProgress(0);
+      setDone(false);
 
       const tick = (now) => {
         const elapsed = Math.max(0, Math.min(1, (now - start) / DURATION_MS));
         const nextValue = Math.round(TARGET_MS * easeOutCubic(elapsed));
-        setProgress(elapsed);
 
         if (nextValue !== lastValue) {
           lastValue = nextValue;
@@ -67,7 +66,7 @@ export function GpuLatencyCounter() {
           frameRef.current = requestAnimationFrame(tick);
         } else {
           setCounter(TARGET_MS);
-          setProgress(1);
+          setDone(true);
           if (visibleRef.current) {
             timeoutRef.current = window.setTimeout(runCounter, REPLAY_DELAY_MS);
           }
@@ -99,7 +98,12 @@ export function GpuLatencyCounter() {
   }, [prefersReducedMotion]);
 
   return (
-    <div ref={ref} className="gpu-latency-counter" aria-label="Sub 90ms GPU HMR edit to visual on scoped ROCm/HIP proof runs">
+    <div
+      ref={ref}
+      className="gpu-latency-counter"
+      data-counter-done="false"
+      aria-label="Sub 90ms GPU HMR edit to visual on scoped ROCm/HIP proof runs"
+    >
       <span>Sub 90ms GPU HMR edit to visual</span>
       <strong>
         <span>sub</span>
@@ -110,9 +114,9 @@ export function GpuLatencyCounter() {
           <span className="gpu-latency-unit">ms</span>
         </span>
       </strong>
-      <span className="gpu-latency-rail" aria-hidden="true">
-        <i />
-      </span>
+      <svg className="gpu-latency-underline" viewBox="0 0 420 34" aria-hidden="true" focusable="false">
+        <path pathLength="1" d="M7 22 C 76 11 140 24 213 16 S 346 10 413 20" />
+      </svg>
       <p>Target proof loop: edit, compile, visual, even as project size grows. Re-run it on your project as the proof gate.</p>
     </div>
   );
