@@ -3521,6 +3521,12 @@ html.light .spotlight {
   font-variant-numeric: tabular-nums;
 }
 
+.gpu-latency-number {
+  display: inline-block;
+  min-width: 2ch;
+  text-align: right;
+}
+
 .gpu-latency-counter p {
   margin: 0;
   max-width: none;

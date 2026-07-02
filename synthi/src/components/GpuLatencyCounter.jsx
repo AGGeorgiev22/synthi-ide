@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useReducedMotion } from "framer-motion";
 
 const TARGET_MS = 90;
-const DURATION_MS = 1050;
+const DURATION_MS = 920;
 
 function easeOutCubic(progress) {
   return 1 - Math.pow(1 - progress, 3);
@@ -12,14 +12,21 @@ function easeOutCubic(progress) {
 
 export function GpuLatencyCounter() {
   const ref = useRef(null);
+  const valueRef = useRef(null);
   const frameRef = useRef(0);
   const hasRunRef = useRef(false);
-  const [value, setValue] = useState(0);
   const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
+    const valueNode = valueRef.current;
+    const setCounter = (nextValue) => {
+      if (valueNode) {
+        valueNode.textContent = String(nextValue);
+      }
+    };
+
     if (prefersReducedMotion) {
-      setValue(TARGET_MS);
+      setCounter(TARGET_MS);
       return undefined;
     }
 
@@ -43,11 +50,13 @@ export function GpuLatencyCounter() {
 
         if (nextValue !== lastValue) {
           lastValue = nextValue;
-          setValue(nextValue);
+          setCounter(nextValue);
         }
 
         if (elapsed < 1) {
           frameRef.current = requestAnimationFrame(tick);
+        } else {
+          setCounter(TARGET_MS);
         }
       };
 
@@ -61,7 +70,7 @@ export function GpuLatencyCounter() {
           observer.disconnect();
         }
       },
-      { rootMargin: "-12% 0px -18%", threshold: 0.28 },
+      { rootMargin: "0px 0px -12%", threshold: 0.16 },
     );
 
     observer.observe(node);
@@ -78,7 +87,9 @@ export function GpuLatencyCounter() {
       <strong>
         <span>sub</span>
         <span className="gpu-latency-value">
-          {value}
+          <span ref={valueRef} className="gpu-latency-number">
+            0
+          </span>
           <span className="gpu-latency-unit">ms</span>
         </span>
       </strong>
