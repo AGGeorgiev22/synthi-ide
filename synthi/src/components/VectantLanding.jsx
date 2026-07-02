@@ -8,67 +8,67 @@ import { GpuLatencyCounter } from "@/components/GpuLatencyCounter";
 import { WaitlistForm } from "@/components/WaitlistForm";
 
 const BROWSER_SHOT = {
-  title: "Browser workflow observe",
-  detail: "The agent sees the running app, browser state, workflow steps, terminal context, and replay surface in one cloud runtime.",
+  title: "Vectant clearance workspace",
+  detail: "Clearance, leases, collision forecast, proof layers, and landing queue stay visible before authority expands.",
+  src: "/product-proof/codesite-full-workflow-ui.png",
+  width: 1440,
+  height: 1100,
+};
+
+const LICENSE_SHOT = {
+  title: "Workflow checkride passed",
+  detail: "The license boundary earns authority only after plan coverage, event stream, API calls, and proof bundle checks pass.",
+  src: "/product-proof/senior-real-codesite-workflow-proof.png",
+  width: 1440,
+  height: 1708,
+};
+
+const RUNTIME_WORKFLOW_SHOT = {
+  title: "Observed workflow state",
+  detail: "Browser state, workflow steps, screenshots, terminal context, and replay surface stay attached to the same run.",
   src: "/product-proof/browser-workflow-observe-ui.png",
   width: 1500,
   height: 1000,
 };
 
-const LICENSE_SHOT = {
-  title: "Export checkride",
-  detail: "Replay validation, manifest generation, export, and publish actions stay inside the same Vectant control plane.",
-  src: "/product-proof/investor-demo-export-handoff.png",
-  width: 1440,
-  height: 1000,
-};
-
-const RUNTIME_WORKFLOW_SHOT = {
-  title: "Loaded workspace state",
-  detail: "Editor, terminal, GPU status, command surface, and runtime controls stay in the same cloud workspace.",
-  src: "/product-proof/browser-workspace-loaded.png",
-  width: 1500,
-  height: 1000,
-};
-
 const COUNTERFACTUAL_SHOT = {
-  title: "Runtime workspace loop",
-  detail: "Repo, terminal, editor, runtime controls, and status proof stay attached to the workspace that ran the agent.",
-  src: "/product-proof/investor-demo-workspace.png",
-  width: 1440,
-  height: 1000,
+  title: "Counterfactual memory proof",
+  detail: "Rejected branches leave evidence, policy deltas, and replay context for the next autonomous run.",
+  src: "/product-proof/codesite-counterfactual-memory-proof.png",
+  width: 1280,
+  height: 2296,
 };
 
 const PROOF_GALLERY = [
   {
-    title: "Hosted browser workflow",
-    detail: "The agent sees the running app, browser state, workflow steps, terminal context, and replay surface together.",
-    src: "/product-proof/browser-workflow-observe-ui.png",
-    width: 1500,
-    height: 1000,
+    title: "Clearance workspace",
+    detail: "Vectant keeps leases, risk, protected paths, and landing queue visible before the agent mutates code.",
+    src: "/product-proof/codesite-full-workflow-ui.png",
+    width: 1440,
+    height: 1100,
     span: "proof-large",
   },
   {
-    title: "Workflow authority rail",
-    detail: "Runtime, observe, trace, contract, replay, source, validate, and export gates stay visible before authority expands.",
-    src: "/product-proof/investor-demo-workflows.png",
+    title: "Workflow proof passed",
+    detail: "Plan coverage, black-box score, artifacts, API calls, and bundle trailers show why the run earned authority.",
+    src: "/product-proof/senior-real-codesite-workflow-proof.png",
     width: 1440,
-    height: 1000,
+    height: 1708,
   },
   {
-    title: "Export handoff",
-    detail: "Compiled contracts, replay validation, manifest generation, export, and publish actions share one product surface.",
-    src: "/product-proof/investor-demo-export-handoff.png",
+    title: "Line provenance inspector",
+    detail: "Reviewers inspect source lines, dependencies, assumptions, and proof attachments before accepting the landing.",
+    src: "/product-proof/codesite-line-inspector-ui-desktop.png",
     width: 1440,
-    height: 1000,
+    height: 1100,
     span: "proof-large",
   },
   {
-    title: "Loaded workspace state",
-    detail: "Editor, terminal, GPU status, command surface, and runtime controls stay in the same cloud workspace.",
-    src: "/product-proof/browser-workspace-loaded.png",
-    width: 1500,
-    height: 1000,
+    title: "Shadow simulator",
+    detail: "Vectant can run a counterfactual path first, then compare risk, collisions, and policy deltas before mutation.",
+    src: "/product-proof/codesite-shadow-simulator-ui-desktop.png",
+    width: 1440,
+    height: 1100,
   },
   {
     title: "GPU HMR visual proof",
@@ -79,11 +79,11 @@ const PROOF_GALLERY = [
     span: "proof-wide",
   },
   {
-    title: "Workspace runtime loop",
-    detail: "Vectant keeps repo, terminal, editor, runtime controls, and status proof in one operating surface.",
-    src: "/product-proof/investor-demo-workspace.png",
-    width: 1440,
-    height: 1000,
+    title: "Counterfactual memory",
+    detail: "Near misses become reviewable evidence instead of discarded context.",
+    src: "/product-proof/codesite-counterfactual-memory-proof.png",
+    width: 1280,
+    height: 2296,
   },
 ];
 
@@ -202,7 +202,7 @@ const RUNTIME_PROOF_PATH = [
     step: "Observe",
     title: "The runtime watches the real system.",
     copy: "Browser, terminal, workflow state, screenshots, HMR status, and replay context stay inside one cloud workspace.",
-    signal: "runtime truth",
+    signal: "live workspace state",
     shot: BROWSER_SHOT,
   },
   {
@@ -288,7 +288,7 @@ const DEEP_FEATURES = [
   {
     tag: "CLOUD",
     title: "Cloud Runtime",
-    copy: "Vectant keeps compiler, Git, agent, browser, ports, services, logs, and evidence on one cloud runtime truth.",
+    copy: "Vectant keeps compiler, Git, agent, browser, ports, services, logs, and evidence attached to one live workspace state.",
   },
   {
     tag: "EXT",
@@ -449,10 +449,10 @@ function Hero() {
   return (
     <section id="top" className="runtime-campaign runtime-hero-v2 relative isolate overflow-visible pt-24">
       <div className="campaign-atmosphere" aria-hidden="true" />
-      <div className="hero-main-grid mx-auto grid max-w-[1540px] gap-12 px-4 pb-16 sm:px-6 lg:grid-cols-[0.92fr_1.08fr] lg:items-center lg:px-8 lg:pb-24">
-        <div className="max-w-[880px]" data-reveal>
+      <div className="hero-main-grid mx-auto max-w-[1540px] px-4 pb-10 sm:px-6 lg:px-8">
+        <div className="hero-copy-stage" data-reveal>
           <p className="hero-kicker">
-            <span className="hero-kicker-copy">Cloud runtime control plane</span>
+            <span className="hero-kicker-copy">Runtime control plane for autonomous coding work</span>
             <svg
               className="hero-kicker-line"
               viewBox="0 0 620 18"
@@ -475,12 +475,12 @@ function Hero() {
             </svg>
           </p>
           <h1 className="hero-title">
-            Autonomous coding needs a governed runtime.
+            The runtime for autonomous software work.
           </h1>
           <p className="hero-copy">
-            Vectant is a cloud development environment where existing agents work under scoped authority, live runtime state, and reviewable proof.
+            Agents request scope, work inside live runtime state, and carry proof reviewers can inspect before anything lands.
           </p>
-          <div className="mt-8 max-w-2xl">
+          <div className="hero-form-shell mt-8">
             <WaitlistForm
               variant="hero"
               buttonLabel="Start proof pilot"
@@ -518,10 +518,10 @@ function ComparisonSection() {
   return (
     <section id="runtime" className="runtime-campaign scroll-mt-16 py-24 md:py-36">
       <div className="mx-auto max-w-[1500px] px-4 sm:px-6 lg:px-8">
-        <div className="runtime-lede" data-reveal>
-          <h2>Code is easy. Safe mutation is the bottleneck.</h2>
+        <div className="runtime-lede runtime-lede-center" data-reveal>
+          <h2>Agents do not merge. They earn production authority.</h2>
           <p>
-            Today's tools produce plausible diffs fast. The expensive part starts after the edit: was the agent allowed to touch that file, did state survive, and can a reviewer replay the evidence?
+            Every serious claim needs scoped authority, preserved state, and proof a reviewer can open.
           </p>
         </div>
 
@@ -538,16 +538,14 @@ function ComparisonSection() {
         <div id="trust-reveal" className="belief-statement" data-reveal>
           <p className="scrub-copy">
             {[
-              "Agents",
-              "do",
-              "not",
-              "merge.",
+              "Code",
+              "moves",
+              "fast.",
               "They",
               "earn",
-              "landing.",
+              "authority.",
               "Every",
-              "serious",
-              "claim",
+              "landing",
               "carries",
               "proof.",
             ].map((word, index) => (
@@ -619,7 +617,7 @@ function RuntimeControlSection() {
     <section id="capabilities" className="runtime-campaign scroll-mt-16 py-24 md:py-36">
       <div className="mx-auto max-w-[1500px] px-4 sm:px-6 lg:px-8">
         <div className="section-lede max-w-[1040px]" data-reveal>
-          <h2>Autonomy is only useful when the runtime can govern it.</h2>
+          <h2>Agents need more than tools. They need operating boundaries.</h2>
           <p>
             Vectant is not chat over a repo. It is the execution environment around the running system: tools, policies, browser state, logs, leases, replay, and proof in one place.
           </p>
@@ -641,7 +639,7 @@ function RuntimeControlSection() {
         <div className="mt-14 grid gap-4 lg:grid-cols-[1.05fr_0.95fr]">
           <ProductFrame shot={BROWSER_SHOT} className="min-h-full" priority={false} />
           <div className="runtime-contract-panel" data-reveal>
-            <h3>MCP eyes and hands share the same runtime truth.</h3>
+            <h3>MCP eyes and hands share the same live state.</h3>
             <p>
               Compiler, AI, Git, browser, terminal, preview, logs, collaboration, and MCP tools observe the same project state. Agents get eyes and hands in the runtime; reviewers get facts instead of reconstructed stories.
             </p>
@@ -790,7 +788,7 @@ function ProofSection() {
   return (
     <section id="proof" className="runtime-campaign scroll-mt-16 py-24 md:py-36">
       <div className="mx-auto max-w-[1500px] px-4 sm:px-6 lg:px-8">
-        <div className="section-lede max-w-[1110px]" data-reveal>
+        <div className="section-lede section-lede-center mx-auto max-w-[1110px]" data-reveal>
           <h2>Every agent landing leaves a replay ledger.</h2>
           <p>
             Before a diff reaches the repo, Vectant records the route, lease, protected paths, conflicts, checks, replay, and output evidence. Review the change by opening the proof packet, not by trusting a summary.
@@ -881,7 +879,7 @@ function FeatureSystemsSection() {
         <div className="section-lede max-w-[1120px]" data-reveal>
           <h2>Vectant wraps the hard parts of agent work in one runtime loop.</h2>
           <p>
-            Start with the systems that make autonomous work believable on real codebases, not only greenfield web apps. Then try everything else inside Vectant.
+            Start with the systems that make autonomous work believable on real codebases, not only greenfield web apps. Then pilot the loops your reviewers already worry about.
           </p>
         </div>
 
@@ -913,7 +911,7 @@ function BeyondSitesSection() {
       <div className="mx-auto max-w-[1500px] px-4 sm:px-6 lg:px-8">
         <div className="grid gap-12 lg:grid-cols-[0.86fr_1.14fr] lg:items-start">
           <div data-reveal>
-          <h2 className="surface-headline">The real wedge is any system that must keep running.</h2>
+          <h2 className="surface-headline">Built for systems that cannot be casually restarted.</h2>
           <p className="surface-copy">
               Websites are the obvious demo. Vectant is built for systems that compile, render, stream, log, or need browser, terminal, GPU, mobile, GUI, or service control.
           </p>

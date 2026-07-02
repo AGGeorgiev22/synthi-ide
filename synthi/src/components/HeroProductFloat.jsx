@@ -6,19 +6,19 @@ import { motion, useReducedMotion, useScroll, useSpring, useTransform } from "fr
 
 const SHOTS = {
   primary: {
-    title: "Vectant governed workspace",
+    title: "Vectant clearance workspace",
     detail:
-      "A live cloud runtime with workflow authority, terminal context, GPU state, and proof-ready session state.",
-    src: "/product-proof/browser-workflow-observe-ui.png",
-    width: 1500,
-    height: 1000,
+      "A live runtime surface with clearance, leases, collision forecast, proof rails, and landing evidence in one place.",
+    src: "/product-proof/codesite-full-workflow-ui.png",
+    width: 1440,
+    height: 1100,
   },
   observe: {
-    title: "Runtime workflow proof",
-    detail: "A real Vectant workflow with hosted browser attachment, observed screenshots, trace, contract, and replay steps.",
-    src: "/product-proof/investor-demo-workflows.png",
+    title: "Workflow proof packet",
+    detail: "Passed checks, event stream, API calls, black-box score, and proof bundle trailers.",
+    src: "/product-proof/senior-real-codesite-workflow-proof.png",
     width: 1440,
-    height: 1000,
+    height: 1708,
   },
   gpu: {
     title: "GPU HMR proof",
@@ -34,30 +34,30 @@ export function HeroProductFloat() {
   const prefersReducedMotion = useReducedMotion();
   const { scrollYProgress } = useScroll({
     target: ref,
-    offset: ["start 86%", "end 18%"],
+    offset: ["start start", "end end"],
   });
   const spring = { stiffness: 154, damping: 22, mass: 0.5 };
 
-  const stageY = useSpring(useTransform(scrollYProgress, [0, 0.5, 1], [10, -2, -12]), spring);
-  const mainX = useSpring(useTransform(scrollYProgress, [0, 0.5, 1], [22, 4, -10]), spring);
-  const mainY = useSpring(useTransform(scrollYProgress, [0, 0.5, 1], [58, 22, 8]), spring);
-  const mainZ = useSpring(useTransform(scrollYProgress, [0, 0.5, 1], [-220, -68, 0]), spring);
-  const mainScale = useSpring(useTransform(scrollYProgress, [0, 0.5, 1], [0.74, 0.9, 0.98]), spring);
-  const mainRotateX = useSpring(useTransform(scrollYProgress, [0, 0.5, 1], [10, 4, 0]), spring);
-  const mainRotateY = useSpring(useTransform(scrollYProgress, [0, 0.5, 1], [-6, -1.4, 0]), spring);
+  const stageY = useSpring(useTransform(scrollYProgress, [0, 0.46, 1], [38, -6, -28]), spring);
+  const mainX = useSpring(useTransform(scrollYProgress, [0, 0.46, 1], [0, 0, 0]), spring);
+  const mainY = useSpring(useTransform(scrollYProgress, [0, 0.46, 1], [86, 12, -22]), spring);
+  const mainZ = useSpring(useTransform(scrollYProgress, [0, 0.46, 1], [-360, -90, 12]), spring);
+  const mainScale = useSpring(useTransform(scrollYProgress, [0, 0.46, 1], [0.58, 0.92, 1.07]), spring);
+  const mainRotateX = useSpring(useTransform(scrollYProgress, [0, 0.46, 1], [15, 4, -1]), spring);
+  const mainRotateY = useSpring(useTransform(scrollYProgress, [0, 0.46, 1], [-12, -2, 0]), spring);
   const mainRotateZ = useSpring(useTransform(scrollYProgress, [0, 1], [0.55, 0]), spring);
-  const observeY = useSpring(useTransform(scrollYProgress, [0, 0.5, 1], [54, 18, 4]), spring);
-  const observeX = useSpring(useTransform(scrollYProgress, [0, 0.5, 1], [74, 32, 18]), spring);
-  const observeZ = useSpring(useTransform(scrollYProgress, [0, 0.5, 1], [-80, -18, 24]), spring);
-  const observeScale = useSpring(useTransform(scrollYProgress, [0, 0.5, 1], [0.58, 0.72, 0.82]), spring);
-  const gpuY = useSpring(useTransform(scrollYProgress, [0, 0.5, 1], [118, 88, 60]), spring);
-  const gpuX = useSpring(useTransform(scrollYProgress, [0, 0.5, 1], [-54, -36, -24]), spring);
-  const gpuZ = useSpring(useTransform(scrollYProgress, [0, 0.5, 1], [-92, -28, 12]), spring);
-  const gpuScale = useSpring(useTransform(scrollYProgress, [0, 0.5, 1], [0.58, 0.72, 0.82]), spring);
-  const collabY = useSpring(useTransform(scrollYProgress, [0, 0.52, 1], [108, 76, 52]), spring);
-  const collabX = useSpring(useTransform(scrollYProgress, [0, 0.52, 1], [54, 24, 8]), spring);
-  const collabZ = useSpring(useTransform(scrollYProgress, [0, 0.52, 1], [-74, -14, 18]), spring);
-  const collabScale = useSpring(useTransform(scrollYProgress, [0, 0.52, 1], [0.58, 0.72, 0.82]), spring);
+  const observeY = useSpring(useTransform(scrollYProgress, [0, 0.44, 1], [38, -18, -32]), spring);
+  const observeX = useSpring(useTransform(scrollYProgress, [0, 0.44, 1], [138, 70, 4]), spring);
+  const observeZ = useSpring(useTransform(scrollYProgress, [0, 0.44, 1], [-220, -28, 150]), spring);
+  const observeScale = useSpring(useTransform(scrollYProgress, [0, 0.44, 1], [0.45, 0.66, 0.78]), spring);
+  const gpuY = useSpring(useTransform(scrollYProgress, [0, 0.48, 1], [160, 106, 58]), spring);
+  const gpuX = useSpring(useTransform(scrollYProgress, [0, 0.48, 1], [-128, -72, -42]), spring);
+  const gpuZ = useSpring(useTransform(scrollYProgress, [0, 0.48, 1], [-240, -60, 130]), spring);
+  const gpuScale = useSpring(useTransform(scrollYProgress, [0, 0.48, 1], [0.46, 0.66, 0.78]), spring);
+  const collabY = useSpring(useTransform(scrollYProgress, [0, 0.52, 1], [50, 18, -10]), spring);
+  const collabX = useSpring(useTransform(scrollYProgress, [0, 0.52, 1], [52, -150, -300]), spring);
+  const collabZ = useSpring(useTransform(scrollYProgress, [0, 0.42, 0.58, 1], [-230, 40, 260, 300]), spring);
+  const collabScale = useSpring(useTransform(scrollYProgress, [0, 0.52, 1], [0.46, 0.66, 0.82]), spring);
   const collabRotateZ = useSpring(useTransform(scrollYProgress, [0, 1], [1.2, 0]), spring);
 
   const stickyStyle = prefersReducedMotion ? undefined : { y: stageY };
@@ -127,9 +127,23 @@ export function HeroProductFloat() {
                 width={SHOTS.primary.width}
                 height={SHOTS.primary.height}
                 priority
-                sizes="(min-width: 1280px) 48vw, (min-width: 768px) 82vw, 100vw"
-                className="h-auto w-full"
+                sizes="(min-width: 1280px) 78vw, (min-width: 768px) 88vw, 100vw"
+                className="hero-primary-shot-image"
               />
+              <div className="hero-shot-brand-mask" aria-hidden="true">
+                <span>[V]</span>
+                <strong>Vectant</strong>
+              </div>
+              <div className="hero-proof-scan" aria-hidden="true">
+                <span>lease observed</span>
+                <span>replay attached</span>
+                <span>proof ready</span>
+              </div>
+              <div className="hero-proof-orbit" aria-hidden="true">
+                <span />
+                <span />
+                <span />
+              </div>
             </div>
           </motion.div>
         </motion.div>
@@ -142,10 +156,14 @@ export function HeroProductFloat() {
                 alt={`${SHOTS.observe.title}: ${SHOTS.observe.detail}`}
                 width={SHOTS.observe.width}
                 height={SHOTS.observe.height}
-                priority
+                priority={false}
                 sizes="360px"
                 className="h-auto w-full"
               />
+              <div className="hero-workflow-brand-mask" aria-hidden="true">
+                <span>[V]</span>
+                <strong>Vectant proof</strong>
+              </div>
               <figcaption>
                 <strong>Workflow proof rail</strong>
                 <span>browser attach, observe, trace, contract, replay</span>
@@ -233,7 +251,7 @@ export function HeroProductFloat() {
                 alt={`${SHOTS.gpu.title}: ${SHOTS.gpu.detail}`}
                 width={SHOTS.gpu.width}
                 height={SHOTS.gpu.height}
-                priority
+                priority={false}
                 sizes="300px"
                 className="h-auto w-full"
               />
