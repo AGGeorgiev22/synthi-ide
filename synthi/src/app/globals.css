@@ -2406,7 +2406,7 @@ html.light .spotlight {
   border: var(--onramp-border-width) solid transparent;
   border-radius: 12px;
   background:
-    linear-gradient(#101012, #101012) padding-box,
+    linear-gradient(transparent, transparent) padding-box,
     linear-gradient(90deg, #ff3dbe 0%, #ff9f43 24%, #ffd166 42%, #22d3ee 66%, #8b7bff 100%) border-box;
   box-shadow:
     0 0 0 1px rgba(255, 247, 239, 0.04),
