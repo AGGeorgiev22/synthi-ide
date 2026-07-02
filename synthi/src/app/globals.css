@@ -2295,7 +2295,7 @@ html.light .spotlight {
 .agent-onramp {
   position: relative;
   overflow: visible;
-  min-height: 180dvh;
+  min-height: clamp(1160px, 138dvh, 1480px);
 }
 
 .agent-onramp::before {
@@ -2319,16 +2319,16 @@ html.light .spotlight {
   gap: clamp(28px, 5vw, 84px);
   align-items: center;
   position: sticky;
-  top: 92px;
+  top: 86px;
   min-height: auto;
-  height: calc(100dvh - 132px);
+  height: calc(100dvh - 116px);
   padding-top: 0;
 }
 
 .agent-onramp-copy h2 {
-  max-width: 930px;
+  max-width: 780px;
   font-family: var(--font-satoshi), ui-sans-serif, system-ui, sans-serif;
-  font-size: clamp(42px, 6vw, 86px);
+  font-size: clamp(42px, 5.2vw, 74px);
   font-weight: 780;
   line-height: 0.98;
   letter-spacing: 0;
@@ -2338,7 +2338,7 @@ html.light .spotlight {
 
 .agent-onramp-copy p {
   margin-top: 26px;
-  max-width: 64ch;
+  max-width: 58ch;
   font-size: 17px;
   line-height: 1.72;
   color: var(--campaign-muted);

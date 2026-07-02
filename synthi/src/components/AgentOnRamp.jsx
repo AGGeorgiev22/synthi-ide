@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion, useMotionValueEvent, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { motion, useMotionValueEvent, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
 
 const STEPS = [
   {
@@ -94,10 +94,13 @@ export function AgentOnRamp() {
     offset: ["start start", "end end"],
   });
   const stepStops = STEPS.map((_, index) => index / (STEPS.length - 1));
-  const borderY = useTransform(
-    scrollYProgress,
-    stepStops,
-    borderMetrics.tops,
+  const borderY = useSpring(
+    useTransform(
+      scrollYProgress,
+      stepStops,
+      borderMetrics.tops,
+    ),
+    { stiffness: 170, damping: 26, mass: 0.42 },
   );
 
   useEffect(() => {
@@ -146,7 +149,7 @@ export function AgentOnRamp() {
 
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
     if (reduce) return;
-    const nextIndex = Math.min(STEPS.length - 1, Math.max(0, Math.round(latest * (STEPS.length - 1))));
+    const nextIndex = latest < 0.36 ? 0 : latest < 0.72 ? 1 : 2;
     if (nextIndex !== activeIndexRef.current) {
       activeIndexRef.current = nextIndex;
       setActiveIndex(nextIndex);
