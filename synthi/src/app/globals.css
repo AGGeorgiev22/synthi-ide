@@ -1456,7 +1456,7 @@ html.light .secondary-cta:hover {
 }
 
 .hero-product-float {
-  min-height: clamp(880px, 118dvh, 1180px);
+  min-height: clamp(720px, 82dvh, 880px);
   perspective: 1800px;
   transform-style: preserve-3d;
 }
@@ -4371,15 +4371,15 @@ html.light .agent-onramp-panel {
 @media (min-width: 1120px) {
   .hero-main-grid {
     align-items: start;
-    min-height: clamp(660px, 84dvh, 900px);
-    padding-top: clamp(20px, 3.6vh, 46px);
+    min-height: clamp(640px, 78dvh, 780px);
+    padding-top: clamp(16px, 2.8vh, 34px);
   }
 
   .hero-product-float {
     align-self: start;
     position: relative;
     top: auto;
-    min-height: clamp(980px, 118dvh, 1180px);
+    min-height: clamp(720px, 82dvh, 900px);
   }
 
   .hero-title {
