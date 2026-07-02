@@ -52,6 +52,47 @@ export function VectantMotion() {
         }
       );
 
+      gsap.utils.toArray(".hero-kicker-line-path").forEach((path) => {
+        gsap.set(path, {
+          strokeDasharray: 1.04,
+          strokeDashoffset: 1.04,
+          opacity: 0.24,
+        });
+
+        gsap
+          .timeline({ repeat: -1, repeatDelay: 0.28 })
+          .to(path, {
+            strokeDashoffset: 0,
+            opacity: 0.96,
+            duration: 1.18,
+            ease: "power3.out",
+          })
+          .to(path, {
+            opacity: 1,
+            duration: 1.55,
+            ease: "sine.inOut",
+          })
+          .to(path, {
+            strokeDashoffset: -1.04,
+            opacity: 0.18,
+            duration: 0.92,
+            ease: "power3.in",
+          });
+      });
+
+      gsap.utils.toArray(".proof-marquee-track").forEach((track) => {
+        gsap.fromTo(
+          track,
+          { xPercent: 0 },
+          {
+            xPercent: -50,
+            duration: 30,
+            repeat: -1,
+            ease: "none",
+          },
+        );
+      });
+
       const words = gsap.utils.toArray(".scrub-word");
       if (words.length) {
         gsap.fromTo(

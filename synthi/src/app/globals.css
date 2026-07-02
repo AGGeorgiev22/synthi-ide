@@ -1295,10 +1295,9 @@ html.light .hero-kicker {
   stroke-width: 2.2;
   stroke-linecap: round;
   stroke-linejoin: round;
-  opacity: 0.92;
-  stroke-dasharray: 1;
-  stroke-dashoffset: 1;
-  animation: hero-kicker-draw 1.16s cubic-bezier(0.16, 1, 0.3, 1) 0.28s forwards;
+  opacity: 0.88;
+  stroke-dasharray: 1.04;
+  stroke-dashoffset: 1.04;
   pointer-events: none;
 }
 
@@ -2350,7 +2349,6 @@ html.light .hero-product-card {
   width: max-content;
   flex-wrap: nowrap;
   justify-content: flex-start;
-  animation: vectant-proof-marquee-loop 34s linear infinite;
   will-change: transform;
 }
 
@@ -2372,16 +2370,6 @@ html.light .proof-marquee span {
 
 .proof-marquee span:last-child {
   border-right: 0;
-}
-
-@keyframes vectant-proof-marquee-loop {
-  from {
-    transform: translate3d(0, 0, 0);
-  }
-
-  to {
-    transform: translate3d(-50%, 0, 0);
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -4319,20 +4307,6 @@ html.light .agent-onramp-panel {
   44%, 78% {
     opacity: 1;
     transform: translateX(0) scale(1);
-  }
-}
-
-@keyframes hero-kicker-draw {
-  from {
-    stroke-dashoffset: 1;
-    opacity: 0.38;
-  }
-  72% {
-    opacity: 0.92;
-  }
-  to {
-    stroke-dashoffset: 0;
-    opacity: 0.88;
   }
 }
 
