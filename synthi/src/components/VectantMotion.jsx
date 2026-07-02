@@ -129,18 +129,20 @@ export function VectantMotion() {
           const runtimePathTimeline = gsap.timeline({
             scrollTrigger: {
               trigger: runtimePathShell,
-              start: "top top+=74",
-              end: () => `+=${Math.max(window.innerHeight * 2.35, 1700)}`,
+              start: "top top",
+              end: () => `+=${Math.max(window.innerHeight * Math.max(runtimePathPanels.length - 1, 1) * 0.86, 1500)}`,
               pin: true,
-              scrub: true,
+              scrub: 1,
               anticipatePin: 1,
               invalidateOnRefresh: true,
             },
           });
 
+          const runtimeStepSpacing = 1.24;
+
           runtimePathSteps.forEach((step, index) => {
             if (index === 0) return;
-            const at = index;
+            const at = index * runtimeStepSpacing;
 
             runtimePathTimeline
               .to(
@@ -149,10 +151,10 @@ export function VectantMotion() {
                   autoAlpha: 0,
                   y: -26,
                   scale: 0.985,
-                  duration: 0.42,
+                  duration: 0.5,
                   ease: "none",
                 },
-                at - 0.32,
+                at - 0.42,
               )
               .to(
                 runtimePathPanels[index],
@@ -160,7 +162,7 @@ export function VectantMotion() {
                   autoAlpha: 1,
                   y: 0,
                   scale: 1,
-                  duration: 0.55,
+                  duration: 0.72,
                   ease: "none",
                 },
                 at - 0.18,
@@ -170,24 +172,24 @@ export function VectantMotion() {
                 {
                   opacity: 0.48,
                   y: -6,
-                  duration: 0.38,
+                  duration: 0.46,
                   ease: "none",
                 },
-                at - 0.28,
+                at - 0.34,
               )
               .to(
                 step,
                 {
                   opacity: 1,
                   y: 0,
-                  duration: 0.4,
+                  duration: 0.5,
                   ease: "none",
                 },
-                at - 0.24,
+                at - 0.28,
               );
           });
 
-          runtimePathTimeline.to({}, { duration: 0.55 });
+          runtimePathTimeline.to({}, { duration: 0.9 });
         }
       }
 
