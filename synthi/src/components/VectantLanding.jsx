@@ -144,7 +144,7 @@ const COLLABORATION_WEDGES = [
     copy: "Invite the right humans and agents, scope who can see or act inside the workspace, and revoke access without losing the session trail.",
   },
   {
-    title: "Low-latency shared presence",
+    title: "Shared workspace presence",
     copy: "Edits, cursors, selections, runtime state, and handoff context move through one shared session.",
   },
   {
@@ -178,9 +178,9 @@ const RUNTIME_PILLARS = [
   },
   {
     mark: "remember",
-    title: "Counterfactual memory",
-    signal: "near-misses / causal twins / regret traces",
-    copy: "Vectant keeps counterfactual traces, regret memory, and causal twins so near-misses improve the next decision.",
+    title: "Replay memory",
+    signal: "near-misses / evidence trails / review context",
+    copy: "Vectant keeps near-miss traces, policy deltas, and replay context so the next run starts from evidence instead of folklore.",
   },
 ];
 
@@ -255,27 +255,27 @@ const TRUST_SYSTEMS = [
   },
   {
     code: "memory",
-    title: "Counterfactual Memory",
+    title: "Near-Miss Memory",
     line: "The rejected branch still pays rent.",
-    copy: "Vectant converts near-misses into comparable choice scenes with evidence, policy deltas, and regret signals for the next run.",
+    copy: "Vectant converts near-misses into reviewable evidence, policy deltas, and context the next agent run can use.",
   },
   {
     code: "replay",
-    title: "Causal Twin",
-    line: "Fork the past, change one variable, replay the outcome.",
-    copy: "Vectant varies captured change context in an isolated twin, then reports confidence, coverage, and proof.",
+    title: "Replay Ledger",
+    line: "Open the route the agent actually took.",
+    copy: "Vectant records requested scope, observed runtime state, checks, output evidence, and handoff context for review.",
   },
   {
     code: "load",
-    title: "Allostatic Evidence",
-    line: "Authority adapts to the load the system can prove.",
-    copy: "Vectant lowers restrictions after clean landings, replay, and checkrides. Failures raise load through deterministic evidence.",
+    title: "Adaptive Authority",
+    line: "Authority expands only when evidence earns it.",
+    copy: "Vectant can widen or revoke capability after clean landings, replay, checkrides, and failed gates.",
   },
   {
     code: "probe",
-    title: "Therapeutic Tomography",
-    line: "Diagnose with minimum effective authority.",
-    copy: "Vectant starts with small probes, keeps uncertainty visible, justifies escalation, and separates investigation from mutation.",
+    title: "Minimum Authority Probes",
+    line: "Investigate before mutation expands.",
+    copy: "Vectant starts with small probes, keeps uncertainty visible, and separates investigation from production-bound mutation.",
   },
 ];
 
@@ -293,7 +293,7 @@ const DEEP_FEATURES = [
   {
     tag: "EXT",
     title: "VS Code Extension Path",
-    copy: "Vectant brings every VS Code extension your workflow depends on into the same governed extension host path.",
+    copy: "Vectant keeps critical editor extension paths inside the same governed workspace and proof boundary.",
   },
   {
     tag: "LIVE",
@@ -302,8 +302,8 @@ const DEEP_FEATURES = [
   },
   {
     tag: "APK",
-    title: "Mobile Compile",
-    copy: "Vectant drives Flutter-first Android flows: detect, build APK, install, launch, capture logs, record video, and drive input channels.",
+    title: "Mobile Workflow Capture",
+    copy: "Vectant can pilot mobile-adjacent flows by capturing build output, launch state, logs, video evidence, and input channels.",
   },
   {
     tag: "REPAIR",
@@ -313,7 +313,7 @@ const DEEP_FEATURES = [
   {
     tag: "ANALYZE",
     title: "Proactive Analysis",
-    copy: "Vectant runs static checks under 100ms, semantic checks under 500ms, and rate-limited AI analysis before the compiler wastes your loop.",
+    copy: "Vectant runs fast preflight checks, semantic inspection, and rate-limited AI analysis before expensive build loops begin.",
   },
   {
     tag: "MCP",
@@ -355,7 +355,7 @@ const FAQ = [
   },
   {
     q: "What exactly is the GPU HMR claim?",
-    a: "Bring the real compiled project, not a toy benchmark. Vectant profiles native GPU hot paths, supports CUDA/ROCm/HIP architecture, and promotes reload only when state preservation, ABI, epoch, oracle, and ledger gates pass. Current local proof is ROCm/HIP.",
+    a: "Bring the real compiled project, not a toy benchmark. Vectant promotes reload only when state preservation, ABI, epoch, oracle, and ledger gates pass. Current proof is ROCm/HIP; CUDA-oriented workflows belong in a hardware-backed pilot.",
   },
   {
     q: "Why would senior engineers trust autonomous agents here?",
@@ -367,7 +367,7 @@ const FAQ = [
   },
   {
     q: "Can humans and agents collaborate in one workspace?",
-    a: "Yes. Live collaboration is built around instant presence, workspace access controls, and Vectant sessions where independent agents can coordinate routes, claims, conflicts, and handoffs in the same shared room.",
+    a: "Yes. Live collaboration is built around shared presence, workspace access controls, and Vectant sessions where independent agents can coordinate routes, claims, conflicts, and handoffs in the same shared room.",
   },
 ];
 
@@ -719,7 +719,7 @@ function LiveCollaborationSection() {
           <div className="collab-console-copy">
             <h2>One live room for humans, agents, permissions, and proof.</h2>
             <p>
-              Vectant collaboration is low-latency shared workspace state for software operations: permissions, presence, cursors, selections, runtime state, and agent action all share the same session.
+              Vectant collaboration keeps software operations in one shared workspace state: permissions, presence, cursors, selections, runtime state, and agent action all share the same session.
             </p>
             <p>
               Independent agents coordinate routes, claim work, negotiate conflicts, and hand off context inside the same governed runtime. Every move is scoped, leased, and replayable.
@@ -729,7 +729,7 @@ function LiveCollaborationSection() {
           <div className="collab-room" aria-label="Live collaboration room model">
             <div className="collab-room-header">
               <span>workspace_acl.yaml</span>
-              <strong>4 humans / 6 agents / live</strong>
+              <strong>humans / agents / governed</strong>
             </div>
             <div className="collab-room-grid">
               {COLLABORATION_WEDGES.map(({ title, copy }) => (

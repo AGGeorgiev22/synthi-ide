@@ -42,9 +42,9 @@ const satoshi = localFont({
 });
 
 export const metadata = {
-  title: "Vectant - Proof-Gated Runtime for Production Agents",
+  title: "Vectant - Runtime Control Plane for Production Agents",
   description:
-    "Vectant is the cloud runtime where trusted agents run real software, preserve state, prove native GPU hot paths, earn authority, collaborate live, and ship replayable evidence.",
+    "Vectant is the cloud development environment where agents work under scoped authority, live runtime state, and reviewable proof.",
   keywords: [
     "cloud IDE",
     "AI development environment",
@@ -52,12 +52,11 @@ export const metadata = {
     "bring your own agent",
     "agent infrastructure",
     "Vectant proof",
-    "Causal Twin",
-    "counterfactual telemetry",
     "Vectant licenses",
-    "allostatic evidence",
+    "replay ledger",
+    "line provenance",
     "GPU HMR",
-    "minimum authority",
+    "scoped authority",
     "MCP",
     "developer tools",
     "Vectant",
@@ -65,9 +64,9 @@ export const metadata = {
   authors: [{ name: "Vectant" }],
   metadataBase: new URL("https://vectant.dev"),
   openGraph: {
-    title: "Vectant - Proof-Gated Runtime for Production Agents",
+    title: "Vectant - Runtime Control Plane for Production Agents",
     description:
-      "The cloud runtime where autonomous agents see the app, run the build, preserve state, prove GPU hot paths, earn scoped authority, and ship replayable evidence.",
+      "The cloud development environment where autonomous agents see the app, run the build, preserve state, earn scoped authority, and ship reviewable evidence.",
     url: "https://vectant.dev",
     siteName: "Vectant",
     type: "website",
@@ -75,9 +74,9 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Vectant - Proof-Gated Runtime for Production Agents",
+    title: "Vectant - Runtime Control Plane for Production Agents",
     description:
-      "The cloud runtime where agents run, reload, preserve state, prove, remember, and earn authority.",
+      "The cloud runtime where production agents run with scoped authority, live state, and proof a reviewer can inspect.",
   },
   icons: {
     icon: "/Vectant-logo-white.svg",
