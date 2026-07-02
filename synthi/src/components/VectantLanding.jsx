@@ -494,7 +494,7 @@ function Hero() {
         <HeroProductFloat />
       </div>
 
-      <div className="mx-auto max-w-[1540px] px-4 pb-16 sm:px-6 lg:px-8">
+      <div className="hero-proof-strip-shell mx-auto max-w-[1540px] px-4 pb-16 sm:px-6 lg:px-8">
         <div className="hero-proof-strip" data-reveal>
           {[
             ["Vectant clearance", "MutationLeases, no-fly zones, landing inspection"],

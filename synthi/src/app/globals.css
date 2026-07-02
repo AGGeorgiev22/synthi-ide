@@ -2524,6 +2524,12 @@ html.light .hero-product-card {
   width: min(285px, 34%);
 }
 
+.hero-proof-strip-shell {
+  position: relative;
+  z-index: 4;
+  margin-top: clamp(180px, 28dvh, 360px);
+}
+
 .hero-proof-strip {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -5092,6 +5098,10 @@ html.light .agent-onramp-panel {
     right: auto;
     bottom: auto;
     border-radius: 16px;
+  }
+
+  .hero-proof-strip-shell {
+    margin-top: clamp(40px, 8dvh, 84px);
   }
 
   .hero-proof-strip,
