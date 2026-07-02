@@ -904,14 +904,12 @@ function FinalCta() {
     <section id="waitlist" className="runtime-campaign surface-dark scroll-mt-16 bg-[#070708] px-4 py-24 text-white md:py-36">
       <div className="final-cta mx-auto max-w-[1160px]" data-reveal>
         <div className="final-cta-icon">
-          <Image
+          <img
             src="/Vectant_v3_nobg.png"
             alt="Vectant"
-            width={1043}
-            height={239}
+            width="1043"
+            height="239"
             loading="eager"
-            unoptimized
-            sizes="(min-width: 768px) 340px, 240px"
             className="final-cta-logo h-auto w-[240px] sm:w-[300px] md:w-[340px]"
           />
         </div>
