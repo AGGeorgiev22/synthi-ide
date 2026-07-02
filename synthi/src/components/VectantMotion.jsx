@@ -1,60 +1,39 @@
 "use client";
 
-import { useEffect } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import Lenis from "lenis";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 export function VectantMotion() {
-  useEffect(() => {
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
-    if (reduce || !finePointer) return undefined;
-
-    const lenis = new Lenis({
-      duration: 0.78,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      smoothWheel: true,
-      wheelMultiplier: 1.12,
-      touchMultiplier: 1.02,
-    });
-
-    lenis.on("scroll", ScrollTrigger.update);
-
-    let frame = 0;
-    const raf = (time) => {
-      lenis.raf(time);
-      frame = requestAnimationFrame(raf);
-    };
-    frame = requestAnimationFrame(raf);
-
-    return () => {
-      cancelAnimationFrame(frame);
-      lenis.destroy();
-    };
-  }, []);
-
   useGSAP(() => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduce) return undefined;
 
     const ctx = gsap.context(() => {
-      gsap.utils.toArray("[data-reveal]").forEach((node) => {
+      const revealNodes = new Set([
+        ...gsap.utils.toArray("[data-reveal]"),
+        ...gsap.utils.toArray(
+          ".proof-frame, .runtime-pillar, .deep-feature, .trust-system, .surface-list article, .faq-card, .comparison-ledger-row, .proof-gallery-card, .gpu-compare-shell, .compiled-workflow-grid article",
+        ),
+      ]);
+
+      revealNodes.forEach((node) => {
         gsap.fromTo(
           node,
-          { y: 14, opacity: 0.9 },
+          { y: 22, opacity: 0.72, scale: 0.992 },
           {
             y: 0,
             opacity: 1,
-            ease: "none",
+            scale: 1,
+            duration: 0.72,
+            ease: "power3.out",
+            clearProps: "transform,opacity",
             scrollTrigger: {
               trigger: node,
-              start: "top 98%",
-              end: "top 72%",
-              scrub: 0.45,
+              start: "top 90%",
+              once: true,
             },
           }
         );
@@ -104,91 +83,6 @@ export function VectantMotion() {
         });
       });
 
-      gsap.utils.toArray(".proof-frame, .runtime-pillar, .deep-feature, .trust-system, .surface-list article, .faq-card, .comparison-ledger-row").forEach((node) => {
-        gsap.fromTo(
-          node,
-          { y: 14, opacity: 0.9 },
-          {
-            y: 0,
-            opacity: 1,
-            ease: "none",
-            scrollTrigger: {
-              trigger: node,
-              start: "top 98%",
-              end: "top 72%",
-              scrub: 0.45,
-            },
-          }
-        );
-      });
-
-      gsap.utils.toArray(".proof-frame").forEach((node) => {
-        gsap.fromTo(
-          node,
-          { scale: 0.985 },
-          {
-            scale: 1,
-            ease: "none",
-            immediateRender: false,
-            scrollTrigger: {
-              trigger: node,
-              start: "top 90%",
-              end: "bottom 40%",
-              scrub: 0.9,
-            },
-          }
-        );
-      });
-
-      gsap.utils.toArray(".proof-gallery-card").forEach((node, index) => {
-        gsap.fromTo(
-          node,
-          { y: 14 + (index % 3) * 4, opacity: 0.9 },
-          {
-            y: 0,
-            opacity: 1,
-            ease: "none",
-            scrollTrigger: {
-              trigger: node,
-              start: "top 98%",
-              end: "top 72%",
-              scrub: 0.45,
-            },
-          }
-        );
-      });
-
-      gsap.utils.toArray(".gpu-compare-shell, .compiled-workflow-grid article").forEach((node) => {
-        gsap.fromTo(
-          node,
-          { y: 16, opacity: 0.9 },
-          {
-            y: 0,
-            opacity: 1,
-            ease: "none",
-            scrollTrigger: {
-              trigger: node,
-              start: "top 98%",
-              end: "top 72%",
-              scrub: 0.45,
-            },
-          }
-        );
-      });
-
-      const onramp = document.querySelector(".agent-onramp");
-      const onrampGrid = document.querySelector(".agent-onramp-grid");
-      const canPinOnramp = window.matchMedia("(min-width: 1181px)").matches;
-      if (canPinOnramp && onramp && onrampGrid) {
-        ScrollTrigger.create({
-          trigger: onramp,
-          start: "top 92px",
-          end: "+=165%",
-          pin: onrampGrid,
-          pinSpacing: true,
-          anticipatePin: 1,
-        });
-      }
     });
 
     return () => ctx.revert();

@@ -85,6 +85,7 @@ function ChromaStep({ step, index, activeIndex, reduce }) {
 export function AgentOnRamp() {
   const ref = useRef(null);
   const stageRef = useRef(null);
+  const activeIndexRef = useRef(0);
   const [activeIndex, setActiveIndex] = useState(0);
   const [borderMetrics, setBorderMetrics] = useState(DEFAULT_BORDER_METRICS);
   const reduce = useReducedMotion();
@@ -92,7 +93,6 @@ export function AgentOnRamp() {
     target: ref,
     offset: ["start start", "end end"],
   });
-  const y = useTransform(scrollYProgress, [0, 1], [24, -20]);
   const stepStops = STEPS.map((_, index) => index / (STEPS.length - 1));
   const borderY = useTransform(
     scrollYProgress,
@@ -147,7 +147,10 @@ export function AgentOnRamp() {
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
     if (reduce) return;
     const nextIndex = Math.min(STEPS.length - 1, Math.max(0, Math.round(latest * (STEPS.length - 1))));
-    setActiveIndex((current) => (current === nextIndex ? current : nextIndex));
+    if (nextIndex !== activeIndexRef.current) {
+      activeIndexRef.current = nextIndex;
+      setActiveIndex(nextIndex);
+    }
   });
 
   return (
@@ -167,7 +170,7 @@ export function AgentOnRamp() {
             </p>
           </motion.div>
 
-          <motion.div className={`agent-onramp-panel ${reduce ? "agent-onramp-reduced" : ""}`} style={reduce ? undefined : { y }}>
+          <motion.div className={`agent-onramp-panel ${reduce ? "agent-onramp-reduced" : ""}`}>
             <div className="agent-onramp-panel-top">
               <span>agent runtime authorization path</span>
               <strong>live authority rail</strong>
