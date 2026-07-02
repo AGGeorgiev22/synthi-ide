@@ -7,7 +7,7 @@ const STEPS = [
   {
     verb: "Attach",
     state: "agent attached",
-    title: "Attach any coding agent to the runtime.",
+    title: "Keep your agents. Govern their authority.",
     copy: "CLI agents, MCP tools, editor paths, repo, browser, and terminal share one autonomous runtime environment.",
     signal: "repo, tools, browser, terminal",
     accent: "#ff3dbe",
@@ -161,7 +161,7 @@ export function AgentOnRamp() {
             viewport={{ once: true, amount: 0.34 }}
             transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
           >
-            <h2>Attach any coding agent to governed runtime authority.</h2>
+            <h2>Keep your agents. Govern their authority.</h2>
             <p>
               Vectant wraps agents, tools, repo state, browser state, terminal, and proof policy inside one autonomous runtime environment.
             </p>
