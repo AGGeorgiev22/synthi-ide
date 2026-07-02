@@ -2402,43 +2402,40 @@ html.light .spotlight {
   right: var(--onramp-pad);
   left: calc(var(--onramp-pad) + 36px);
   z-index: 4;
-  --onramp-border-width: 2px;
   border-radius: 12px;
   background: transparent;
-  box-shadow:
-    0 0 0 1px rgba(255, 247, 239, 0.04),
-    0 0 22px rgba(255, 61, 190, 0.12);
   opacity: 0.98;
   pointer-events: none;
   will-change: transform;
 }
 
+.agent-onramp-scroll-border::before,
 .agent-onramp-scroll-border::after {
   content: "";
   position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  padding: var(--onramp-border-width);
-  background: linear-gradient(90deg, #ff3dbe 0%, #ff9f43 24%, #ffd166 42%, #22d3ee 66%, #8b7bff 100%);
-  -webkit-mask:
-    linear-gradient(#000 0 0) content-box,
-    linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
+  top: -2px;
+  bottom: -2px;
+  width: 32px;
+  border-radius: 13px;
+  opacity: 0.96;
+  filter: drop-shadow(0 0 16px rgba(255, 61, 190, 0.18)) drop-shadow(0 0 18px rgba(34, 211, 238, 0.14));
   pointer-events: none;
 }
 
 .agent-onramp-scroll-border::before {
-  content: "";
-  position: absolute;
-  inset: -10px;
-  z-index: -1;
-  border-radius: 16px;
+  left: -16px;
   background:
-    radial-gradient(180px circle at 12% 12%, rgba(255, 61, 190, 0.15), transparent 62%),
-    radial-gradient(180px circle at 92% 88%, rgba(34, 211, 238, 0.12), transparent 64%);
-  opacity: 0.7;
-  pointer-events: none;
+    linear-gradient(180deg, #ff4bd8 0%, #ff6a3d 46%, #5ee7ff 100%) left / 2px 100% no-repeat,
+    linear-gradient(90deg, #ff4bd8, rgba(255, 106, 61, 0.86)) left top / 28px 2px no-repeat,
+    linear-gradient(90deg, #5ee7ff, rgba(139, 123, 255, 0.88)) left bottom / 28px 2px no-repeat;
+}
+
+.agent-onramp-scroll-border::after {
+  right: -16px;
+  background:
+    linear-gradient(180deg, #ff6a3d 0%, #5ee7ff 50%, #8b7bff 100%) right / 2px 100% no-repeat,
+    linear-gradient(90deg, rgba(255, 106, 61, 0.86), #8b7bff) right top / 28px 2px no-repeat,
+    linear-gradient(90deg, rgba(94, 231, 255, 0.9), #8b7bff) right bottom / 28px 2px no-repeat;
 }
 
 .agent-onramp-chroma-stage::before {
