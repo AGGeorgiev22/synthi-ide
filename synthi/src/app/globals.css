@@ -1418,15 +1418,17 @@ html.light .spotlight {
 }
 
 .hero-product-float {
-  min-height: clamp(660px, 118dvh, 980px);
+  min-height: clamp(620px, 86dvh, 780px);
   perspective: 1800px;
   transform-style: preserve-3d;
 }
 
 .hero-product-sticky {
   position: sticky;
-  top: 76px;
-  min-height: 620px;
+  top: clamp(76px, 9vh, 96px);
+  display: grid;
+  min-height: min(620px, calc(100dvh - 132px));
+  align-items: center;
   perspective: 1800px;
   transform-style: preserve-3d;
   will-change: transform;
@@ -1454,13 +1456,15 @@ html.light .spotlight {
 .hero-product-main {
   position: relative;
   z-index: 5;
+  width: min(100%, 780px);
+  margin-inline: auto;
   transform-origin: 52% 54%;
   transform-style: preserve-3d;
   will-change: transform;
 }
 
 .hero-product-shell {
-  margin-top: 20px;
+  margin-top: 0;
   backface-visibility: hidden;
   box-shadow:
     0 58px 150px rgba(0, 0, 0, 0.58),
@@ -1629,10 +1633,10 @@ html.light .spotlight {
 
 .hero-code-collab-card {
   position: absolute;
-  right: clamp(-18px, -1.2vw, -6px);
-  bottom: 18px;
+  right: 1%;
+  bottom: 5%;
   z-index: 9;
-  width: min(500px, 52%);
+  width: min(430px, 46%);
   overflow: hidden;
   border: 1px solid rgba(255, 247, 239, 0.16);
   border-radius: 20px;
@@ -1940,15 +1944,15 @@ html.light .spotlight {
 }
 
 .hero-product-card-observe {
-  top: -10px;
-  right: -4px;
-  width: min(320px, 34%);
+  top: 2%;
+  right: 1%;
+  width: min(286px, 30%);
 }
 
 .hero-product-card-gpu {
-  left: -12px;
-  bottom: 38px;
-  width: min(270px, 30%);
+  left: 1%;
+  bottom: 8%;
+  width: min(240px, 28%);
 }
 
 .hero-floating-proof {
@@ -4271,6 +4275,7 @@ html.light .spotlight {
     align-self: start;
     position: relative;
     top: auto;
+    min-height: clamp(620px, 76dvh, 760px);
   }
 
   .hero-title {
