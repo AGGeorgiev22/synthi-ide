@@ -4,7 +4,8 @@ import { useEffect, useRef } from "react";
 import { useReducedMotion } from "framer-motion";
 
 const TARGET_MS = 90;
-const DURATION_MS = 920;
+const DURATION_MS = 1280;
+const REPLAY_DELAY_MS = 1800;
 
 function easeOutCubic(progress) {
   return 1 - Math.pow(1 - progress, 3);
@@ -14,7 +15,8 @@ export function GpuLatencyCounter() {
   const ref = useRef(null);
   const valueRef = useRef(null);
   const frameRef = useRef(0);
-  const hasRunRef = useRef(false);
+  const timeoutRef = useRef(0);
+  const visibleRef = useRef(false);
   const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
@@ -35,14 +37,16 @@ export function GpuLatencyCounter() {
       return undefined;
     }
 
-    const runCounter = () => {
-      if (hasRunRef.current) {
-        return;
-      }
+    const stopCounter = () => {
+      cancelAnimationFrame(frameRef.current);
+      clearTimeout(timeoutRef.current);
+    };
 
-      hasRunRef.current = true;
+    const runCounter = () => {
+      stopCounter();
       const start = performance.now();
       let lastValue = -1;
+      setCounter(0);
 
       const tick = (now) => {
         const elapsed = Math.min(1, (now - start) / DURATION_MS);
@@ -57,6 +61,9 @@ export function GpuLatencyCounter() {
           frameRef.current = requestAnimationFrame(tick);
         } else {
           setCounter(TARGET_MS);
+          if (visibleRef.current) {
+            timeoutRef.current = window.setTimeout(runCounter, REPLAY_DELAY_MS);
+          }
         }
       };
 
@@ -66,8 +73,11 @@ export function GpuLatencyCounter() {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
+          visibleRef.current = true;
           runCounter();
-          observer.disconnect();
+        } else {
+          visibleRef.current = false;
+          stopCounter();
         }
       },
       { rootMargin: "0px 0px -12%", threshold: 0.16 },
@@ -77,7 +87,7 @@ export function GpuLatencyCounter() {
 
     return () => {
       observer.disconnect();
-      cancelAnimationFrame(frameRef.current);
+      stopCounter();
     };
   }, [prefersReducedMotion]);
 
