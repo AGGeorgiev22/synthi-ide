@@ -16,11 +16,11 @@ const BROWSER_SHOT = {
 };
 
 const LICENSE_SHOT = {
-  title: "Vectant checkride",
-  detail: "Vectant workflow UI proving selectors, protected paths, proof gates, and repeatable agent authority before a license expands.",
-  src: "/product-proof/codesite-full-workflow-ui.png",
+  title: "Vectant workflow checkride",
+  detail: "Workflow steps, runtime status, replay validation, export, and manifest actions stay inside the Vectant control plane.",
+  src: "/product-proof/investor-demo-workflows.png",
   width: 1440,
-  height: 1100,
+  height: 1000,
 };
 
 const RUNTIME_WORKFLOW_SHOT = {
@@ -32,60 +32,58 @@ const RUNTIME_WORKFLOW_SHOT = {
 };
 
 const COUNTERFACTUAL_SHOT = {
-  title: "Counterfactual memory",
-  detail: "Replayable memory traces show what changed, what would have happened, and why a landing did or did not earn authority.",
-  src: "/product-proof/codesite-counterfactual-memory-proof.png",
-  width: 1280,
-  height: 2296,
+  title: "Export handoff",
+  detail: "Compile, validate, export, manifest, and publish actions stay attached to the same live workspace state.",
+  src: "/product-proof/investor-demo-export-handoff.png",
+  width: 1440,
+  height: 1000,
 };
 
 const PROOF_GALLERY = [
   {
-    title: "Vectant radar map",
-    detail: "A real Vectant airspace map showing protected paths, collision zones, leases, and runtime clearance in one proof surface.",
-    src: "/codesite-proof/codesite-radar-desktop.png",
-    width: 1440,
-    height: 1973,
-    span: "proof-large proof-tall",
-  },
-  {
-    title: "Vectant black box",
-    detail: "A captured proof packet for agent landings, with replayable state and audit context instead of a loose chat transcript.",
-    src: "/codesite-proof/codesite-black-box-desktop.png",
-    width: 1440,
-    height: 1313,
-  },
-  {
-    title: "Vectant workflow proof",
-    detail: "The full landing workflow: task scope, runtime state, collisions, proof lanes, and handoff evidence in one product capture.",
-    src: "/product-proof/senior-real-codesite-workflow-proof.png",
-    width: 1440,
-    height: 1708,
+    title: "Hosted browser workflow",
+    detail: "The agent sees the running app, browser state, workflow steps, terminal context, and replay surface together.",
+    src: "/product-proof/browser-workflow-observe-ui.png",
+    width: 1500,
+    height: 1000,
     span: "proof-large",
   },
   {
-    title: "Vectant full workflow proof",
-    detail: "Schema clearance, denied writes, line provenance, browser capture, proof bundle, and commit trailers in one landing packet.",
-    src: "/product-proof/codesite-full-workflow-proof.png",
-    width: 1280,
-    height: 1567,
+    title: "Workflow authority rail",
+    detail: "Runtime, observe, trace, contract, replay, source, validate, and export gates stay visible before authority expands.",
+    src: "/product-proof/investor-demo-workflows.png",
+    width: 1440,
+    height: 1000,
+  },
+  {
+    title: "Export handoff",
+    detail: "Compiled contracts, replay validation, manifest generation, export, and publish actions share one product surface.",
+    src: "/product-proof/investor-demo-export-handoff.png",
+    width: 1440,
+    height: 1000,
     span: "proof-large",
   },
   {
-    title: "Line provenance",
-    detail: "Vectant traces the landing back to source-aware evidence so reviewers can inspect what changed and why.",
-    src: "/codesite-proof/codesite-line-provenance-desktop.png",
-    width: 1440,
-    height: 1100,
+    title: "Loaded workspace state",
+    detail: "Editor, terminal, GPU status, command surface, and runtime controls stay in the same cloud workspace.",
+    src: "/product-proof/browser-workspace-loaded.png",
+    width: 1500,
+    height: 1000,
+  },
+  {
+    title: "GPU HMR visual proof",
+    detail: "Before, diff, and after evidence make compiled hot-swap output inspectable while the runtime stays alive.",
+    src: "/product-proof/gpu-hmr-diff.png",
+    width: 800,
+    height: 600,
     span: "proof-wide",
   },
   {
-    title: "Counterfactual memory",
-    detail: "Near-misses become retained product evidence, not invisible failed branches the next agent has to rediscover.",
-    src: "/product-proof/codesite-counterfactual-memory-proof.png",
-    width: 1280,
-    height: 2296,
-    span: "proof-tall",
+    title: "Workspace runtime loop",
+    detail: "Vectant keeps repo, terminal, editor, runtime controls, and status proof in one operating surface.",
+    src: "/product-proof/investor-demo-workspace.png",
+    width: 1440,
+    height: 1000,
   },
 ];
 
@@ -213,11 +211,11 @@ const RUNTIME_PROOF_PATH = [
     copy: "Protected paths, collision zones, no-fly zones, and evidence gates decide whether a mutation can continue.",
     signal: "risk gates",
     shot: {
-      title: "Clearance surface",
-      detail: "Protected paths, risk classes, leases, and inspection lanes stay inspectable.",
-      src: "/product-proof/codesite-full-workflow-ui.png",
+      title: "Contract rail",
+      detail: "Runtime, trace, contract, replay, source, and validation gates stay visible before authority expands.",
+      src: "/product-proof/investor-demo-workflows.png",
       width: 1440,
-      height: 1100,
+      height: 1000,
     },
   },
   {
@@ -226,11 +224,11 @@ const RUNTIME_PROOF_PATH = [
     copy: "Replay, line provenance, output proof, and commit context travel with the change before production-bound work merges.",
     signal: "proof packet",
     shot: {
-      title: "Replay ledger",
-      detail: "Line provenance and black-box replay turn agent output into review material.",
-      src: "/codesite-proof/codesite-line-provenance-desktop.png",
+      title: "Export handoff",
+      detail: "Compile, validate, manifest, export, and publish actions leave the workspace with attached proof state.",
+      src: "/product-proof/investor-demo-export-handoff.png",
       width: 1440,
-      height: 1100,
+      height: 1000,
     },
   },
 ];
