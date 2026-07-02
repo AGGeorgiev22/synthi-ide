@@ -452,7 +452,7 @@ function Hero() {
       <div className="hero-main-grid mx-auto grid max-w-[1540px] gap-12 px-4 pb-16 sm:px-6 lg:grid-cols-[0.92fr_1.08fr] lg:items-center lg:px-8 lg:pb-24">
         <div className="max-w-[880px]" data-reveal>
           <p className="hero-kicker">
-            <span className="hero-kicker-copy">Governed autonomy for production code</span>
+            <span className="hero-kicker-copy">Cloud runtime control plane</span>
             <svg
               className="hero-kicker-line"
               viewBox="0 0 620 18"
@@ -476,10 +476,10 @@ function Hero() {
             </svg>
           </p>
           <h1 className="hero-title">
-            The world's first fully autonomous runtime for production agents.
+            Autonomous coding needs a governed runtime.
           </h1>
           <p className="hero-copy">
-            Run existing coding agents inside a live cloud workspace where authority is leased, runtime state is preserved, and every landing ships with proof.
+            Vectant is a cloud development environment where existing agents work under scoped authority, live runtime state, and reviewable proof.
           </p>
           <div className="mt-8 max-w-2xl">
             <WaitlistForm
