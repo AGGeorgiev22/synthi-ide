@@ -536,11 +536,12 @@ function ComparisonSection() {
         </div>
 
         <div id="trust-reveal" className="belief-statement" data-reveal>
-          <p className="scrub-copy">
+          <p className="scrub-copy" aria-label="Agents do not merge. They earn authority. Every landing carries proof.">
             {[
-              "Code",
-              "moves",
-              "fast.",
+              "Agents",
+              "do",
+              "not",
+              "merge.",
               "They",
               "earn",
               "authority.",
@@ -554,6 +555,24 @@ function ComparisonSection() {
               </span>
             ))}
           </p>
+          <div className="belief-proof-rail" aria-label="Vectant authority proof sequence">
+            {[
+              ["Lease", "scope before write"],
+              ["Observe", "live runtime state"],
+              ["Constrain", "protected paths checked"],
+              ["Prove", "replay ledger attached"],
+            ].map(([label, detail], index) => (
+              <span key={label} style={{ "--rail-index": index }}>
+                <b>{label}</b>
+                <em>{detail}</em>
+              </span>
+            ))}
+          </div>
+          <div className="belief-proof-field" aria-hidden="true">
+            <i />
+            <i />
+            <i />
+          </div>
         </div>
       </div>
     </section>

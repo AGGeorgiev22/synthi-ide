@@ -3359,13 +3359,55 @@ html.light .agent-onramp-panel {
 }
 
 .belief-statement {
-  margin-top: 92px;
-  max-width: 1260px;
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  min-height: clamp(520px, 68dvh, 720px);
+  margin-top: clamp(86px, 13dvh, 148px);
+  max-width: 1320px;
   margin-inline: auto;
+  overflow: hidden;
+  border-radius: 28px;
+  padding: clamp(54px, 8vw, 108px) clamp(18px, 4vw, 64px);
   text-align: center;
 }
 
+.belief-statement::before {
+  content: "";
+  position: absolute;
+  inset: 8% 0 4%;
+  z-index: -2;
+  border: 1px solid rgba(255, 247, 239, 0.07);
+  border-radius: inherit;
+  background:
+    radial-gradient(46% 50% at 18% 22%, rgba(255, 98, 173, 0.12), transparent 72%),
+    radial-gradient(44% 54% at 82% 58%, rgba(81, 215, 233, 0.1), transparent 74%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.038), rgba(255, 255, 255, 0.012));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.055),
+    0 46px 120px rgba(0, 0, 0, 0.28);
+}
+
+.belief-statement::after {
+  content: "";
+  position: absolute;
+  top: 47%;
+  left: 50%;
+  z-index: -1;
+  width: min(980px, 92vw);
+  height: min(360px, 34vw);
+  border: 1px solid rgba(255, 247, 239, 0.12);
+  border-radius: 9999px;
+  opacity: 0.58;
+  transform: translate3d(-50%, -50%, 0) rotate(-5deg);
+}
+
 .scrub-copy {
+  position: relative;
+  z-index: 2;
+  max-width: 1160px;
   font-family: var(--font-satoshi), ui-sans-serif, system-ui, sans-serif;
   font-size: 36px;
   font-weight: 780;
@@ -3373,6 +3415,191 @@ html.light .agent-onramp-panel {
   letter-spacing: 0;
   color: var(--campaign-ink);
   text-wrap: balance;
+}
+
+.belief-proof-rail {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  width: min(980px, 100%);
+  margin-top: clamp(28px, 5vw, 54px);
+  overflow: hidden;
+  border: 1px solid rgba(255, 247, 239, 0.12);
+  border-radius: 14px;
+  background:
+    linear-gradient(90deg, rgba(255, 106, 61, 0.06), transparent 42%, rgba(81, 215, 233, 0.055)),
+    rgba(7, 7, 8, 0.78);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.065),
+    0 26px 80px rgba(0, 0, 0, 0.32);
+}
+
+.belief-proof-rail::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 22%;
+  background: linear-gradient(90deg, transparent, rgba(255, 247, 239, 0.08), transparent);
+  opacity: 0.86;
+  transform: translate3d(-105%, 0, 0);
+  pointer-events: none;
+}
+
+.belief-proof-rail span {
+  position: relative;
+  display: grid;
+  gap: 6px;
+  min-height: 92px;
+  align-content: center;
+  border-right: 1px solid rgba(255, 247, 239, 0.095);
+  padding: 18px 20px;
+  text-align: left;
+}
+
+.belief-proof-rail span:last-child {
+  border-right: 0;
+}
+
+.belief-proof-rail span::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 20px;
+  width: 42px;
+  height: 2px;
+  background: linear-gradient(90deg, #ff62ad, #ff8a61, #51d7e9);
+  opacity: 0.78;
+  transform: scaleX(0.42);
+  transform-origin: left center;
+}
+
+.belief-proof-rail b {
+  font-family: var(--font-satoshi), ui-sans-serif, system-ui, sans-serif;
+  font-size: 18px;
+  font-weight: 760;
+  line-height: 1;
+  color: rgba(255, 247, 239, 0.9);
+}
+
+.belief-proof-rail em {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 650;
+  line-height: 1.45;
+  color: rgba(255, 247, 239, 0.54);
+}
+
+.belief-proof-field {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.belief-proof-field i {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(760px, 72vw);
+  height: min(260px, 28vw);
+  border: 1px solid rgba(81, 215, 233, 0.1);
+  border-radius: 9999px;
+  opacity: 0.34;
+  transform: translate3d(-50%, -50%, 0) rotate(var(--belief-ring-rotate, 0deg));
+}
+
+.belief-proof-field i:nth-child(2) {
+  --belief-ring-rotate: 10deg;
+  width: min(920px, 88vw);
+  height: min(320px, 34vw);
+  border-color: rgba(255, 98, 173, 0.1);
+}
+
+.belief-proof-field i:nth-child(3) {
+  --belief-ring-rotate: -13deg;
+  width: min(620px, 62vw);
+  height: min(190px, 22vw);
+  border-color: rgba(255, 138, 97, 0.12);
+}
+
+html.light .belief-statement::before {
+  border-color: rgba(18, 21, 27, 0.08);
+  background:
+    radial-gradient(46% 50% at 18% 22%, rgba(216, 75, 42, 0.1), transparent 72%),
+    radial-gradient(44% 54% at 82% 58%, rgba(0, 119, 168, 0.08), transparent 74%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.74), rgba(246, 248, 251, 0.52));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.82),
+    0 34px 90px rgba(18, 21, 27, 0.08);
+}
+
+html.light .belief-statement::after {
+  border-color: rgba(18, 21, 27, 0.1);
+}
+
+html.light .belief-proof-rail {
+  border-color: rgba(18, 21, 27, 0.12);
+  background:
+    linear-gradient(90deg, rgba(216, 75, 42, 0.07), transparent 42%, rgba(0, 119, 168, 0.055)),
+    rgba(255, 255, 255, 0.78);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 24px 70px rgba(18, 21, 27, 0.08);
+}
+
+html.light .belief-proof-rail span {
+  border-right-color: rgba(18, 21, 27, 0.1);
+}
+
+html.light .belief-proof-rail b {
+  color: rgba(18, 21, 27, 0.84);
+}
+
+html.light .belief-proof-rail em {
+  color: rgba(18, 21, 27, 0.58);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .belief-proof-rail::before {
+    animation: belief-proof-scan 4.8s cubic-bezier(0.76, 0, 0.24, 1) infinite;
+  }
+
+  .belief-proof-field i {
+    animation: belief-proof-drift 9s ease-in-out infinite alternate;
+  }
+
+  .belief-proof-field i:nth-child(2) {
+    animation-duration: 11s;
+  }
+
+  .belief-proof-field i:nth-child(3) {
+    animation-duration: 7.5s;
+  }
+}
+
+@keyframes belief-proof-scan {
+  0%, 18% {
+    transform: translate3d(-105%, 0, 0);
+  }
+
+  72%, 100% {
+    transform: translate3d(455%, 0, 0);
+  }
+}
+
+@keyframes belief-proof-drift {
+  from {
+    opacity: 0.22;
+    transform: translate3d(-50%, -50%, 0) rotate(var(--belief-ring-rotate, 0deg)) scale(0.985);
+  }
+
+  to {
+    opacity: 0.42;
+    transform: translate3d(-50%, -50%, 0) rotate(calc(var(--belief-ring-rotate, 0deg) + 3deg)) scale(1.015);
+  }
 }
 
 .runtime-proof-path {
@@ -5370,6 +5597,31 @@ html.light .agent-onramp-panel {
 
   .comparison-ledger-row {
     gap: 10px;
+  }
+
+  .belief-statement {
+    min-height: auto;
+    margin-top: 64px;
+    padding-block: 58px;
+    border-radius: 18px;
+  }
+
+  .belief-proof-rail {
+    grid-template-columns: 1fr;
+  }
+
+  .belief-proof-rail span {
+    min-height: 76px;
+    border-right: 0;
+    border-bottom: 1px solid var(--campaign-line);
+  }
+
+  .belief-proof-rail span:last-child {
+    border-bottom: 0;
+  }
+
+  .belief-proof-field {
+    display: none;
   }
 
   .runtime-path-copy h2 {
