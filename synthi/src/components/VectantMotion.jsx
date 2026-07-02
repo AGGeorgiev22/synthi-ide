@@ -53,29 +53,31 @@ export function VectantMotion() {
       );
 
       gsap.utils.toArray(".hero-kicker-line-path").forEach((path) => {
+        const lineLength = path.getTotalLength();
+
         gsap.set(path, {
-          strokeDasharray: 1.04,
-          strokeDashoffset: 1.04,
-          opacity: 0.24,
+          strokeDasharray: lineLength,
+          strokeDashoffset: lineLength,
+          opacity: 0.2,
         });
 
         gsap
-          .timeline({ repeat: -1, repeatDelay: 0.28 })
+          .timeline({ repeat: -1, repeatDelay: 0.04 })
           .to(path, {
             strokeDashoffset: 0,
             opacity: 0.96,
-            duration: 1.18,
+            duration: 1.25,
             ease: "power3.out",
           })
           .to(path, {
-            opacity: 1,
-            duration: 1.55,
+            opacity: 0.98,
+            duration: 0.34,
             ease: "sine.inOut",
           })
           .to(path, {
-            strokeDashoffset: -1.04,
-            opacity: 0.18,
-            duration: 0.92,
+            strokeDashoffset: -lineLength,
+            opacity: 0.16,
+            duration: 1.1,
             ease: "power3.in",
           });
       });

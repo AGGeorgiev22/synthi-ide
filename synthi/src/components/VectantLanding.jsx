@@ -471,7 +471,6 @@ function Hero() {
               <path
                 className="hero-kicker-line-path"
                 d="M4 9.4 C 82 5.2 134 5.4 208 8.8 C 282 12.2 340 12.1 416 8.3 C 494 4.5 552 4.8 616 7.8"
-                pathLength="1"
               />
             </svg>
           </p>
