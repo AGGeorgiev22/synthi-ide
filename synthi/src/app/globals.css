@@ -1418,7 +1418,7 @@ html.light .spotlight {
 }
 
 .hero-product-float {
-  min-height: clamp(620px, 86dvh, 780px);
+  min-height: clamp(880px, 118dvh, 1180px);
   perspective: 1800px;
   transform-style: preserve-3d;
 }
@@ -4280,7 +4280,7 @@ html.light .spotlight {
     align-self: start;
     position: relative;
     top: auto;
-    min-height: clamp(620px, 76dvh, 760px);
+    min-height: clamp(980px, 118dvh, 1180px);
   }
 
   .hero-title {
