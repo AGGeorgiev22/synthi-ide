@@ -2551,13 +2551,16 @@ html.light .agent-onramp-panel {
   pointer-events: none;
   transform: translate3d(0, 0, 0);
   will-change: transform;
+  contain: paint;
+  backface-visibility: hidden;
 }
 
 .agent-onramp-card-brackets i {
   position: absolute;
   width: 42px;
   height: 42px;
-  filter: drop-shadow(0 0 12px rgba(255, 61, 190, 0.14)) drop-shadow(0 0 14px rgba(34, 211, 238, 0.12));
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 .agent-onramp-card-brackets i:nth-child(1) {

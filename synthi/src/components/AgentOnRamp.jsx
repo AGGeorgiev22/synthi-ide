@@ -141,7 +141,7 @@ export function AgentOnRamp() {
             trigger: section,
             start: "top top",
             end: "bottom bottom",
-            scrub: 0.22,
+            scrub: true,
             invalidateOnRefresh: true,
             onRefresh: (self) => syncFrame(self.progress),
             onUpdate: (self) => setStepFromProgress(self.progress),
