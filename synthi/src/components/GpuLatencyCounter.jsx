@@ -26,9 +26,13 @@ export function GpuLatencyCounter() {
         valueNode.textContent = String(nextValue);
       }
     };
+    const setProgress = (progress) => {
+      ref.current?.style.setProperty("--gpu-counter-progress", String(progress));
+    };
 
     if (prefersReducedMotion) {
       setCounter(TARGET_MS);
+      ref.current?.style.setProperty("--gpu-counter-progress", "1");
       return undefined;
     }
 
@@ -47,10 +51,12 @@ export function GpuLatencyCounter() {
       const start = performance.now();
       let lastValue = -1;
       setCounter(0);
+      setProgress(0);
 
       const tick = (now) => {
         const elapsed = Math.max(0, Math.min(1, (now - start) / DURATION_MS));
         const nextValue = Math.round(TARGET_MS * easeOutCubic(elapsed));
+        setProgress(elapsed);
 
         if (nextValue !== lastValue) {
           lastValue = nextValue;
@@ -61,6 +67,7 @@ export function GpuLatencyCounter() {
           frameRef.current = requestAnimationFrame(tick);
         } else {
           setCounter(TARGET_MS);
+          setProgress(1);
           if (visibleRef.current) {
             timeoutRef.current = window.setTimeout(runCounter, REPLAY_DELAY_MS);
           }
@@ -69,11 +76,6 @@ export function GpuLatencyCounter() {
 
       frameRef.current = requestAnimationFrame(tick);
     };
-
-    const observedNodes = [
-      node,
-      node.closest("#gpu-hmr") || document.querySelector("#gpu-hmr"),
-    ].filter(Boolean);
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -88,7 +90,7 @@ export function GpuLatencyCounter() {
       { rootMargin: "20% 0px 20%", threshold: 0.01 },
     );
 
-    observedNodes.forEach((observedNode) => observer.observe(observedNode));
+    observer.observe(node);
 
     return () => {
       observer.disconnect();
@@ -98,7 +100,7 @@ export function GpuLatencyCounter() {
 
   return (
     <div ref={ref} className="gpu-latency-counter" aria-label="Sub 90ms GPU HMR edit to visual on scoped ROCm/HIP proof runs">
-      <span>GPU HMR edit to visual</span>
+      <span>Sub 90ms GPU HMR edit to visual</span>
       <strong>
         <span>sub</span>
         <span className="gpu-latency-value">
@@ -108,7 +110,10 @@ export function GpuLatencyCounter() {
           <span className="gpu-latency-unit">ms</span>
         </span>
       </strong>
-      <p>Scoped ROCm/HIP proof run. Re-run it on your project before treating it as an SLA.</p>
+      <span className="gpu-latency-rail" aria-hidden="true">
+        <i />
+      </span>
+      <p>Target proof loop: edit, compile, visual, even as project size grows. Re-run it on your project as the proof gate.</p>
     </div>
   );
 }
