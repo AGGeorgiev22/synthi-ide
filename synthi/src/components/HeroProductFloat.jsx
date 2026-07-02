@@ -189,14 +189,15 @@ export function HeroProductFloat() {
                   </span>
                   <span className="hero-code-row hero-code-row-blue">
                     <em>2</em>
-                    <span>
-                      let rt = Runtime::shared(cfg); <strong className="hero-code-pill hero-code-pill-blue">Mira</strong>
+                    <span className="hero-code-typing-line hero-code-typing-line-mira">
+                      <span className="hero-code-typewrite hero-code-typewrite-mira">let rt = Runtime::shared(cfg);</span>
+                      <strong className="hero-code-pill hero-code-pill-blue">Mira</strong>
                     </span>
                   </span>
                   <span className="hero-code-row hero-code-row-pink">
                     <em>3</em>
-                    <span className="hero-code-typing-line">
-                      <span className="hero-code-typewrite">rt.observe().broadcast();</span>
+                    <span className="hero-code-typing-line hero-code-typing-line-devon">
+                      <span className="hero-code-typewrite hero-code-typewrite-devon">rt.observe().broadcast();</span>
                       <strong className="hero-code-pill hero-code-pill-pink">Devon</strong>
                     </span>
                   </span>
@@ -216,7 +217,7 @@ export function HeroProductFloat() {
                 <span className="hero-code-room">2 here + agent</span>
                 <strong>
                   <i aria-hidden="true" />
-                  Devon <span>is typing in session.rs</span>
+                  Mira + Devon <span>are typing in session.rs</span>
                 </strong>
                 <em>shared runtime</em>
               </div>

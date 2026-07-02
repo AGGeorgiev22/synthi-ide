@@ -1755,7 +1755,7 @@ html.light .hero-product-card {
   right: 1%;
   bottom: 5%;
   z-index: 9;
-  width: min(430px, 46%);
+  width: min(660px, 72%);
   overflow: hidden;
   border: 1px solid rgba(255, 247, 239, 0.16);
   border-radius: 20px;
@@ -1794,9 +1794,9 @@ html.light .hero-product-card {
   align-items: center;
   justify-content: space-between;
   gap: 18px;
-  min-height: 58px;
+  min-height: 52px;
   border-bottom: 1px solid rgba(255, 247, 239, 0.1);
-  padding: 0 22px;
+  padding: 0 20px;
 }
 
 .hero-code-window-title {
@@ -1900,10 +1900,10 @@ html.light .hero-product-card {
   border: 0;
   border-radius: 0;
   background: rgba(0, 0, 0, 0.18);
-  padding: 24px 0 22px;
+  padding: 18px 0 16px;
   font-family: var(--font-mono);
-  font-size: clamp(11px, 0.8vw, 14px);
-  line-height: 1.5;
+  font-size: clamp(11px, 0.76vw, 13px);
+  line-height: 1.42;
   color: rgba(255, 247, 239, 0.76);
   white-space: normal;
 }
@@ -1915,11 +1915,11 @@ html.light .hero-product-card {
 
 .hero-code-row {
   display: grid;
-  grid-template-columns: 48px minmax(0, 1fr);
-  min-height: 38px;
+  grid-template-columns: 42px minmax(0, 1fr);
+  min-height: 32px;
   align-items: center;
   min-width: 0;
-  padding-right: 22px;
+  padding-right: 20px;
   white-space: nowrap;
 }
 
@@ -1939,17 +1939,28 @@ html.light .hero-product-card {
   display: inline-flex;
   min-width: 0;
   align-items: center;
+  gap: 10px;
 }
 
 .hero-code-typewrite {
   display: inline-block;
   width: 0;
-  max-width: 23ch;
   overflow: hidden;
-  border-right: 1px solid #ff62ad;
   color: rgba(255, 237, 247, 0.96);
   white-space: nowrap;
-  animation: hero-code-live-type 5.2s steps(23, end) infinite;
+}
+
+.hero-code-typewrite-mira {
+  max-width: 28ch;
+  border-right: 1px solid #4d8dff;
+  color: rgba(236, 244, 255, 0.98);
+  animation: hero-code-live-type-mira 5.8s steps(28, end) infinite;
+}
+
+.hero-code-typewrite-devon {
+  max-width: 23ch;
+  border-right: 1px solid #ff62ad;
+  animation: hero-code-live-type-devon 5.8s steps(23, end) infinite;
 }
 
 .hero-code-row-blue {
@@ -1982,7 +1993,7 @@ html.light .hero-product-card {
 .hero-code-pill {
   display: inline-flex;
   align-items: center;
-  margin-left: 10px;
+  margin-left: 0;
   border-radius: 9999px;
   padding: 2px 9px 3px;
   font-family: var(--font-satoshi), ui-sans-serif, system-ui, sans-serif;
@@ -1995,11 +2006,12 @@ html.light .hero-product-card {
 
 .hero-code-pill-blue {
   background: linear-gradient(135deg, #3f7dff, #70d2ff);
+  animation: hero-code-pill-mira 5.8s cubic-bezier(0.16, 1, 0.3, 1) infinite;
 }
 
 .hero-code-pill-pink {
   background: linear-gradient(135deg, #ff4ea8, #ff8ac8);
-  animation: hero-code-pill-live 5.2s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+  animation: hero-code-pill-devon 5.8s cubic-bezier(0.16, 1, 0.3, 1) infinite;
 }
 
 .hero-code-status {
@@ -2007,12 +2019,12 @@ html.light .hero-product-card {
   z-index: 1;
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
-  min-height: 62px;
+  min-height: 52px;
   align-items: center;
   gap: 14px;
   border-top: 1px solid rgba(255, 247, 239, 0.1);
   background: rgba(255, 255, 255, 0.018);
-  padding: 0 22px;
+  padding: 0 20px;
   font-family: var(--font-satoshi), ui-sans-serif, system-ui, sans-serif;
   color: rgba(255, 247, 239, 0.5);
 }
@@ -2078,7 +2090,7 @@ html.light .hero-product-card {
   right: 1%;
   bottom: 5%;
   z-index: 9;
-  width: min(430px, 46%);
+  width: min(660px, 72%);
 }
 
 .hero-floating-proof {
@@ -4602,24 +4614,47 @@ html.light .agent-onramp-panel {
   84%, 100% { width: 0; }
 }
 
-@keyframes hero-code-live-type {
+@keyframes hero-code-live-type-mira {
   0%, 10% {
     width: 0;
   }
-  42%, 72% {
-    width: 23ch;
+  34%, 72% {
+    width: 28ch;
   }
   92%, 100% {
     width: 0;
   }
 }
 
-@keyframes hero-code-pill-live {
-  0%, 36%, 94%, 100% {
+@keyframes hero-code-live-type-devon {
+  0%, 15% {
+    width: 0;
+  }
+  42%, 78% {
+    width: 23ch;
+  }
+  96%, 100% {
+    width: 0;
+  }
+}
+
+@keyframes hero-code-pill-mira {
+  0%, 26%, 94%, 100% {
     opacity: 0;
     transform: translateX(-6px) scale(0.96);
   }
-  44%, 78% {
+  34%, 78% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes hero-code-pill-devon {
+  0%, 36%, 96%, 100% {
+    opacity: 0;
+    transform: translateX(-6px) scale(0.96);
+  }
+  44%, 82% {
     opacity: 1;
     transform: translateX(0) scale(1);
   }
@@ -5294,6 +5329,7 @@ html.light .agent-onramp-panel {
     animation: none !important;
   }
 
+  .hero-code-pill-blue,
   .hero-code-pill-pink {
     opacity: 1 !important;
     transform: none !important;
