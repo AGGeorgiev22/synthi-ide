@@ -2325,15 +2325,18 @@ html.light .hero-product-card {
 
 .proof-marquee-track {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  width: max-content;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  animation: vectant-proof-marquee-loop 34s linear infinite;
+  will-change: transform;
 }
 
 .proof-marquee span {
   display: inline-flex;
+  flex: 0 0 auto;
   align-items: center;
   border-right: 1px solid var(--campaign-line);
-  border-bottom: 1px solid rgba(255, 247, 239, 0.055);
   padding: 12px 20px;
   font-family: var(--font-mono);
   font-size: 11px;
@@ -2341,8 +2344,33 @@ html.light .hero-product-card {
   white-space: nowrap;
 }
 
+html.light .proof-marquee span {
+  color: rgba(18, 21, 27, 0.62);
+}
+
 .proof-marquee span:last-child {
   border-right: 0;
+}
+
+@keyframes vectant-proof-marquee-loop {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .proof-marquee-track {
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: center;
+    animation: none;
+    transform: none;
+    will-change: auto;
+  }
 }
 
 .agent-onramp {

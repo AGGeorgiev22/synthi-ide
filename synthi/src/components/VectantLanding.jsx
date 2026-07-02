@@ -388,8 +388,10 @@ function ProofMarquee() {
   return (
     <div className="proof-marquee" aria-label="Vectant runtime capabilities">
       <div className="proof-marquee-track">
-        {items.map((item) => (
-          <span key={item}>{item}</span>
+        {[...items, ...items].map((item, index) => (
+          <span key={`${item}-${index}`} aria-hidden={index >= items.length ? "true" : undefined}>
+            {item}
+          </span>
         ))}
       </div>
     </div>
