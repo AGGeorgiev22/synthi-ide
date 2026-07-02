@@ -63,13 +63,20 @@ function ChromaStep({ step, index, activeIndex, reduce }) {
     >
       {isActive ? (
         <motion.span
+          layoutId="agent-onramp-active-brackets"
           className="agent-onramp-card-brackets"
           aria-hidden="true"
-          initial={reduce ? false : { opacity: 0, scale: 0.985 }}
+          initial={false}
           animate={reduce ? undefined : { opacity: 1, scale: 1 }}
           transition={{
-            duration: reduce ? 0 : 0.14,
-            ease: [0.16, 1, 0.3, 1],
+            opacity: { duration: reduce ? 0 : 0.12, ease: [0.16, 1, 0.3, 1] },
+            scale: { duration: reduce ? 0 : 0.16, ease: [0.16, 1, 0.3, 1] },
+            layout: {
+              type: "spring",
+              stiffness: reduce ? 1000 : 430,
+              damping: reduce ? 100 : 42,
+              mass: 0.72,
+            },
           }}
         >
           <i />
