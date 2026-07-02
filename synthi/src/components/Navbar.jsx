@@ -11,7 +11,7 @@ const LINKS = [
   { label: "Collab", href: "#collaboration" },
   { label: "GPU HMR", href: "#gpu-hmr" },
   { label: "Proof", href: "#proof" },
-  { label: "Licenses", href: "#dojo" },
+  { label: "Dojo", href: "#dojo" },
   { label: "Trust", href: "#trust" },
   { label: "Pilot", href: "#pricing" },
 ];

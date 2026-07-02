@@ -64,11 +64,11 @@ const PROOF_GALLERY = [
     span: "proof-large",
   },
   {
-    title: "Export handoff",
-    detail: "A full Vectant-cleared evidence packet.",
-    src: "/product-proof/investor-demo-export-handoff.png",
-    width: 1440,
-    height: 1000,
+    title: "CodeSite full workflow proof",
+    detail: "Schema clearance, denied writes, line provenance, browser capture, proof bundle, and commit trailers in one landing packet.",
+    src: "/product-proof/codesite-full-workflow-proof.png",
+    width: 1280,
+    height: 1567,
     span: "proof-large",
   },
   {
@@ -405,7 +405,7 @@ function Hero() {
       <div className="hero-main-grid mx-auto grid max-w-[1540px] gap-12 px-4 pb-16 sm:px-6 lg:grid-cols-[0.92fr_1.08fr] lg:items-center lg:px-8 lg:pb-24">
         <div className="max-w-[880px]" data-reveal>
           <p className="hero-kicker">
-            <span className="hero-kicker-copy">World&apos;s first fully autonomous agentic runtime environment for production code</span>
+            <span className="hero-kicker-copy">Fully autonomous agentic runtime for production code</span>
             <svg
               className="hero-kicker-line"
               viewBox="0 0 620 18"
@@ -432,7 +432,7 @@ function Hero() {
             Govern AI agents where the code actually runs.
           </h1>
           <p className="hero-copy">
-            Bring production-bound coding agents into a live workspace with leased mutations, protected paths, replay ledgers, and proof packets.
+            Run existing coding agents inside a live cloud workspace. CodeSite leases every mutation, MCP exposes browser, terminal, and editor signals, and proof packets make each landing reviewable.
           </p>
           <div className="mt-8 max-w-2xl">
             <WaitlistForm
@@ -452,10 +452,10 @@ function Hero() {
       <div className="mx-auto max-w-[1540px] px-4 pb-16 sm:px-6 lg:px-8">
         <div className="hero-proof-strip" data-reveal>
           {[
-            ["Vectant licenses", "agents earn scoped authority before production mutation"],
-            ["Vectant leases", "mutation scope, protected paths, landing inspection, replay ledger"],
+            ["CodeSite clearance", "flight plans, MutationLeases, no-fly zones, landing inspection"],
+            ["Agent Dojo licenses", "demonstrated workflows pass checkrides before authority expands"],
             ["MCP eyes and hands", "browser, terminal, editor, screenshots, network, replay"],
-            ["GPU HMR", "proof-gated compiled reloads with preserved runtime state"],
+            ["Proof packets", "black-box replay, line provenance, output evidence, commit trailers"],
           ].map(([title, copy]) => (
             <div key={title} className="hero-proof-cell">
               <strong>{title}</strong>
@@ -715,12 +715,9 @@ function DojoSection() {
       <div className="mx-auto max-w-[1500px] px-4 sm:px-6 lg:px-8">
         <div className="dojo-stage">
           <div className="dojo-copy" data-reveal>
-            <h2>Teach once. License only what survives checkrides.</h2>
+            <h2>Agent Dojo licenses workflows, not prompts.</h2>
             <p>
-              Demonstrations become source-aware skills with selectors, boundaries, negative cases, and success evidence.
-            </p>
-            <p>
-              The rehearsal environment runs the workflow. Vectant grants a narrow license only where replay and proof pass.
+              A workflow is demonstrated in the real workspace, distilled into selectors, boundaries, negative cases, and success evidence, then checkridden into a revocable agent-callable license.
             </p>
           </div>
 
