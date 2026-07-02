@@ -117,7 +117,7 @@ const COMPILED_WORKFLOWS = [
   },
   {
     title: "CUDA-oriented workflows",
-    copy: "CUDA teams use the same gated route after hardware-backed validation proves the hot path is safe.",
+    copy: "CUDA teams can take the same gated route after hardware-backed validation proves the hot path is safe.",
   },
   {
     title: "Native module boundaries",
@@ -307,8 +307,8 @@ const DEEP_FEATURES = [
   },
   {
     tag: "REPAIR",
-    title: "Self-Healing Runtime",
-    copy: "Vectant runs targeted repair episodes for compile and runtime failures with policy, verification, rollback, and confidence gates.",
+    title: "Repair-Gated Runtime",
+    copy: "Vectant can run targeted repair episodes for compile and runtime failures with policy, verification, rollback, and confidence gates.",
   },
   {
     tag: "ANALYZE",
@@ -351,7 +351,7 @@ const PILOT_ITEMS = [
 const FAQ = [
   {
     q: "Does Vectant only work on websites?",
-    a: "No. If a system can compile, run, stream, render, log, or be observed through browser, GUI, terminal, mobile, or GPU channels, Vectant can become the agent runtime around it.",
+    a: "No. If a system can compile, run, stream, render, log, or expose observable state through browser, GUI, terminal, mobile, or GPU channels, Vectant can pilot a governed agent runtime around it.",
   },
   {
     q: "What exactly is the GPU HMR claim?",
@@ -421,7 +421,7 @@ function ProofMarquee() {
     "state preservation",
     "CUDA-oriented workflows",
     "ROCm / HIP proof",
-    "instant live collab",
+    "shared live sessions",
     "workspace access control",
     "multi-agent Vectant rooms",
     "Vectant replay ledger",
@@ -429,7 +429,7 @@ function ProofMarquee() {
     "counterfactual memory",
     "causal replay",
     "mobile compile",
-    "self-healing gates",
+    "repair-gated checks",
   ];
 
   return (
@@ -723,7 +723,7 @@ function LiveCollaborationSection() {
               Vectant collaboration keeps software operations in one shared workspace state: permissions, presence, cursors, selections, runtime state, and agent action all share the same session.
             </p>
             <p>
-              Independent agents coordinate routes, claim work, negotiate conflicts, and hand off context inside the same governed runtime. Every move is scoped, leased, and replayable.
+              Independent agents coordinate routes, claim work, negotiate conflicts, and hand off context inside the same governed runtime. Agent actions can be scoped, leased, and attached to replayable evidence.
             </p>
           </div>
 
@@ -979,7 +979,7 @@ function FaqSection() {
         <div className="section-lede max-w-[980px]" data-reveal>
           <h2>Strong claims. Clear boundaries.</h2>
           <p>
-            The page makes hard promises because the runtime has hard gates. Screenshots are evidence. The ledger is authority. Every major claim has to survive logs, replay, policy, and proof.
+            Vectant makes the evidence easy to inspect: requested scope, runtime state, protected paths, checks, screenshots, and replay context stay attached to the proof packet.
           </p>
         </div>
         <div className="faq-grid">
