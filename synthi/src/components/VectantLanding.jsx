@@ -298,7 +298,7 @@ const DEEP_FEATURES = [
   {
     tag: "LIVE",
     title: "Live Collaboration",
-    copy: "Vectant gives teams CRDT editing, presence, cursors, workspace access control, and governed human-agent sessions.",
+    copy: "Vectant gives teams shared sessions with presence, cursors, workspace access control, claims, conflicts, and governed human-agent handoffs.",
   },
   {
     tag: "APK",

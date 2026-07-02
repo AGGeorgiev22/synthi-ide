@@ -88,7 +88,7 @@ async function sendConfirmationEmail(email) {
         subject: "You're on the Vectant waitlist!",
         html: `<div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:32px;background:#131112;color:#e5e5e5;border-radius:12px;">
           <h2 style="margin:0 0 16px;color:#58A4B0;">Welcome to Vectant</h2>
-          <p style="line-height:1.6;color:#94a3b8;">You're on the waitlist for the world's first Fully Autonomous Agentic Runtime Environment (FAARE). We'll notify you when it's your turn.</p>
+          <p style="line-height:1.6;color:#94a3b8;">You're on the waitlist for Vectant, a cloud runtime control plane for autonomous coding work. We'll notify you when it's your turn.</p>
           <p style="margin-top:24px;color:#94a3b8;font-size:13px;">- The Vectant Team</p>
         </div>`,
       }),
