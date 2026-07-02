@@ -1273,7 +1273,7 @@ html.light .feature-cta-strip p {
 }
 
 .runtime-hero-v2 {
-  min-height: 182dvh;
+  min-height: 168dvh;
 }
 
 .vectant-landing-root {
@@ -1529,8 +1529,8 @@ html.light .secondary-cta:hover {
 
 .hero-product-float {
   width: min(1420px, 98vw);
-  min-height: clamp(1080px, 154dvh, 1540px);
-  margin: clamp(44px, 8dvh, 92px) auto 0;
+  min-height: clamp(940px, 132dvh, 1320px);
+  margin: clamp(34px, 6dvh, 72px) auto 0;
   perspective: 1800px;
   transform-style: preserve-3d;
 }
@@ -1560,7 +1560,7 @@ html.light .secondary-cta:hover {
     linear-gradient(135deg, rgba(255, 247, 239, 0.06), transparent 48%);
   opacity: 0.72;
   pointer-events: none;
-  transform: translate3d(0, 36px, -220px) scale(0.84) rotateX(9deg);
+  transform: translate3d(0, 42px, -280px) scale(0.8) rotateX(11deg);
   box-shadow:
     0 80px 180px rgba(0, 0, 0, 0.5),
     inset 0 0 0 1px rgba(255, 247, 239, 0.055);
@@ -2527,7 +2527,7 @@ html.light .hero-product-card {
 .hero-proof-strip-shell {
   position: relative;
   z-index: 4;
-  margin-top: clamp(180px, 28dvh, 360px);
+  margin-top: clamp(96px, 16dvh, 220px);
 }
 
 .hero-proof-strip {
@@ -5254,7 +5254,7 @@ html.light .belief-proof-rail em {
     align-self: start;
     position: relative;
     top: auto;
-    min-height: clamp(1080px, 154dvh, 1540px);
+    min-height: clamp(940px, 132dvh, 1320px);
   }
 
   .hero-title {
