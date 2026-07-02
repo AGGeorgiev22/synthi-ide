@@ -909,6 +909,8 @@ function FinalCta() {
             alt="Vectant"
             width={1043}
             height={239}
+            loading="eager"
+            unoptimized
             sizes="(min-width: 768px) 340px, 240px"
             className="final-cta-logo h-auto w-[240px] sm:w-[300px] md:w-[340px]"
           />
