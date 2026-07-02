@@ -2490,9 +2490,9 @@ html.light .spotlight {
 .agent-onramp-chroma-step-active {
   border-color: rgba(255, 247, 239, 0.14);
   background:
-    linear-gradient(135deg, color-mix(in srgb, var(--step-accent) 16%, transparent), transparent 42%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.068), rgba(255, 255, 255, 0.018)),
-    rgba(8, 8, 9, 0.82);
+    linear-gradient(135deg, color-mix(in srgb, var(--step-accent) 20%, transparent), transparent 44%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.088), rgba(255, 255, 255, 0.026)),
+    rgba(10, 10, 11, 0.92);
 }
 
 .agent-onramp-chroma-step-sealed {
@@ -2532,6 +2532,19 @@ html.light .spotlight {
   font-size: 14px;
   line-height: 1.58;
   color: var(--campaign-muted);
+}
+
+.agent-onramp-chroma-step-active h3 {
+  color: #fff7ef;
+}
+
+.agent-onramp-chroma-step-active p {
+  color: rgba(255, 247, 239, 0.72);
+}
+
+.agent-onramp-chroma-step-active small,
+.agent-onramp-chroma-step-active .agent-onramp-chroma-tracks span {
+  color: rgba(255, 247, 239, 0.74);
 }
 
 .agent-onramp-chroma-step small {
