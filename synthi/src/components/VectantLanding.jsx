@@ -454,7 +454,7 @@ function Hero() {
       <div className="hero-main-grid mx-auto grid max-w-[1540px] gap-12 px-4 pb-16 sm:px-6 lg:grid-cols-[0.92fr_1.08fr] lg:items-center lg:px-8 lg:pb-24">
         <div className="max-w-[880px]" data-reveal>
           <p className="hero-kicker">
-            <span className="hero-kicker-copy">Fully autonomous agentic runtime for production code</span>
+            <span className="hero-kicker-copy">Governed autonomy for production code</span>
             <svg
               className="hero-kicker-line"
               viewBox="0 0 620 18"
@@ -478,10 +478,10 @@ function Hero() {
             </svg>
           </p>
           <h1 className="hero-title">
-            Govern AI agents where the code actually runs.
+            The world's first fully autonomous runtime for production agents.
           </h1>
           <p className="hero-copy">
-            Run existing coding agents inside a live cloud workspace. Vectant leases mutations, exposes runtime signals, and turns each landing into replayable evidence.
+            Run existing coding agents inside a live cloud workspace where authority is leased, runtime state is preserved, and every landing ships with proof.
           </p>
           <div className="mt-8 max-w-2xl">
             <WaitlistForm
@@ -491,8 +491,7 @@ function Hero() {
             />
           </div>
           <div className="mt-5 flex flex-wrap gap-3">
-            <PrimaryCta href="#waitlist">Pilot on a production repo</PrimaryCta>
-            <SecondaryCta href="#proof">See runtime evidence</SecondaryCta>
+            <SecondaryCta href="#runtime-path">See the runtime path</SecondaryCta>
           </div>
         </div>
         <HeroProductFloat />
