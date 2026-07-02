@@ -1238,6 +1238,40 @@ html.light .runtime-campaign {
   --campaign-accent-soft: rgba(216, 75, 42, 0.12);
 }
 
+html.light .runtime-pillar-grid,
+html.light .collab-console,
+html.light .dogfood-panel,
+html.light .compiled-workflow-grid article,
+html.light .feature-cta-strip {
+  --campaign-panel: #111113;
+  --campaign-ink: #fff7ef;
+  --campaign-muted: rgba(255, 247, 239, 0.68);
+  --campaign-faint: rgba(255, 247, 239, 0.46);
+  --campaign-line: rgba(255, 247, 239, 0.13);
+  --campaign-line-strong: rgba(255, 247, 239, 0.22);
+}
+
+html.light .runtime-campaign .pilot-panel li {
+  background: rgba(18, 21, 27, 0.026);
+  color: rgba(18, 21, 27, 0.68);
+}
+
+html.light .runtime-pillar-grid .runtime-pillar h3,
+html.light .collab-console .collab-console-copy h2,
+html.light .dogfood-panel .dogfood-copy h2,
+html.light .compiled-workflow-grid article h3,
+html.light .feature-cta-strip h3 {
+  color: #fff7ef;
+}
+
+html.light .runtime-pillar-grid .runtime-pillar p,
+html.light .collab-console .collab-console-copy p,
+html.light .dogfood-panel .dogfood-copy p,
+html.light .compiled-workflow-grid article p,
+html.light .feature-cta-strip p {
+  color: rgba(255, 247, 239, 0.68);
+}
+
 .runtime-hero-v2 {
   min-height: 100dvh;
 }
