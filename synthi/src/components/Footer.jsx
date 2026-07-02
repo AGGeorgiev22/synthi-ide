@@ -9,7 +9,7 @@ const COLUMNS = [
       { label: "Collab", href: "#collaboration" },
       { label: "GPU HMR", href: "#gpu-hmr" },
       { label: "Proof", href: "#proof" },
-      { label: "Dojo", href: "#dojo" },
+      { label: "Licenses", href: "#licenses" },
       { label: "Trust", href: "#trust" },
       { label: "Pilot", href: "#pricing" },
     ],

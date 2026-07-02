@@ -15,9 +15,9 @@ const BROWSER_SHOT = {
   height: 1000,
 };
 
-const DOJO_SHOT = {
-  title: "Agent Dojo checkride",
-  detail: "CodeSite workflow UI proving selectors, protected paths, proof gates, and repeatable agent authority before a license expands.",
+const LICENSE_SHOT = {
+  title: "Vectant checkride",
+  detail: "Vectant workflow UI proving selectors, protected paths, proof gates, and repeatable agent authority before a license expands.",
   src: "/product-proof/codesite-full-workflow-ui.png",
   width: 1440,
   height: 1100,
@@ -41,22 +41,22 @@ const COUNTERFACTUAL_SHOT = {
 
 const PROOF_GALLERY = [
   {
-    title: "CodeSite radar map",
-    detail: "A real CodeSite airspace map showing protected paths, collision zones, leases, and runtime clearance in one proof surface.",
+    title: "Vectant radar map",
+    detail: "A real Vectant airspace map showing protected paths, collision zones, leases, and runtime clearance in one proof surface.",
     src: "/codesite-proof/codesite-radar-desktop.png",
     width: 1440,
     height: 1973,
     span: "proof-large proof-tall",
   },
   {
-    title: "CodeSite black box",
+    title: "Vectant black box",
     detail: "A captured proof packet for agent landings, with replayable state and audit context instead of a loose chat transcript.",
     src: "/codesite-proof/codesite-black-box-desktop.png",
     width: 1440,
     height: 1313,
   },
   {
-    title: "CodeSite workflow proof",
+    title: "Vectant workflow proof",
     detail: "The full landing workflow: task scope, runtime state, collisions, proof lanes, and handoff evidence in one product capture.",
     src: "/product-proof/senior-real-codesite-workflow-proof.png",
     width: 1440,
@@ -64,7 +64,7 @@ const PROOF_GALLERY = [
     span: "proof-large",
   },
   {
-    title: "CodeSite full workflow proof",
+    title: "Vectant full workflow proof",
     detail: "Schema clearance, denied writes, line provenance, browser capture, proof bundle, and commit trailers in one landing packet.",
     src: "/product-proof/codesite-full-workflow-proof.png",
     width: 1280,
@@ -73,7 +73,7 @@ const PROOF_GALLERY = [
   },
   {
     title: "Line provenance",
-    detail: "CodeSite traces the landing back to source-aware evidence so reviewers can inspect what changed and why.",
+    detail: "Vectant traces the landing back to source-aware evidence so reviewers can inspect what changed and why.",
     src: "/codesite-proof/codesite-line-provenance-desktop.png",
     width: 1440,
     height: 1100,
@@ -186,7 +186,7 @@ const RUNTIME_PILLARS = [
   },
 ];
 
-const DOJO_STEPS = [
+const LICENSE_STEPS = [
   ["Demonstrate", "A human or agent teaches the workflow inside the real workspace."],
   ["Distill", "Vectant extracts source-aware steps, boundaries, selectors, and success evidence."],
   ["Practice", "The rehearsal environment runs checkrides, negative cases, and replay trials before authority expands."],
@@ -432,7 +432,7 @@ function Hero() {
             Govern AI agents where the code actually runs.
           </h1>
           <p className="hero-copy">
-            Run existing coding agents inside a live cloud workspace. CodeSite leases every mutation, MCP exposes browser, terminal, and editor signals, and proof packets make each landing reviewable.
+            Run existing coding agents inside a live cloud workspace. Vectant leases mutations, exposes runtime signals, and turns each landing into replayable evidence.
           </p>
           <div className="mt-8 max-w-2xl">
             <WaitlistForm
@@ -452,8 +452,8 @@ function Hero() {
       <div className="mx-auto max-w-[1540px] px-4 pb-16 sm:px-6 lg:px-8">
         <div className="hero-proof-strip" data-reveal>
           {[
-            ["CodeSite clearance", "flight plans, MutationLeases, no-fly zones, landing inspection"],
-            ["Agent Dojo licenses", "demonstrated workflows pass checkrides before authority expands"],
+            ["Vectant clearance", "MutationLeases, no-fly zones, landing inspection"],
+            ["Vectant checkrides", "demonstrated workflows earn scoped, revocable authority"],
             ["MCP eyes and hands", "browser, terminal, editor, screenshots, network, replay"],
             ["Proof packets", "black-box replay, line provenance, output evidence, commit trailers"],
           ].map(([title, copy]) => (
@@ -709,20 +709,20 @@ function ProofSection() {
   );
 }
 
-function DojoSection() {
+function LicensesSection() {
   return (
-    <section id="dojo" className="runtime-campaign scroll-mt-16 py-24 md:py-36">
+    <section id="licenses" className="runtime-campaign scroll-mt-16 py-24 md:py-36">
       <div className="mx-auto max-w-[1500px] px-4 sm:px-6 lg:px-8">
         <div className="dojo-stage">
           <div className="dojo-copy" data-reveal>
-            <h2>Agent Dojo licenses workflows, not prompts.</h2>
+            <h2>Vectant turns workflows into revocable licenses.</h2>
             <p>
-              A workflow is demonstrated in the real workspace, distilled into selectors, boundaries, negative cases, and success evidence, then checkridden into a revocable agent-callable license.
+              A workflow runs in the real workspace, then Vectant captures selectors, boundaries, negative cases, and success evidence before granting scoped authority.
             </p>
           </div>
 
           <div className="dojo-steps" data-reveal>
-            {DOJO_STEPS.map(([title, copy], index) => (
+            {LICENSE_STEPS.map(([title, copy], index) => (
               <article key={title}>
                 <span className="dojo-step-mark">{index + 1}</span>
                 <div>
@@ -735,7 +735,7 @@ function DojoSection() {
         </div>
 
         <div className="mt-14 grid gap-4 lg:grid-cols-[0.95fr_1.05fr]">
-          <ProductFrame shot={DOJO_SHOT} className="dojo-proof-tall" />
+          <ProductFrame shot={LICENSE_SHOT} className="dojo-proof-tall" />
           <div className="grid gap-4">
             <ProductFrame shot={RUNTIME_WORKFLOW_SHOT} />
             <ProductFrame shot={COUNTERFACTUAL_SHOT} className="counter-proof" />
@@ -939,7 +939,7 @@ export function VectantLanding() {
       <LiveCollaborationSection />
       <GpuSection />
       <ProofSection />
-      <DojoSection />
+      <LicensesSection />
       <TrustSystemsSection />
       <FeatureSystemsSection />
       <BeyondSitesSection />
