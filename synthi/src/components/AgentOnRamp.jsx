@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { LayoutGroup, motion, useMotionValueEvent, useReducedMotion, useScroll } from "framer-motion";
+import { motion, useMotionValueEvent, useReducedMotion, useScroll } from "framer-motion";
 
 const STEPS = [
   {
@@ -61,30 +61,6 @@ function ChromaStep({ step, index, activeIndex, reduce }) {
       }
       transition={{ duration: reduce ? 0 : 0.18, ease: [0.16, 1, 0.3, 1] }}
     >
-      {isActive ? (
-        <motion.span
-          layoutId="agent-onramp-active-brackets"
-          className="agent-onramp-card-brackets"
-          aria-hidden="true"
-          initial={false}
-          animate={reduce ? undefined : { opacity: 1, scale: 1 }}
-          transition={{
-            opacity: { duration: reduce ? 0 : 0.12, ease: [0.16, 1, 0.3, 1] },
-            scale: { duration: reduce ? 0 : 0.16, ease: [0.16, 1, 0.3, 1] },
-            layout: {
-              type: "spring",
-              stiffness: reduce ? 1000 : 430,
-              damping: reduce ? 100 : 42,
-              mass: 0.72,
-            },
-          }}
-        >
-          <i />
-          <i />
-          <i />
-          <i />
-        </motion.span>
-      ) : null}
       <div className="agent-onramp-chroma-step-top">
         <span>{step.verb}</span>
         <strong>{isActive ? step.state : status}</strong>
@@ -144,19 +120,38 @@ export function AgentOnRamp() {
               <span>agent authority path</span>
               <strong>scoped / replayable / revocable</strong>
             </div>
-            <LayoutGroup id="agent-onramp-bracket-group">
-              <div className="agent-onramp-chroma-stage">
-                {STEPS.map((step, index) => (
-                  <ChromaStep
-                    key={step.verb}
-                    step={step}
-                    index={index}
-                    activeIndex={activeIndex}
-                    reduce={reduce}
-                  />
-                ))}
-              </div>
-            </LayoutGroup>
+            <div className="agent-onramp-chroma-stage">
+              <motion.span
+                className="agent-onramp-card-brackets"
+                aria-hidden="true"
+                initial={false}
+                animate={{ "--onramp-active-index": activeIndex }}
+                transition={
+                  reduce
+                    ? { duration: 0 }
+                    : {
+                        type: "spring",
+                        stiffness: 230,
+                        damping: 30,
+                        mass: 0.78,
+                      }
+                }
+              >
+                <i />
+                <i />
+                <i />
+                <i />
+              </motion.span>
+              {STEPS.map((step, index) => (
+                <ChromaStep
+                  key={step.verb}
+                  step={step}
+                  index={index}
+                  activeIndex={activeIndex}
+                  reduce={reduce}
+                />
+              ))}
+            </div>
           </motion.div>
         </div>
       </div>

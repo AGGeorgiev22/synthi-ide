@@ -2633,12 +2633,15 @@ html.light .agent-onramp-panel {
 
 .agent-onramp-card-brackets {
   position: absolute;
-  inset: 0;
+  top: var(--onramp-pad);
+  right: var(--onramp-pad);
+  left: calc(var(--onramp-pad) + 36px);
+  height: calc((100% - (var(--onramp-pad) * 2) - (var(--onramp-gap) * 2)) / 3);
   z-index: 4;
   border-radius: 12px;
   opacity: 1;
   pointer-events: none;
-  transform: translate3d(0, 0, 0);
+  transform: translate3d(0, calc(var(--onramp-active-index, 0) * (100% + var(--onramp-gap))), 0);
   will-change: transform;
   contain: paint;
   backface-visibility: hidden;
