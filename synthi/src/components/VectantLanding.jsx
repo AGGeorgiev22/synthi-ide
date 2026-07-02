@@ -384,13 +384,12 @@ function ProofMarquee() {
     "mobile compile",
     "self-healing gates",
   ];
-  const loop = [...items, ...items];
 
   return (
-    <div className="proof-marquee" aria-hidden="true">
+    <div className="proof-marquee" aria-label="Vectant runtime capabilities">
       <div className="proof-marquee-track">
-        {loop.map((item, index) => (
-          <span key={`${item}-${index}`}>{item}</span>
+        {items.map((item) => (
+          <span key={item}>{item}</span>
         ))}
       </div>
     </div>

@@ -2272,24 +2272,31 @@ html.light .spotlight {
   max-width: 100%;
   border-top: 1px solid var(--campaign-line);
   border-bottom: 1px solid var(--campaign-line);
-  background: rgba(255, 255, 255, 0.04);
+  background:
+    linear-gradient(90deg, rgba(255, 106, 61, 0.07), transparent 34%, rgba(81, 215, 233, 0.055)),
+    rgba(255, 255, 255, 0.032);
 }
 
 .proof-marquee-track {
   display: flex;
-  width: max-content;
-  animation: vectant-proof-marquee 46s linear infinite;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .proof-marquee span {
   display: inline-flex;
   align-items: center;
   border-right: 1px solid var(--campaign-line);
+  border-bottom: 1px solid rgba(255, 247, 239, 0.055);
   padding: 12px 20px;
   font-family: var(--font-mono);
   font-size: 11px;
   color: rgba(255, 247, 239, 0.62);
   white-space: nowrap;
+}
+
+.proof-marquee span:last-child {
+  border-right: 0;
 }
 
 .agent-onramp {
@@ -4169,11 +4176,6 @@ html.light .spotlight {
   margin: 22px auto 0;
 }
 
-@keyframes vectant-proof-marquee {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
-}
-
 @keyframes hero-live-type-a {
   0%, 8% { width: 0; }
   27%, 52% { width: 15ch; }
@@ -4744,10 +4746,6 @@ html.light .spotlight {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .proof-marquee-track {
-    animation: none !important;
-  }
-
   .hero-kicker-line-path {
     animation: none !important;
     stroke-dashoffset: 0;
