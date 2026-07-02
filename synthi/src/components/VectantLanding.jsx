@@ -31,6 +31,30 @@ const RUNTIME_WORKFLOW_SHOT = {
   height: 1000,
 };
 
+const AUTHORITY_REQUEST_SHOT = {
+  title: "Authority request surface",
+  detail: "The workspace shows scope, runtime state, and proof context before a lease expands into production-bound work.",
+  src: "/product-proof/senior-real-codesite-ui-desktop-loaded.png",
+  width: 1440,
+  height: 1100,
+};
+
+const CONSTRAIN_SHOT = {
+  title: "Shadow simulator",
+  detail: "Risk, protected paths, collision zones, and counterfactual branches are inspected before authority widens.",
+  src: "/product-proof/codesite-shadow-simulator-ui-desktop.png",
+  width: 1440,
+  height: 1100,
+};
+
+const PROOF_PACKET_SHOT = {
+  title: "Full workflow proof",
+  detail: "Plan coverage, event stream, API calls, black-box score, and bundle trailers show why the run passed.",
+  src: "/product-proof/codesite-full-workflow-proof.png",
+  width: 1280,
+  height: 1567,
+};
+
 const COUNTERFACTUAL_SHOT = {
   title: "Counterfactual memory proof",
   detail: "Rejected branches leave evidence, policy deltas, and replay context for the next autonomous run.",
@@ -190,13 +214,7 @@ const RUNTIME_PROOF_PATH = [
     title: "The agent asks for authority first.",
     copy: "Vectant turns intent into a MutationLease with files, routes, protected paths, and required evidence before code changes.",
     signal: "scope before write",
-    shot: {
-      title: "Workspace authority request",
-      detail: "The request begins inside the same editor, terminal, browser, and runtime surface reviewers inspect later.",
-      src: "/product-proof/browser-workspace-loaded.png",
-      width: 1500,
-      height: 1000,
-    },
+    shot: AUTHORITY_REQUEST_SHOT,
   },
   {
     step: "Observe",
@@ -210,26 +228,14 @@ const RUNTIME_PROOF_PATH = [
     title: "The landing is checked against risk.",
     copy: "Protected paths, collision zones, no-fly zones, and evidence gates decide whether a mutation can continue.",
     signal: "risk gates",
-    shot: {
-      title: "Contract rail",
-      detail: "Runtime, trace, contract, replay, source, and validation gates stay visible before authority expands.",
-      src: "/product-proof/investor-demo-workflows.png",
-      width: 1440,
-      height: 1000,
-    },
+    shot: CONSTRAIN_SHOT,
   },
   {
     step: "Prove",
     title: "Reviewers open evidence, not a story.",
     copy: "Replay, line provenance, output proof, and commit context travel with the change before production-bound work merges.",
     signal: "proof packet",
-    shot: {
-      title: "Export handoff",
-      detail: "Compile, validate, manifest, export, and publish actions leave the workspace with attached proof state.",
-      src: "/product-proof/investor-demo-export-handoff.png",
-      width: 1440,
-      height: 1000,
-    },
+    shot: PROOF_PACKET_SHOT,
   },
 ];
 
@@ -686,7 +692,7 @@ function DogfoodSection() {
             </div>
             <h2>Vectant ships through its own control plane.</h2>
             <p>
-              The workspace behind this page contains repo, browser, terminal, agents, HMR state, clearance, and proof. The screenshots are captured product surfaces, not concept art.
+              The proof loop behind this page contains repo, browser, terminal, agents, HMR state, clearance, and replay. The screenshots are captured runtime surfaces, not concept art.
             </p>
             <div className="dogfood-proof-line" aria-label="Vectant self-build proof path">
               <i className="dogfood-proof-sweep" aria-hidden="true" />
@@ -700,17 +706,17 @@ function DogfoodSection() {
           <div className="dogfood-console">
             <div className="dogfood-images">
               <Image
-                src="/product-proof/investor-demo-workspace.png"
-                alt="Vectant workspace used to build Vectant."
+                src="/product-proof/codesite-full-workflow-ui.png"
+                alt="Runtime workspace with clearance, leases, collision forecast, and proof layers."
                 width={1440}
-                height={1000}
+                height={1100}
                 sizes="(min-width: 1024px) 34vw, 100vw"
               />
               <Image
-                src="/product-proof/investor-demo-export-handoff.png"
-                alt="Vectant export handoff proof while building Vectant."
-                width={1440}
-                height={1000}
+                src="/product-proof/codesite-full-workflow-proof.png"
+                alt="Workflow proof packet with checks, API calls, event stream, and bundle trailers."
+                width={1280}
+                height={1567}
                 sizes="(min-width: 1024px) 34vw, 100vw"
               />
             </div>
