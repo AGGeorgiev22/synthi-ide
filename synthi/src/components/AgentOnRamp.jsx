@@ -149,7 +149,7 @@ export function AgentOnRamp() {
 
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
     if (reduce) return;
-    const nextIndex = latest < 0.36 ? 0 : latest < 0.72 ? 1 : 2;
+    const nextIndex = latest < 0.3 ? 0 : latest < 0.66 ? 1 : 2;
     if (nextIndex !== activeIndexRef.current) {
       activeIndexRef.current = nextIndex;
       setActiveIndex(nextIndex);
