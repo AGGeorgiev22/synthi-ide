@@ -4,6 +4,7 @@ import { AgentOnRamp } from "@/components/AgentOnRamp";
 import { HeroProductFloat } from "@/components/HeroProductFloat";
 import { VectantMotion } from "@/components/VectantMotion";
 import { GpuBeforeAfter } from "@/components/GpuBeforeAfter";
+import { GpuLatencyCounter } from "@/components/GpuLatencyCounter";
 import { WaitlistForm } from "@/components/WaitlistForm";
 
 const BROWSER_SHOT = {
@@ -654,16 +655,7 @@ function GpuSection() {
           <div className="gpu-copy">
             <p className="section-mark">Proof-gated GPU HMR</p>
             <h2>Hot-swap compiled code. Keep runtime state.</h2>
-            <div className="gpu-latency-counter" aria-label="Sub 90ms GPU HMR edit to visual, no matter the size of your project">
-              <span>GPU HMR edit to visual</span>
-              <strong>
-                <span>sub</span>
-                <span className="gpu-latency-value">
-                  90<span className="gpu-latency-unit">ms</span>
-                </span>
-              </strong>
-              <p>No matter the size of your project.</p>
-            </div>
+            <GpuLatencyCounter />
             <p>
               Vectant swaps the compiled artifact without dropping the running session, then promotes only after ABI, hardware, oracle, ledger, and state checks pass.
             </p>
