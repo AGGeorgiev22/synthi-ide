@@ -1415,7 +1415,7 @@ html.light .spotlight {
 
 .hero-product-float {
   min-height: clamp(660px, 118dvh, 980px);
-  perspective: 1600px;
+  perspective: 1800px;
   transform-style: preserve-3d;
 }
 
@@ -1423,26 +1423,44 @@ html.light .spotlight {
   position: sticky;
   top: 76px;
   min-height: 620px;
-  perspective: 1600px;
-  transform-style: flat;
+  perspective: 1800px;
+  transform-style: preserve-3d;
+  will-change: transform;
 }
 
 .hero-product-depth {
-  display: none;
+  position: absolute;
+  inset: 5% -7% auto 1%;
+  z-index: 0;
+  display: block;
+  height: 64%;
+  border-radius: 30px;
+  background:
+    radial-gradient(circle at 62% 42%, rgba(81, 215, 233, 0.22), transparent 34%),
+    radial-gradient(circle at 18% 18%, rgba(255, 98, 173, 0.22), transparent 38%),
+    linear-gradient(135deg, rgba(255, 247, 239, 0.06), transparent 48%);
+  opacity: 0.72;
+  pointer-events: none;
+  transform: translate3d(0, 36px, -220px) scale(0.84) rotateX(9deg);
+  box-shadow:
+    0 80px 180px rgba(0, 0, 0, 0.5),
+    inset 0 0 0 1px rgba(255, 247, 239, 0.055);
 }
 
 .hero-product-main {
   position: relative;
   z-index: 5;
-  transform-origin: 50% 58%;
+  transform-origin: 52% 54%;
   transform-style: preserve-3d;
   will-change: transform;
 }
 
 .hero-product-shell {
   margin-top: 20px;
+  backface-visibility: hidden;
   box-shadow:
-    0 42px 120px rgba(0, 0, 0, 0.52),
+    0 58px 150px rgba(0, 0, 0, 0.58),
+    0 16px 70px rgba(81, 215, 233, 0.08),
     0 0 0 1px rgba(255, 247, 239, 0.04);
 }
 
@@ -1483,6 +1501,7 @@ html.light .spotlight {
   padding: 6px;
   transform-origin: 50% 50%;
   transform-style: preserve-3d;
+  backface-visibility: hidden;
   will-change: transform, opacity;
   box-shadow:
     0 44px 110px rgba(0, 0, 0, 0.56),
@@ -1601,7 +1620,7 @@ html.light .spotlight {
   right: clamp(-18px, -1.2vw, -6px);
   bottom: 18px;
   z-index: 9;
-  width: min(560px, 58%);
+  width: min(500px, 52%);
   overflow: hidden;
   border: 1px solid rgba(255, 247, 239, 0.16);
   border-radius: 20px;
@@ -1616,7 +1635,9 @@ html.light .spotlight {
     inset 0 1px 0 rgba(255, 255, 255, 0.1),
     inset 0 -1px 0 rgba(0, 0, 0, 0.82);
   transform-origin: 100% 100%;
-  will-change: transform;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  will-change: transform, opacity;
 }
 
 .hero-code-collab-card::after {
@@ -1909,13 +1930,13 @@ html.light .spotlight {
 .hero-product-card-observe {
   top: -10px;
   right: -4px;
-  width: min(340px, 38%);
+  width: min(320px, 34%);
 }
 
 .hero-product-card-gpu {
   left: -12px;
   bottom: 38px;
-  width: min(290px, 32%);
+  width: min(270px, 30%);
 }
 
 .hero-floating-proof {
