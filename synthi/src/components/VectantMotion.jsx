@@ -58,27 +58,26 @@ export function VectantMotion() {
         gsap.set(path, {
           strokeDasharray: lineLength,
           strokeDashoffset: lineLength,
-          opacity: 0.2,
+          opacity: 0.92,
         });
 
         gsap
-          .timeline({ repeat: -1, repeatDelay: 0.04 })
+          .timeline()
           .to(path, {
             strokeDashoffset: 0,
-            opacity: 0.96,
-            duration: 1.25,
+            duration: 1.45,
             ease: "power3.out",
           })
-          .to(path, {
-            opacity: 0.98,
-            duration: 0.34,
-            ease: "sine.inOut",
+          .set(path, {
+            strokeDasharray: `${lineLength * 0.86} ${lineLength * 0.14}`,
+            strokeDashoffset: 0,
+            opacity: 0.96,
           })
           .to(path, {
             strokeDashoffset: -lineLength,
-            opacity: 0.16,
-            duration: 1.1,
-            ease: "power3.in",
+            duration: 5.8,
+            ease: "none",
+            repeat: -1,
           });
       });
 

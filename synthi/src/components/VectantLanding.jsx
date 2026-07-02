@@ -672,6 +672,7 @@ function DogfoodSection() {
               The workspace behind this page contains repo, browser, terminal, agents, HMR state, clearance, and proof. The screenshots are captured product surfaces, not concept art.
             </p>
             <div className="dogfood-proof-line" aria-label="Vectant self-build proof path">
+              <i className="dogfood-proof-sweep" aria-hidden="true" />
               <span>workspace</span>
               <span>agents</span>
               <span>hmr</span>
