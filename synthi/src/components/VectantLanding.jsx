@@ -428,10 +428,10 @@ function Hero() {
             </svg>
           </p>
           <h1 className="hero-title">
-            The runtime where autonomous agents earn authority.
+            Govern AI agents where the code actually runs.
           </h1>
           <p className="hero-copy">
-            Run agents inside a live workspace where every action is leased, observed, replayed, and proven before it reaches production.
+            Bring production-bound coding agents into a live workspace with leased mutations, protected paths, replay ledgers, and proof packets.
           </p>
           <div className="mt-8 max-w-2xl">
             <WaitlistForm

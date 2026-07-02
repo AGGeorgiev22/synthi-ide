@@ -6,9 +6,9 @@ import { motion, useMotionValueEvent, useReducedMotion, useScroll, useTransform 
 const STEPS = [
   {
     verb: "Attach",
-    state: "agent attached",
-    title: "Keep your agents. Govern their authority.",
-    copy: "CLI agents, MCP tools, editor paths, repo, browser, and terminal share one autonomous runtime environment.",
+    state: "runtime attached",
+    title: "Connect the agents and tools you already use.",
+    copy: "CLI agents, MCP tools, VS Code paths, repo state, browser state, and terminal context share one runtime view.",
     signal: "repo, tools, browser, terminal",
     accent: "#ff3dbe",
     accent2: "#ff6a3d",
@@ -16,19 +16,19 @@ const STEPS = [
   },
   {
     verb: "Constrain",
-    state: "authority scoped",
-    title: "Constrain every mutation before it starts.",
-    copy: "MutationLeases define files, routes, inputs, protected paths, and proof requirements before the agent mutates code.",
+    state: "write leased",
+    title: "Lease every write before it starts.",
+    copy: "MutationLeases define files, routes, inputs, protected paths, and required proof before an agent mutates code.",
     signal: "leases, policy, protected paths",
     accent: "#ff9f43",
     accent2: "#ffd166",
-    tracks: ["MutationLease", "Vectant license", "policy gate"],
+    tracks: ["MutationLease", "protected paths", "proof gate"],
   },
   {
     verb: "Land",
-    state: "proof ready",
-    title: "Land work only with evidence attached.",
-    copy: "Review replay, line provenance, preserved state, clearance, and output proof before production-bound changes merge.",
+    state: "proof packet",
+    title: "Review the landing, not the story.",
+    copy: "Inspect replay, line provenance, preserved runtime state, clearance, and output proof before production-bound work merges.",
     signal: "replay, proof, landing",
     accent: "#22d3ee",
     accent2: "#8b7bff",
@@ -164,16 +164,16 @@ export function AgentOnRamp() {
             viewport={{ once: true, amount: 0.34 }}
             transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
           >
-            <h2>Keep your agents. Govern their authority.</h2>
+            <h2>Bring your agents into a governed runtime.</h2>
             <p>
-              Vectant wraps agents, tools, repo state, browser state, terminal, and proof policy inside one autonomous runtime environment.
+              Keep your CLI agents, MCP tools, editor paths, repo, browser, and terminal. Vectant makes authority explicit with leases before mutation, proof before landing, and revocation when evidence fails.
             </p>
           </motion.div>
 
           <motion.div className={`agent-onramp-panel ${reduce ? "agent-onramp-reduced" : ""}`}>
             <div className="agent-onramp-panel-top">
-              <span>agent runtime authorization path</span>
-              <strong>live authority rail</strong>
+              <span>agent authority path</span>
+              <strong>scoped / replayable / revocable</strong>
             </div>
             <div ref={stageRef} className="agent-onramp-chroma-stage">
               <motion.div
