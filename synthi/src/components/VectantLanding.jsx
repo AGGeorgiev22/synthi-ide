@@ -401,7 +401,30 @@ function Hero() {
       <div className="campaign-atmosphere" aria-hidden="true" />
       <div className="hero-main-grid mx-auto grid max-w-[1540px] gap-12 px-4 pb-16 sm:px-6 lg:grid-cols-[0.92fr_1.08fr] lg:items-center lg:px-8 lg:pb-24">
         <div className="max-w-[880px]" data-reveal>
-          <p className="hero-kicker"><span>World's first fully autonomous agentic runtime environment for production code</span></p>
+          <p className="hero-kicker">
+            <span className="hero-kicker-copy">World&apos;s first fully autonomous agentic runtime environment for production code</span>
+            <svg
+              className="hero-kicker-line"
+              viewBox="0 0 620 18"
+              preserveAspectRatio="none"
+              aria-hidden="true"
+              focusable="false"
+            >
+              <defs>
+                <linearGradient id="hero-kicker-gradient" x1="0" x2="620" y1="0" y2="0" gradientUnits="userSpaceOnUse">
+                  <stop offset="0" stopColor="#ff4bd8" />
+                  <stop offset="0.34" stopColor="#ff6848" />
+                  <stop offset="0.68" stopColor="#5ee7ff" />
+                  <stop offset="1" stopColor="#8d7bff" />
+                </linearGradient>
+              </defs>
+              <path
+                className="hero-kicker-line-path"
+                d="M2 9 C 68 4 128 14 196 8 C 268 1 334 5 396 10 C 474 17 546 12 618 7"
+                pathLength="1"
+              />
+            </svg>
+          </p>
           <h1 className="hero-title">
             The runtime where autonomous agents earn authority.
           </h1>
