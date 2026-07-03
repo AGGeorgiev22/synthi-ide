@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
 import { motion, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
 
@@ -31,6 +31,7 @@ const SHOTS = {
 
 export function HeroProductFloat() {
   const ref = useRef(null);
+  const [raisedCard, setRaisedCard] = useState(null);
   const prefersReducedMotion = useReducedMotion();
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -38,31 +39,40 @@ export function HeroProductFloat() {
   });
   const spring = { stiffness: 154, damping: 22, mass: 0.5 };
 
-  const stageY = useSpring(useTransform(scrollYProgress, [0, 0.52, 0.82, 1], [52, -8, -28, -96]), spring);
+  const stageY = useSpring(useTransform(scrollYProgress, [0, 0.52, 0.82, 1], [52, -6, -18, -44]), spring);
   const mainX = useSpring(useTransform(scrollYProgress, [0, 0.46, 1], [0, 0, 0]), spring);
-  const mainY = useSpring(useTransform(scrollYProgress, [0, 0.42, 0.78, 1], [108, 0, -18, -72]), spring);
-  const mainZ = useSpring(useTransform(scrollYProgress, [0, 0.42, 0.78, 1], [-520, 20, 150, -90]), spring);
-  const mainScale = useSpring(useTransform(scrollYProgress, [0, 0.42, 0.78, 1], [0.5, 1.02, 1, 0.84]), spring);
-  const mainRotateX = useSpring(useTransform(scrollYProgress, [0, 0.42, 0.78, 1], [17, 0, -1, 4]), spring);
-  const mainRotateY = useSpring(useTransform(scrollYProgress, [0, 0.42, 0.78, 1], [-14, 0, 0, 2]), spring);
+  const mainY = useSpring(useTransform(scrollYProgress, [0, 0.42, 0.78, 1], [108, 0, -12, -34]), spring);
+  const mainZ = useSpring(useTransform(scrollYProgress, [0, 0.42, 0.78, 1], [-520, 20, 170, 86]), spring);
+  const mainScale = useSpring(useTransform(scrollYProgress, [0, 0.42, 0.78, 1], [0.5, 1.02, 1, 0.94]), spring);
+  const mainRotateX = useSpring(useTransform(scrollYProgress, [0, 0.42, 0.78, 1], [17, 0, -1, 0.75]), spring);
+  const mainRotateY = useSpring(useTransform(scrollYProgress, [0, 0.42, 0.78, 1], [-14, 0, 0, 0.8]), spring);
   const mainRotateZ = useSpring(useTransform(scrollYProgress, [0, 1], [0.55, 0]), spring);
-  const mainOpacity = useTransform(scrollYProgress, [0, 0.78, 1], [1, 1, 0.32]);
-  const observeY = useSpring(useTransform(scrollYProgress, [0, 0.42, 0.78, 1], [26, -22, -38, -118]), spring);
-  const observeX = useSpring(useTransform(scrollYProgress, [0, 0.42, 0.78, 1], [154, 86, 22, 64]), spring);
-  const observeZ = useSpring(useTransform(scrollYProgress, [0, 0.42, 0.78, 1], [-260, 16, 138, -60]), spring);
-  const observeScale = useSpring(useTransform(scrollYProgress, [0, 0.42, 0.78, 1], [0.42, 0.62, 0.72, 0.54]), spring);
-  const observeOpacity = useTransform(scrollYProgress, [0, 0.78, 1], [1, 1, 0.14]);
-  const gpuY = useSpring(useTransform(scrollYProgress, [0, 0.46, 0.78, 1], [176, 110, 60, -38]), spring);
-  const gpuX = useSpring(useTransform(scrollYProgress, [0, 0.46, 0.78, 1], [-142, -80, -44, -112]), spring);
-  const gpuZ = useSpring(useTransform(scrollYProgress, [0, 0.46, 0.78, 1], [-280, -18, 120, -80]), spring);
-  const gpuScale = useSpring(useTransform(scrollYProgress, [0, 0.46, 0.78, 1], [0.44, 0.62, 0.72, 0.52]), spring);
-  const gpuOpacity = useTransform(scrollYProgress, [0, 0.78, 1], [1, 1, 0.12]);
-  const collabY = useSpring(useTransform(scrollYProgress, [0, 0.48, 0.78, 1], [78, 18, -4, -92]), spring);
-  const collabX = useSpring(useTransform(scrollYProgress, [0, 0.48, 0.78, 1], [72, -132, -252, -370]), spring);
-  const collabZ = useSpring(useTransform(scrollYProgress, [0, 0.42, 0.78, 1], [-280, 64, 230, -120]), spring);
-  const collabScale = useSpring(useTransform(scrollYProgress, [0, 0.48, 0.78, 1], [0.44, 0.64, 0.74, 0.54]), spring);
+  const mainOpacity = useTransform(scrollYProgress, [0, 0.84, 1], [1, 1, 0.9]);
+  const observeY = useSpring(useTransform(scrollYProgress, [0, 0.42, 0.78, 1], [26, -22, -32, -60]), spring);
+  const observeX = useSpring(useTransform(scrollYProgress, [0, 0.42, 0.78, 1], [154, 86, 22, 34]), spring);
+  const observeZ = useSpring(useTransform(scrollYProgress, [0, 0.42, 0.78, 1], [-260, 16, 150, 74]), spring);
+  const observeScale = useSpring(useTransform(scrollYProgress, [0, 0.42, 0.78, 1], [0.42, 0.62, 0.72, 0.66]), spring);
+  const observeOpacity = useTransform(scrollYProgress, [0, 0.84, 1], [1, 1, 0.82]);
+  const gpuY = useSpring(useTransform(scrollYProgress, [0, 0.46, 0.78, 1], [176, 110, 60, 14]), spring);
+  const gpuX = useSpring(useTransform(scrollYProgress, [0, 0.46, 0.78, 1], [-142, -80, -44, -72]), spring);
+  const gpuZ = useSpring(useTransform(scrollYProgress, [0, 0.46, 0.78, 1], [-280, -18, 132, 62]), spring);
+  const gpuScale = useSpring(useTransform(scrollYProgress, [0, 0.46, 0.78, 1], [0.44, 0.62, 0.72, 0.64]), spring);
+  const gpuOpacity = useTransform(scrollYProgress, [0, 0.84, 1], [1, 1, 0.78]);
+  const collabY = useSpring(useTransform(scrollYProgress, [0, 0.48, 0.78, 1], [78, 18, -4, -38]), spring);
+  const collabX = useSpring(useTransform(scrollYProgress, [0, 0.48, 0.78, 1], [72, -132, -252, -280]), spring);
+  const collabZ = useSpring(useTransform(scrollYProgress, [0, 0.42, 0.78, 1], [-280, 64, 230, 96]), spring);
+  const collabScale = useSpring(useTransform(scrollYProgress, [0, 0.48, 0.78, 1], [0.44, 0.64, 0.74, 0.66]), spring);
   const collabRotateZ = useSpring(useTransform(scrollYProgress, [0, 1], [1.2, 0]), spring);
-  const collabOpacity = useTransform(scrollYProgress, [0, 0.78, 1], [1, 1, 0.12]);
+  const collabOpacity = useTransform(scrollYProgress, [0, 0.84, 1], [1, 1, 0.82]);
+  const cardHover = prefersReducedMotion
+    ? undefined
+    : {
+        y: -12,
+        z: 180,
+        scale: 1.055,
+        rotateX: -1,
+        transition: { type: "spring", stiffness: 230, damping: 20, mass: 0.42 },
+      };
 
   const stickyStyle = prefersReducedMotion ? undefined : { y: stageY };
   const mainStyle = prefersReducedMotion
@@ -86,6 +96,11 @@ export function HeroProductFloat() {
   const collabStyle = prefersReducedMotion
     ? undefined
     : { x: collabX, y: collabY, z: collabZ, scale: collabScale, rotateZ: collabRotateZ, opacity: collabOpacity };
+  const withRaisedLayer = (style, key) => (raisedCard === key ? { ...(style || {}), zIndex: 80 } : style);
+  const raiseLayer = (key) => ({
+    onHoverStart: () => setRaisedCard(key),
+    onHoverEnd: () => setRaisedCard((current) => (current === key ? null : current)),
+  });
   const cardReveal = (delay) => ({
     initial: prefersReducedMotion ? false : "hidden",
     animate: "show",
@@ -153,8 +168,18 @@ export function HeroProductFloat() {
           </motion.div>
         </motion.div>
 
-        <motion.div className="hero-product-card-anchor hero-product-card-observe" style={observeStyle}>
-          <motion.figure className="hero-product-card" data-hero-card="workflow" {...cardReveal(0.28)}>
+        <motion.div
+          className="hero-product-card-anchor hero-product-card-observe"
+          style={withRaisedLayer(observeStyle, "workflow")}
+          {...raiseLayer("workflow")}
+        >
+          <motion.figure
+            className="hero-product-card"
+            data-hero-card="workflow"
+            whileHover={cardHover}
+            {...raiseLayer("workflow")}
+            {...cardReveal(0.28)}
+          >
             <div className="hero-card-pop-inner">
               <Image
                 src={SHOTS.observe.src}
@@ -177,11 +202,17 @@ export function HeroProductFloat() {
           </motion.figure>
         </motion.div>
 
-        <motion.div className="hero-product-card-anchor hero-code-collab-anchor" style={collabStyle}>
+        <motion.div
+          className="hero-product-card-anchor hero-code-collab-anchor"
+          style={withRaisedLayer(collabStyle, "collab")}
+          {...raiseLayer("collab")}
+        >
           <motion.figure
             className="hero-code-collab-card"
             data-hero-card="collab"
             aria-label="Shared runtime collaboration"
+            whileHover={cardHover}
+            {...raiseLayer("collab")}
             {...cardReveal(0.52)}
           >
             <div className="hero-card-pop-inner">
@@ -248,8 +279,18 @@ export function HeroProductFloat() {
           </motion.figure>
         </motion.div>
 
-        <motion.div className="hero-product-card-anchor hero-product-card-gpu" style={gpuStyle}>
-          <motion.figure className="hero-product-card" data-hero-card="gpu" {...cardReveal(0.76)}>
+        <motion.div
+          className="hero-product-card-anchor hero-product-card-gpu"
+          style={withRaisedLayer(gpuStyle, "gpu")}
+          {...raiseLayer("gpu")}
+        >
+          <motion.figure
+            className="hero-product-card"
+            data-hero-card="gpu"
+            whileHover={cardHover}
+            {...raiseLayer("gpu")}
+            {...cardReveal(0.76)}
+          >
             <div className="hero-card-pop-inner">
               <Image
                 src={SHOTS.gpu.src}
