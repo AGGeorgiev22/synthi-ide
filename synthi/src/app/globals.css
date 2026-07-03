@@ -2763,7 +2763,7 @@ html.light .proof-marquee span {
 }
 
 .agent-onramp-track {
-  min-height: clamp(980px, 142dvh, 1480px);
+  min-height: clamp(1180px, 168dvh, 1780px);
 }
 
 .agent-onramp-grid {
@@ -2857,7 +2857,7 @@ html.light .agent-onramp-panel {
   display: grid;
   grid-template-rows: repeat(3, minmax(0, 1fr));
   gap: var(--onramp-gap);
-  min-height: 520px;
+  min-height: 560px;
   padding: var(--onramp-pad);
   overflow: hidden;
 }
@@ -2874,7 +2874,6 @@ html.light .agent-onramp-panel {
 .agent-onramp-chroma-step {
   position: relative;
   z-index: 1;
-  isolation: isolate;
   display: grid;
   gap: 14px;
   min-height: 0;
@@ -2901,20 +2900,25 @@ html.light .agent-onramp-panel {
 
 .agent-onramp-card-brackets {
   position: absolute;
-  inset: -1px;
-  z-index: 3;
-  border-radius: inherit;
+  top: var(--onramp-pad);
+  right: var(--onramp-pad);
+  left: calc(var(--onramp-pad) + 36px);
+  height: calc((100% - (var(--onramp-pad) * 2) - (var(--onramp-gap) * 2)) / 3);
+  z-index: 4;
+  border-radius: 12px;
   opacity: 1;
   pointer-events: none;
+  transform: translate3d(0, calc(var(--onramp-active-index, 0) * (100% + var(--onramp-gap))), 0);
+  will-change: transform;
   contain: paint;
   backface-visibility: hidden;
-  animation: agent-onramp-bracket-in 0.24s cubic-bezier(0.16, 1, 0.3, 1) both;
+  transform-style: flat;
 }
 
 .agent-onramp-card-brackets i {
   position: absolute;
-  width: 34px;
-  height: 34px;
+  width: 42px;
+  height: 42px;
   transform: translateZ(0);
   backface-visibility: hidden;
 }
@@ -2923,44 +2927,32 @@ html.light .agent-onramp-panel {
   top: 0;
   left: 0;
   background:
-    linear-gradient(90deg, var(--step-accent), var(--step-accent-2)) left top / 34px 2px no-repeat,
-    linear-gradient(180deg, var(--step-accent), var(--step-accent-2)) left top / 2px 34px no-repeat;
+    linear-gradient(90deg, #ff4bd8, #ff6a3d) left top / 42px 2px no-repeat,
+    linear-gradient(180deg, #ff4bd8, #ff6a3d) left top / 2px 42px no-repeat;
 }
 
 .agent-onramp-card-brackets i:nth-child(2) {
   top: 0;
   right: 0;
   background:
-    linear-gradient(90deg, var(--step-accent-2), #ffd166) right top / 34px 2px no-repeat,
-    linear-gradient(180deg, var(--step-accent-2), #ffd166) right top / 2px 34px no-repeat;
+    linear-gradient(90deg, #ff6a3d, #ffd166) right top / 42px 2px no-repeat,
+    linear-gradient(180deg, #ff6a3d, #ffd166) right top / 2px 42px no-repeat;
 }
 
 .agent-onramp-card-brackets i:nth-child(3) {
   bottom: 0;
   left: 0;
   background:
-    linear-gradient(90deg, #5ee7ff, var(--step-accent)) left bottom / 34px 2px no-repeat,
-    linear-gradient(0deg, #5ee7ff, var(--step-accent)) left bottom / 2px 34px no-repeat;
+    linear-gradient(90deg, #5ee7ff, #8b7bff) left bottom / 42px 2px no-repeat,
+    linear-gradient(0deg, #5ee7ff, #8b7bff) left bottom / 2px 42px no-repeat;
 }
 
 .agent-onramp-card-brackets i:nth-child(4) {
   right: 0;
   bottom: 0;
   background:
-    linear-gradient(90deg, var(--step-accent-2), #8b7bff) right bottom / 34px 2px no-repeat,
-    linear-gradient(0deg, var(--step-accent-2), #8b7bff) right bottom / 2px 34px no-repeat;
-}
-
-@keyframes agent-onramp-bracket-in {
-  from {
-    opacity: 0;
-    transform: scale(0.992);
-  }
-
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
+    linear-gradient(90deg, #22d3ee, #8b7bff) right bottom / 42px 2px no-repeat,
+    linear-gradient(0deg, #22d3ee, #8b7bff) right bottom / 2px 42px no-repeat;
 }
 
 .agent-onramp-chroma-step-active {
@@ -5994,10 +5986,6 @@ html.light .belief-proof-rail em {
   }
 
   .agent-onramp-chroma-step-active {
-    animation: none !important;
-  }
-
-  .agent-onramp-card-brackets {
     animation: none !important;
   }
 }
