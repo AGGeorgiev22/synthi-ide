@@ -461,8 +461,9 @@ function Hero() {
       <div className="campaign-atmosphere" aria-hidden="true" />
       <div className="hero-main-grid mx-auto max-w-[1540px] px-4 pb-10 sm:px-6 lg:px-8">
         <div className="hero-copy-stage" data-reveal>
-          <div className="hero-proof-path" aria-label="lease active, state observed, proof attached">
-            lease: active <span aria-hidden="true">·</span> state: observed <span aria-hidden="true">·</span> proof: attached
+          <div className="hero-proof-path" aria-label="Vectant runtime control boundary">
+            <span>Runtime control boundary</span>
+            <strong>mutation requires lease, state, proof</strong>
           </div>
           <h1 className="hero-title">Agents can write code. Vectant controls what lands.</h1>
           <p className="hero-copy">

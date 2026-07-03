@@ -1340,29 +1340,44 @@ html.light .campaign-atmosphere {
 }
 
 .hero-proof-path {
-  display: block;
+  display: inline-flex;
   width: fit-content;
+  max-width: 100%;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
   margin-bottom: 30px;
+  border-bottom: 1px solid rgba(255, 247, 239, 0.16);
+  padding: 0 0 14px;
   font-family: var(--font-mono);
   font-size: 10.5px;
-  font-weight: 660;
-  letter-spacing: 0.02em;
-  line-height: 1.2;
-  color: rgba(255, 247, 239, 0.44);
-  text-transform: lowercase;
+  line-height: 1.15;
+  color: rgba(255, 247, 239, 0.62);
 }
 
 html.light .hero-proof-path {
-  color: rgba(18, 21, 27, 0.5);
+  border-bottom-color: rgba(18, 21, 27, 0.16);
+  color: rgba(18, 21, 27, 0.62);
 }
 
 .hero-proof-path span {
-  margin-inline: 0.55em;
-  color: rgba(255, 247, 239, 0.26);
+  font-size: 11px;
+  font-weight: 760;
+  color: #ff9b76;
+}
+
+.hero-proof-path strong {
+  font-size: 11px;
+  font-weight: 680;
+  color: rgba(255, 247, 239, 0.68);
 }
 
 html.light .hero-proof-path span {
-  color: rgba(18, 21, 27, 0.3);
+  color: #b74c29;
+}
+
+html.light .hero-proof-path strong {
+  color: rgba(18, 21, 27, 0.64);
 }
 
 .hero-title {
