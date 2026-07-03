@@ -180,8 +180,8 @@ const GPU_SCOPE_MATRIX = [
   },
   {
     label: "none.",
-    status: "boundary required",
-    copy: "We don't force our into our standards. That's easy to do. With Vectant, you can bring ANY codebase.",
+    status: "required boundary",
+    copy: "Use your existing code. No wrappers. No framework lock-in."
   },
 ];
 
