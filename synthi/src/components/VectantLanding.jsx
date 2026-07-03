@@ -463,11 +463,11 @@ function Hero() {
         <div className="hero-copy-stage" data-reveal>
           <div className="hero-proof-path" aria-label="Vectant runtime control boundary">
             <span>Runtime control boundary</span>
-            <strong>mutation requires lease, state, proof</strong>
+            <strong>compiled mutation requires lease, state, proof</strong>
           </div>
-          <h1 className="hero-title">Agents can write code. Vectant controls what lands.</h1>
+          <h1 className="hero-title">Agents can change GPU code. Vectant keeps runtime alive.</h1>
           <p className="hero-copy">
-            Run coding agents inside a live workspace with leases, replay, and proof attached before code reaches production.
+            Proof-gated live updates for ROCm/HIP and native code paths, with leases, replay, and evidence before anything reaches production.
           </p>
           <div className="hero-cta-row">
             <PrimaryCta>Request pilot</PrimaryCta>
@@ -480,10 +480,10 @@ function Hero() {
       <div className="hero-proof-strip-shell mx-auto max-w-[1540px] px-4 pb-16 sm:px-6 lg:px-8">
         <div className="hero-proof-strip" data-reveal>
           {[
-            ["Vectant clearance", "MutationLeases, no-fly zones, landing inspection"],
-            ["Vectant checkrides", "demonstrated workflows earn scoped, revocable authority"],
-            ["MCP eyes and hands", "browser, terminal, editor, screenshots, network, replay"],
-            ["Proof packets", "black-box replay, line provenance, output evidence, commit trailers"],
+            ["ROCm/HIP proof", "public before, diff, after visual evidence"],
+            ["Native boundaries", "ABI and state checks before promotion"],
+            ["CUDA route", "hardware-backed pilots validate supported paths"],
+            ["Agent authority", "leases, replay, proof before merge"],
           ].map(([title, copy]) => (
             <div key={title} className="hero-proof-cell">
               <strong>{title}</strong>
