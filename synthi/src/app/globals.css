@@ -1556,7 +1556,7 @@ html.light .secondary-cta:hover {
 
 .hero-product-float {
   width: min(1420px, 98vw);
-  min-height: clamp(900px, 112dvh, 1320px);
+  min-height: clamp(1180px, 156dvh, 1760px);
   margin: clamp(4px, 1.4dvh, 18px) auto 0;
   perspective: 1800px;
   transform-style: preserve-3d;
@@ -5268,7 +5268,7 @@ html.light .belief-proof-rail em {
     align-self: start;
     position: relative;
     top: auto;
-    min-height: clamp(900px, 112dvh, 1320px);
+    min-height: clamp(1180px, 156dvh, 1760px);
   }
 
   .hero-title {
