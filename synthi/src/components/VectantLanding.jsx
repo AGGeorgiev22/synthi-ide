@@ -457,10 +457,9 @@ function Hero() {
       <div className="campaign-atmosphere" aria-hidden="true" />
       <div className="hero-main-grid mx-auto max-w-[1540px] px-4 pb-10 sm:px-6 lg:px-8">
         <div className="hero-copy-stage" data-reveal>
-          <div className="hero-proof-path" aria-label="Vectant proof path">
-            {["lease", "observe", "replay", "prove", "land"].map((step) => (
-              <span key={step}>{step}</span>
-            ))}
+          <div className="hero-proof-path" aria-label="Vectant runtime control boundary">
+            <span>Runtime control boundary</span>
+            <strong>mutation requires lease, state, proof</strong>
           </div>
           <h1 className="hero-title">Agents can write code. Vectant controls what lands.</h1>
           <p className="hero-copy">
