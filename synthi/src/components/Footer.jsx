@@ -1,6 +1,9 @@
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
 
+const PILOT_EMAIL = "aleksandar.kolev@vectant.dev";
+const PILOT_MAILTO = `mailto:${PILOT_EMAIL}?subject=${encodeURIComponent("Vectant proof pilot")}`;
+
 const COLUMNS = [
   {
     title: "Product",
@@ -20,7 +23,7 @@ const COLUMNS = [
       { label: "FAQ", href: "#faq" },
       { label: "Docs", href: "#waitlist", soon: true },
       { label: "Changelog", href: "#waitlist", soon: true },
-      { label: "Contact", href: "mailto:info@vectant.dev" },
+      { label: "Contact", href: PILOT_MAILTO },
     ],
   },
 ];

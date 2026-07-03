@@ -5,7 +5,11 @@ import { HeroProductFloat } from "@/components/HeroProductFloat";
 import { VectantMotion } from "@/components/VectantMotion";
 import { GpuBeforeAfter } from "@/components/GpuBeforeAfter";
 import { GpuLatencyCounter } from "@/components/GpuLatencyCounter";
-import { WaitlistForm } from "@/components/WaitlistForm";
+
+const PILOT_EMAIL = "aleksandar.kolev@vectant.dev";
+const PILOT_MAILTO = `mailto:${PILOT_EMAIL}?subject=${encodeURIComponent("Vectant proof pilot")}&body=${encodeURIComponent(
+  "Hi Aleksandar,\n\nWe are interested in running a Vectant proof pilot for our company.\n\nCompany:\nRepo or system to pilot:\nWhat our agents are blocked from landing safely today:\n"
+)}`;
 
 const BROWSER_SHOT = {
   title: "Vectant clearance workspace",
@@ -377,9 +381,9 @@ const FAQ = [
   },
 ];
 
-function PrimaryCta({ href = "#waitlist", children = "Run a proof pilot" }) {
+function PrimaryCta({ href = PILOT_MAILTO, children = "Run a proof pilot", className = "" }) {
   return (
-    <a href={href} className="primary-cta group">
+    <a href={href} className={`primary-cta group ${className}`}>
       <span>{children}</span>
       <span className="primary-cta-icon">
         <span aria-hidden="true">→</span>
@@ -465,7 +469,7 @@ function Hero() {
             Run coding agents inside a live workspace with leases, replay, and proof attached before code reaches production.
           </p>
           <div className="hero-cta-row">
-            <PrimaryCta href="#waitlist">Request pilot</PrimaryCta>
+            <PrimaryCta>Request pilot</PrimaryCta>
             <SecondaryCta href="#runtime-path">View proof path</SecondaryCta>
           </div>
         </div>
@@ -891,7 +895,7 @@ function FeatureSystemsSection() {
             <h3>Bring the loop that currently scares reviewers.</h3>
             <p>Vectant attaches runtime state, policy, replay, and proof before the agent asks to land work.</p>
           </div>
-          <PrimaryCta href="#waitlist">Request pilot access</PrimaryCta>
+          <PrimaryCta>Request pilot access</PrimaryCta>
         </div>
       </div>
     </section>
@@ -951,11 +955,7 @@ function PricingSection() {
             ))}
           </ul>
           <div className="mt-8">
-            <WaitlistForm
-              variant="hero"
-              buttonLabel="Start proof run"
-              className="w-full border-line bg-surface/65"
-            />
+            <PrimaryCta className="pilot-email-cta">Email Aleksandar</PrimaryCta>
           </div>
         </div>
       </div>
@@ -1005,11 +1005,7 @@ function FinalCta() {
           Run a pilot inside an autonomous runtime with your tools, your extension paths, your runtime signals, and evidence your reviewers can inspect.
         </p>
         <div className="mx-auto mt-9 max-w-2xl">
-          <WaitlistForm
-            variant="hero"
-            buttonLabel="Request pilot access"
-            className="w-full border-line bg-surface/65"
-          />
+          <PrimaryCta className="pilot-email-cta">Email Aleksandar</PrimaryCta>
         </div>
       </div>
     </section>

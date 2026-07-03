@@ -16,6 +16,11 @@ const LINKS = [
   { label: "Pilot", href: "#pricing" },
 ];
 
+const PILOT_EMAIL = "aleksandar.kolev@vectant.dev";
+const PILOT_MAILTO = `mailto:${PILOT_EMAIL}?subject=${encodeURIComponent("Vectant proof pilot")}&body=${encodeURIComponent(
+  "Hi Aleksandar,\n\nWe are interested in running a Vectant proof pilot for our company.\n\nCompany:\nRepo or system to pilot:\nWhat our agents are blocked from landing safely today:\n"
+)}`;
+
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
@@ -73,7 +78,7 @@ export function Navbar() {
           <div className="hidden items-center gap-2 lg:flex">
             <ThemeToggle />
             <a
-              href="#waitlist"
+              href={PILOT_MAILTO}
               className="sheen group inline-flex items-center gap-1.5 rounded-sm border border-line bg-transparent px-4 py-2 text-[13.5px] font-medium text-ink-dim transition-[border-color,color,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-0.5 hover:border-line-2 hover:text-ink active:scale-[0.97]"
             >
               Request pilot
@@ -117,7 +122,7 @@ export function Navbar() {
           ))}
           <div className="mt-2 flex flex-col gap-2 border-t border-line pt-4">
             <a
-              href="#waitlist"
+              href={PILOT_MAILTO}
               onClick={() => setOpen(false)}
               className="rounded-sm border border-line/80 bg-transparent px-4 py-3 text-center text-[15px] font-medium text-ink"
             >

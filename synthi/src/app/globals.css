@@ -1480,6 +1480,10 @@ html.light .secondary-cta {
   transform: translateX(3px);
 }
 
+.pilot-email-cta {
+  width: 100%;
+}
+
 .secondary-cta:hover {
   border-color: rgba(255, 247, 239, 0.38);
   color: #fff7ef;
