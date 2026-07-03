@@ -486,7 +486,7 @@ function Hero() {
           </div>
           <h1 className="hero-title">Agents can change GPU code. Vectant keeps runtime alive.</h1>
           <p className="hero-copy">
-            Proof-gated live updates for ROCm/HIP and native code paths, with leases, replay, and evidence before anything reaches production.
+            Hot-swap compiled code changes into live sessions. Replay each mutation, attach proof, and promote only when the gate passes. You'll love it.
           </p>
           <div className="hero-cta-row">
             <PrimaryCta>Request pilot</PrimaryCta>
@@ -1029,7 +1029,7 @@ function FinalCta() {
             className="final-cta-logo h-auto w-[240px] sm:w-[300px] md:w-[340px]"
           />
         </div>
-        <h2>Bring the repo your agent cannot safely touch yet.</h2>
+        <h2>And this is not everything.</h2>
         <p>
           Run a pilot inside an autonomous runtime with your tools, your extension paths, your runtime signals, and evidence your reviewers can inspect.
         </p>
