@@ -35,33 +35,33 @@ export function HeroProductFloat() {
   const prefersReducedMotion = useReducedMotion();
   const { scrollYProgress } = useScroll({
     target: ref,
-    offset: ["start start", "end end"],
+    offset: ["start 72%", "end 18%"],
   });
   const spring = { stiffness: 154, damping: 22, mass: 0.5 };
 
-  const stageY = useSpring(useTransform(scrollYProgress, [0, 0.52, 0.82, 1], [52, -6, -18, -44]), spring);
+  const stageY = useSpring(useTransform(scrollYProgress, [0, 0.34, 0.72, 1], [34, 8, -4, -22]), spring);
   const mainX = useSpring(useTransform(scrollYProgress, [0, 0.46, 1], [0, 0, 0]), spring);
-  const mainY = useSpring(useTransform(scrollYProgress, [0, 0.42, 0.78, 1], [108, 0, -12, -34]), spring);
-  const mainZ = useSpring(useTransform(scrollYProgress, [0, 0.42, 0.78, 1], [-520, 20, 170, 86]), spring);
-  const mainScale = useSpring(useTransform(scrollYProgress, [0, 0.42, 0.78, 1], [0.5, 1.02, 1, 0.94]), spring);
-  const mainRotateX = useSpring(useTransform(scrollYProgress, [0, 0.42, 0.78, 1], [17, 0, -1, 0.75]), spring);
-  const mainRotateY = useSpring(useTransform(scrollYProgress, [0, 0.42, 0.78, 1], [-14, 0, 0, 0.8]), spring);
+  const mainY = useSpring(useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [96, 34, 18, 4]), spring);
+  const mainZ = useSpring(useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [-360, 72, 190, 96]), spring);
+  const mainScale = useSpring(useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0.66, 1.04, 1, 0.94]), spring);
+  const mainRotateX = useSpring(useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [11, 0, -1, 0.75]), spring);
+  const mainRotateY = useSpring(useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [-9, 0, 0, 0.8]), spring);
   const mainRotateZ = useSpring(useTransform(scrollYProgress, [0, 1], [0.55, 0]), spring);
   const mainOpacity = useTransform(scrollYProgress, [0, 0.84, 1], [1, 1, 0.9]);
-  const observeY = useSpring(useTransform(scrollYProgress, [0, 0.42, 0.78, 1], [26, -22, -32, -60]), spring);
-  const observeX = useSpring(useTransform(scrollYProgress, [0, 0.42, 0.78, 1], [154, 86, 22, 34]), spring);
-  const observeZ = useSpring(useTransform(scrollYProgress, [0, 0.42, 0.78, 1], [-260, 16, 150, 74]), spring);
-  const observeScale = useSpring(useTransform(scrollYProgress, [0, 0.42, 0.78, 1], [0.42, 0.62, 0.72, 0.66]), spring);
+  const observeY = useSpring(useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [34, 4, -8, -28]), spring);
+  const observeX = useSpring(useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [76, 44, 18, 28]), spring);
+  const observeZ = useSpring(useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [-150, 90, 170, 82]), spring);
+  const observeScale = useSpring(useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0.52, 0.74, 0.78, 0.68]), spring);
   const observeOpacity = useTransform(scrollYProgress, [0, 0.84, 1], [1, 1, 0.82]);
-  const gpuY = useSpring(useTransform(scrollYProgress, [0, 0.46, 0.78, 1], [176, 110, 60, 14]), spring);
-  const gpuX = useSpring(useTransform(scrollYProgress, [0, 0.46, 0.78, 1], [-142, -80, -44, -72]), spring);
-  const gpuZ = useSpring(useTransform(scrollYProgress, [0, 0.46, 0.78, 1], [-280, -18, 132, 62]), spring);
-  const gpuScale = useSpring(useTransform(scrollYProgress, [0, 0.46, 0.78, 1], [0.44, 0.62, 0.72, 0.64]), spring);
+  const gpuY = useSpring(useTransform(scrollYProgress, [0, 0.32, 0.72, 1], [158, 112, 78, 34]), spring);
+  const gpuX = useSpring(useTransform(scrollYProgress, [0, 0.32, 0.72, 1], [-64, -42, -30, -54]), spring);
+  const gpuZ = useSpring(useTransform(scrollYProgress, [0, 0.32, 0.72, 1], [-160, 72, 152, 70]), spring);
+  const gpuScale = useSpring(useTransform(scrollYProgress, [0, 0.32, 0.72, 1], [0.54, 0.74, 0.78, 0.66]), spring);
   const gpuOpacity = useTransform(scrollYProgress, [0, 0.84, 1], [1, 1, 0.78]);
-  const collabY = useSpring(useTransform(scrollYProgress, [0, 0.48, 0.78, 1], [78, 18, -4, -38]), spring);
-  const collabX = useSpring(useTransform(scrollYProgress, [0, 0.48, 0.78, 1], [72, -132, -252, -280]), spring);
-  const collabZ = useSpring(useTransform(scrollYProgress, [0, 0.42, 0.78, 1], [-280, 64, 230, 96]), spring);
-  const collabScale = useSpring(useTransform(scrollYProgress, [0, 0.48, 0.78, 1], [0.44, 0.64, 0.74, 0.66]), spring);
+  const collabY = useSpring(useTransform(scrollYProgress, [0, 0.32, 0.72, 1], [78, 36, 18, -8]), spring);
+  const collabX = useSpring(useTransform(scrollYProgress, [0, 0.32, 0.72, 1], [36, -88, -210, -238]), spring);
+  const collabZ = useSpring(useTransform(scrollYProgress, [0, 0.32, 0.72, 1], [-170, 118, 244, 102]), spring);
+  const collabScale = useSpring(useTransform(scrollYProgress, [0, 0.32, 0.72, 1], [0.54, 0.76, 0.78, 0.68]), spring);
   const collabRotateZ = useSpring(useTransform(scrollYProgress, [0, 1], [1.2, 0]), spring);
   const collabOpacity = useTransform(scrollYProgress, [0, 0.84, 1], [1, 1, 0.82]);
   const cardHover = prefersReducedMotion
@@ -158,11 +158,6 @@ export function HeroProductFloat() {
                 <span>lease observed</span>
                 <span>replay attached</span>
                 <span>proof ready</span>
-              </div>
-              <div className="hero-proof-orbit" aria-hidden="true">
-                <span />
-                <span />
-                <span />
               </div>
             </div>
           </motion.div>

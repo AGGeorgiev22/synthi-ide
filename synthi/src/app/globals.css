@@ -1340,44 +1340,33 @@ html.light .campaign-atmosphere {
 }
 
 .hero-proof-path {
-  display: inline-flex;
+  display: block;
   width: fit-content;
-  align-items: center;
-  gap: 12px;
-  border-bottom: 1px solid rgba(255, 247, 239, 0.16);
-  padding: 0 0 11px;
-  color: rgba(255, 247, 239, 0.64);
+  margin-bottom: 30px;
   font-family: var(--font-mono);
-  line-height: 1.15;
+  font-size: 10.5px;
+  font-weight: 660;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+  color: rgba(255, 247, 239, 0.44);
+  text-transform: lowercase;
 }
 
 html.light .hero-proof-path {
-  border-bottom-color: rgba(18, 21, 27, 0.16);
-  color: rgba(18, 21, 27, 0.62);
+  color: rgba(18, 21, 27, 0.5);
 }
 
 .hero-proof-path span {
-  font-size: 10px;
-  font-weight: 760;
-  color: #ffb199;
-}
-
-.hero-proof-path strong {
-  font-size: 11px;
-  font-weight: 680;
-  color: rgba(255, 247, 239, 0.68);
+  margin-inline: 0.55em;
+  color: rgba(255, 247, 239, 0.26);
 }
 
 html.light .hero-proof-path span {
-  color: #b74c29;
-}
-
-html.light .hero-proof-path strong {
-  color: rgba(18, 21, 27, 0.64);
+  color: rgba(18, 21, 27, 0.3);
 }
 
 .hero-title {
-  margin-top: 30px;
+  margin-top: 0;
   max-width: min(1400px, 94vw);
   font-family: var(--font-satoshi), ui-sans-serif, system-ui, sans-serif;
   font-size: clamp(48px, 5.7vw, 88px);
@@ -1548,8 +1537,8 @@ html.light .secondary-cta:hover {
 
 .hero-product-float {
   width: min(1420px, 98vw);
-  min-height: clamp(900px, 124dvh, 1240px);
-  margin: clamp(12px, 3dvh, 34px) auto 0;
+  min-height: clamp(900px, 112dvh, 1320px);
+  margin: clamp(4px, 1.4dvh, 18px) auto 0;
   perspective: 1800px;
   transform-style: preserve-3d;
 }
@@ -1558,7 +1547,7 @@ html.light .secondary-cta:hover {
   position: sticky;
   top: clamp(76px, 9vh, 96px);
   display: grid;
-  min-height: min(720px, calc(100dvh - 120px));
+  min-height: min(680px, calc(100dvh - 112px));
   align-items: center;
   isolation: isolate;
   perspective: 1800px;
@@ -1568,10 +1557,10 @@ html.light .secondary-cta:hover {
 
 .hero-product-depth {
   position: absolute;
-  inset: 3% -4% auto -4%;
+  inset: 0 -3% auto -3%;
   z-index: 0;
   display: block;
-  height: 74%;
+  height: 70%;
   border-radius: 30px;
   background:
     radial-gradient(circle at 62% 42%, rgba(81, 215, 233, 0.28), transparent 34%),
@@ -1580,7 +1569,7 @@ html.light .secondary-cta:hover {
     linear-gradient(135deg, rgba(255, 247, 239, 0.06), transparent 48%);
   opacity: 0.72;
   pointer-events: none;
-  transform: translate3d(0, 42px, -280px) scale(0.8) rotateX(11deg);
+  transform: translate3d(0, 18px, -250px) scale(0.82) rotateX(9deg);
   box-shadow:
     0 80px 180px rgba(0, 0, 0, 0.5),
     inset 0 0 0 1px rgba(255, 247, 239, 0.055);
@@ -1699,30 +1688,25 @@ html.light .hero-product-depth {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 8px;
-  border-top: 1px solid rgba(81, 215, 233, 0.58);
-  border-bottom: 1px solid rgba(255, 98, 173, 0.32);
+  border-top: 1px solid rgba(255, 247, 239, 0.12);
+  border-bottom: 1px solid rgba(255, 247, 239, 0.08);
   background:
-    linear-gradient(90deg, transparent, rgba(81, 215, 233, 0.12), rgba(255, 98, 173, 0.1), transparent),
-    linear-gradient(180deg, rgba(255, 247, 239, 0.08), transparent);
+    linear-gradient(90deg, transparent, rgba(255, 247, 239, 0.055), transparent),
+    linear-gradient(180deg, rgba(8, 8, 9, 0.34), transparent);
   padding: 7px 10px;
-  color: rgba(255, 247, 239, 0.76);
+  color: rgba(255, 247, 239, 0.46);
   font-family: var(--font-mono);
   font-size: 9px;
   font-weight: 650;
   line-height: 1;
-  opacity: 0.78;
+  opacity: 0.68;
   pointer-events: none;
   text-transform: lowercase;
-  transform: translate3d(0, -22px, 0);
-  animation: hero-proof-scan 6.6s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+  transform: translate3d(0, -10px, 0);
 }
 
 .hero-proof-scan::before {
-  content: "";
-  position: absolute;
-  inset: -22px 0;
-  background: linear-gradient(180deg, transparent, rgba(81, 215, 233, 0.1), transparent);
-  opacity: 0.72;
+  content: none;
 }
 
 .hero-proof-scan span {
@@ -1735,75 +1719,9 @@ html.light .hero-product-depth {
 
 html.light .hero-proof-scan {
   background:
-    linear-gradient(90deg, transparent, rgba(81, 215, 233, 0.16), rgba(255, 98, 173, 0.13), transparent),
-    linear-gradient(180deg, rgba(18, 21, 27, 0.06), transparent);
-  color: rgba(255, 247, 239, 0.82);
-}
-
-.hero-proof-orbit {
-  position: absolute;
-  right: 5%;
-  bottom: 8%;
-  z-index: 3;
-  width: min(260px, 26%);
-  aspect-ratio: 1;
-  border: 1px solid rgba(255, 247, 239, 0.13);
-  border-radius: 9999px;
-  background:
-    radial-gradient(circle, rgba(255, 247, 239, 0.08), transparent 54%),
-    rgba(0, 0, 0, 0.28);
-  opacity: 0.84;
-  pointer-events: none;
-  transform: rotateX(58deg) rotateZ(-12deg);
-  transform-style: preserve-3d;
-}
-
-.hero-proof-orbit::before,
-.hero-proof-orbit::after,
-.hero-proof-orbit span {
-  content: "";
-  position: absolute;
-  border-radius: 9999px;
-}
-
-.hero-proof-orbit::before {
-  inset: 14%;
-  border: 1px solid rgba(81, 215, 233, 0.26);
-}
-
-.hero-proof-orbit::after {
-  inset: 43%;
-  background: #fff7ef;
-  box-shadow:
-    0 0 24px rgba(255, 247, 239, 0.76),
-    0 0 42px rgba(81, 215, 233, 0.42);
-}
-
-.hero-proof-orbit span {
-  top: 50%;
-  left: 50%;
-  width: 9px;
-  height: 9px;
-  margin: -4px 0 0 -4px;
-  background: #55d8ef;
-  box-shadow: 0 0 18px rgba(85, 216, 239, 0.82);
-  animation: hero-proof-orbit 7.8s linear infinite;
-}
-
-.hero-proof-orbit span:nth-child(2) {
-  width: 7px;
-  height: 7px;
-  background: #ff62ad;
-  animation-duration: 10.4s;
-  animation-delay: -2.4s;
-}
-
-.hero-proof-orbit span:nth-child(3) {
-  width: 6px;
-  height: 6px;
-  background: #ffb199;
-  animation-duration: 6.2s;
-  animation-delay: -4.2s;
+    linear-gradient(90deg, transparent, rgba(255, 247, 239, 0.06), transparent),
+    linear-gradient(180deg, rgba(8, 8, 9, 0.3), transparent);
+  color: rgba(255, 247, 239, 0.5);
 }
 
 .hero-product-card {
@@ -2350,19 +2268,19 @@ html.light .hero-product-card {
 
 .hero-product-card-observe {
   top: 2%;
-  right: 1%;
+  right: 3.5%;
   width: min(286px, 30%);
 }
 
 .hero-product-card-gpu {
   z-index: 40;
-  left: 1%;
+  left: 3.5%;
   bottom: 8%;
   width: min(240px, 28%);
 }
 
 .hero-code-collab-anchor {
-  right: 1%;
+  right: 4%;
   bottom: 1%;
   width: min(660px, 72%);
 }
@@ -5262,34 +5180,6 @@ html.light .belief-proof-rail em {
   }
 }
 
-@keyframes hero-proof-orbit {
-  from {
-    transform: rotate(0deg) translateX(112px) rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg) translateX(112px) rotate(-360deg);
-  }
-}
-
-@keyframes hero-proof-scan {
-  0%, 100% {
-    opacity: 0;
-    transform: translate3d(0, -32px, 0);
-  }
-  14% {
-    opacity: 0.72;
-  }
-  48% {
-    opacity: 0.86;
-  }
-  86% {
-    opacity: 0.64;
-  }
-  100% {
-    transform: translate3d(0, 248px, 0);
-  }
-}
-
 @media (min-width: 640px) {
   .hero-title {
     font-size: clamp(56px, 5.7vw, 88px);
@@ -5322,7 +5212,7 @@ html.light .belief-proof-rail em {
     align-self: start;
     position: relative;
     top: auto;
-    min-height: clamp(900px, 124dvh, 1240px);
+    min-height: clamp(900px, 112dvh, 1320px);
   }
 
   .hero-title {
@@ -5570,10 +5460,6 @@ html.light .belief-proof-rail em {
 
   .hero-shot-brand-mask strong {
     font-size: 13px;
-  }
-
-  .hero-proof-orbit {
-    display: none;
   }
 
   .hero-proof-scan {
@@ -5991,16 +5877,6 @@ html.light .belief-proof-rail em {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-proof-orbit span {
-    animation: none !important;
-  }
-
-  .hero-proof-scan {
-    animation: none !important;
-    opacity: 0.52;
-    transform: translate3d(0, 54px, 0);
-  }
-
   .dogfood-proof-sweep {
     display: none;
     animation: none !important;
