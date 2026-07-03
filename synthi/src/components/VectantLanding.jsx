@@ -210,31 +210,31 @@ const RUNTIME_PILLARS = [
 
 const RUNTIME_PROOF_PATH = [
   {
-    step: "Request",
-    title: "The agent asks for authority first.",
-    copy: "Vectant turns intent into a MutationLease with files, routes, protected paths, and required evidence before code changes.",
-    signal: "scope before write",
+    step: "Lease requested",
+    title: "Scope is bound before mutation.",
+    copy: "Files, routes, commands, protected paths, expiry, and required evidence become a MutationLease before the agent can write.",
+    signal: "permission boundary",
     shot: AUTHORITY_REQUEST_SHOT,
   },
   {
-    step: "Observe",
-    title: "The runtime watches the real system.",
-    copy: "Browser, terminal, workflow state, screenshots, HMR status, and replay context stay inside one cloud workspace.",
-    signal: "live workspace state",
+    step: "Runtime observed",
+    title: "The live workspace is captured.",
+    copy: "Browser, terminal, logs, screenshots, HMR, and repo state stay in one session so reviewers see what the agent saw.",
+    signal: "session telemetry",
     shot: BROWSER_SHOT,
   },
   {
-    step: "Constrain",
-    title: "The landing is checked against risk.",
-    copy: "Protected paths, collision zones, no-fly zones, and evidence gates decide whether a mutation can continue.",
-    signal: "risk gates",
+    step: "Mutation gated",
+    title: "Risk gates decide the next action.",
+    copy: "Protected paths, collisions, no-fly zones, and output checks block or narrow the mutation before it expands.",
+    signal: "policy enforcement",
     shot: CONSTRAIN_SHOT,
   },
   {
-    step: "Prove",
-    title: "Reviewers open evidence, not a story.",
+    step: "Proof attached",
+    title: "The handoff includes evidence.",
     copy: "Replay, line provenance, output proof, and commit context travel with the change before production-bound work merges.",
-    signal: "proof packet",
+    signal: "audit packet",
     shot: PROOF_PACKET_SHOT,
   },
 ];
@@ -564,16 +564,15 @@ function RuntimeProofPathSection() {
     <section id="runtime-path" className="runtime-campaign runtime-proof-path scroll-mt-16 py-24 md:py-36">
       <div className="runtime-path-shell mx-auto max-w-[1500px] px-4 sm:px-6 lg:px-8">
         <div className="runtime-path-copy" data-reveal>
-          <p className="section-mark">Autonomous runtime path</p>
-          <h2>The runtime makes every agent earn its next move.</h2>
+          <p className="section-mark">Runtime authority path</p>
+          <h2>Every agent action passes through a control boundary.</h2>
           <p>
-            Vectant is the control plane between autonomous agents and production code. The story is not chat, promise, merge. It is request, observe, constrain, prove.
+            Vectant sits between autonomous agents and production code with narrow permissions, observed workspace state, gated mutation, and evidence a reviewer can audit.
           </p>
 
           <div className="runtime-path-steps" aria-label="Vectant runtime proof path">
-            {RUNTIME_PROOF_PATH.map(({ step, title, copy, signal }, index) => (
+            {RUNTIME_PROOF_PATH.map(({ step, title, copy, signal }) => (
               <article key={step} data-runtime-step>
-                <span>{String(index + 1).padStart(2, "0")}</span>
                 <div>
                   <strong>{step}</strong>
                   <h3>{title}</h3>
