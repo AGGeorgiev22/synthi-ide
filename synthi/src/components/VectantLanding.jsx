@@ -159,11 +159,30 @@ const COMPILED_WORKFLOWS = [
 
 const GPU_HMR_MARKETS = [
   "ML infrastructure",
-  "CUDA / ROCm loops",
+  "ROCm/HIP proof loops",
+  "CUDA preflight pilots",
   "rendering",
   "simulation",
   "game engines",
   "large C++ / Rust",
+];
+
+const GPU_SCOPE_MATRIX = [
+  {
+    label: "ROCm/HIP",
+    status: "public visual proof",
+    copy: "Before, diff, and after output evidence from a live session.",
+  },
+  {
+    label: "CUDA route",
+    status: "pilot validation",
+    copy: "Hardware-backed pilots must prove the same compile, load, and state gates.",
+  },
+  {
+    label: "Native C++ / Rust",
+    status: "boundary required",
+    copy: "Reloadable paths need explicit ABI, symbol, and state-preservation checks.",
+  },
 ];
 
 const COLLABORATION_WEDGES = [
@@ -333,7 +352,7 @@ const DEEP_FEATURES = [
 ];
 
 const SURFACES = [
-  ["Large-scale ML infra", "CUDA and ROCm/HIP artifacts, kernel loops, output oracles, device epochs, before-after proof"],
+  ["Large-scale ML infra", "ROCm/HIP proof loops, CUDA preflight routes, output oracles, device epochs, before-after proof"],
   ["Enterprise codebases", "large repos, policy gates, VS Code extensions, branch evidence, line provenance, rollback trails"],
   ["Robotics and simulation", "render loops, hardware-adjacent validation, perceptual proof, preserved runtime state"],
   ["Game engines and native systems", "compiled C++ / Rust hot paths, ABI checks, asset reload, stateful scene proof"],
@@ -350,7 +369,7 @@ const DOGFOOD_ITEMS = [
 
 const PILOT_ITEMS = [
   "Profile GPU HMR on a real compiled project",
-  "Run CUDA or ROCm/HIP workflows with state preservation proof",
+  "Run ROCm/HIP proof workflows or preflight CUDA/native routes for hardware-backed validation",
   "Connect the VS Code extensions your enterprise repo actually needs",
   "Review Vectant proof packets from production-bound agent work",
   "Open a live collaboration room with humans and independent agents",
@@ -753,11 +772,20 @@ function GpuSection() {
         <div className="gpu-stage" data-reveal>
           <div className="gpu-copy">
             <p className="section-mark">Proof-gated GPU HMR</p>
-            <h2>Hot-swap compiled code. Keep runtime state.</h2>
+            <h2>Agent-written compiled changes only promote with evidence.</h2>
             <GpuLatencyCounter />
             <p>
-              Vectant swaps the compiled artifact without dropping the running session. ABI, hardware, oracle, ledger, and state checks decide whether the reload can promote.
+              Vectant swaps supported compiled artifacts without dropping the running session. ABI, hardware, oracle, ledger, and state checks decide whether the reload can promote.
             </p>
+            <div className="gpu-proof-grid" aria-label="GPU HMR proof scope">
+              {GPU_SCOPE_MATRIX.map(({ label, status, copy }) => (
+                <article key={label}>
+                  <span>{status}</span>
+                  <h3>{label}</h3>
+                  <p>{copy}</p>
+                </article>
+              ))}
+            </div>
             <div className="gpu-market-strip" aria-label="Best-fit GPU HMR markets">
               {GPU_HMR_MARKETS.map((market) => (
                 <span key={market}>{market}</span>
@@ -1021,10 +1049,10 @@ export function VectantLanding() {
       <AgentOnRamp />
       <ComparisonSection />
       <RuntimeProofPathSection />
+      <GpuSection />
       <RuntimeControlSection />
       <DogfoodSection />
       <LiveCollaborationSection />
-      <GpuSection />
       <ProofSection />
       <LicensesSection />
       <TrustSystemsSection />

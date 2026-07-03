@@ -4522,6 +4522,43 @@ html.light .belief-proof-rail em {
   align-content: stretch;
 }
 
+.gpu-proof-grid article {
+  min-height: 118px;
+  border: 1px solid rgba(19, 11, 8, 0.18);
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, rgba(255, 247, 239, 0.1), rgba(19, 11, 8, 0.045)),
+    rgba(19, 11, 8, 0.035);
+  padding: 14px;
+}
+
+.gpu-proof-grid span {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-weight: 780;
+  letter-spacing: 0.02em;
+  color: rgba(19, 11, 8, 0.58);
+}
+
+.gpu-proof-grid h3 {
+  margin-top: 12px;
+  font-family: var(--font-satoshi), ui-sans-serif, system-ui, sans-serif;
+  font-size: 20px;
+  font-weight: 840;
+  line-height: 0.98;
+  letter-spacing: 0;
+  color: #100805;
+}
+
+.gpu-proof-grid p {
+  margin-top: 10px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  line-height: 1.45;
+  color: rgba(19, 11, 8, 0.64);
+}
+
 .gpu-evidence-stack {
   display: grid;
   gap: 14px;
@@ -5423,6 +5460,10 @@ html.light .belief-proof-rail em {
 
   .compiled-workflow-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .gpu-proof-grid {
+    grid-template-columns: 1fr;
   }
 
   .proof-gallery {
