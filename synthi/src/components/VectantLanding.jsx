@@ -179,9 +179,9 @@ const GPU_SCOPE_MATRIX = [
     copy: "Hardware-backed pilots must prove the same compile, load, and state gates.",
   },
   {
-    label: "Native C++ / Rust",
+    label: "none.",
     status: "boundary required",
-    copy: "Reloadable paths need explicit ABI, symbol, and state-preservation checks.",
+    copy: "We don't force our into our standards. That's easy to do. With Vectant, you can bring ANY codebase.",
   },
 ];
 
