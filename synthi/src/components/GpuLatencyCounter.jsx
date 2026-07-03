@@ -107,9 +107,9 @@ export function GpuLatencyCounter() {
       ref={ref}
       className="gpu-latency-counter"
       data-counter-done="false"
-      aria-label="Sub 90ms GPU HMR edit to visual target on scoped ROCm/HIP proof runs"
+      aria-label="Sub 90ms GPU HMR edit-to-visual target on scoped ROCm/HIP proof runs"
     >
-      <span>GPU HMR proof-loop target</span>
+      <span>Sub 90ms GPU HMR edit-to-visual target</span>
       <strong>
         <span>sub</span>
         <span className="gpu-latency-value">
@@ -123,11 +123,11 @@ export function GpuLatencyCounter() {
         <path pathLength="1" d="M7 22 C 76 11 140 24 213 16 S 346 10 413 20" />
       </svg>
       <div className="gpu-latency-artifacts" aria-label="GPU HMR proof artifacts">
-        {["source diff", "compiled epoch", "visual oracle", "state ledger"].map((item) => (
+        {["source diff", "compiled epoch", "ABI / state check", "visual oracle"].map((item) => (
           <span key={item}>{item}</span>
         ))}
       </div>
-      <p>Scoped hot path, independent of repo size: edit, compile, visual, then promote only when the proof gate passes.</p>
+      <p>Scope the hot path, not the whole repo: edit, compile, visual, then promote only when the proof gate passes.</p>
     </div>
   );
 }

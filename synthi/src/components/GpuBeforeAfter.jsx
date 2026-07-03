@@ -32,8 +32,8 @@ export function GpuBeforeAfter() {
     <div className="gpu-compare-shell" data-reveal>
       <div className="gpu-compare-toolbar">
         <div>
-          <span>compiled runtime proof</span>
-          <strong>Drag the divider. The runtime stayed alive.</strong>
+          <span>public visual proof</span>
+          <strong>Drag the divider. The visual changed without resetting the session.</strong>
         </div>
         <div className="gpu-compare-readout">{position}% after</div>
       </div>
