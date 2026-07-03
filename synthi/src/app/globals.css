@@ -4501,6 +4501,28 @@ html.light .belief-proof-rail em {
   animation: gpu-latency-underline-draw 720ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
+.gpu-latency-artifacts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px;
+  margin-top: 4px;
+}
+
+.gpu-latency-artifacts span {
+  display: inline-flex;
+  min-height: 30px;
+  align-items: center;
+  border: 1px solid rgba(19, 11, 8, 0.17);
+  border-radius: 6px;
+  background: rgba(19, 11, 8, 0.045);
+  padding: 7px 9px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 780;
+  line-height: 1.2;
+  color: rgba(19, 11, 8, 0.66);
+}
+
 .gpu-latency-counter p {
   margin: 0;
   max-width: none;

@@ -136,20 +136,20 @@ const TOOL_COMPARISON = [
 
 const COMPILED_WORKFLOWS = [
   {
-    title: "ROCm / HIP proof runs",
-    copy: "Compile the sidecar, publish a new epoch, and accept only when device, oracle, and visual proof pass.",
+    title: "ROCm / HIP proof scope",
+    copy: "Hardware-backed runs publish a new epoch only after device, oracle, and visual proof pass.",
   },
   {
-    title: "CUDA-oriented workflows",
-    copy: "CUDA teams can take the same gated route after hardware-backed validation proves the hot path is safe.",
+    title: "CUDA-oriented route",
+    copy: "CUDA paths stay preflight-only until hardware validation proves the same runtime gates hold.",
   },
   {
-    title: "Native module boundaries",
-    copy: "Find the smallest safe compiled path. Refuse reload when ABI, binding, or state proof is missing.",
+    title: "Native boundary check",
+    copy: "Vectant finds the smallest reloadable path and refuses promotion when ABI or state proof is missing.",
   },
   {
-    title: "Rendering loops",
-    copy: "Before, diff, and after evidence show the output while the ledger records compile, dispatch, and preservation signals.",
+    title: "Visual oracle ledger",
+    copy: "Before, diff, and after evidence show output while the ledger records compile and preservation signals.",
   },
 ];
 
@@ -752,10 +752,7 @@ function GpuSection() {
             <h2>Hot-swap compiled code. Keep runtime state.</h2>
             <GpuLatencyCounter />
             <p>
-              Vectant swaps the compiled artifact without dropping the running session, then promotes only after ABI, hardware, oracle, ledger, and state checks pass.
-            </p>
-            <p>
-              Current proof: ROCm/HIP. CUDA-oriented workflows follow the same gated route after hardware-backed validation.
+              Vectant swaps the compiled artifact without dropping the running session. ABI, hardware, oracle, ledger, and state checks decide whether the reload can promote.
             </p>
             <div className="gpu-market-strip" aria-label="Best-fit GPU HMR markets">
               {GPU_HMR_MARKETS.map((market) => (
