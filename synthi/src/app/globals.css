@@ -3764,7 +3764,7 @@ html.light .belief-proof-rail em {
   grid-template-rows: minmax(0, 1fr) auto;
   padding: 56px 10px 10px;
   opacity: 0;
-  transform: translate3d(0, 28px, 0) scale(0.965);
+  transform: translate3d(0, 22px, 0) scale(0.982);
   will-change: transform, opacity;
 }
 

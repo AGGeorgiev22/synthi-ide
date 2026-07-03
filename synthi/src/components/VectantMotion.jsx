@@ -123,22 +123,22 @@ export function VectantMotion() {
         if (runtimePathSteps.length && runtimePathSteps.length === runtimePathPanels.length) {
           gsap.set(runtimePathSteps, { opacity: 0.46, y: 8 });
           gsap.set(runtimePathSteps[0], { opacity: 1, y: 0 });
-          gsap.set(runtimePathPanels, { autoAlpha: 0, y: 34, scale: 0.965 });
+          gsap.set(runtimePathPanels, { autoAlpha: 0, y: 22, scale: 0.982 });
           gsap.set(runtimePathPanels[0], { autoAlpha: 1, y: 0, scale: 1 });
 
           const runtimePathTimeline = gsap.timeline({
             scrollTrigger: {
               trigger: runtimePathShell,
               start: "top top",
-              end: () => `+=${Math.max(window.innerHeight * Math.max(runtimePathPanels.length - 1, 1) * 0.86, 1500)}`,
+              end: () => `+=${Math.max(window.innerHeight * Math.max(runtimePathPanels.length - 1, 1) * 0.66, 1120)}`,
               pin: true,
-              scrub: 1,
+              scrub: 0.72,
               anticipatePin: 1,
               invalidateOnRefresh: true,
             },
           });
 
-          const runtimeStepSpacing = 1.24;
+          const runtimeStepSpacing = 1.02;
 
           runtimePathSteps.forEach((step, index) => {
             if (index === 0) return;
@@ -149,9 +149,9 @@ export function VectantMotion() {
                 runtimePathPanels[index - 1],
                 {
                   autoAlpha: 0,
-                  y: -26,
-                  scale: 0.985,
-                  duration: 0.5,
+                  y: -18,
+                  scale: 0.992,
+                  duration: 0.42,
                   ease: "none",
                 },
                 at - 0.42,
@@ -162,7 +162,7 @@ export function VectantMotion() {
                   autoAlpha: 1,
                   y: 0,
                   scale: 1,
-                  duration: 0.72,
+                  duration: 0.58,
                   ease: "none",
                 },
                 at - 0.18,
@@ -171,8 +171,8 @@ export function VectantMotion() {
                 runtimePathSteps[index - 1],
                 {
                   opacity: 0.48,
-                  y: -6,
-                  duration: 0.46,
+                  y: -4,
+                  duration: 0.38,
                   ease: "none",
                 },
                 at - 0.34,
@@ -182,14 +182,14 @@ export function VectantMotion() {
                 {
                   opacity: 1,
                   y: 0,
-                  duration: 0.5,
+                  duration: 0.42,
                   ease: "none",
                 },
                 at - 0.28,
               );
           });
 
-          runtimePathTimeline.to({}, { duration: 0.9 });
+          runtimePathTimeline.to({}, { duration: 0.35 });
         }
       }
 
