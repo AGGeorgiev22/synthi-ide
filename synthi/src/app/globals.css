@@ -1339,80 +1339,89 @@ html.light .campaign-atmosphere {
   color: #ffb199;
 }
 
-.hero-kicker {
+.hero-proof-path {
   display: inline-grid;
-  max-width: 100%;
-  justify-items: center;
-  gap: 3px;
+  grid-template-columns: repeat(5, auto);
+  align-items: center;
+  overflow: hidden;
+  border: 1px solid rgba(255, 247, 239, 0.14);
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.012)),
+    rgba(255, 255, 255, 0.024);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    0 18px 54px rgba(0, 0, 0, 0.28);
+  color: rgba(255, 247, 239, 0.68);
   font-family: var(--font-mono);
-  font-size: clamp(9.5px, 2.6vw, 11px);
-  font-weight: 650;
-  line-height: 1.35;
-  letter-spacing: 0;
-  color: rgba(255, 247, 239, 0.74);
+  font-size: 10px;
+  font-weight: 660;
+  line-height: 1;
 }
 
-html.light .hero-kicker {
-  color: rgba(18, 21, 27, 0.72);
+html.light .hero-proof-path {
+  border-color: rgba(18, 21, 27, 0.13);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.42)),
+    rgba(18, 21, 27, 0.026);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.82),
+    0 18px 44px rgba(18, 21, 27, 0.08);
+  color: rgba(18, 21, 27, 0.66);
 }
 
-.hero-kicker-copy {
-  display: block;
-  max-width: min(100%, 56ch);
+.hero-proof-path span {
+  position: relative;
+  display: inline-flex;
+  min-height: 30px;
+  align-items: center;
+  padding: 0 14px;
+  white-space: nowrap;
 }
 
-.hero-kicker-line {
-  display: block;
-  width: 100%;
-  max-width: min(100%, 56ch);
-  height: 13px;
-  overflow: visible;
-  filter: drop-shadow(0 0 8px rgba(255, 75, 216, 0.24));
+.hero-proof-path span + span {
+  border-left: 1px solid rgba(255, 247, 239, 0.1);
 }
 
-.hero-kicker-line-path {
-  fill: none;
-  stroke: url("#hero-kicker-gradient");
-  stroke-width: 1.8;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  opacity: 0.92;
-  stroke-dasharray: 1.04;
-  stroke-dashoffset: 1.04;
-  pointer-events: none;
+html.light .hero-proof-path span + span {
+  border-left-color: rgba(18, 21, 27, 0.1);
 }
 
 .hero-title {
-  margin-top: 26px;
-  max-width: min(1500px, 92vw);
+  margin-top: 30px;
+  max-width: min(1400px, 94vw);
   font-family: var(--font-satoshi), ui-sans-serif, system-ui, sans-serif;
-  font-size: clamp(52px, 7.1vw, 108px);
+  font-size: clamp(48px, 5.7vw, 88px);
   font-weight: 760;
-  line-height: 0.96;
+  line-height: 0.98;
   letter-spacing: 0;
   color: var(--campaign-ink);
   text-wrap: balance;
 }
 
 .hero-copy {
-  margin-top: 24px;
-  max-width: 68ch;
-  font-size: 18px;
-  line-height: 1.72;
+  margin-top: 22px;
+  max-width: 62ch;
+  font-size: 17px;
+  line-height: 1.68;
   color: var(--campaign-muted);
 }
 
 .hero-copy-stage {
   display: grid;
   justify-items: center;
-  max-width: min(1500px, 94vw);
+  max-width: min(1400px, 94vw);
   margin-inline: auto;
-  padding-top: clamp(20px, 4dvh, 48px);
+  padding-top: clamp(4px, 2dvh, 22px);
   text-align: center;
 }
 
-.hero-form-shell {
-  width: min(760px, 100%);
+.hero-cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 30px;
 }
 
 .primary-cta,
@@ -1551,7 +1560,7 @@ html.light .secondary-cta:hover {
 .hero-product-float {
   width: min(1420px, 98vw);
   min-height: clamp(900px, 124dvh, 1240px);
-  margin: clamp(34px, 6dvh, 72px) auto 0;
+  margin: clamp(12px, 3dvh, 34px) auto 0;
   perspective: 1800px;
   transform-style: preserve-3d;
 }
@@ -5273,7 +5282,7 @@ html.light .belief-proof-rail em {
 
 @media (min-width: 640px) {
   .hero-title {
-    font-size: clamp(62px, 7.1vw, 108px);
+    font-size: clamp(56px, 5.7vw, 88px);
   }
 
   .runtime-lede h2,
@@ -5307,7 +5316,7 @@ html.light .belief-proof-rail em {
   }
 
   .hero-title {
-    font-size: clamp(72px, 7.1vw, 108px);
+    font-size: clamp(66px, 5vw, 88px);
   }
 
   .runtime-lede h2,
@@ -5331,7 +5340,7 @@ html.light .belief-proof-rail em {
 
 @media (min-width: 1440px) {
   .hero-title {
-    font-size: clamp(92px, 7.1vw, 108px);
+    font-size: clamp(76px, 4.8vw, 88px);
   }
 
   .runtime-lede h2,
@@ -5523,8 +5532,18 @@ html.light .belief-proof-rail em {
     justify-items: start;
   }
 
-  .hero-kicker {
-    justify-items: start;
+  .hero-proof-path {
+    max-width: 100%;
+    grid-template-columns: repeat(3, auto);
+  }
+
+  .hero-proof-path span {
+    min-height: 28px;
+    padding-inline: 11px;
+  }
+
+  .hero-cta-row {
+    justify-content: flex-start;
   }
 
   .hero-primary-shot-image {
@@ -5951,7 +5970,7 @@ html.light .belief-proof-rail em {
 
 @media (min-width: 1120px) {
   .hero-title {
-    font-size: clamp(72px, 7.1vw, 108px);
+    font-size: clamp(66px, 5vw, 88px);
   }
 
   .gpu-copy h2 {
@@ -5961,7 +5980,7 @@ html.light .belief-proof-rail em {
 
 @media (min-width: 1440px) {
   .hero-title {
-    font-size: clamp(92px, 7.1vw, 108px);
+    font-size: clamp(76px, 4.8vw, 88px);
   }
 
   .gpu-copy h2 {
@@ -5978,11 +5997,6 @@ html.light .belief-proof-rail em {
     animation: none !important;
     opacity: 0.52;
     transform: translate3d(0, 54px, 0);
-  }
-
-  .hero-kicker-line-path {
-    animation: none !important;
-    stroke-dashoffset: 0;
   }
 
   .dogfood-proof-sweep {

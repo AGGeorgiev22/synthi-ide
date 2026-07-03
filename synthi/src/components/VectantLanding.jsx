@@ -453,48 +453,22 @@ function ProofMarquee() {
 
 function Hero() {
   return (
-    <section id="top" className="runtime-campaign runtime-hero-v2 relative isolate overflow-visible pt-24">
+    <section id="top" className="runtime-campaign runtime-hero-v2 relative isolate overflow-visible pt-20">
       <div className="campaign-atmosphere" aria-hidden="true" />
       <div className="hero-main-grid mx-auto max-w-[1540px] px-4 pb-10 sm:px-6 lg:px-8">
         <div className="hero-copy-stage" data-reveal>
-          <p className="hero-kicker">
-            <span className="hero-kicker-copy">Runtime control plane for autonomous coding work</span>
-            <svg
-              className="hero-kicker-line"
-              viewBox="0 0 620 18"
-              preserveAspectRatio="none"
-              aria-hidden="true"
-              focusable="false"
-            >
-              <defs>
-                <linearGradient id="hero-kicker-gradient" x1="0" x2="620" y1="0" y2="0" gradientUnits="userSpaceOnUse">
-                  <stop offset="0" stopColor="#ff4bd8" />
-                  <stop offset="0.34" stopColor="#ff6848" />
-                  <stop offset="0.68" stopColor="#5ee7ff" />
-                  <stop offset="1" stopColor="#8d7bff" />
-                </linearGradient>
-              </defs>
-              <path
-                className="hero-kicker-line-path"
-                d="M4 9 C 92 7.2 150 10.6 236 9.1 S 384 6.9 470 8.8 S 564 10.7 616 8.3"
-              />
-            </svg>
-          </p>
-          <h1 className="hero-title">
-            The runtime for autonomous software work.
-          </h1>
-          <p className="hero-copy">
-            Agents request scope, work inside live runtime state, and carry proof reviewers can inspect before anything lands.
-          </p>
-          <div className="hero-form-shell mt-8">
-            <WaitlistForm
-              variant="hero"
-              buttonLabel="Start proof pilot"
-              className="w-full border-line bg-surface/65"
-            />
+          <div className="hero-proof-path" aria-label="Vectant proof path">
+            {["lease", "observe", "replay", "prove", "land"].map((step) => (
+              <span key={step}>{step}</span>
+            ))}
           </div>
-          <div className="mt-5 flex flex-wrap gap-3">
-            <SecondaryCta href="#runtime-path">See the runtime path</SecondaryCta>
+          <h1 className="hero-title">Agents can write code. Vectant controls what lands.</h1>
+          <p className="hero-copy">
+            Run coding agents inside a live workspace with leases, replay, and proof attached before code reaches production.
+          </p>
+          <div className="hero-cta-row">
+            <PrimaryCta href="#waitlist">Request pilot</PrimaryCta>
+            <SecondaryCta href="#runtime-path">View proof path</SecondaryCta>
           </div>
         </div>
         <HeroProductFloat />
