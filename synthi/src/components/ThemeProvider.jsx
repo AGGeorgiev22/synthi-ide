@@ -1,6 +1,7 @@
 "use client";
 
 import { ThemeProvider as NextThemesProvider } from "next-themes";
+import { MotionConfig } from "framer-motion";
 
 /**
  * Class-based theme provider. Adds `.light` / `.dark` to <html>.
@@ -15,7 +16,7 @@ export function ThemeProvider({ children }) {
       enableSystem
       disableTransitionOnChange={false}
     >
-      {children}
+      <MotionConfig reducedMotion="user">{children}</MotionConfig>
     </NextThemesProvider>
   );
 }
