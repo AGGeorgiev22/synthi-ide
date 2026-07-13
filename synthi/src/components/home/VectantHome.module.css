@@ -1056,10 +1056,17 @@
     min-height: 500px;
   }
 
-  .proofImageCheckride,
+  .proofImageCheckride {
+    transform: scale(1.28);
+    transform-origin: left top;
+    object-position: left top;
+  }
+
   .proofImageHandoff,
   .proofImageMemory {
-    object-position: 18% top;
+    transform: scale(1.36);
+    transform-origin: left top;
+    object-position: left top;
   }
 
   .proofCinemaCaption {
