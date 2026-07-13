@@ -5,6 +5,7 @@ import { FinalApproach } from "@/components/home/FinalApproach";
 import { GpuProofChapter } from "@/components/home/GpuProofChapter";
 import { RunBoundary } from "@/components/home/RunBoundary";
 import { RuntimeFeedback } from "@/components/home/RuntimeFeedback";
+import styles from "@/components/VectantLanding.module.css";
 
 export function VectantLanding() {
   return (

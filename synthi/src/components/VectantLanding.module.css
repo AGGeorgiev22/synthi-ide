@@ -1,0 +1,20 @@
+.page {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
+  color: #f2efe9;
+  background: #050609;
+}
+
+.page::before {
+  position: fixed;
+  z-index: 30;
+  inset: 0;
+  pointer-events: none;
+  content: "";
+  opacity: 0.014;
+  background-image: url("/noise.svg");
+  background-size: 180px 180px;
+}
