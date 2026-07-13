@@ -1,10 +1,11 @@
 import Image from "next/image";
 
 import { AgentOnRamp } from "@/components/AgentOnRamp";
-import { HeroProductFloat } from "@/components/HeroProductFloat";
 import { VectantMotion } from "@/components/VectantMotion";
 import { GpuBeforeAfter } from "@/components/GpuBeforeAfter";
 import { GpuLatencyCounter } from "@/components/GpuLatencyCounter";
+import { AgentWorkbench, PilotArrow } from "@/components/home/AgentWorkbench";
+import styles from "@/components/home/VectantHome.module.css";
 
 const PILOT_EMAIL = "aleksandar.kolev@vectant.dev";
 const PILOT_MAILTO = `mailto:${PILOT_EMAIL}?subject=${encodeURIComponent("Vectant proof pilot")}&body=${encodeURIComponent(
@@ -441,77 +442,29 @@ function ProductFrame({ shot, className = "", mediaClassName = "", priority = fa
   );
 }
 
-function ProofMarquee() {
-  const items = [
-    "eyes through MCP",
-    "hands through leases",
-    "runtime evidence",
-    "proof-gated GPU HMR",
-    "state preservation",
-    "CUDA-oriented workflows",
-    "ROCm / HIP proof",
-    "shared live sessions",
-    "workspace access control",
-    "multi-agent Vectant rooms",
-    "Vectant replay ledger",
-    "Vectant checkrides",
-    "counterfactual memory",
-    "causal replay",
-    "mobile compile",
-    "repair-gated checks",
-  ];
-
-  return (
-    <div className="proof-marquee" aria-label="Vectant runtime capabilities">
-      <div className="proof-marquee-track">
-        {[...items, ...items].map((item, index) => (
-          <span key={`${item}-${index}`} aria-hidden={index >= items.length ? "true" : undefined}>
-            {item}
-          </span>
-        ))}
-      </div>
-    </div>
-  );
-}
-
 function Hero() {
   return (
-    <section id="top" className="runtime-campaign runtime-hero-v2 relative isolate overflow-visible pt-20">
-      <div className="campaign-atmosphere" aria-hidden="true" />
-      <div className="hero-main-grid mx-auto max-w-[1540px] px-4 pb-10 sm:px-6 lg:px-8">
-        <div className="hero-copy-stage" data-reveal>
-          <div className="hero-proof-path" aria-label="Vectant runtime control boundary">
-            <span>Runtime control boundary</span>
-            <strong>compiled mutation requires lease, state, proof</strong>
-          </div>
-          <h1 className="hero-title">Agents can change GPU code. Vectant keeps runtime alive.</h1>
-          <p className="hero-copy">
-            Hot-swap compiled code changes into live sessions. Replay each mutation, attach proof, and promote only when the gate passes. You'll love it.
+    <section id="top" className={styles.hero}>
+      <div className={`${styles.sectionShell} ${styles.heroGrid}`}>
+        <div className={styles.heroCopy}>
+          <h1 className={styles.heroTitle}>
+            Run more agents. <span className={styles.heroTitleAccent}>Lose less control.</span>
+          </h1>
+          <p className={styles.heroBody}>
+            Run coding agents in parallel while Vectant scopes authority, preserves runtime state, and gathers proof for review.
           </p>
-          <div className="hero-cta-row">
-            <PrimaryCta>Request pilot</PrimaryCta>
-            <SecondaryCta href="#runtime-path">View proof path</SecondaryCta>
+          <div className={styles.heroActions}>
+            <a href={PILOT_MAILTO} className={styles.primaryButton}>
+              Request pilot
+              <span className={styles.buttonIcon}>
+                <PilotArrow />
+              </span>
+            </a>
+            <a href="#runtime-path" className={styles.secondaryButton}>See proof</a>
           </div>
         </div>
-        <HeroProductFloat />
+        <AgentWorkbench />
       </div>
-
-      <div className="hero-proof-strip-shell mx-auto max-w-[1540px] px-4 pb-16 sm:px-6 lg:px-8">
-        <div className="hero-proof-strip" data-reveal>
-          {[
-            ["ROCm/HIP proof", "public before, diff, after visual evidence"],
-            ["Native boundaries", "ABI and state checks before promotion"],
-            ["CUDA route", "hardware-backed pilots validate supported paths"],
-            ["Agent authority", "leases, replay, proof before merge"],
-          ].map(([title, copy]) => (
-            <div key={title} className="hero-proof-cell">
-              <strong>{title}</strong>
-              <span>{copy}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-      <ProofMarquee />
     </section>
   );
 }
@@ -1043,7 +996,7 @@ function FinalCta() {
 
 export function VectantLanding() {
   return (
-    <main className="vectant-landing-root w-full max-w-full">
+    <main className={`${styles.page} vectant-landing-root w-full max-w-full`}>
       <VectantMotion />
       <Hero />
       <AgentOnRamp />
