@@ -46,32 +46,47 @@ const EVIDENCE = [
 export function RuntimeFeedback() {
   const rootRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [sealActive, setSealActive] = useState(false);
   const reduceMotion = useReducedMotion();
   const { scrollYProgress } = useScroll({
     target: rootRef,
     offset: ["start start", "end end"],
   });
-  const sealOpacity = useTransform(scrollYProgress, [0.82, 0.95], [0, 1]);
-  const sealScale = useTransform(scrollYProgress, [0.82, 0.95], [1.08, 1]);
+  const reelOpacity = useTransform(scrollYProgress, [0.76, 0.84], [1, 0]);
+  const reelScale = useTransform(scrollYProgress, [0.76, 0.84], [1, 0.985]);
+  const sealOpacity = useTransform(scrollYProgress, [0.84, 0.92], [0, 1]);
+  const sealScale = useTransform(scrollYProgress, [0.84, 0.92], [1.06, 1]);
 
   useMotionValueEvent(scrollYProgress, "change", (progress) => {
     if (reduceMotion) return;
     const nextIndex = progress < 0.34 ? 0 : progress < 0.67 ? 1 : 2;
     setActiveIndex((current) => (current === nextIndex ? current : nextIndex));
+    setSealActive((current) => {
+      const next = progress >= 0.82;
+      return current === next ? current : next;
+    });
   });
 
   return (
     <section id="proof" ref={rootRef} className={styles.proofCinema}>
       <div className={styles.proofStage}>
-        <header className={styles.proofHeader}>
+        <motion.header
+          className={styles.proofHeader}
+          style={reduceMotion ? { opacity: 1, scale: 1 } : { opacity: reelOpacity, scale: reelScale }}
+        >
           <div>
             <p>INCIDENT RECORDER / 07 13</p>
             <h2>The proof lands with the work.</h2>
           </div>
           <span>Scroll to replay the evidence</span>
-        </header>
+        </motion.header>
 
-        <div className={styles.proofAccordion}>
+        <motion.div
+          className={styles.proofAccordion}
+          style={reduceMotion ? { opacity: 1, scale: 1 } : { opacity: reelOpacity, scale: reelScale }}
+          aria-hidden={!reduceMotion && sealActive}
+          inert={!reduceMotion && sealActive ? true : undefined}
+        >
           {EVIDENCE.map((item, index) => {
             const active = index === activeIndex;
             return (
@@ -104,12 +119,13 @@ export function RuntimeFeedback() {
               </article>
             );
           })}
-        </div>
+        </motion.div>
 
         <motion.div
           className={styles.proofSeal}
           style={reduceMotion ? { opacity: 1, scale: 1 } : { opacity: sealOpacity, scale: sealScale }}
-          aria-hidden="true"
+          aria-hidden={!reduceMotion && !sealActive}
+          role="status"
         >
           <VectantMark gradientId="proof-seal-mark" className={styles.proofSealMark} />
           <p>PROOF BUNDLE SEALED</p>
