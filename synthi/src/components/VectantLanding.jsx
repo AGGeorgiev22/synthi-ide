@@ -1,15 +1,12 @@
 import Image from "next/image";
+import { ArrowUpRight } from "@phosphor-icons/react";
 
-import { AgentWorkbench, PilotArrow } from "@/components/home/AgentWorkbench";
 import { AuthorityStory } from "@/components/home/AuthorityStory";
+import { CinematicHero } from "@/components/home/CinematicHero";
 import { GpuProofChapter } from "@/components/home/GpuProofChapter";
 import { RuntimeFeedback } from "@/components/home/RuntimeFeedback";
 import styles from "@/components/home/VectantHome.module.css";
-
-const PILOT_EMAIL = "aleksandar.kolev@vectant.dev";
-const PILOT_MAILTO = `mailto:${PILOT_EMAIL}?subject=${encodeURIComponent("Vectant proof pilot")}&body=${encodeURIComponent(
-  "Hi Aleksandar,\n\nWe are interested in running a Vectant proof pilot for our company.\n\nCompany:\nRepo or system to pilot:\nWhat our agents are blocked from landing safely today:\n"
-)}`;
+import { PILOT_MAILTO } from "@/lib/pilot";
 
 const CAPABILITIES = [
   "Any coding agent",
@@ -40,33 +37,6 @@ const FAQ = [
     answer: "Yes. Shared rooms keep presence, routes, claims, conflicts, runtime state, and handoff context in the same governed session.",
   },
 ];
-
-function Hero() {
-  return (
-    <section id="top" className={styles.hero}>
-      <div className={`${styles.sectionShell} ${styles.heroGrid}`}>
-        <div className={styles.heroCopy}>
-          <h1 className={styles.heroTitle}>
-            Run more agents. <span className={styles.heroTitleAccent}>Lose less control.</span>
-          </h1>
-          <p className={styles.heroBody}>
-            Run coding agents in parallel while Vectant scopes authority, preserves runtime state, and gathers proof for review.
-          </p>
-          <div className={styles.heroActions}>
-            <a href={PILOT_MAILTO} className={styles.primaryButton}>
-              Request pilot
-              <span className={styles.buttonIcon}>
-                <PilotArrow />
-              </span>
-            </a>
-            <a href="#runtime-path" className={styles.secondaryButton}>See proof</a>
-          </div>
-        </div>
-        <AgentWorkbench />
-      </div>
-    </section>
-  );
-}
 
 function ProductManifesto() {
   const items = [...CAPABILITIES, ...CAPABILITIES];
@@ -128,7 +98,7 @@ function FinalCta() {
             <div className={styles.heroActions}>
               <a href={PILOT_MAILTO} className={styles.primaryButton}>
                 Request pilot
-                <span className={styles.buttonIcon}><PilotArrow /></span>
+                <span className={styles.buttonIcon}><ArrowUpRight size={15} weight="bold" /></span>
               </a>
             </div>
           </div>
@@ -141,7 +111,7 @@ function FinalCta() {
 export function VectantLanding() {
   return (
     <main id="main-content" className={styles.page}>
-      <Hero />
+      <CinematicHero />
       <ProductManifesto />
       <AuthorityStory />
       <GpuProofChapter />
