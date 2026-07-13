@@ -68,9 +68,15 @@ export function Navbar() {
     if (!open) return undefined;
 
     const priorOverflow = document.body.style.overflow;
+    const priorRootOverflow = document.documentElement.style.overflow;
+    const priorRootOverscroll = document.documentElement.style.overscrollBehavior;
+    const priorBodyOverscroll = document.body.style.overscrollBehavior;
     const backgroundNodes = [document.getElementById("main-content"), document.querySelector("footer")].filter(Boolean);
     const priorInert = backgroundNodes.map((node) => node.inert);
     document.body.style.overflow = "hidden";
+    document.body.style.overscrollBehavior = "none";
+    document.documentElement.style.overflow = "hidden";
+    document.documentElement.style.overscrollBehavior = "none";
     backgroundNodes.forEach((node) => { node.inert = true; });
     const focusTimer = window.setTimeout(() => firstLinkRef.current?.focus(), 60);
 
@@ -103,6 +109,9 @@ export function Navbar() {
       window.clearTimeout(focusTimer);
       window.removeEventListener("keydown", onKeyDown);
       document.body.style.overflow = priorOverflow;
+      document.body.style.overscrollBehavior = priorBodyOverscroll;
+      document.documentElement.style.overflow = priorRootOverflow;
+      document.documentElement.style.overscrollBehavior = priorRootOverscroll;
       backgroundNodes.forEach((node, index) => { node.inert = priorInert[index]; });
     };
   }, [open]);
