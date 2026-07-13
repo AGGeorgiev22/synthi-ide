@@ -1,0 +1,396 @@
+.cinemaHero {
+  position: relative;
+  min-height: 228dvh;
+  color: #f2efe9;
+  background: #050609;
+}
+
+.cinemaHeroSticky {
+  position: sticky;
+  top: 0;
+  min-height: 100dvh;
+  overflow: hidden;
+  background: #050609;
+}
+
+.cinemaAtmosphere,
+.cinemaAtmosphereGrade,
+.cinemaFlightPaths {
+  position: absolute;
+  inset: 0;
+}
+
+.cinemaAtmosphere {
+  transform-origin: 50% 56%;
+}
+
+.cinemaAtmosphereImage {
+  object-fit: cover;
+  object-position: center center;
+}
+
+.cinemaAtmosphereGrade {
+  background:
+    linear-gradient(180deg, rgb(3 4 7 / 0.68) 0%, transparent 28%, transparent 66%, rgb(3 4 7 / 0.58) 100%),
+    radial-gradient(circle at 50% 52%, transparent 0 24%, rgb(3 4 7 / 0.16) 58%, rgb(3 4 7 / 0.55) 100%);
+}
+
+.cinemaFlightPaths {
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.cinemaRailPath,
+.cinemaInterceptPath {
+  fill: none;
+  stroke-linecap: round;
+}
+
+.cinemaRailPath {
+  stroke: #ff7657;
+  stroke-width: 1.6;
+  filter: drop-shadow(0 0 7px rgb(255 83 46 / 0.72));
+}
+
+.cinemaInterceptPath {
+  stroke: rgb(225 235 244 / 0.88);
+  stroke-width: 1.2;
+  filter: drop-shadow(0 0 5px rgb(203 226 245 / 0.35));
+}
+
+.cinemaConflictPoint {
+  fill: #ff7657;
+  stroke: rgb(255 118 87 / 0.28);
+  stroke-width: 18;
+  filter: drop-shadow(0 0 12px rgb(255 83 46 / 0.9));
+}
+
+.cinemaIncident {
+  position: absolute;
+  z-index: 4;
+  top: 43.5%;
+  left: calc(50% + 2.25rem);
+  display: grid;
+  gap: 0.22rem;
+  padding-left: 0.8rem;
+  border-left: 1px solid #ff7657;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  text-transform: uppercase;
+}
+
+.cinemaIncident span {
+  color: #ff7657;
+  font-size: 0.63rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.cinemaIncident strong {
+  color: #dddfe5;
+  font-size: 0.66rem;
+  font-weight: 500;
+  letter-spacing: 0.035em;
+}
+
+.cinemaHeroCopy {
+  position: absolute;
+  z-index: 5;
+  top: clamp(7rem, 13.5vh, 9.5rem);
+  right: 1rem;
+  left: 1rem;
+  max-width: 1180px;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.cinemaEyebrow {
+  margin: 0 0 1.1rem;
+  color: rgb(230 232 238 / 0.64);
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.62rem;
+  font-weight: 650;
+  letter-spacing: 0.17em;
+}
+
+.cinemaHeroCopy h1 {
+  margin: 0;
+  color: #f2efe9;
+  font-family: var(--font-cabinet), var(--font-satoshi), ui-sans-serif, sans-serif;
+  font-size: clamp(4rem, 7.5vw, 8.35rem);
+  font-weight: 500;
+  line-height: 0.84;
+  letter-spacing: -0.058em;
+}
+
+.cinemaHeroCopy h1 span {
+  display: block;
+}
+
+.cinemaHeroCopy h1 span:last-child {
+  color: #ff7657;
+}
+
+.cinemaHeroDek {
+  max-width: 37rem;
+  margin: 1.45rem auto 0;
+  color: rgb(221 223 229 / 0.68);
+  font-size: clamp(0.96rem, 1.2vw, 1.1rem);
+  line-height: 1.58;
+}
+
+.cinemaPrimaryAction {
+  display: inline-flex;
+  min-height: 3.2rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 1.65rem;
+  border-radius: 2px;
+  padding-inline: 1.2rem;
+  color: #1a100d;
+  background: #ff7657;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.34),
+    0 14px 42px rgb(120 30 11 / 0.24);
+  font-size: 0.78rem;
+  font-weight: 720;
+  letter-spacing: -0.01em;
+  outline: none;
+  transition:
+    transform 420ms cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 420ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cinemaPrimaryAction:hover {
+  transform: translateY(-2px);
+  background: #ff896d;
+}
+
+.cinemaPrimaryAction:active {
+  transform: scale(0.98);
+}
+
+.cinemaPrimaryAction:focus-visible {
+  box-shadow:
+    0 0 0 2px #050609,
+    0 0 0 4px #8ae7f1;
+}
+
+.cinemaProductReveal {
+  position: absolute;
+  z-index: 3;
+  inset: clamp(4.8rem, 7vh, 6rem) clamp(0.7rem, 1.6vw, 1.7rem) clamp(0.7rem, 1.6vw, 1.7rem);
+  margin: 0;
+  overflow: hidden;
+  background: #07080b;
+  box-shadow:
+    0 0 0 1px rgb(255 255 255 / 0.12),
+    0 48px 120px rgb(0 0 0 / 0.64);
+  transform-origin: 50% 56%;
+}
+
+.cinemaProductWindow {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.cinemaProductImage {
+  object-fit: cover;
+  object-position: center 18%;
+  filter: contrast(1.05) saturate(0.95) brightness(0.96);
+}
+
+.cinemaProductGrade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgb(3 4 7 / 0.26), transparent 15%, transparent 78%, rgb(3 4 7 / 0.38)),
+    linear-gradient(90deg, rgb(3 4 7 / 0.2), transparent 12%, transparent 88%, rgb(3 4 7 / 0.2));
+}
+
+.cinemaProductTelemetry {
+  position: absolute;
+  z-index: 3;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: grid;
+  min-height: 2.9rem;
+  grid-template-columns: repeat(4, auto);
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-inline: clamp(0.85rem, 2vw, 1.7rem);
+  color: rgb(228 230 235 / 0.58);
+  background: rgb(5 6 9 / 0.88);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.11);
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.59rem;
+  letter-spacing: 0.09em;
+  backdrop-filter: blur(18px);
+}
+
+.cinemaProductTelemetry strong {
+  color: #ff7657;
+  font-weight: 680;
+}
+
+.cinemaScrollCue {
+  position: absolute;
+  z-index: 5;
+  bottom: 1.5rem;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  transform: translateX(-50%);
+  color: rgb(225 227 233 / 0.62);
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .cinemaHeroCopy {
+    animation: cinema-copy-in 1.15s 180ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .cinemaScrollCue svg {
+    animation: cinema-cue 1.8s 1.2s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+  }
+}
+
+@keyframes cinema-copy-in {
+  from {
+    opacity: 0;
+    clip-path: inset(0 0 100% 0);
+    transform: translateY(28px);
+  }
+}
+
+@keyframes cinema-cue {
+  50% {
+    transform: translateY(5px);
+  }
+}
+
+@media (max-width: 767px) {
+  .cinemaHero {
+    min-height: 198dvh;
+  }
+
+  .cinemaHeroCopy {
+    top: 7.2rem;
+    right: 1rem;
+    left: 1rem;
+  }
+
+  .cinemaEyebrow {
+    margin-bottom: 0.85rem;
+    font-size: 0.55rem;
+  }
+
+  .cinemaHeroCopy h1 {
+    font-size: clamp(3.1rem, 14.5vw, 4.65rem);
+    line-height: 0.87;
+    letter-spacing: -0.054em;
+  }
+
+  .cinemaHeroDek {
+    max-width: 22rem;
+    margin-top: 1.15rem;
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  .cinemaPrimaryAction {
+    min-height: 3rem;
+    margin-top: 1.3rem;
+    padding-inline: 1rem;
+    font-size: 0.73rem;
+  }
+
+  .cinemaIncident {
+    top: 50%;
+    left: calc(50% - 0.25rem);
+  }
+
+  .cinemaIncident strong {
+    display: none;
+  }
+
+  .cinemaProductReveal {
+    inset: 5rem 0.5rem 0.5rem;
+  }
+
+  .cinemaProductImage {
+    width: 980px !important;
+    max-width: none !important;
+    object-position: 23% 17%;
+  }
+
+  .cinemaProductTelemetry {
+    min-height: 2.75rem;
+    grid-template-columns: repeat(2, auto);
+    font-size: 0.53rem;
+  }
+
+  .cinemaProductTelemetry span:nth-child(2),
+  .cinemaProductTelemetry span:nth-child(3) {
+    display: none;
+  }
+
+  .cinemaScrollCue {
+    bottom: 1.1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cinemaHero {
+    min-height: auto;
+  }
+
+  .cinemaHeroSticky {
+    position: relative;
+    min-height: auto;
+    padding: 8rem 1rem 1rem;
+  }
+
+  .cinemaAtmosphere {
+    height: 100dvh;
+  }
+
+  .cinemaFlightPaths,
+  .cinemaIncident,
+  .cinemaScrollCue {
+    display: none;
+  }
+
+  .cinemaHeroCopy {
+    position: relative;
+    top: auto;
+    right: auto;
+    left: auto;
+    min-height: 63dvh;
+    align-content: start;
+  }
+
+  .cinemaProductReveal {
+    position: relative;
+    inset: auto;
+    width: 100%;
+    height: 72dvh;
+    min-height: 520px;
+    clip-path: none;
+  }
+
+  .cinemaPrimaryAction {
+    transition-duration: 0.01ms;
+  }
+}
