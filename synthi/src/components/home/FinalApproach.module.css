@@ -59,7 +59,18 @@
   left: 1rem;
   max-width: 1360px;
   margin-inline: auto;
+  isolation: isolate;
   text-align: center;
+}
+
+.finalCopy::before {
+  position: absolute;
+  z-index: -1;
+  inset: -3.5rem -2rem -2.5rem;
+  content: "";
+  background: radial-gradient(ellipse at center, rgb(5 6 9 / 0.58), transparent 72%);
+  filter: blur(12px);
+  pointer-events: none;
 }
 
 .finalCopy > p {
@@ -102,6 +113,7 @@
   color: rgb(226 228 234 / 0.66);
   font-size: clamp(0.94rem, 1.15vw, 1.06rem);
   line-height: 1.58;
+  text-shadow: 0 2px 14px rgb(3 4 7 / 0.92);
 }
 
 .finalAction {
@@ -213,6 +225,7 @@
 
   .finalCopyFooter > span {
     max-width: 22rem;
+    color: rgb(235 236 240 / 0.82);
     font-size: 0.9rem;
     line-height: 1.5;
   }
