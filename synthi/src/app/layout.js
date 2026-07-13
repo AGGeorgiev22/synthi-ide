@@ -33,6 +33,16 @@ const satoshi = localFont({
   display: "swap",
 });
 
+const cabinetGrotesk = localFont({
+  src: [
+    { path: "../../fonts/CabinetGrotesk-Regular.woff2", weight: "400", style: "normal" },
+    { path: "../../fonts/CabinetGrotesk-Medium.woff2", weight: "500", style: "normal" },
+    { path: "../../fonts/CabinetGrotesk-Bold.woff2", weight: "700", style: "normal" },
+  ],
+  variable: "--font-cabinet",
+  display: "swap",
+});
+
 export const metadata = {
   title: "Vectant - Runtime Control Plane for Production Agents",
   description:
@@ -80,7 +90,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${satoshi.variable} ${spaceGrotesk.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${satoshi.variable} ${cabinetGrotesk.variable} ${spaceGrotesk.variable} antialiased`}
       >
         <ThemeProvider>
           {children}
