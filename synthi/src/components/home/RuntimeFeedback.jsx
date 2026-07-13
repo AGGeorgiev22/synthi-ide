@@ -109,6 +109,7 @@ export function RuntimeFeedback() {
               <article
                 key={item.key}
                 className={`${styles.proofPanel} ${active ? styles.proofPanelActive : ""}`}
+                data-proof-panel={item.key}
               >
                 <Image
                   src={item.src}

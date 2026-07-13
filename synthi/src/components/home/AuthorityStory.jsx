@@ -172,7 +172,11 @@ export function AuthorityStory() {
       <div ref={stackRef} className={styles.authorityStack}>
         <div className={styles.authorityStage}>
           {AUTHORITY_SCENES.map(({ key, phase, event, title, copy, src, alt, shot }) => (
-            <article key={key} className={`${styles.authorityScene} ${shot}`}>
+            <article
+              key={key}
+              className={`${styles.authorityScene} ${shot}`}
+              data-authority-scene={key}
+            >
               <div className={styles.authoritySceneMedia} data-authority-shot>
                 <Image
                   src={src}
