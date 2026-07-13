@@ -41,7 +41,7 @@ export function GpuProofChapter() {
   const outputScale = useTransform(camera, [0.48, 1], [0.86, 1.025]);
   const outputY = useTransform(camera, [0.48, 1], [90, -12]);
   const afterClip = useTransform(camera, [0.64, 0.9], ["inset(0 100% 0 0)", "inset(0 0% 0 0)"]);
-  const verdictOpacity = useTransform(camera, [0.82, 0.95], [0, 1]);
+  const verdictOpacity = useTransform(camera, [0.68, 0.82], [0, 1]);
   const heatOpacity = useTransform(camera, [0.04, 0.46, 0.76], [0.18, 1, 0.32]);
   const stateGateOpacity = useTransform(camera, GATES[0].range, [0.16, 1]);
   const abiGateOpacity = useTransform(camera, GATES[1].range, [0.16, 1]);
