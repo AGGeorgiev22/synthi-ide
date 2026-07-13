@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import {
   motion,
@@ -47,6 +47,7 @@ export function RuntimeFeedback() {
   const rootRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [sealActive, setSealActive] = useState(false);
+  const [mobileCut, setMobileCut] = useState(false);
   const reduceMotion = useReducedMotion();
   const { scrollYProgress } = useScroll({
     target: rootRef,
@@ -56,6 +57,14 @@ export function RuntimeFeedback() {
   const reelScale = useTransform(scrollYProgress, [0.76, 0.84], [1, 0.985]);
   const sealOpacity = useTransform(scrollYProgress, [0.84, 0.92], [0, 1]);
   const sealScale = useTransform(scrollYProgress, [0.84, 0.92], [1.06, 1]);
+
+  useEffect(() => {
+    const query = window.matchMedia("(max-width: 767px)");
+    const update = () => setMobileCut(query.matches);
+    update();
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
 
   useMotionValueEvent(scrollYProgress, "change", (progress) => {
     if (reduceMotion) return;
@@ -89,6 +98,13 @@ export function RuntimeFeedback() {
         >
           {EVIDENCE.map((item, index) => {
             const active = index === activeIndex;
+            const visible = mobileCut || active;
+            const label = (
+              <>
+                <b>0{index + 1}</b>
+                <span>{item.label}</span>
+              </>
+            );
             return (
               <article
                 key={item.key}
@@ -96,23 +112,33 @@ export function RuntimeFeedback() {
               >
                 <Image
                   src={item.src}
-                  alt={item.alt}
+                  alt={visible ? item.alt : ""}
+                  aria-hidden={!visible}
                   fill
-                  sizes={active ? "(min-width: 768px) 78vw, 100vw" : "20vw"}
+                  sizes={visible ? "(min-width: 768px) 78vw, 100vw" : "12vw"}
                   className={`${styles.proofPanelImage} ${item.position}`}
                 />
                 <div className={styles.proofPanelGrade} aria-hidden="true" />
-                <button
-                  type="button"
-                  aria-expanded={active}
-                  aria-controls={`proof-panel-${item.key}`}
-                  onClick={() => setActiveIndex(index)}
-                  className={styles.proofPanelButton}
+                {mobileCut ? (
+                  <div id={`proof-tab-${item.key}`} className={styles.proofPanelButton}>{label}</div>
+                ) : (
+                  <button
+                    id={`proof-tab-${item.key}`}
+                    type="button"
+                    aria-expanded={active}
+                    aria-controls={`proof-panel-${item.key}`}
+                    onClick={() => setActiveIndex(index)}
+                    className={styles.proofPanelButton}
+                  >
+                    {label}
+                  </button>
+                )}
+                <div
+                  id={`proof-panel-${item.key}`}
+                  className={styles.proofPanelCaption}
+                  aria-hidden={!visible}
+                  aria-labelledby={`proof-tab-${item.key}`}
                 >
-                  <b>0{index + 1}</b>
-                  <span>{item.label}</span>
-                </button>
-                <div id={`proof-panel-${item.key}`} className={styles.proofPanelCaption}>
                   <h3>{item.title}</h3>
                   <p>{item.copy}</p>
                 </div>
