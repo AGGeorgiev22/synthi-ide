@@ -5,12 +5,22 @@ import { Logo } from "@/components/Logo";
 import styles from "@/components/Footer.module.css";
 import { PILOT_EMAIL, PILOT_MAILTO } from "@/lib/pilot";
 
-const LINKS = [
-  { label: "Run boundary", href: "#runtime" },
-  { label: "Controlled flight", href: "#runtime-path" },
-  { label: "Live engine", href: "#gpu-hmr" },
-  { label: "Incident recorder", href: "#proof" },
-  { label: "Field notes", href: "#faq" },
+const GROUPS = [
+  {
+    label: "Product",
+    links: [
+      { label: "Run boundary", href: "#runtime" },
+      { label: "Authority", href: "#runtime-path" },
+      { label: "GPU HMR", href: "#gpu-hmr" },
+    ],
+  },
+  {
+    label: "Evidence",
+    links: [
+      { label: "Proof reel", href: "#proof" },
+      { label: "Technical questions", href: "#faq" },
+    ],
+  },
 ];
 
 export function Footer() {
@@ -18,36 +28,41 @@ export function Footer() {
     <footer className={styles.footer}>
       <div className={styles.footerShell}>
         <div className={styles.footerLead}>
+          <Logo className={styles.footerLogo} markClassName={styles.footerMark} />
           <div>
-            <p>END OF TRANSMISSION / VECTANT</p>
-            <Logo className={styles.footerLogo} />
-          </div>
-          <h2>Control the run. Keep the proof.</h2>
-        </div>
-
-        <div className={styles.footerIndex}>
-          <nav aria-label="Footer navigation">
-            {LINKS.map((link, index) => (
-              <a key={link.label} href={link.href}>
-                <b>0{index + 1}</b>
-                <span>{link.label}</span>
-              </a>
-            ))}
-          </nav>
-
-          <div className={styles.footerContact}>
-            <p>Bring the repository that needs a real boundary.</p>
-            <a href={PILOT_MAILTO}>
+            <h2>
+              <span>Control the run.</span>
+              <span>Keep the proof.</span>
+            </h2>
+            <a href={PILOT_MAILTO} className={styles.footerAction}>
               Request a proof pilot
-              <ArrowUpRight size={16} weight="bold" />
+              <ArrowUpRight size={17} weight="bold" />
             </a>
           </div>
+        </div>
+
+        <div className={styles.footerDirectory}>
+          {GROUPS.map((group) => (
+            <section key={group.label}>
+              <p>{group.label}</p>
+              <nav aria-label={`${group.label} links`}>
+                {group.links.map((link) => (
+                  <a key={link.label} href={link.href}>{link.label}</a>
+                ))}
+              </nav>
+            </section>
+          ))}
+
+          <section className={styles.footerContact}>
+            <p>Contact</p>
+            <span>Bring the guarded repository. Keep your agent stack.</span>
+            <a href={`mailto:${PILOT_EMAIL}`}>{PILOT_EMAIL}</a>
+          </section>
         </div>
 
         <div className={styles.footerLegal}>
           <p>Copyright {new Date().getFullYear()} Vectant. All rights reserved.</p>
           <div>
-            <a href={`mailto:${PILOT_EMAIL}`}>Email</a>
             <Link href="/privacy">Privacy</Link>
             <a href="#top">Back to top</a>
           </div>
