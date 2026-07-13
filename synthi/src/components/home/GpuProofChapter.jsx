@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import Image from "next/image";
 import {
   motion,
@@ -10,90 +10,132 @@ import {
   useTransform,
 } from "framer-motion";
 
-import styles from "@/components/home/VectantHome.module.css";
+import styles from "@/components/home/GpuProofChapter.module.css";
+
+const GATES = [
+  { key: "state", label: "STATE LOCKED", x: 418, y: 650, range: [0.13, 0.24] },
+  { key: "abi", label: "ABI MATCHED", x: 615, y: 554, range: [0.22, 0.33] },
+  { key: "output", label: "OUTPUT VERIFIED", x: 800, y: 460, range: [0.31, 0.42] },
+  { key: "ledger", label: "LEDGER SEALED", x: 995, y: 558, range: [0.4, 0.51] },
+];
 
 export function GpuProofChapter() {
   const rootRef = useRef(null);
-  const [position, setPosition] = useState(54);
   const reduceMotion = useReducedMotion();
   const { scrollYProgress } = useScroll({
     target: rootRef,
-    offset: ["start end", "end start"],
+    offset: ["start start", "end end"],
   });
   const camera = useSpring(scrollYProgress, {
-    stiffness: 88,
-    damping: 26,
-    mass: 0.45,
+    stiffness: 84,
+    damping: 24,
+    mass: 0.44,
   });
-  const posterY = useTransform(camera, [0, 1], [90, -72]);
-  const posterScale = useTransform(camera, [0, 0.5, 1], [0.86, 1, 1.035]);
-  const copyY = useTransform(camera, [0, 1], [46, -34]);
+
+  const currentProgress = useTransform(camera, [0.08, 0.48], [0, 1]);
+  const coilOpacity = useTransform(camera, [0, 0.5, 0.69], [1, 1, 0]);
+  const coilScale = useTransform(camera, [0, 0.54], [0.92, 1.02]);
+  const copyOpacity = useTransform(camera, [0, 0.36, 0.61], [1, 1, 0]);
+  const copyY = useTransform(camera, [0, 0.61], [0, -56]);
+  const outputOpacity = useTransform(camera, [0.5, 0.64], [0, 1]);
+  const outputScale = useTransform(camera, [0.48, 1], [0.86, 1.025]);
+  const outputY = useTransform(camera, [0.48, 1], [90, -12]);
+  const afterClip = useTransform(camera, [0.64, 0.9], ["inset(0 100% 0 0)", "inset(0 0% 0 0)"]);
+  const verdictOpacity = useTransform(camera, [0.82, 0.95], [0, 1]);
+  const heatOpacity = useTransform(camera, [0.04, 0.46, 0.76], [0.18, 1, 0.32]);
+  const stateGateOpacity = useTransform(camera, GATES[0].range, [0.16, 1]);
+  const abiGateOpacity = useTransform(camera, GATES[1].range, [0.16, 1]);
+  const outputGateOpacity = useTransform(camera, GATES[2].range, [0.16, 1]);
+  const ledgerGateOpacity = useTransform(camera, GATES[3].range, [0.16, 1]);
+  const gateOpacities = [stateGateOpacity, abiGateOpacity, outputGateOpacity, ledgerGateOpacity];
 
   return (
     <section id="gpu-hmr" ref={rootRef} className={styles.gpuCinema}>
-      <div className={styles.gpuCinemaShell}>
+      <div className={styles.gpuStage}>
         <motion.div
-          className={styles.gpuCinemaCopy}
-          style={reduceMotion ? undefined : { y: copyY }}
+          className={styles.gpuHeat}
+          style={reduceMotion ? undefined : { opacity: heatOpacity }}
+          aria-hidden="true"
+        />
+
+        <motion.div
+          className={styles.gpuCopy}
+          style={reduceMotion ? undefined : { opacity: copyOpacity, y: copyY }}
         >
+          <p>LIVE ENGINE / BLACK START</p>
           <h2>Change the kernel. Keep the moment.</h2>
-          <p>
-            A compiled patch moves only when state, ABI, output, and the evidence ledger agree.
-          </p>
+          <span>A compiled patch moves only when state, ABI, output, and the evidence ledger agree.</span>
+        </motion.div>
+
+        <motion.div
+          className={styles.gpuCoil}
+          style={reduceMotion ? undefined : { opacity: coilOpacity, scale: coilScale }}
+          aria-hidden="true"
+        >
+          <svg viewBox="0 0 1600 900" preserveAspectRatio="none">
+            <path className={styles.gpuCoilGhost} d="M 120 810 C 290 760 468 640 800 458 C 1132 640 1310 760 1480 810" />
+            <motion.path
+              className={styles.gpuCoilCurrent}
+              d="M 120 810 C 290 760 468 640 800 458 C 1132 640 1310 760 1480 810"
+              style={reduceMotion ? undefined : { pathLength: currentProgress }}
+            />
+            <path className={styles.gpuCoilReturn} d="M 800 458 L 800 86" />
+            {GATES.map((gate, index) => (
+                <motion.g key={gate.key} style={reduceMotion ? undefined : { opacity: gateOpacities[index] }}>
+                  <circle className={styles.gpuGateHalo} cx={gate.x} cy={gate.y} r="18" />
+                  <circle className={styles.gpuGateCore} cx={gate.x} cy={gate.y} r="4" />
+                  <line className={styles.gpuGateTick} x1={gate.x} y1={gate.y - 28} x2={gate.x} y2={gate.y - 54} />
+                  <text className={styles.gpuGateLabel} x={gate.x} y={gate.y - 67} textAnchor="middle">{gate.label}</text>
+                </motion.g>
+              ))}
+          </svg>
+          <div className={styles.gpuCurrentReadout}>
+            <span>VERIFIED CURRENT</span>
+            <strong>STATE RETAINED</strong>
+          </div>
         </motion.div>
 
         <motion.figure
-          className={styles.gpuDiffPoster}
-          style={reduceMotion ? undefined : { y: posterY, scale: posterScale }}
+          className={styles.gpuOutput}
+          style={
+            reduceMotion
+              ? undefined
+              : { opacity: outputOpacity, scale: outputScale, y: outputY }
+          }
         >
           <Image
-            src="/product-proof/gpu-hmr-diff.png"
-            alt="The visual output difference created by a proof-gated GPU hot reload"
+            src="/product-proof/gpu-hmr-before.png"
+            alt="GPU render immediately before the compiled hot reload"
             fill
-            sizes="(min-width: 1100px) 62vw, 100vw"
-            className="object-cover"
+            sizes="100vw"
+            className={styles.gpuOutputImage}
           />
-        </motion.figure>
-
-        <div className={styles.gpuProofSentence}>
-          <span>Live state stays attached.</span>
-          <span>The output still has to prove itself.</span>
-        </div>
-
-        <div className={styles.gpuCompareCinema} style={{ "--compare-position": `${position}%` }}>
-          <div className={styles.gpuCompareLabels} aria-hidden="true">
-            <span>Before</span>
-            <span>After</span>
-          </div>
-          <div className={styles.gpuCompareStage}>
+          <motion.div
+            className={styles.gpuOutputAfter}
+            style={reduceMotion ? undefined : { clipPath: afterClip }}
+          >
             <Image
-              src="/product-proof/gpu-hmr-before.png"
-              alt="GPU render before the compiled hot reload"
+              src="/product-proof/gpu-hmr-after.png"
+              alt="Verified GPU render after the compiled hot reload retained live state"
               fill
-              sizes="(min-width: 1100px) 78vw, 100vw"
-              className="object-cover"
+              sizes="100vw"
+              className={styles.gpuOutputImage}
             />
-            <div className={styles.gpuCompareAfter}>
-              <Image
-                src="/product-proof/gpu-hmr-after.png"
-                alt="GPU render after the compiled hot reload"
-                fill
-                sizes="(min-width: 1100px) 78vw, 100vw"
-                className="object-cover"
-              />
-            </div>
-            <div className={styles.gpuCompareDivider} aria-hidden="true"><span /></div>
-            <input
-              type="range"
-              min="0"
-              max="100"
-              value={position}
-              onChange={(event) => setPosition(Number(event.target.value))}
-              aria-label="Compare GPU output before and after hot reload"
-              className={styles.gpuCompareRange}
-            />
+          </motion.div>
+          <div className={styles.gpuOutputTelemetry}>
+            <span>FRAME 008219</span>
+            <span>HMR APPLIED</span>
+            <span>STATE DELTA 0</span>
+            <strong>OUTPUT VERIFIED</strong>
           </div>
-        </div>
+          <motion.figcaption
+            className={styles.gpuVerdict}
+            style={reduceMotion ? undefined : { opacity: verdictOpacity }}
+          >
+            <span>NO RESET</span>
+            <strong>Live state stayed attached.</strong>
+          </motion.figcaption>
+        </motion.figure>
       </div>
     </section>
   );
