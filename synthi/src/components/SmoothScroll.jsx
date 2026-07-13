@@ -46,7 +46,16 @@ export function SmoothScroll() {
           const target = document.querySelector(id);
           if (!target) return;
           e.preventDefault();
-          lenis.scrollTo(target, { offset: -72, duration: 1.1 });
+          const shouldFocus = a.dataset.scrollFocus === "true";
+          lenis.scrollTo(target, {
+            offset: -72,
+            duration: 1.1,
+            onComplete: () => {
+              if (!shouldFocus) return;
+              if (!target.hasAttribute("tabindex")) target.setAttribute("tabindex", "-1");
+              target.focus({ preventScroll: true });
+            },
+          });
           history.replaceState(null, "", id);
         };
         document.addEventListener("click", onClick);

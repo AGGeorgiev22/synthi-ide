@@ -26,6 +26,11 @@ const linkMotion = {
   }),
 };
 
+const reducedLinkMotion = {
+  hidden: { opacity: 1, y: 0, clipPath: "inset(0 0 0% 0)" },
+  visible: { opacity: 1, y: 0, clipPath: "inset(0 0 0% 0)", transition: { duration: 0 } },
+};
+
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
@@ -57,7 +62,10 @@ export function Navbar() {
     if (!open) return undefined;
 
     const priorOverflow = document.body.style.overflow;
+    const backgroundNodes = [document.getElementById("main-content"), document.querySelector("footer")].filter(Boolean);
+    const priorInert = backgroundNodes.map((node) => node.inert);
     document.body.style.overflow = "hidden";
+    backgroundNodes.forEach((node) => { node.inert = true; });
     const focusTimer = window.setTimeout(() => firstLinkRef.current?.focus(), 60);
 
     const onKeyDown = (event) => {
@@ -68,7 +76,10 @@ export function Navbar() {
       }
 
       if (event.key !== "Tab" || !dialogRef.current) return;
-      const focusable = [...dialogRef.current.querySelectorAll('a[href], button:not([disabled])')];
+      const focusable = [
+        menuButtonRef.current,
+        ...dialogRef.current.querySelectorAll('a[href], button:not([disabled])'),
+      ].filter(Boolean);
       if (!focusable.length) return;
       const first = focusable[0];
       const last = focusable[focusable.length - 1];
@@ -86,6 +97,7 @@ export function Navbar() {
       window.clearTimeout(focusTimer);
       window.removeEventListener("keydown", onKeyDown);
       document.body.style.overflow = priorOverflow;
+      backgroundNodes.forEach((node, index) => { node.inert = priorInert[index]; });
     };
   }, [open]);
 
@@ -94,7 +106,7 @@ export function Navbar() {
   return (
     <header className={styles.navHeader}>
       <motion.nav
-        layout
+        layout={!reduceMotion}
         aria-label="Primary navigation"
         className={`${styles.navRail} ${scrolled || open ? styles.navRailContracted : ""}`}
       >
@@ -106,9 +118,10 @@ export function Navbar() {
           {!scrolled && !open ? (
             <motion.div
               key="links"
-              initial={{ opacity: 0 }}
+              initial={reduceMotion ? false : { opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
+              transition={reduceMotion ? { duration: 0 } : undefined}
               className={styles.navLinks}
             >
               {LINKS.slice(0, 4).map((link) => (
@@ -118,9 +131,10 @@ export function Navbar() {
           ) : (
             <motion.div
               key="mission"
-              initial={{ opacity: 0, y: 5 }}
+              initial={reduceMotion ? false : { opacity: 0, y: 5 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
+              transition={reduceMotion ? { duration: 0 } : undefined}
               className={styles.navMission}
               aria-hidden="true"
             >
@@ -155,8 +169,9 @@ export function Navbar() {
             initial={reduceMotion ? { opacity: 0 } : { opacity: 0, clipPath: "inset(0 0 100% 0)" }}
             animate={{ opacity: 1, clipPath: "inset(0 0 0% 0)" }}
             exit={reduceMotion ? { opacity: 0 } : { opacity: 0, clipPath: "inset(0 0 100% 0)" }}
-            transition={{ duration: 0.62, ease: [0.16, 1, 0.3, 1] }}
+            transition={reduceMotion ? { duration: 0 } : { duration: 0.62, ease: [0.16, 1, 0.3, 1] }}
             className={styles.navIndex}
+            data-lenis-prevent
           >
             <div className={styles.navIndexCorridor} aria-hidden="true"><i /><i /></div>
             <div className={styles.navIndexShell}>
@@ -167,8 +182,9 @@ export function Navbar() {
                     key={link.label}
                     ref={index === 0 ? firstLinkRef : undefined}
                     href={link.href}
+                    data-scroll-focus="true"
                     custom={index}
-                    variants={linkMotion}
+                    variants={reduceMotion ? reducedLinkMotion : linkMotion}
                     initial="hidden"
                     animate="visible"
                     onClick={closeMenu}
@@ -182,9 +198,9 @@ export function Navbar() {
               </nav>
 
               <motion.div
-                initial={{ opacity: 0, y: 18 }}
+                initial={reduceMotion ? false : { opacity: 0, y: 18 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.38, duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+                transition={reduceMotion ? { duration: 0 } : { delay: 0.38, duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
                 className={styles.navIndexFooter}
               >
                 <p>A governed runtime for the repositories you still will not hand to an agent.</p>
