@@ -115,7 +115,11 @@ export function RuntimeFeedback() {
                   alt={visible ? item.alt : ""}
                   aria-hidden={!visible}
                   fill
-                  sizes={visible ? "(min-width: 768px) 78vw, 100vw" : "12vw"}
+                  sizes={
+                    visible
+                      ? "(max-width: 767px) 940px, (min-width: 768px) 78vw"
+                      : "(max-width: 767px) 940px, 12vw"
+                  }
                   className={`${styles.proofPanelImage} ${item.position}`}
                 />
                 <div className={styles.proofPanelGrade} aria-hidden="true" />

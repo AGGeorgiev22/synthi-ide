@@ -178,7 +178,7 @@ export function AuthorityStory() {
                   src={src}
                   alt={alt}
                   fill
-                  sizes="100vw"
+                  sizes="(max-width: 767px) 940px, 100vw"
                   className={styles.authoritySceneImage}
                 />
                 <div className={styles.authoritySceneGrade} aria-hidden="true" />

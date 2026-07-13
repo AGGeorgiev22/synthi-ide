@@ -47,7 +47,7 @@ export function FinalApproach() {
             src="/cinema/controlled-flight-dawn.png"
             alt=""
             fill
-            sizes="100vw"
+            sizes="(max-width: 767px) 980px, 100vw"
             className={styles.finalAtmosphereImage}
           />
           <div className={styles.finalAtmosphereGrade} />

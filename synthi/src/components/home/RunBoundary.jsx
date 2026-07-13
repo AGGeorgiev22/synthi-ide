@@ -51,7 +51,7 @@ export function RunBoundary() {
             src="/product-proof/browser-workflow-observe-ui.png"
             alt="Vectant workflow controls showing runtime, observation, trace, contract, and replay attached to one run"
             fill
-            sizes="100vw"
+            sizes="(max-width: 767px) 980px, 100vw"
             className={styles.boundaryImage}
           />
           <div className={styles.boundaryGrade} aria-hidden="true" />

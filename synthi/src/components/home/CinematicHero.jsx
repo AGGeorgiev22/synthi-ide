@@ -58,7 +58,7 @@ export function CinematicHero() {
             alt=""
             fill
             priority
-            sizes="100vw"
+            sizes="(max-width: 767px) 1935px, 100vw"
             className={styles.cinemaAtmosphereImage}
           />
           <div className={styles.cinemaAtmosphereGrade} />
@@ -139,7 +139,7 @@ export function CinematicHero() {
               alt="Vectant CodeSite showing a live authority map, landing queue, and collision forecast"
               fill
               priority
-              sizes="(min-width: 1600px) 1600px, 100vw"
+              sizes="(max-width: 767px) 980px, (min-width: 1600px) 1600px, 100vw"
               className={styles.cinemaProductImage}
             />
             <div className={styles.cinemaProductGrade} aria-hidden="true" />
