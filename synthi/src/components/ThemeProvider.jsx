@@ -3,17 +3,14 @@
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { MotionConfig } from "framer-motion";
 
-/**
- * Class-based theme provider. Adds `.light` / `.dark` to <html>.
- * The marketing surface follows the visitor's system preference. Product
- * screens keep their dark runtime chrome in either page theme.
- */
+/** The public product film is authored as one continuous dark environment. */
 export function ThemeProvider({ children }) {
   return (
     <NextThemesProvider
       attribute="class"
-      defaultTheme="system"
-      enableSystem
+      defaultTheme="dark"
+      forcedTheme="dark"
+      enableSystem={false}
       disableTransitionOnChange={false}
     >
       <MotionConfig reducedMotion="user">{children}</MotionConfig>
