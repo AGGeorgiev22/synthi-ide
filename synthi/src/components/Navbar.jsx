@@ -1,7 +1,13 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import {
+  AnimatePresence,
+  motion,
+  useMotionValueEvent,
+  useReducedMotion,
+  useScroll,
+} from "framer-motion";
 import { ArrowUpRight } from "@phosphor-icons/react";
 
 import { AnimatedLogo } from "@/components/Logo";
@@ -39,29 +45,33 @@ export function Navbar() {
   const firstLinkRef = useRef(null);
   const dialogRef = useRef(null);
   const reduceMotion = useReducedMotion();
+  const { scrollY } = useScroll();
 
   useEffect(() => {
-    let frame = 0;
-    const update = () => {
-      frame = 0;
-      setScrolled(window.scrollY > Math.max(120, window.innerHeight * 0.72));
-      const finalApproach = document.getElementById("pricing");
-      setProofSealed(
-        Boolean(finalApproach) &&
-          window.scrollY >= finalApproach.offsetTop - window.innerHeight * 0.42,
-      );
-    };
-    const onScroll = () => {
-      if (!frame) frame = window.requestAnimationFrame(update);
-    };
-    update();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    return () => {
-      if (frame) window.cancelAnimationFrame(frame);
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-    };
+    setScrolled(scrollY.get() > Math.max(120, window.innerHeight * 0.72));
+  }, [scrollY]);
+
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    const next = latest > Math.max(120, window.innerHeight * 0.72);
+    setScrolled((current) => (current === next ? current : next));
+  });
+
+  useEffect(() => {
+    const finalApproach = document.getElementById("pricing");
+    if (!finalApproach) return undefined;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setProofSealed(true);
+          return;
+        }
+        setProofSealed(entry.boundingClientRect.top < 0);
+      },
+      { rootMargin: "0px 0px -58% 0px" },
+    );
+    observer.observe(finalApproach);
+    return () => observer.disconnect();
   }, []);
 
   useEffect(() => {
