@@ -39,9 +39,10 @@
   position: absolute;
   z-index: 3;
   top: clamp(6.8rem, 13.5vh, 9rem);
-  left: 50%;
+  right: 0;
+  left: 0;
   width: min(calc(100% - 2rem), 1180px);
-  transform: translateX(-50%);
+  margin-inline: auto;
   text-align: center;
 }
 
@@ -146,10 +147,11 @@
   position: absolute;
   z-index: 2;
   top: clamp(31rem, 53dvh, 36rem);
-  left: 50%;
+  right: 0;
+  left: 0;
   width: min(calc(100% - 2rem), 1560px);
   height: min(65dvh, 720px);
-  transform: translateX(-50%);
+  margin-inline: auto;
   transform-origin: center top;
 }
 
@@ -1514,4 +1516,3 @@
     animation: none;
   }
 }
-
