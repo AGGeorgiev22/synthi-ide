@@ -2,72 +2,141 @@
 
 import { useRef } from "react";
 import Image from "next/image";
-import { ArrowDown, ArrowUpRight } from "@phosphor-icons/react";
-import {
-  motion,
-  useReducedMotion,
-  useScroll,
-  useSpring,
-  useTransform,
-} from "framer-motion";
+import { ArrowUpRight } from "@phosphor-icons/react";
+import { useGSAP } from "@gsap/react";
+import { gsap } from "gsap";
+import { MotionPathPlugin } from "gsap/MotionPathPlugin";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import styles from "@/components/home/CinematicHero.module.css";
 import { PILOT_MAILTO } from "@/lib/pilot";
 
-const CLOSED_APERTURE = "polygon(49.2% 48%, 50.8% 48%, 53.2% 94%, 46.8% 94%)";
-const CORRIDOR_APERTURE = "polygon(29% 6%, 71% 6%, 93% 98%, 7% 98%)";
-const OPEN_APERTURE = "polygon(1.4% 1.5%, 98.6% 1.5%, 98.6% 98.5%, 1.4% 98.5%)";
+gsap.registerPlugin(MotionPathPlugin, ScrollTrigger, useGSAP);
 
 export function CinematicHero() {
   const rootRef = useRef(null);
-  const reduceMotion = useReducedMotion();
-  const { scrollYProgress } = useScroll({
-    target: rootRef,
-    offset: ["start start", "end end"],
-  });
-  const camera = useSpring(scrollYProgress, {
-    stiffness: 86,
-    damping: 24,
-    mass: 0.42,
-  });
+  const atmosphereRef = useRef(null);
+  const routePathRef = useRef(null);
+  const routeTokenRef = useRef(null);
+  const conflictRef = useRef(null);
+  const incidentRef = useRef(null);
+  const copyRef = useRef(null);
+  const shutterLeftRef = useRef(null);
+  const shutterRightRef = useRef(null);
+  const productRef = useRef(null);
+  const productImageRef = useRef(null);
+  const productTelemetryRef = useRef(null);
+  const productFrameRef = useRef(null);
 
-  const atmosphereScale = useTransform(camera, [0, 1], [1.015, 1.16]);
-  const atmosphereOpacity = useTransform(camera, [0, 0.58, 0.9], [1, 0.88, 0.18]);
-  const railProgress = useTransform(camera, [0, 0.24], [0, 1]);
-  const interceptProgress = useTransform(camera, [0.08, 0.34], [0, 1]);
-  const copyOpacity = useTransform(camera, [0, 0.28, 0.43], [1, 1, 0]);
-  const copyY = useTransform(camera, [0, 0.43], [0, -76]);
-  const incidentOpacity = useTransform(camera, [0.16, 0.25, 0.42, 0.5], [0, 1, 1, 0]);
-  const incidentY = useTransform(camera, [0.16, 0.42], [18, -10]);
-  const productOpacity = useTransform(camera, [0.38, 0.48, 1], [0, 1, 1]);
-  const productClip = useTransform(
-    camera,
-    [0.38, 0.68, 0.83],
-    [CLOSED_APERTURE, CORRIDOR_APERTURE, OPEN_APERTURE],
+  useGSAP(
+    () => {
+      const media = gsap.matchMedia();
+
+      media.add("(prefers-reduced-motion: no-preference)", () => {
+        const routePath = routePathRef.current;
+        const timeline = gsap.timeline({
+          defaults: { ease: "none" },
+          scrollTrigger: {
+            trigger: rootRef.current,
+            start: "top top",
+            end: "bottom bottom",
+            scrub: 0.55,
+            invalidateOnRefresh: true,
+          },
+        });
+
+        gsap.set(routePath, { strokeDasharray: 1, strokeDashoffset: 1 });
+        gsap.set(routeTokenRef.current, {
+          autoAlpha: 0,
+          motionPath: {
+            path: routePath,
+            align: routePath,
+            alignOrigin: [0.5, 0.5],
+            start: 0,
+            end: 0,
+          },
+        });
+        gsap.set([conflictRef.current, incidentRef.current], { autoAlpha: 0 });
+        gsap.set(shutterLeftRef.current, { xPercent: -108 });
+        gsap.set(shutterRightRef.current, { xPercent: 108 });
+        gsap.set(productRef.current, { autoAlpha: 0, scale: 0.82, yPercent: 7 });
+        gsap.set([productTelemetryRef.current, productFrameRef.current], { autoAlpha: 0 });
+
+        gsap.fromTo(
+          copyRef.current,
+          { autoAlpha: 0, y: 28, clipPath: "inset(0 0 100% 0)" },
+          {
+            autoAlpha: 1,
+            y: 0,
+            clipPath: "inset(0 0 0% 0)",
+            duration: 1.05,
+            ease: "power4.out",
+            delay: 0.14,
+          },
+        );
+
+        timeline
+          .addLabel("coldOpen", 0)
+          .to(atmosphereRef.current, { scale: 1.065, yPercent: -1.8, duration: 1.25 }, "coldOpen")
+          .to(routePath, { strokeDashoffset: 0, duration: 0.72 }, 0.08)
+          .to(
+            routeTokenRef.current,
+            {
+              autoAlpha: 1,
+              motionPath: {
+                path: routePath,
+                align: routePath,
+                alignOrigin: [0.5, 0.5],
+                start: 0,
+                end: 1,
+              },
+              duration: 0.72,
+            },
+            0.08,
+          )
+          .addLabel("conflict", 0.76)
+          .to(conflictRef.current, { autoAlpha: 1, scale: 1.15, duration: 0.07, ease: "power3.out" }, "conflict")
+          .to(incidentRef.current, { autoAlpha: 1, y: -8, duration: 0.12, ease: "power3.out" }, "conflict")
+          .to(copyRef.current, { autoAlpha: 0, y: -54, duration: 0.2, ease: "power2.in" }, 0.82)
+          .to(shutterLeftRef.current, { xPercent: 0, duration: 0.2, ease: "power4.in" }, 0.82)
+          .to(shutterRightRef.current, { xPercent: 0, duration: 0.2, ease: "power4.in" }, 0.82)
+          .set(productRef.current, { autoAlpha: 1 }, 1.01)
+          .to(incidentRef.current, { autoAlpha: 0, duration: 0.06 }, 1.01)
+          .addLabel("aperture", 1.02)
+          .to(shutterLeftRef.current, { xPercent: -108, duration: 0.34, ease: "power4.inOut" }, "aperture")
+          .to(shutterRightRef.current, { xPercent: 108, duration: 0.34, ease: "power4.inOut" }, "aperture")
+          .to(productRef.current, { scale: 1, yPercent: 0, duration: 0.62, ease: "power3.out" }, "aperture")
+          .fromTo(
+            productImageRef.current,
+            { scale: 1.075, xPercent: 1.8 },
+            { scale: 1.01, xPercent: 0, duration: 0.78 },
+            "aperture",
+          )
+          .to([productFrameRef.current, productTelemetryRef.current], { autoAlpha: 1, duration: 0.2 }, 1.28)
+          .to({}, { duration: 0.22 });
+
+        return () => timeline.kill();
+      });
+
+      return () => media.revert();
+    },
+    { scope: rootRef },
   );
-  const productScale = useTransform(camera, [0.38, 1], [0.9, 1.035]);
-  const productY = useTransform(camera, [0.38, 1], [120, -18]);
-  const productTelemetryOpacity = useTransform(camera, [0.7, 0.86], [0, 1]);
-  const scrollCueOpacity = useTransform(camera, [0, 0.12, 0.24], [1, 1, 0]);
 
   return (
-    <section id="top" ref={rootRef} className={styles.cinemaHero}>
+    <section id="top" ref={rootRef} className={styles.cinemaHero} data-film-act="cold-open">
       <div className={styles.cinemaHeroSticky}>
-        <motion.div
-          className={styles.cinemaAtmosphere}
-          style={reduceMotion ? { opacity: 1, scale: 1 } : { opacity: atmosphereOpacity, scale: atmosphereScale }}
-          aria-hidden="true"
-        >
+        <div ref={atmosphereRef} className={styles.cinemaAtmosphere} aria-hidden="true">
           <Image
             src="/cinema/controlled-flight-night.png"
             alt=""
             fill
             priority
-            sizes="(max-width: 767px) 1935px, 100vw"
+            sizes="100vw"
             className={styles.cinemaAtmosphereImage}
           />
           <div className={styles.cinemaAtmosphereGrade} />
-        </motion.div>
+        </div>
 
         <svg
           className={styles.cinemaFlightPaths}
@@ -75,98 +144,79 @@ export function CinematicHero() {
           preserveAspectRatio="none"
           aria-hidden="true"
         >
-          <motion.path
-            className={styles.cinemaRailPath}
-            d="M -40 665 L 800 452"
-            style={reduceMotion ? { pathLength: 1 } : { pathLength: railProgress }}
+          <path className={styles.cinemaBoundaryPath} d="M -80 706 L 800 455 L 1680 706" />
+          <path
+            ref={routePathRef}
+            className={styles.cinemaIntrusionPath}
+            pathLength="1"
+            d="M 1115 -55 C 1080 125 940 210 808 430"
           />
-          <motion.path
-            className={styles.cinemaRailPath}
-            d="M 1640 665 L 800 452"
-            style={reduceMotion ? { pathLength: 1 } : { pathLength: railProgress }}
-          />
-          <motion.path
-            className={styles.cinemaInterceptPath}
-            d="M 690 -40 C 720 130 906 220 822 398"
-            style={reduceMotion ? { pathLength: 1 } : { pathLength: interceptProgress }}
-          />
-          <motion.circle
-            className={styles.cinemaConflictPoint}
-            cx="818"
-            cy="406"
-            r="5"
-            style={reduceMotion ? { opacity: 1 } : { opacity: incidentOpacity }}
-          />
+          <g ref={routeTokenRef} className={styles.cinemaRouteToken}>
+            <rect x="-7" y="-7" width="14" height="14" rx="1" />
+            <path d="M -14 0 H 14 M 0 -14 V 14" />
+          </g>
+          <g ref={conflictRef} className={styles.cinemaConflictPoint} transform="translate(808 430)">
+            <circle r="5" />
+            <circle r="20" />
+          </g>
         </svg>
 
-        <motion.div
-          className={styles.cinemaIncident}
-          style={reduceMotion ? { opacity: 1, y: 0 } : { opacity: incidentOpacity, y: incidentY }}
-        >
-          <span>PATH CONFLICT</span>
-          <strong>Route 03 moved to holding</strong>
-        </motion.div>
+        <div ref={incidentRef} className={styles.cinemaIncident} role="status">
+          <span>Protected path crossed</span>
+          <strong>Write held · route moved to holding</strong>
+        </div>
 
-        <motion.div
-          className={styles.cinemaHeroCopy}
-          style={reduceMotion ? { opacity: 1, y: 0 } : { opacity: copyOpacity, y: copyY }}
-        >
-          <p className={styles.cinemaEyebrow}>VECTANT CONTROL PLANE</p>
+        <div ref={copyRef} className={styles.cinemaHeroCopy}>
+          <p className={styles.cinemaEyebrow}>Vectant control plane</p>
           <h1>
             <span>Agents move.</span>
             <span>Authority stays bounded.</span>
           </h1>
-          <p className={styles.cinemaHeroDek}>
-            Parallel coding agents get live runtime state, scoped authority, and proof your team can replay.
-          </p>
-          <a href={PILOT_MAILTO} className={styles.cinemaPrimaryAction}>
-            Request a proof pilot
-            <ArrowUpRight size={16} weight="bold" />
-          </a>
-        </motion.div>
-
-        <motion.figure
-          className={styles.cinemaProductReveal}
-          style={
-            reduceMotion
-              ? { clipPath: OPEN_APERTURE, opacity: 1, scale: 1, y: 0 }
-              : {
-                  clipPath: productClip,
-                  opacity: productOpacity,
-                  scale: productScale,
-                  y: productY,
-                }
-          }
-        >
-          <div className={styles.cinemaProductWindow}>
-            <Image
-              src="/product-proof/codesite-full-workflow-ui.png"
-              alt="Vectant CodeSite showing a live authority map, landing queue, and collision forecast"
-              fill
-              sizes="(max-width: 767px) 980px, (min-width: 1600px) 1600px, 100vw"
-              className={styles.cinemaProductImage}
-            />
-            <div className={styles.cinemaProductGrade} aria-hidden="true" />
+          <div className={styles.cinemaHeroFooter}>
+            <p>
+              Parallel coding agents get live runtime state, scoped authority, and proof your team can replay.
+            </p>
+            <a href={PILOT_MAILTO} className={styles.cinemaPrimaryAction}>
+              Request a proof pilot
+              <ArrowUpRight size={16} weight="bold" />
+            </a>
           </div>
-          <motion.figcaption
-            className={styles.cinemaProductTelemetry}
-            style={reduceMotion ? { opacity: 1 } : { opacity: productTelemetryOpacity }}
-          >
-            <span>RUN 0713</span>
-            <span>SCOPE ATTACHED</span>
-            <span>3 AGENTS ACTIVE</span>
-            <strong>AUTHORITY IN FORCE</strong>
-          </motion.figcaption>
-        </motion.figure>
+        </div>
 
-        <motion.div
-          className={styles.cinemaScrollCue}
-          style={reduceMotion ? { opacity: 1 } : { opacity: scrollCueOpacity }}
-          aria-hidden="true"
-        >
-          <span>Follow the run</span>
-          <ArrowDown size={14} />
-        </motion.div>
+        <figure ref={productRef} className={styles.cinemaProductReveal}>
+          <div className={styles.cinemaProductWindow}>
+            <div ref={productImageRef} className={styles.cinemaProductCamera}>
+              <Image
+                src="/product-proof/codesite-full-workflow-ui.png"
+                alt="Vectant CodeSite showing a live authority map, landing queue, and collision forecast"
+                fill
+                sizes="(max-width: 767px) 1120px, 100vw"
+                className={styles.cinemaProductImage}
+              />
+            </div>
+            <div className={styles.cinemaProductGrade} aria-hidden="true" />
+            <svg
+              ref={productFrameRef}
+              className={styles.cinemaProductFrame}
+              viewBox="0 0 1600 900"
+              preserveAspectRatio="none"
+              aria-hidden="true"
+            >
+              <path d="M -40 850 L 800 454 L 1640 850" />
+            </svg>
+          </div>
+          <figcaption ref={productTelemetryRef} className={styles.cinemaProductTelemetry}>
+            <span>Flights <strong>3</strong></span>
+            <span>Leases <strong>1</strong></span>
+            <span>Transactions <strong>2</strong></span>
+            <span>Required <strong>0</strong></span>
+          </figcaption>
+        </figure>
+
+        <div className={styles.cinemaShutters} aria-hidden="true">
+          <i ref={shutterLeftRef} className={styles.cinemaShutterLeft} />
+          <i ref={shutterRightRef} className={styles.cinemaShutterRight} />
+        </div>
       </div>
     </section>
   );

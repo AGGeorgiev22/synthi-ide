@@ -1,6 +1,6 @@
 .cinemaHero {
   position: relative;
-  min-height: 228dvh;
+  min-height: 244dvh;
   color: #f2efe9;
   background: #050609;
 }
@@ -11,28 +11,35 @@
   min-height: 100dvh;
   overflow: hidden;
   background: #050609;
+  isolation: isolate;
 }
 
 .cinemaAtmosphere,
 .cinemaAtmosphereGrade,
-.cinemaFlightPaths {
+.cinemaFlightPaths,
+.cinemaProductFrame,
+.cinemaShutters {
   position: absolute;
   inset: 0;
 }
 
 .cinemaAtmosphere {
-  transform-origin: 50% 56%;
+  z-index: 0;
+  transform-origin: 56% 56%;
+  will-change: transform;
 }
 
 .cinemaAtmosphereImage {
   object-fit: cover;
   object-position: center center;
+  filter: saturate(0.82) contrast(1.05) brightness(0.9);
 }
 
 .cinemaAtmosphereGrade {
   background:
-    linear-gradient(180deg, rgb(3 4 7 / 0.68) 0%, transparent 28%, transparent 66%, rgb(3 4 7 / 0.58) 100%),
-    radial-gradient(circle at 50% 52%, transparent 0 24%, rgb(3 4 7 / 0.16) 58%, rgb(3 4 7 / 0.55) 100%);
+    linear-gradient(90deg, rgb(3 4 7 / 0.38) 0%, transparent 47%, rgb(3 4 7 / 0.18) 100%),
+    linear-gradient(180deg, rgb(3 4 7 / 0.7) 0%, transparent 32%, transparent 68%, rgb(3 4 7 / 0.72) 100%),
+    radial-gradient(circle at 58% 48%, transparent 0 14%, rgb(3 4 7 / 0.12) 38%, rgb(3 4 7 / 0.52) 100%);
 }
 
 .cinemaFlightPaths {
@@ -43,121 +50,146 @@
   pointer-events: none;
 }
 
-.cinemaRailPath,
-.cinemaInterceptPath {
+.cinemaBoundaryPath,
+.cinemaIntrusionPath,
+.cinemaRouteToken path {
   fill: none;
   stroke-linecap: round;
 }
 
-.cinemaRailPath {
-  stroke: #ff7657;
-  stroke-width: 1.6;
-  filter: drop-shadow(0 0 7px rgb(255 83 46 / 0.72));
+.cinemaBoundaryPath {
+  stroke: rgb(255 118 87 / 0.72);
+  stroke-width: 1.3;
+  filter: drop-shadow(0 0 7px rgb(255 83 46 / 0.58));
 }
 
-.cinemaInterceptPath {
-  stroke: rgb(225 235 244 / 0.88);
-  stroke-width: 1.2;
-  filter: drop-shadow(0 0 5px rgb(203 226 245 / 0.35));
+.cinemaIntrusionPath {
+  stroke: rgb(231 237 243 / 0.88);
+  stroke-width: 1.4;
+  filter: drop-shadow(0 0 6px rgb(214 233 246 / 0.32));
 }
 
-.cinemaConflictPoint {
+.cinemaRouteToken rect {
+  fill: #f2efe9;
+  stroke: #050609;
+  stroke-width: 2;
+}
+
+.cinemaRouteToken path {
+  stroke: rgb(242 239 233 / 0.5);
+  stroke-width: 1;
+}
+
+.cinemaConflictPoint circle:first-child {
   fill: #ff7657;
-  stroke: rgb(255 118 87 / 0.28);
-  stroke-width: 18;
-  filter: drop-shadow(0 0 12px rgb(255 83 46 / 0.9));
+  filter: drop-shadow(0 0 10px rgb(255 83 46 / 0.92));
+}
+
+.cinemaConflictPoint circle:last-child {
+  fill: rgb(255 118 87 / 0.08);
+  stroke: rgb(255 118 87 / 0.48);
+  stroke-width: 1;
 }
 
 .cinemaIncident {
   position: absolute;
-  z-index: 4;
-  top: 43.5%;
-  left: calc(50% + 2.25rem);
+  z-index: 9;
+  top: 46%;
+  left: calc(50% + 1.7rem);
   display: grid;
-  gap: 0.22rem;
-  padding-left: 0.8rem;
+  gap: 0.28rem;
+  padding-left: 0.9rem;
   border-left: 1px solid #ff7657;
   font-family: var(--font-geist-mono), ui-monospace, monospace;
+  letter-spacing: 0.045em;
   text-transform: uppercase;
+  pointer-events: none;
 }
 
 .cinemaIncident span {
   color: #ff7657;
-  font-size: 0.63rem;
+  font-size: 0.62rem;
   font-weight: 700;
-  letter-spacing: 0.12em;
 }
 
 .cinemaIncident strong {
-  color: #dddfe5;
-  font-size: 0.66rem;
+  color: rgb(239 239 236 / 0.78);
+  font-size: 0.64rem;
   font-weight: 500;
-  letter-spacing: 0.035em;
 }
 
 .cinemaHeroCopy {
   position: absolute;
   z-index: 5;
-  top: clamp(7rem, 13.5vh, 9.5rem);
-  right: 1rem;
-  left: 1rem;
-  max-width: 1180px;
-  margin-inline: auto;
-  text-align: center;
+  top: clamp(8.8rem, 17.5vh, 12rem);
+  left: clamp(1.4rem, 6.2vw, 6.8rem);
+  width: min(90vw, 91rem);
+  text-align: left;
+  will-change: transform, opacity, clip-path;
 }
 
 .cinemaEyebrow {
-  margin: 0 0 1.1rem;
-  color: rgb(230 232 238 / 0.64);
+  margin: 0 0 clamp(1.25rem, 2.2vh, 1.8rem);
+  color: rgb(232 233 236 / 0.65);
   font-family: var(--font-geist-mono), ui-monospace, monospace;
-  font-size: 0.62rem;
+  font-size: 0.64rem;
   font-weight: 650;
-  letter-spacing: 0.17em;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
 }
 
 .cinemaHeroCopy h1 {
   margin: 0;
   color: #f2efe9;
-  font-family: var(--font-cabinet), var(--font-satoshi), ui-sans-serif, sans-serif;
-  font-size: clamp(4rem, 7.5vw, 8.35rem);
+  font-family: var(--font-outfit), var(--font-cabinet), var(--font-satoshi), ui-sans-serif, sans-serif;
+  font-size: clamp(4.4rem, 8.15vw, 8.9rem);
   font-weight: 500;
-  line-height: 0.84;
-  letter-spacing: -0.058em;
+  line-height: 0.82;
+  letter-spacing: -0.064em;
 }
 
 .cinemaHeroCopy h1 span {
   display: block;
+  white-space: nowrap;
 }
 
 .cinemaHeroCopy h1 span:last-child {
   color: #ff7657;
 }
 
-.cinemaHeroDek {
-  max-width: 37rem;
-  margin: 1.45rem auto 0;
-  color: rgb(221 223 229 / 0.68);
-  font-size: clamp(0.96rem, 1.2vw, 1.1rem);
+.cinemaHeroFooter {
+  display: flex;
+  max-width: 61rem;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-top: clamp(1.5rem, 3.4vh, 2.6rem);
+}
+
+.cinemaHeroFooter p {
+  max-width: 34rem;
+  margin: 0;
+  color: rgb(225 226 230 / 0.68);
+  font-size: clamp(0.95rem, 1.15vw, 1.08rem);
   line-height: 1.58;
 }
 
 .cinemaPrimaryAction {
   display: inline-flex;
-  min-height: 3.2rem;
+  min-height: 3.25rem;
+  flex: 0 0 auto;
   align-items: center;
   justify-content: center;
-  gap: 0.75rem;
-  margin-top: 1.65rem;
-  border-radius: 2px;
-  padding-inline: 1.2rem;
-  color: #1a100d;
+  gap: 0.78rem;
+  padding-inline: 1.25rem;
+  color: #170d0a;
   background: #ff7657;
   box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 0.34),
-    0 14px 42px rgb(120 30 11 / 0.24);
-  font-size: 0.78rem;
-  font-weight: 720;
-  letter-spacing: -0.01em;
+    inset 0 1px 0 rgb(255 255 255 / 0.32),
+    0 18px 46px rgb(100 24 8 / 0.24);
+  font-size: 0.79rem;
+  font-weight: 740;
+  letter-spacing: -0.012em;
   outline: none;
   transition:
     transform 420ms cubic-bezier(0.16, 1, 0.3, 1),
@@ -182,26 +214,32 @@
 .cinemaProductReveal {
   position: absolute;
   z-index: 3;
-  inset: clamp(4.8rem, 7vh, 6rem) clamp(0.7rem, 1.6vw, 1.7rem) clamp(0.7rem, 1.6vw, 1.7rem);
+  inset: clamp(4.65rem, 7vh, 5.8rem) clamp(0.65rem, 1.4vw, 1.5rem) clamp(0.7rem, 1.4vw, 1.5rem);
   margin: 0;
   overflow: hidden;
-  background: #07080b;
+  background: #06070a;
   box-shadow:
-    0 0 0 1px rgb(255 255 255 / 0.12),
-    0 48px 120px rgb(0 0 0 / 0.64);
-  transform-origin: 50% 56%;
+    0 0 0 1px rgb(255 255 255 / 0.13),
+    0 52px 130px rgb(0 0 0 / 0.68);
+  transform-origin: 50% 52%;
+  will-change: transform, opacity;
 }
 
-.cinemaProductWindow {
+.cinemaProductWindow,
+.cinemaProductCamera {
   position: absolute;
   inset: 0;
   overflow: hidden;
 }
 
+.cinemaProductCamera {
+  will-change: transform;
+}
+
 .cinemaProductImage {
   object-fit: cover;
-  object-position: center 18%;
-  filter: contrast(1.06) saturate(0.98) brightness(1.08);
+  object-position: center 17%;
+  filter: contrast(1.04) saturate(0.96) brightness(1.12);
 }
 
 .cinemaProductGrade {
@@ -209,8 +247,21 @@
   inset: 0;
   pointer-events: none;
   background:
-    linear-gradient(180deg, rgb(3 4 7 / 0.26), transparent 15%, transparent 78%, rgb(3 4 7 / 0.38)),
-    linear-gradient(90deg, rgb(3 4 7 / 0.2), transparent 12%, transparent 88%, rgb(3 4 7 / 0.2));
+    linear-gradient(180deg, rgb(3 4 7 / 0.12), transparent 18%, transparent 82%, rgb(3 4 7 / 0.38)),
+    linear-gradient(90deg, rgb(3 4 7 / 0.17), transparent 10%, transparent 90%, rgb(3 4 7 / 0.17));
+}
+
+.cinemaProductFrame {
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.cinemaProductFrame path {
+  fill: none;
+  stroke: rgb(255 118 87 / 0.58);
+  stroke-width: 1.1;
+  filter: drop-shadow(0 0 5px rgb(255 83 46 / 0.46));
 }
 
 .cinemaProductTelemetry {
@@ -220,170 +271,167 @@
   bottom: 0;
   left: 0;
   display: grid;
-  min-height: 2.9rem;
+  min-height: 3rem;
   grid-template-columns: repeat(4, auto);
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  padding-inline: clamp(0.85rem, 2vw, 1.7rem);
+  padding-inline: clamp(0.85rem, 2vw, 1.8rem);
   color: rgb(228 230 235 / 0.58);
-  background: rgb(5 6 9 / 0.88);
+  background: rgb(5 6 9 / 0.9);
   box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.11);
   font-family: var(--font-geist-mono), ui-monospace, monospace;
-  font-size: 0.59rem;
-  letter-spacing: 0.09em;
-  backdrop-filter: blur(18px);
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  backdrop-filter: blur(16px);
 }
 
 .cinemaProductTelemetry strong {
-  color: #ff7657;
-  font-weight: 680;
+  margin-left: 0.3rem;
+  color: #f2efe9;
+  font-weight: 650;
 }
 
-.cinemaScrollCue {
+.cinemaShutters {
+  z-index: 8;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.cinemaShutters i {
   position: absolute;
-  z-index: 5;
-  bottom: 1.5rem;
-  left: 50%;
-  display: flex;
-  align-items: center;
-  gap: 0.55rem;
-  transform: translateX(-50%);
-  color: rgb(225 227 233 / 0.62);
-  font-family: var(--font-geist-mono), ui-monospace, monospace;
-  font-size: 0.6rem;
-  letter-spacing: 0.11em;
-  text-transform: uppercase;
+  top: -2%;
+  bottom: -2%;
+  width: 57%;
+  display: block;
+  background:
+    radial-gradient(circle at 50% 50%, rgb(20 23 29 / 0.95), #050609 58%),
+    #050609;
+  will-change: transform;
 }
 
-@media (prefers-reduced-motion: no-preference) {
+.cinemaShutterLeft {
+  left: -1px;
+  clip-path: polygon(0 0, 100% 0, 66% 50%, 100% 100%, 0 100%);
+  box-shadow: 20px 0 70px rgb(0 0 0 / 0.75);
+}
+
+.cinemaShutterRight {
+  right: -1px;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 34% 50%);
+  box-shadow: -20px 0 70px rgb(0 0 0 / 0.75);
+}
+
+@media (max-width: 900px) {
   .cinemaHeroCopy {
-    animation: cinema-copy-in 1.15s 180ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    top: clamp(8rem, 16vh, 10rem);
+    left: clamp(1.1rem, 4vw, 2.5rem);
+    width: calc(100% - clamp(2.2rem, 8vw, 5rem));
   }
 
-  .cinemaScrollCue svg {
-    animation: cinema-cue 1.8s 1.2s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+  .cinemaHeroCopy h1 {
+    font-size: clamp(3.75rem, 9.2vw, 6rem);
   }
-}
 
-@keyframes cinema-copy-in {
-  from {
-    opacity: 0;
-    clip-path: inset(0 0 100% 0);
-    transform: translateY(28px);
-  }
-}
-
-@keyframes cinema-cue {
-  50% {
-    transform: translateY(5px);
+  .cinemaHeroFooter {
+    align-items: flex-start;
   }
 }
 
 @media (max-width: 767px) {
   .cinemaHero {
-    min-height: 198dvh;
+    min-height: 224dvh;
+  }
+
+  .cinemaAtmosphereImage {
+    object-position: 50% center;
+  }
+
+  .cinemaAtmosphereGrade {
+    background:
+      linear-gradient(180deg, rgb(3 4 7 / 0.68) 0%, transparent 29%, transparent 63%, rgb(3 4 7 / 0.82) 100%),
+      radial-gradient(circle at 54% 46%, transparent 0 12%, rgb(3 4 7 / 0.2) 42%, rgb(3 4 7 / 0.58) 100%);
   }
 
   .cinemaHeroCopy {
-    top: 7.2rem;
-    right: 1rem;
+    top: clamp(7.3rem, 14.5svh, 9rem);
     left: 1rem;
+    width: calc(100% - 2rem);
   }
 
   .cinemaEyebrow {
-    margin-bottom: 0.85rem;
-    font-size: 0.55rem;
+    margin-bottom: 1rem;
+    font-size: 0.58rem;
   }
 
   .cinemaHeroCopy h1 {
-    font-size: clamp(3.1rem, 14.5vw, 4.65rem);
-    line-height: 0.87;
-    letter-spacing: -0.054em;
-  }
-
-  .cinemaHeroDek {
-    max-width: 22rem;
-    margin-top: 1.15rem;
-    font-size: 0.9rem;
-    line-height: 1.5;
-  }
-
-  .cinemaPrimaryAction {
-    min-height: 3rem;
-    margin-top: 1.3rem;
-    padding-inline: 1rem;
-    font-size: 0.73rem;
-  }
-
-  .cinemaIncident {
-    top: 50%;
-    left: calc(50% - 0.25rem);
-  }
-
-  .cinemaIncident strong {
-    display: none;
-  }
-
-  .cinemaProductReveal {
-    inset: 5rem 0.5rem 0.5rem;
-  }
-
-  .cinemaProductImage {
-    width: 980px !important;
-    max-width: none !important;
-    object-position: 23% 17%;
-  }
-
-  .cinemaProductTelemetry {
-    min-height: 2.75rem;
-    grid-template-columns: repeat(2, auto);
-    font-size: 0.53rem;
-  }
-
-  .cinemaProductTelemetry span:nth-child(2),
-  .cinemaProductTelemetry span:nth-child(3) {
-    display: none;
-  }
-
-  .cinemaScrollCue {
-    bottom: 1.1rem;
-  }
-}
-
-@media (max-height: 700px) {
-  .cinemaHero {
-    min-height: 182dvh;
-  }
-
-  .cinemaHeroCopy {
-    top: 4.15rem;
-  }
-
-  .cinemaEyebrow {
-    margin-bottom: 0.55rem;
-  }
-
-  .cinemaHeroCopy h1 {
-    font-size: clamp(2.35rem, 10.5vh, 3.5rem);
+    font-size: clamp(3.35rem, 15vw, 5rem);
     line-height: 0.86;
   }
 
-  .cinemaHeroDek {
-    max-width: 31rem;
-    margin-top: 0.75rem;
-    font-size: 0.8rem;
-    line-height: 1.42;
+  .cinemaHeroCopy h1 span:last-child {
+    font-size: 0.64em;
+    letter-spacing: -0.048em;
+  }
+
+  .cinemaHeroFooter {
+    display: grid;
+    gap: 1.2rem;
+    margin-top: 1.3rem;
+  }
+
+  .cinemaHeroFooter p {
+    max-width: 24rem;
+    font-size: 0.9rem;
+    line-height: 1.52;
   }
 
   .cinemaPrimaryAction {
-    min-height: 2.7rem;
-    margin-top: 0.85rem;
-    font-size: 0.7rem;
+    width: max-content;
+    min-height: 3rem;
   }
 
-  .cinemaScrollCue {
-    display: none;
+  .cinemaIncident {
+    top: 48%;
+    left: calc(50% + 0.8rem);
+    max-width: 10.5rem;
+  }
+
+  .cinemaIncident span,
+  .cinemaIncident strong {
+    font-size: 0.53rem;
+    line-height: 1.35;
+  }
+
+  .cinemaProductReveal {
+    inset: 4.35rem 0.55rem 0.55rem;
+  }
+
+  .cinemaProductImage {
+    width: 1120px !important;
+    max-width: none !important;
+    object-fit: cover;
+    object-position: 43% 15%;
+  }
+
+  .cinemaProductTelemetry {
+    grid-template-columns: repeat(2, auto);
+    row-gap: 0.4rem;
+    padding-block: 0.55rem;
+    font-size: 0.52rem;
+  }
+
+  .cinemaShutters i {
+    width: 62%;
+  }
+
+  .cinemaShutterLeft {
+    clip-path: polygon(0 0, 100% 0, 58% 50%, 100% 100%, 0 100%);
+  }
+
+  .cinemaShutterRight {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 42% 50%);
   }
 }
 
@@ -395,46 +443,61 @@
   .cinemaHeroSticky {
     position: relative;
     min-height: auto;
-    padding: 8rem 1rem 1rem;
+    overflow: visible;
   }
 
   .cinemaAtmosphere {
-    height: 100dvh;
+    position: relative;
+    height: 100svh;
+    min-height: 42rem;
+  }
+
+  .cinemaHeroCopy {
+    top: clamp(8rem, 17vh, 11rem);
   }
 
   .cinemaFlightPaths,
   .cinemaIncident,
-  .cinemaScrollCue {
+  .cinemaShutters {
     display: none;
-  }
-
-  .cinemaAtmosphere,
-  .cinemaHeroCopy,
-  .cinemaProductReveal,
-  .cinemaProductTelemetry {
-    opacity: 1 !important;
-    transform: none !important;
-  }
-
-  .cinemaHeroCopy {
-    position: relative;
-    top: auto;
-    right: auto;
-    left: auto;
-    min-height: 63dvh;
-    align-content: start;
   }
 
   .cinemaProductReveal {
     position: relative;
     inset: auto;
-    width: 100%;
-    height: 72dvh;
-    min-height: 520px;
-    clip-path: none !important;
+    height: min(76svh, 52rem);
+    min-height: 31rem;
+    margin: 0 clamp(0.6rem, 1.5vw, 1.5rem) clamp(0.6rem, 1.5vw, 1.5rem);
+    opacity: 1 !important;
+    transform: none !important;
   }
 
-  .cinemaPrimaryAction {
-    transition-duration: 0.01ms;
+  .cinemaProductCamera,
+  .cinemaProductFrame,
+  .cinemaProductTelemetry {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+@media (max-height: 650px) and (min-width: 768px) {
+  .cinemaHeroCopy {
+    top: 5.4rem;
+  }
+
+  .cinemaEyebrow {
+    margin-bottom: 0.75rem;
+  }
+
+  .cinemaHeroCopy h1 {
+    font-size: clamp(3.55rem, 7.4vw, 6.8rem);
+  }
+
+  .cinemaHeroFooter {
+    margin-top: 1rem;
+  }
+
+  .cinemaProductReveal {
+    top: 4.35rem;
   }
 }
