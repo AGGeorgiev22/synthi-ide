@@ -1,168 +1,195 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import Image from "next/image";
+import { useGSAP } from "@gsap/react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useReducedMotion } from "framer-motion";
 
 import styles from "@/components/home/AuthorityStory.module.css";
 
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 const AUTHORITY_SCENES = [
   {
     key: "radar",
-    phase: "CONFLICT FORECAST",
-    event: "Route 03 crossing protected path",
-    title: "See the collision before it lands.",
-    copy: "Parallel agents share one map of protected paths, active leases, conflicts, and the order work is allowed to move.",
+    state: "Forecast",
+    title: "The conflict appears before impact.",
+    copy: "Active agents share one map of protected paths, leases, and the order work is allowed to move.",
     src: "/codesite-proof/codesite-radar-desktop.png",
-    alt: "Vectant radar showing active agent flights and a forecast collision",
+    alt: "Vectant radar forecasting a collision between active agent work",
     shot: styles.authorityShotRadar,
   },
   {
     key: "black-box",
-    phase: "WRITE DENIED",
-    event: "Mutation held and recorder armed",
-    title: "The boundary absorbs the hit.",
-    copy: "Denied writes, quarantines, instructions, and proof bundles stay in one ordered event stream instead of disappearing into chat.",
+    state: "Write held",
+    title: "The denied write enters the record.",
+    copy: "The boundary blocks the mutation and preserves the instruction, quarantine, and ordered event that caused it.",
     src: "/codesite-proof/codesite-black-box-desktop.png",
-    alt: "Vectant black box showing an ordered record of authority events",
+    alt: "Vectant Black Box preserving the denied write and ordered authority events",
     shot: styles.authorityShotBlackBox,
   },
   {
     key: "provenance",
-    phase: "PROVENANCE ATTACHED",
-    event: "Transaction, process, and evidence linked",
-    title: "Trace authority to the line.",
-    copy: "Every source line retains its transaction, process ancestry, evidence, and rationale.",
+    state: "Evidence attached",
+    title: "The exact line keeps its chain of custody.",
+    copy: "Source, transaction, process ancestry, evidence, and rationale remain linked where the change occurred.",
     src: "/codesite-proof/codesite-line-provenance-desktop.png",
-    alt: "Vectant line inspector tracing a source line to its transaction and evidence",
+    alt: "Vectant line provenance tracing a source line to its transaction and evidence",
     shot: styles.authorityShotProvenance,
   },
   {
     key: "landing",
-    phase: "LANDING HELD",
-    event: "Check failed and clearance withheld",
-    title: "Nothing lands without proof.",
-    copy: "A failed check holds the change and names the exact condition that blocked it.",
+    state: "Landing blocked",
+    title: "Clearance waits for proof.",
+    copy: "The failed condition remains visible, the change stays held, and nothing lands by inference.",
     src: "/codesite-proof/codesite-landing-desktop.png",
-    alt: "Vectant landing view holding a change after a failed proof check",
+    alt: "Vectant landing view withholding clearance after a failed proof check",
     shot: styles.authorityShotLanding,
   },
 ];
+
+const SHOT_MOTION = [
+  { from: { scale: 1.02 }, to: { scale: 1.105, xPercent: -1.5 } },
+  { from: { scale: 1.22, xPercent: 3 }, to: { scale: 1.06, xPercent: 0 } },
+  { from: { scale: 1.08, xPercent: 5 }, to: { scale: 1.08, xPercent: -4 } },
+  { from: { scale: 1.18, yPercent: 2 }, to: { scale: 1.04, yPercent: -1 } },
+];
+
+const SCENE_STARTS = [0, 0.92, 2.22, 3.06];
+const SCENE_HOLDS = [0.92, 1.3, 0.84, 1.16];
 
 export function AuthorityStory() {
   const rootRef = useRef(null);
   const preludeRef = useRef(null);
   const stackRef = useRef(null);
   const progressRef = useRef(null);
-  const cursorRef = useRef(null);
-  const reduceMotion = useReducedMotion();
+  const tokenRef = useRef(null);
+  const sceneRefs = useRef([]);
+  const shotRefs = useRef([]);
+  const copyRefs = useRef([]);
+  const stateRefs = useRef([]);
 
-  useEffect(() => {
-    if (reduceMotion || !rootRef.current || !preludeRef.current || !stackRef.current) {
-      return undefined;
-    }
-
-    const context = gsap.context(() => {
-      const preludeWords = gsap.utils.toArray(`.${styles.authorityPreludeWord}`);
-      gsap.fromTo(
-        preludeWords,
-        { opacity: 0.13, y: 12 },
-        {
-          opacity: 1,
-          y: 0,
-          stagger: 0.1,
-          ease: "none",
-          scrollTrigger: {
-            trigger: preludeRef.current,
-            start: "top 88%",
-            end: "bottom 46%",
-            scrub: 0.7,
-          },
-        }
-      );
-
+  useGSAP(
+    () => {
       const media = gsap.matchMedia();
-      media.add("(min-width: 768px)", () => {
-        const scenes = gsap.utils.toArray(`.${styles.authorityScene}`);
-        const steps = gsap.utils.toArray(`.${styles.authorityProgressStep}`);
+
+      media.add("(prefers-reduced-motion: no-preference)", () => {
+        const preludeWords = gsap.utils.toArray(`.${styles.authorityPreludeWord}`);
+        const preludeTween = gsap.fromTo(
+          preludeWords,
+          { opacity: 0.12, y: 14 },
+          {
+            opacity: 1,
+            y: 0,
+            stagger: 0.08,
+            ease: "none",
+            scrollTrigger: {
+              trigger: preludeRef.current,
+              start: "top 84%",
+              end: "bottom 45%",
+              scrub: 0.55,
+            },
+          },
+        );
+
+        const scenes = sceneRefs.current.filter(Boolean);
+        const shots = shotRefs.current.filter(Boolean);
+        const copies = copyRefs.current.filter(Boolean);
+        const states = stateRefs.current.filter(Boolean);
 
         gsap.set(scenes, { autoAlpha: 0, zIndex: 1 });
         gsap.set(scenes[0], { autoAlpha: 1, zIndex: 2, clipPath: "inset(0 0 0 0)" });
-        gsap.set(progressRef.current, { scaleX: 0.03, transformOrigin: "left center" });
-        gsap.set(cursorRef.current, { left: "0%" });
-        gsap.set(steps, { color: "rgba(231, 233, 239, 0.52)" });
+        gsap.set(copies, { autoAlpha: 0, y: 30, clipPath: "inset(0 0 100% 0)" });
+        gsap.set(progressRef.current, { scaleX: 0, transformOrigin: "left center" });
+        gsap.set(tokenRef.current, { left: "0%" });
+        gsap.set(states, { color: "rgba(231, 233, 239, 0.38)" });
 
         const timeline = gsap.timeline({
           scrollTrigger: {
             trigger: stackRef.current,
             start: "top top",
             end: "bottom bottom",
-            scrub: 0.85,
+            scrub: 0.62,
             invalidateOnRefresh: true,
           },
         });
 
         scenes.forEach((scene, index) => {
-          const at = index;
-          const shot = scene.querySelector("[data-authority-shot]");
-          const copy = scene.querySelector("[data-authority-copy]");
+          const start = SCENE_STARTS[index];
+          const hold = SCENE_HOLDS[index];
+          const previous = scenes[index - 1];
+          const wipe = index % 2 === 0 ? "inset(0 100% 0 0)" : "inset(0 0 0 100%)";
 
           if (index > 0) {
-            const previous = scenes[index - 1];
-            const inset = index % 2 === 0 ? "inset(100% 0 0 0)" : "inset(0 100% 0 0)";
             timeline
-              .set(scene, { autoAlpha: 1, zIndex: 3, clipPath: inset }, at)
-              .to(scene, { clipPath: "inset(0 0 0 0)", duration: 0.16, ease: "power2.out" }, at)
-              .set(previous, { autoAlpha: 0, zIndex: 1 }, at + 0.16);
+              .set(scene, { autoAlpha: 1, zIndex: 3, clipPath: wipe }, start)
+              .to(scene, { clipPath: "inset(0 0 0 0)", duration: 0.13, ease: "power4.inOut" }, start)
+              .set(previous, { autoAlpha: 0, zIndex: 1 }, start + 0.13);
           }
 
           timeline
             .fromTo(
-              shot,
-              { scale: index === 1 ? 1.065 : 1.035, xPercent: index === 2 ? 2.2 : 0 },
-              { scale: 1, xPercent: 0, duration: 0.86, ease: "none" },
-              at
+              shots[index],
+              SHOT_MOTION[index].from,
+              { ...SHOT_MOTION[index].to, duration: hold, ease: "none" },
+              start,
             )
-            .fromTo(
-              copy,
-              { y: 28, clipPath: "inset(0 0 100% 0)" },
-              { y: 0, clipPath: "inset(0 0 0% 0)", duration: 0.25, ease: "power2.out" },
-              at + 0.08
+            .to(
+              copies[index],
+              {
+                autoAlpha: 1,
+                y: 0,
+                clipPath: "inset(0 0 0% 0)",
+                duration: 0.22,
+                ease: "power3.out",
+              },
+              start + 0.1,
             )
             .to(
               progressRef.current,
-              { scaleX: (index + 1) / scenes.length, duration: 0.72, ease: "none" },
-              at
+              { scaleX: (index + 1) / scenes.length, duration: hold * 0.82, ease: "none" },
+              start,
             )
             .to(
-              cursorRef.current,
-              { left: `${(index / (scenes.length - 1)) * 100}%`, duration: 0.72, ease: "none" },
-              at
+              tokenRef.current,
+              {
+                left: `${(index / (scenes.length - 1)) * 100}%`,
+                duration: index === 0 ? 0.01 : 0.32,
+                ease: "power3.inOut",
+              },
+              start,
             )
-            .to(steps[index], { color: "#ff7657", duration: 0.14, ease: "none" }, at + 0.08);
+            .to(states[index], { color: "#ff7657", duration: 0.12 }, start + 0.08);
+
+          if (index < scenes.length - 1) {
+            timeline.to(
+              copies[index],
+              { autoAlpha: 0, y: -24, duration: 0.12, ease: "power2.in" },
+              start + hold - 0.12,
+            );
+          }
         });
 
-        timeline.to({}, { duration: 0.16 });
-        return () => timeline.kill();
+        timeline.to({}, { duration: 0.18 });
+
+        return () => {
+          preludeTween.kill();
+          timeline.kill();
+        };
       });
 
       return () => media.revert();
-    }, rootRef);
-
-    return () => context.revert();
-  }, [reduceMotion]);
+    },
+    { scope: rootRef },
+  );
 
   return (
-    <section id="runtime-path" ref={rootRef} className={styles.authorityFilm}>
+    <section id="runtime-path" ref={rootRef} className={styles.authorityFilm} data-film-act="incident">
       <div ref={preludeRef} className={styles.authorityPrelude}>
-        <p>BLACK BOX RECORDER ARMED</p>
         <h2>
           <span className={styles.authorityPreludeWord}>One</span>{" "}
-          <span className={styles.authorityPreludeWord}>run.</span>{" "}
+          <span className={styles.authorityPreludeWord}>incident.</span>{" "}
           <span className={styles.authorityPreludeWord}>Every</span>{" "}
           <span className={styles.authorityPreludeWord}>decision</span>{" "}
           <span className={styles.authorityPreludeWord}>attached.</span>
@@ -171,49 +198,54 @@ export function AuthorityStory() {
 
       <div ref={stackRef} className={styles.authorityStack}>
         <div className={styles.authorityStage}>
-          {AUTHORITY_SCENES.map(({ key, phase, event, title, copy, src, alt, shot }) => (
+          {AUTHORITY_SCENES.map(({ key, title, copy, src, alt, shot }, index) => (
             <article
               key={key}
+              ref={(node) => { sceneRefs.current[index] = node; }}
               className={`${styles.authorityScene} ${shot}`}
               data-authority-scene={key}
             >
-              <div className={styles.authoritySceneMedia} data-authority-shot>
+              <div
+                ref={(node) => { shotRefs.current[index] = node; }}
+                className={styles.authoritySceneMedia}
+              >
                 <Image
                   src={src}
                   alt={alt}
                   fill
-                  sizes="(max-width: 767px) 940px, 100vw"
+                  sizes="(max-width: 767px) 980px, 100vw"
                   className={styles.authoritySceneImage}
                 />
                 <div className={styles.authoritySceneGrade} aria-hidden="true" />
               </div>
-              <div className={styles.authoritySceneCopy} data-authority-copy>
-                <p>{phase}</p>
+              <div
+                ref={(node) => { copyRefs.current[index] = node; }}
+                className={styles.authoritySceneCopy}
+              >
                 <h2>{title}</h2>
-                <span>{copy}</span>
-              </div>
-              <div className={styles.authorityEvent} aria-hidden="true">
-                <span>{phase}</span>
-                <strong>{event}</strong>
+                <p>{copy}</p>
               </div>
             </article>
           ))}
 
-          <div className={styles.authorityMissionHeader} aria-hidden="true">
-            <span>FLIGHT 07 / 13</span>
-            <strong>CONTROLLED AUTHORITY</strong>
-          </div>
-
-          <div className={styles.authorityProgress} aria-hidden="true">
-            <i ref={progressRef} />
-            <b ref={cursorRef} />
-            {AUTHORITY_SCENES.map((scene) => (
-              <span key={scene.key} className={styles.authorityProgressStep}>{scene.key}</span>
-            ))}
+          <div className={styles.authorityChain} aria-hidden="true">
+            <div className={styles.authorityChainTrack}>
+              <i ref={progressRef} />
+              <b ref={tokenRef}>
+                <em />
+              </b>
+            </div>
+            <div className={styles.authorityChainStates}>
+              {AUTHORITY_SCENES.map((scene, index) => (
+                <span key={scene.key} ref={(node) => { stateRefs.current[index] = node; }}>
+                  {scene.state}
+                </span>
+              ))}
+            </div>
           </div>
 
           <svg className={styles.authorityCorridor} viewBox="0 0 1600 900" preserveAspectRatio="none" aria-hidden="true">
-            <path d="M -40 820 L 800 478 L 1640 820" />
+            <path d="M -60 840 L 800 486 L 1660 840" />
           </svg>
         </div>
       </div>

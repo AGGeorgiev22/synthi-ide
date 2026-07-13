@@ -7,41 +7,32 @@
 
 .authorityPrelude {
   display: grid;
-  width: min(calc(100% - 2rem), 1420px);
-  min-height: 44dvh;
+  width: min(calc(100% - 2rem), 1460px);
+  min-height: 40dvh;
   margin-inline: auto;
   padding-block: clamp(5rem, 9vw, 8rem);
   align-content: center;
 }
 
-.authorityPrelude > p {
-  margin: 0 0 1.05rem;
-  color: #ff7657;
-  font-family: var(--font-geist-mono), ui-monospace, monospace;
-  font-size: 0.6rem;
-  font-weight: 650;
-  letter-spacing: 0.15em;
-}
-
 .authorityPrelude h2 {
-  max-width: 14ch;
+  max-width: 13ch;
   margin: 0;
   color: #efede8;
-  font-family: var(--font-cabinet), var(--font-satoshi), ui-sans-serif, sans-serif;
-  font-size: clamp(3.1rem, 5.7vw, 6.4rem);
+  font-family: var(--font-outfit), var(--font-cabinet), var(--font-satoshi), ui-sans-serif, sans-serif;
+  font-size: clamp(3.6rem, 7.2vw, 8rem);
   font-weight: 500;
-  line-height: 0.88;
-  letter-spacing: -0.055em;
+  line-height: 0.86;
+  letter-spacing: -0.062em;
 }
 
 .authorityPreludeWord {
   display: inline-block;
-  opacity: 0.13;
+  opacity: 0.12;
 }
 
 .authorityStack {
   position: relative;
-  height: 320dvh;
+  height: 318dvh;
 }
 
 .authorityStage {
@@ -50,6 +41,7 @@
   height: 100dvh;
   overflow: hidden;
   background: #050609;
+  isolation: isolate;
 }
 
 .authorityScene {
@@ -69,16 +61,19 @@
 
 .authoritySceneMedia {
   position: absolute;
-  inset: clamp(4.65rem, 7vh, 5.8rem) clamp(0.65rem, 1.5vw, 1.5rem) clamp(3.6rem, 6vh, 4.8rem);
+  inset: clamp(4.65rem, 7vh, 5.8rem) clamp(0.7rem, 1.5vw, 1.6rem) clamp(4.5rem, 7vh, 5.6rem);
   overflow: hidden;
-  background: #090a0f;
-  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.1);
+  background: #08090d;
+  box-shadow:
+    inset 0 0 0 1px rgb(255 255 255 / 0.1),
+    0 32px 90px rgb(0 0 0 / 0.36);
   transform-origin: center center;
+  will-change: transform;
 }
 
 .authoritySceneImage {
   object-fit: cover;
-  filter: contrast(1.06) saturate(0.97) brightness(1.06);
+  filter: contrast(1.05) saturate(0.97) brightness(1.12);
 }
 
 .authoritySceneGrade {
@@ -90,142 +85,108 @@
 .authoritySceneCopy {
   position: absolute;
   z-index: 4;
-  left: clamp(2rem, 5.5vw, 6rem);
-  bottom: clamp(5.8rem, 11vh, 8.2rem);
-  max-width: 760px;
+  left: clamp(1.8rem, 5vw, 5.4rem);
+  bottom: clamp(6.2rem, 11vh, 8.6rem);
+  max-width: 50rem;
+  padding: 1.15rem 1.35rem 1.3rem;
+  background: linear-gradient(90deg, rgb(5 6 9 / 0.94), rgb(5 6 9 / 0.72) 72%, transparent);
+  will-change: transform, opacity, clip-path;
 }
 
-.authoritySceneCopy > p {
-  margin: 0 0 0.9rem;
-  color: #ff7657;
-  font-family: var(--font-geist-mono), ui-monospace, monospace;
-  font-size: 0.58rem;
-  font-weight: 680;
-  letter-spacing: 0.14em;
+.authoritySceneCopy::before {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 1px;
+  background: #ff7657;
+  content: "";
 }
 
 .authoritySceneCopy h2 {
-  max-width: 11ch;
+  max-width: 12ch;
   margin: 0;
   color: #f2efe9;
-  font-family: var(--font-cabinet), var(--font-satoshi), ui-sans-serif, sans-serif;
-  font-size: clamp(3.2rem, 5.8vw, 6.75rem);
+  font-family: var(--font-outfit), var(--font-cabinet), var(--font-satoshi), ui-sans-serif, sans-serif;
+  font-size: clamp(3rem, 5.6vw, 6.5rem);
   font-weight: 500;
-  line-height: 0.86;
-  letter-spacing: -0.057em;
+  line-height: 0.87;
+  letter-spacing: -0.058em;
   text-wrap: balance;
 }
 
-.authoritySceneCopy > span {
-  display: block;
-  max-width: 37rem;
-  margin-top: 1.15rem;
-  color: rgb(224 226 232 / 0.7);
-  font-size: clamp(0.94rem, 1.18vw, 1.08rem);
-  line-height: 1.58;
+.authoritySceneCopy p {
+  max-width: 36rem;
+  margin: 1rem 0 0;
+  color: rgb(226 227 231 / 0.7);
+  font-size: clamp(0.92rem, 1.15vw, 1.06rem);
+  line-height: 1.56;
 }
 
-.authorityEvent {
-  position: absolute;
-  z-index: 4;
-  right: clamp(1.5rem, 3vw, 3rem);
-  bottom: clamp(4.7rem, 7.5vh, 6rem);
-  display: grid;
-  min-width: min(24rem, 30vw);
-  gap: 0.32rem;
-  padding: 0.9rem 1rem;
-  border-left: 1px solid #ff7657;
-  background: rgb(5 6 9 / 0.78);
-  font-family: var(--font-geist-mono), ui-monospace, monospace;
-  backdrop-filter: blur(16px);
-}
-
-.authorityEvent span {
-  color: #ff7657;
-  font-size: 0.55rem;
-  font-weight: 680;
-  letter-spacing: 0.13em;
-}
-
-.authorityEvent strong {
-  color: rgb(237 235 230 / 0.82);
-  font-size: 0.6rem;
-  font-weight: 520;
-  letter-spacing: 0.04em;
-}
-
-.authorityMissionHeader {
-  position: absolute;
-  z-index: 8;
-  top: 0;
-  right: 0;
-  left: 0;
-  display: flex;
-  min-height: clamp(4.1rem, 6vh, 5rem);
-  align-items: end;
-  justify-content: space-between;
-  padding: 0 clamp(1.4rem, 3vw, 3rem) 0.8rem;
-  color: rgb(231 233 239 / 0.66);
-  background: #050609;
-  box-shadow: inset 0 -1px 0 rgb(255 255 255 / 0.09);
-  font-family: var(--font-geist-mono), ui-monospace, monospace;
-  font-size: 0.57rem;
-  letter-spacing: 0.12em;
-}
-
-.authorityMissionHeader strong {
-  color: #ff7657;
-  font-weight: 650;
-}
-
-.authorityProgress {
+.authorityChain {
   position: absolute;
   z-index: 8;
   right: clamp(1.4rem, 3vw, 3rem);
   bottom: 0;
   left: clamp(1.4rem, 3vw, 3rem);
-  display: grid;
-  min-height: clamp(3.4rem, 5vh, 4.2rem);
-  grid-template-columns: repeat(4, 1fr);
-  align-items: center;
+  min-height: clamp(4rem, 6vh, 5rem);
+  padding-top: 1.3rem;
+  color: rgb(231 233 239 / 0.48);
   background: #050609;
   box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.09);
   font-family: var(--font-geist-mono), ui-monospace, monospace;
 }
 
-.authorityProgress > i {
+.authorityChainTrack {
   position: absolute;
   top: 0;
   right: 0;
   left: 0;
   height: 1px;
-  background: #ff7657;
-  box-shadow: 0 0 10px rgb(255 83 46 / 0.72);
+  background: rgb(255 255 255 / 0.12);
 }
 
-.authorityProgress > b {
+.authorityChainTrack > i {
   position: absolute;
-  top: -3px;
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  transform: translateX(-50%);
+  inset: 0;
   background: #ff7657;
-  box-shadow: 0 0 14px rgb(255 83 46 / 0.85);
+  box-shadow: 0 0 11px rgb(255 83 46 / 0.64);
 }
 
-.authorityProgressStep {
-  color: rgb(231 233 239 / 0.52);
-  font-size: 0.61rem;
-  letter-spacing: 0.11em;
+.authorityChainTrack > b {
+  position: absolute;
+  top: 0;
+  transform: translate(-50%, -50%);
+}
+
+.authorityChainTrack em {
+  display: block;
+  width: 9px;
+  height: 9px;
+  border: 2px solid #050609;
+  border-radius: 50%;
+  background: #ff7657;
+  box-shadow: 0 0 0 1px #ff7657, 0 0 14px rgb(255 83 46 / 0.78);
+}
+
+.authorityChainStates {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  align-items: center;
+  gap: 1rem;
+}
+
+.authorityChainStates span {
+  font-size: 0.59rem;
+  letter-spacing: 0.09em;
   text-transform: uppercase;
 }
 
-.authorityProgressStep:not(:first-of-type) {
+.authorityChainStates span:not(:first-child) {
   text-align: center;
 }
 
-.authorityProgressStep:last-child {
+.authorityChainStates span:last-child {
   text-align: right;
 }
 
@@ -240,7 +201,7 @@
 
 .authorityCorridor path {
   fill: none;
-  stroke: rgb(255 118 87 / 0.22);
+  stroke: rgb(255 118 87 / 0.19);
   stroke-width: 1;
   vector-effect: non-scaling-stroke;
 }
@@ -251,12 +212,12 @@
 
 .authorityShotRadar .authoritySceneGrade {
   background:
-    linear-gradient(90deg, rgb(4 5 8 / 0.82) 0%, rgb(4 5 8 / 0.42) 31%, transparent 62%),
-    linear-gradient(0deg, rgb(4 5 8 / 0.82), transparent 43%);
+    linear-gradient(90deg, rgb(4 5 8 / 0.42), transparent 37%),
+    linear-gradient(0deg, rgb(4 5 8 / 0.5), transparent 38%);
 }
 
 .authorityShotBlackBox .authoritySceneMedia {
-  left: 36%;
+  left: 34%;
 }
 
 .authorityShotBlackBox .authoritySceneImage {
@@ -264,23 +225,24 @@
 }
 
 .authorityShotBlackBox .authoritySceneGrade {
-  background: linear-gradient(90deg, rgb(4 5 8 / 0.42), transparent 24% 78%, rgb(4 5 8 / 0.26));
+  background: linear-gradient(90deg, rgb(4 5 8 / 0.14), transparent 23% 78%, rgb(4 5 8 / 0.18));
 }
 
 .authorityShotBlackBox .authoritySceneCopy {
   top: 50%;
-  right: 67%;
+  right: 68%;
   bottom: auto;
-  max-width: 460px;
+  left: clamp(1.8rem, 5vw, 5.4rem);
+  max-width: 30rem;
   transform: translateY(-50%);
 }
 
 .authorityShotBlackBox .authoritySceneCopy h2 {
-  font-size: clamp(3.15rem, 5.15vw, 5.9rem);
+  font-size: clamp(3rem, 4.8vw, 5.6rem);
 }
 
 .authorityShotProvenance .authoritySceneMedia {
-  top: 28%;
+  top: 26%;
 }
 
 .authorityShotProvenance .authoritySceneImage {
@@ -289,23 +251,19 @@
 
 .authorityShotProvenance .authoritySceneGrade {
   background:
-    linear-gradient(180deg, rgb(4 5 8 / 0.14), transparent 20% 72%, rgb(4 5 8 / 0.55)),
-    linear-gradient(90deg, rgb(4 5 8 / 0.28), transparent 20% 82%, rgb(4 5 8 / 0.28));
+    linear-gradient(180deg, rgb(4 5 8 / 0.08), transparent 22% 74%, rgb(4 5 8 / 0.42)),
+    linear-gradient(90deg, rgb(4 5 8 / 0.16), transparent 18% 84%, rgb(4 5 8 / 0.16));
 }
 
 .authorityShotProvenance .authoritySceneCopy {
-  top: clamp(5.9rem, 10vh, 8rem);
+  top: clamp(5.8rem, 9vh, 7.6rem);
   bottom: auto;
-  max-width: 1260px;
+  max-width: 68rem;
 }
 
 .authorityShotProvenance .authoritySceneCopy h2 {
-  max-width: none;
+  max-width: 14ch;
   font-size: clamp(3rem, 5vw, 5.8rem);
-}
-
-.authorityShotProvenance .authoritySceneCopy > span {
-  max-width: 42rem;
 }
 
 .authorityShotLanding .authoritySceneImage {
@@ -314,72 +272,70 @@
 
 .authorityShotLanding .authoritySceneGrade {
   background:
-    linear-gradient(90deg, rgb(4 5 8 / 0.86) 0%, rgb(4 5 8 / 0.48) 32%, transparent 64%),
-    linear-gradient(0deg, rgb(4 5 8 / 0.82), transparent 44%);
+    linear-gradient(270deg, rgb(4 5 8 / 0.58) 0%, rgb(4 5 8 / 0.24) 36%, transparent 66%),
+    linear-gradient(0deg, rgb(4 5 8 / 0.46), transparent 42%);
+}
+
+.authorityShotLanding .authoritySceneCopy {
+  right: clamp(1.8rem, 5vw, 5.4rem);
+  left: auto;
+  width: min(42rem, 48vw);
+}
+
+@media (max-width: 900px) and (min-width: 768px) {
+  .authoritySceneCopy h2 {
+    font-size: clamp(3rem, 6.6vw, 5rem);
+  }
+
+  .authorityShotBlackBox .authoritySceneCopy {
+    right: 62%;
+  }
 }
 
 @media (max-width: 767px) {
   .authorityPrelude {
     width: calc(100% - 2rem);
-    min-height: 38dvh;
-    padding-block: 5.5rem;
+    min-height: 48dvh;
+    padding-block: 6.5rem 5.5rem;
   }
 
   .authorityPrelude h2 {
-    max-width: 11ch;
-    font-size: clamp(3rem, 13.8vw, 4.25rem);
-    line-height: 0.9;
+    max-width: 10ch;
+    font-size: clamp(3.3rem, 15.5vw, 4.8rem);
+    line-height: 0.88;
   }
 
   .authorityStack {
-    height: auto;
-    padding-inline: 0.5rem;
-  }
-
-  .authorityStage {
-    position: relative;
-    height: auto;
-    overflow: visible;
-  }
-
-  .authorityScene,
-  .authorityScene:first-child {
-    position: relative;
-    inset: auto;
-    min-height: 74dvh;
-    margin-bottom: 0.5rem;
-    visibility: visible !important;
-    opacity: 1 !important;
-    clip-path: none !important;
+    height: 286dvh;
   }
 
   .authoritySceneMedia,
   .authorityShotBlackBox .authoritySceneMedia,
   .authorityShotProvenance .authoritySceneMedia {
-    inset: 0;
-    transform: none !important;
+    inset: 4.35rem 0.5rem 4.7rem;
   }
 
   .authoritySceneImage {
-    width: 940px !important;
+    width: 980px !important;
     max-width: none !important;
-    filter: contrast(1.06) saturate(0.97) brightness(1.01);
+    object-fit: cover;
+    filter: contrast(1.05) saturate(0.96) brightness(1.09);
   }
 
   .authorityShotRadar .authoritySceneImage {
-    object-position: 22% 18%;
+    object-position: 24% 18%;
   }
 
   .authorityShotBlackBox .authoritySceneImage {
-    object-position: 76% 48%;
+    object-position: 78% 48%;
   }
 
   .authorityShotProvenance .authoritySceneImage {
-    object-position: 21% 8%;
+    object-position: 24% 8%;
   }
 
   .authorityShotLanding .authoritySceneImage {
-    object-position: 79% 69%;
+    object-position: 80% 69%;
   }
 
   .authoritySceneGrade,
@@ -387,19 +343,20 @@
   .authorityShotBlackBox .authoritySceneGrade,
   .authorityShotProvenance .authoritySceneGrade,
   .authorityShotLanding .authoritySceneGrade {
-    background:
-      linear-gradient(0deg, rgb(4 5 8 / 0.94) 0%, rgb(4 5 8 / 0.5) 42%, transparent 72%),
-      linear-gradient(90deg, rgb(4 5 8 / 0.4), transparent 70%);
+    background: linear-gradient(0deg, rgb(4 5 8 / 0.86) 0%, rgb(4 5 8 / 0.34) 38%, transparent 66%);
   }
 
   .authoritySceneCopy,
   .authorityShotBlackBox .authoritySceneCopy,
-  .authorityShotProvenance .authoritySceneCopy {
+  .authorityShotProvenance .authoritySceneCopy,
+  .authorityShotLanding .authoritySceneCopy {
     top: auto;
-    right: 1.35rem;
-    bottom: 2rem;
-    left: 1.35rem;
+    right: 0.95rem;
+    bottom: 5.35rem;
+    left: 0.95rem;
+    width: auto;
     max-width: none;
+    padding: 0.9rem 0.9rem 1rem;
     transform: none;
   }
 
@@ -407,22 +364,31 @@
   .authorityShotBlackBox .authoritySceneCopy h2,
   .authorityShotProvenance .authoritySceneCopy h2 {
     max-width: 10ch;
-    font-size: clamp(2.8rem, 12.4vw, 3.75rem);
-    line-height: 0.89;
+    font-size: clamp(2.7rem, 12.8vw, 3.8rem);
+    line-height: 0.88;
   }
 
-  .authoritySceneCopy > span {
-    max-width: 25rem;
-    margin-top: 0.9rem;
-    font-size: 0.88rem;
-    line-height: 1.5;
+  .authoritySceneCopy p {
+    max-width: 23rem;
+    margin-top: 0.78rem;
+    font-size: 0.84rem;
+    line-height: 1.48;
   }
 
-  .authorityEvent,
-  .authorityMissionHeader,
-  .authorityProgress,
-  .authorityCorridor {
-    display: none;
+  .authorityChain {
+    right: 0.75rem;
+    left: 0.75rem;
+    min-height: 4.15rem;
+    padding-top: 1.25rem;
+  }
+
+  .authorityChainStates {
+    gap: 0.3rem;
+  }
+
+  .authorityChainStates span {
+    font-size: 0.43rem;
+    letter-spacing: 0.04em;
   }
 }
 
@@ -446,10 +412,37 @@
   .authorityScene:first-child {
     position: relative;
     inset: auto;
-    min-height: 82dvh;
+    min-height: 78dvh;
     margin-bottom: 0.5rem;
     visibility: visible !important;
     opacity: 1 !important;
     clip-path: none !important;
+  }
+
+  .authoritySceneMedia,
+  .authorityShotBlackBox .authoritySceneMedia,
+  .authorityShotProvenance .authoritySceneMedia {
+    inset: 0;
+    transform: none !important;
+  }
+
+  .authoritySceneCopy,
+  .authorityShotBlackBox .authoritySceneCopy,
+  .authorityShotProvenance .authoritySceneCopy,
+  .authorityShotLanding .authoritySceneCopy {
+    top: auto;
+    right: clamp(1rem, 4vw, 4rem);
+    bottom: clamp(1.5rem, 5vw, 4rem);
+    left: clamp(1rem, 4vw, 4rem);
+    width: auto;
+    max-width: 50rem;
+    opacity: 1 !important;
+    clip-path: none !important;
+    transform: none !important;
+  }
+
+  .authorityChain,
+  .authorityCorridor {
+    display: none;
   }
 }
