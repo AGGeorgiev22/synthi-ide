@@ -725,7 +725,7 @@
 .faq summary {
   display: grid;
   min-height: 5.5rem;
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr);
   align-items: center;
   gap: 1rem;
   cursor: pointer;
@@ -795,11 +795,6 @@
   line-height: 1.6;
 }
 
-.closingMark {
-  width: clamp(110px, 15vw, 210px);
-  color: rgb(244 241 235 / 0.72);
-}
-
 @keyframes evidence-spin {
   to {
     transform: rotate(360deg);
@@ -867,6 +862,21 @@
   pointer-events: none;
   content: "";
   background: radial-gradient(circle, rgb(255 119 87 / 0.19), transparent 68%);
+}
+
+.ctaImage {
+  object-fit: cover;
+  object-position: 54% center;
+  opacity: 0.9;
+}
+
+.ctaScrim {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  background:
+    linear-gradient(90deg, #0d0f13 0%, rgb(13 15 19 / 0.94) 32%, rgb(13 15 19 / 0.56) 58%, rgb(13 15 19 / 0.06) 84%, transparent 100%),
+    linear-gradient(0deg, rgb(13 15 19 / 0.38), transparent 56%);
 }
 
 .focusRing:focus-visible,
@@ -1061,12 +1071,17 @@
     align-items: start;
   }
 
-  .closingMark {
-    order: -1;
-  }
-
   .ctaShell {
     padding: 3.2rem 1.25rem;
+  }
+
+  .ctaImage {
+    object-position: 62% center;
+    opacity: 0.58;
+  }
+
+  .ctaScrim {
+    background: linear-gradient(90deg, #0d0f13 0%, rgb(13 15 19 / 0.9) 74%, rgb(13 15 19 / 0.55) 100%);
   }
 }
 

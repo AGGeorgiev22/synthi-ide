@@ -1,4 +1,5 @@
-import { VectantMark } from "@/components/Logo";
+import Image from "next/image";
+
 import { AgentWorkbench, PilotArrow } from "@/components/home/AgentWorkbench";
 import { AuthorityStory } from "@/components/home/AuthorityStory";
 import { GpuProofChapter } from "@/components/home/GpuProofChapter";
@@ -112,6 +113,14 @@ function FinalCta() {
   return (
     <section id="pricing" className={`${styles.chapter} px-2 sm:px-4`}>
       <div id="waitlist" className={`${styles.ctaShell} ${styles.sectionShell}`}>
+        <Image
+          src="/visuals/vectant-authority-aperture.png"
+          alt=""
+          fill
+          sizes="(min-width: 1500px) 1500px, 100vw"
+          className={styles.ctaImage}
+        />
+        <div className={styles.ctaScrim} aria-hidden="true" />
         <div className={styles.closingGrid}>
           <div>
             <h2>Give the next agent a boundary worth trusting.</h2>
@@ -123,7 +132,6 @@ function FinalCta() {
               </a>
             </div>
           </div>
-          <VectantMark className={styles.closingMark} gradientId="closing-vectant-mark" />
         </div>
       </div>
     </section>
