@@ -138,7 +138,6 @@ export function CinematicHero() {
               src="/product-proof/codesite-full-workflow-ui.png"
               alt="Vectant CodeSite showing a live authority map, landing queue, and collision forecast"
               fill
-              priority
               sizes="(max-width: 767px) 980px, (min-width: 1600px) 1600px, 100vw"
               className={styles.cinemaProductImage}
             />
