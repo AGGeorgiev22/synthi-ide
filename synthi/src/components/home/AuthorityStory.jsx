@@ -98,14 +98,14 @@ export function AuthorityStory() {
 
         scenes.slice(1).forEach((scene, index) => {
           const previous = scenes[index];
-          const at = index;
+          const at = index * 1.08;
           timeline
-            .to(previous, { autoAlpha: 0, scale: 0.955, duration: 0.58, ease: "none" }, at)
+            .to(previous, { autoAlpha: 0, scale: 0.975, duration: 0.3, ease: "none" }, at)
             .fromTo(
               scene,
-              { autoAlpha: 0, scale: 1.035 },
-              { autoAlpha: 1, scale: 1, duration: 0.72, ease: "none" },
-              at + 0.22
+              { autoAlpha: 0, scale: 1.025 },
+              { autoAlpha: 1, scale: 1, duration: 0.56, ease: "none" },
+              at + 0.32
             );
         });
 
