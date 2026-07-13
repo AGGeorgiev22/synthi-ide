@@ -15,7 +15,7 @@ const EVIDENCE = [
   {
     key: "checkride",
     label: "Checkride",
-    title: "The workflow passed. The proof stayed.",
+    title: "Passed, with evidence attached.",
     copy: "Plan coverage, denied writes, provenance, replay, runtime events, and exported artifacts remain reviewable after the run.",
     src: "/product-proof/senior-real-codesite-workflow-proof.png",
     alt: "Vectant checkride with a passed workflow and retained proof bundle",
@@ -24,7 +24,7 @@ const EVIDENCE = [
   {
     key: "handoff",
     label: "Handoff",
-    title: "The handoff carries its assertions.",
+    title: "Assertions survive handoff.",
     copy: "Clearance, transaction state, proof bundles, quarantined writes, and commit trailers travel with the change.",
     src: "/product-proof/codesite-full-workflow-proof.png",
     alt: "Vectant handoff with clearance, transaction state, and proof attached",
@@ -33,7 +33,7 @@ const EVIDENCE = [
   {
     key: "memory",
     label: "Memory",
-    title: "The next run remembers the near-miss.",
+    title: "Prior near-misses inform the next route.",
     copy: "Counterfactual policy can influence a later route while hard safety gates remain visible and in force.",
     src: "/product-proof/codesite-counterfactual-memory-proof.png",
     alt: "Vectant memory proof with a prior near-miss influencing a later route",
@@ -48,7 +48,9 @@ export function RuntimeFeedback() {
   const headerRef = useRef(null);
   const trackRef = useRef(null);
   const panelRefs = useRef([]);
+  const captionRefs = useRef([]);
   const sealRef = useRef(null);
+  const ledgerTrackRef = useRef(null);
 
   useGSAP(
     () => {
@@ -56,6 +58,7 @@ export function RuntimeFeedback() {
 
       media.add("(prefers-reduced-motion: no-preference)", () => {
         const panels = panelRefs.current.filter(Boolean);
+        const captions = captionRefs.current.filter(Boolean);
         const centerPanel = (index) => {
           const panel = panels[index];
           return window.innerWidth / 2 - (panel.offsetLeft + panel.offsetWidth / 2);
@@ -65,6 +68,7 @@ export function RuntimeFeedback() {
         gsap.set(trackRef.current, { x: () => centerPanel(0) });
         gsap.set(panels, { opacity: 0.34, scale: 0.96 });
         gsap.set(panels[0], { opacity: 1, scale: 1 });
+        gsap.set(captions, { autoAlpha: 0, y: 18 });
         gsap.set(sealRef.current, { autoAlpha: 0, scale: 1.08 });
 
         const timeline = gsap.timeline({
@@ -78,20 +82,31 @@ export function RuntimeFeedback() {
         });
 
         timeline
-          .addLabel("checkride", 0)
-          .to(headerRef.current, { autoAlpha: 0, y: -28, duration: 0.18, ease: "power2.in" }, 0.42)
-          .addLabel("handoff", 0.62)
-          .to(trackRef.current, { x: () => centerPanel(1), duration: 0.46, ease: "power3.inOut" }, "handoff")
-          .to(panels[0], { opacity: 0.34, scale: 0.96, duration: 0.32 }, "handoff")
-          .to(panels[1], { opacity: 1, scale: 1, duration: 0.32 }, "handoff+=0.12")
-          .addLabel("memory", 1.18)
-          .to(trackRef.current, { x: () => centerPanel(2), duration: 0.46, ease: "power3.inOut" }, "memory")
-          .to(panels[1], { opacity: 0.34, scale: 0.96, duration: 0.32 }, "memory")
-          .to(panels[2], { opacity: 1, scale: 1, duration: 0.32 }, "memory+=0.12")
-          .addLabel("seal", 1.76)
-          .to(trackRef.current, { opacity: 0, scale: 0.965, duration: 0.24, ease: "power2.in" }, "seal")
-          .to(sealRef.current, { autoAlpha: 1, scale: 1, duration: 0.3, ease: "power3.out" }, "seal+=0.12")
-          .to({}, { duration: 0.28 });
+          .addLabel("establish", 0)
+          .to({}, { duration: 0.24 })
+          .to(headerRef.current, { autoAlpha: 0, y: -28, duration: 0.16, ease: "power2.in" })
+          .to(captions[0], { autoAlpha: 1, y: 0, duration: 0.18, ease: "power2.out" }, "<+=0.05")
+          .to({}, { duration: 0.38 })
+          .to(captions[0], { autoAlpha: 0, y: -16, duration: 0.12, ease: "power2.in" })
+          .addLabel("handoff")
+          .to(trackRef.current, { x: () => centerPanel(1), duration: 0.34, ease: "power3.inOut" }, "handoff")
+          .to(panels[0], { opacity: 0.34, scale: 0.96, duration: 0.24 }, "handoff")
+          .to(panels[1], { opacity: 1, scale: 1, duration: 0.24 }, "handoff+=0.08")
+          .to(captions[1], { autoAlpha: 1, y: 0, duration: 0.18, ease: "power2.out" }, "handoff+=0.28")
+          .to({}, { duration: 0.42 })
+          .to(captions[1], { autoAlpha: 0, y: -16, duration: 0.12, ease: "power2.in" })
+          .addLabel("memory")
+          .to(trackRef.current, { x: () => centerPanel(2), duration: 0.34, ease: "power3.inOut" }, "memory")
+          .to(panels[1], { opacity: 0.34, scale: 0.96, duration: 0.24 }, "memory")
+          .to(panels[2], { opacity: 1, scale: 1, duration: 0.24 }, "memory+=0.08")
+          .to(captions[2], { autoAlpha: 1, y: 0, duration: 0.18, ease: "power2.out" }, "memory+=0.28")
+          .to({}, { duration: 0.44 })
+          .to(captions[2], { autoAlpha: 0, y: -16, duration: 0.12, ease: "power2.in" })
+          .addLabel("seal")
+          .to(trackRef.current, { opacity: 0, scale: 0.965, duration: 0.22, ease: "power2.in" }, "seal")
+          .to(sealRef.current, { autoAlpha: 1, scale: 1, duration: 0.3, ease: "power3.out" }, "seal+=0.1")
+          .fromTo(ledgerTrackRef.current, { xPercent: 0 }, { xPercent: -18, duration: 0.62, ease: "none" }, "seal+=0.08")
+          .to({}, { duration: 0.34 });
 
         return () => timeline.kill();
       });
@@ -127,7 +142,10 @@ export function RuntimeFeedback() {
                 />
                 <div className={styles.proofPanelGrade} aria-hidden="true" />
               </div>
-              <div className={styles.proofPanelCaption}>
+              <div
+                ref={(node) => { captionRefs.current[index] = node; }}
+                className={styles.proofPanelCaption}
+              >
                 <span>{item.label}</span>
                 <h3>{item.title}</h3>
                 <p>{item.copy}</p>
@@ -136,16 +154,17 @@ export function RuntimeFeedback() {
           ))}
         </div>
 
-        <div ref={sealRef} className={styles.proofSeal} role="status">
+        <div ref={sealRef} className={styles.proofSeal}>
           <VectantMark gradientId="proof-seal-mark" className={styles.proofSealMark} />
           <strong>Replay ready.</strong>
           <p>Plan, authority, runtime, and artifacts stay in one reviewable bundle.</p>
-          <div className={styles.proofLedger} aria-label="Proof bundle contents">
-            <div className={styles.proofLedgerTrack}>
+          <div className={styles.proofLedger}>
+            <p className={styles.proofLedgerAccessible}>Proof bundle contents: {LEDGER.join(", ")}.</p>
+            <div ref={ledgerTrackRef} className={styles.proofLedgerTrack} aria-hidden="true">
               {[0, 1].map((copy) => (
-                <span key={copy} aria-hidden={copy === 1 ? "true" : undefined}>
-                  {LEDGER.map((item) => <b key={`${copy}-${item}`}>{item}</b>)}
-                </span>
+                <ul key={copy}>
+                  {LEDGER.map((item) => <li key={`${copy}-${item}`}>{item}</li>)}
+                </ul>
               ))}
             </div>
           </div>

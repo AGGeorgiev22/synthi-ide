@@ -1,6 +1,6 @@
 .proofCinema {
   position: relative;
-  min-height: 232dvh;
+  min-height: 286dvh;
   scroll-margin-top: 4.5rem;
   color: #f2efe9;
   background: #050609;
@@ -82,6 +82,18 @@
   will-change: transform, opacity;
 }
 
+.proofPanel[data-proof-panel="checkride"] {
+  width: min(78vw, 1160px);
+}
+
+.proofPanel[data-proof-panel="handoff"] {
+  width: min(70vw, 1040px);
+}
+
+.proofPanel[data-proof-panel="memory"] {
+  width: min(64vw, 960px);
+}
+
 .proofPanelMedia {
   position: absolute;
   inset: 0;
@@ -90,7 +102,7 @@
 
 .proofPanelImage {
   object-fit: cover;
-  filter: contrast(1.04) saturate(0.96) brightness(1.1);
+  filter: contrast(1.04) saturate(0.96) brightness(1.15);
 }
 
 .proofImageCheckride {
@@ -110,8 +122,8 @@
   inset: 0;
   pointer-events: none;
   background:
-    linear-gradient(90deg, rgb(4 5 8 / 0.22), transparent 28%),
-    linear-gradient(0deg, rgb(4 5 8 / 0.68), transparent 43%);
+    linear-gradient(90deg, rgb(4 5 8 / 0.16), transparent 28%),
+    linear-gradient(0deg, rgb(4 5 8 / 0.58), transparent 43%);
 }
 
 .proofPanelCaption {
@@ -238,14 +250,17 @@
   will-change: transform;
 }
 
-.proofLedgerTrack > span {
+.proofLedgerTrack > ul {
   display: flex;
   min-height: 3.2rem;
+  margin: 0;
+  padding: 0;
   align-items: center;
   flex: none;
+  list-style: none;
 }
 
-.proofLedgerTrack b {
+.proofLedgerTrack li {
   display: inline-flex;
   align-items: center;
   color: rgb(231 233 239 / 0.54);
@@ -256,7 +271,7 @@
   text-transform: uppercase;
 }
 
-.proofLedgerTrack b::after {
+.proofLedgerTrack li::after {
   width: 4rem;
   height: 1px;
   margin-inline: 1.3rem;
@@ -264,21 +279,20 @@
   content: "";
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .proofLedgerTrack {
-    animation: proof-ledger 24s linear infinite;
-  }
-}
-
-@keyframes proof-ledger {
-  to {
-    transform: translateX(-50%);
-  }
+.proofLedgerAccessible {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 @media (max-width: 767px) {
   .proofCinema {
-    min-height: 218dvh;
+    min-height: 270dvh;
   }
 
   .proofHeader {
@@ -310,21 +324,31 @@
     height: 74dvh;
   }
 
-  .proofPanelImage {
-    width: 940px !important;
-    max-width: none !important;
+  .proofPanel[data-proof-panel="checkride"] {
+    width: calc(100vw - 1.5rem);
+    height: 74dvh;
+  }
+
+  .proofPanel[data-proof-panel="handoff"] {
+    width: calc(100vw - 2.1rem);
+    height: 71dvh;
+  }
+
+  .proofPanel[data-proof-panel="memory"] {
+    width: calc(100vw - 2.8rem);
+    height: 68dvh;
   }
 
   .proofImageCheckride {
-    object-position: 27% 32%;
+    object-position: 24% 32%;
   }
 
   .proofImageHandoff {
-    object-position: 63% 40%;
+    object-position: 57% 40%;
   }
 
   .proofImageMemory {
-    object-position: 32% 39%;
+    object-position: 76% 39%;
   }
 
   .proofPanelCaption {
@@ -340,7 +364,7 @@
   }
 
   .proofPanelCaption p {
-    font-size: 0.82rem;
+    font-size: 0.875rem;
     line-height: 1.46;
   }
 
@@ -353,7 +377,8 @@
   }
 
   .proofSeal > strong {
-    font-size: clamp(3.7rem, 18vw, 5.5rem);
+    max-width: calc(100% - 1rem);
+    font-size: clamp(3.45rem, 16.2vw, 5rem);
   }
 
   .proofSeal > p {
@@ -361,7 +386,11 @@
     font-size: 0.86rem;
   }
 
-  .proofLedgerTrack b::after {
+  .proofLedgerTrack li {
+    font-size: 0.54rem;
+  }
+
+  .proofLedgerTrack li::after {
     width: 2.5rem;
     margin-inline: 0.9rem;
   }
@@ -404,6 +433,13 @@
   }
 
   .proofPanel {
+    width: 100%;
+    height: min(76dvh, 47rem);
+  }
+
+  .proofPanel[data-proof-panel="checkride"],
+  .proofPanel[data-proof-panel="handoff"],
+  .proofPanel[data-proof-panel="memory"] {
     width: 100%;
     height: min(76dvh, 47rem);
   }
