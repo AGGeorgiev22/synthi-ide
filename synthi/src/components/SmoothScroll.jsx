@@ -18,6 +18,11 @@ export function SmoothScroll() {
     let onClick;
     let offScrollTrigger;
     let cancelled = false;
+    const stopLenis = () => lenis?.stop();
+    const startLenis = () => lenis?.start();
+
+    window.addEventListener("vectant:scroll-lock", stopLenis);
+    window.addEventListener("vectant:scroll-unlock", startLenis);
 
     Promise.all([import("lenis"), import("gsap/ScrollTrigger")])
       .then(([{ default: Lenis }, { ScrollTrigger }]) => {
@@ -28,6 +33,7 @@ export function SmoothScroll() {
           wheelMultiplier: 1,
           touchMultiplier: 1.5,
         });
+        if (document.documentElement.dataset.vectantScrollLock === "true") lenis.stop();
 
         offScrollTrigger = lenis.on("scroll", ScrollTrigger.update);
 
@@ -50,6 +56,7 @@ export function SmoothScroll() {
           lenis.scrollTo(target, {
             offset: -72,
             duration: 1.1,
+            force: true,
             onComplete: () => {
               if (!shouldFocus) return;
               if (!target.hasAttribute("tabindex")) target.setAttribute("tabindex", "-1");
@@ -65,6 +72,8 @@ export function SmoothScroll() {
     return () => {
       cancelled = true;
       cancelAnimationFrame(rafId);
+      window.removeEventListener("vectant:scroll-lock", stopLenis);
+      window.removeEventListener("vectant:scroll-unlock", startLenis);
       if (onClick) document.removeEventListener("click", onClick);
       if (offScrollTrigger) offScrollTrigger();
       if (lenis) lenis.destroy();

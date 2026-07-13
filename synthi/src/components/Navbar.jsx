@@ -77,6 +77,8 @@ export function Navbar() {
     document.body.style.overscrollBehavior = "none";
     document.documentElement.style.overflow = "hidden";
     document.documentElement.style.overscrollBehavior = "none";
+    document.documentElement.dataset.vectantScrollLock = "true";
+    window.dispatchEvent(new Event("vectant:scroll-lock"));
     backgroundNodes.forEach((node) => { node.inert = true; });
     const focusTimer = window.setTimeout(() => firstLinkRef.current?.focus(), 60);
 
@@ -112,6 +114,8 @@ export function Navbar() {
       document.body.style.overscrollBehavior = priorBodyOverscroll;
       document.documentElement.style.overflow = priorRootOverflow;
       document.documentElement.style.overscrollBehavior = priorRootOverscroll;
+      delete document.documentElement.dataset.vectantScrollLock;
+      window.dispatchEvent(new Event("vectant:scroll-unlock"));
       backgroundNodes.forEach((node, index) => { node.inert = priorInert[index]; });
     };
   }, [open]);
