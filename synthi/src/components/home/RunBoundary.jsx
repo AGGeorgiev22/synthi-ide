@@ -43,7 +43,7 @@ export function RunBoundary() {
           className={styles.boundaryFrame}
           style={
             reduceMotion
-              ? undefined
+              ? { clipPath: OPEN_FRAME, scale: 1, y: 0 }
               : { clipPath: frameClip, scale: frameScale, y: frameY }
           }
         >
@@ -59,19 +59,19 @@ export function RunBoundary() {
 
         <motion.div
           className={styles.boundaryTelemetry}
-          style={reduceMotion ? undefined : { opacity: telemetryOpacity }}
+          style={reduceMotion ? { opacity: 1 } : { opacity: telemetryOpacity }}
           aria-label="Run state"
         >
           <div><span>RUN</span><strong>07 / 13</strong></div>
           <div><span>SCOPE</span><strong>ATTACHED</strong></div>
           <div><span>RUNTIME</span><strong>LIVE</strong></div>
           <div><span>REPLAY</span><strong>RECORDING</strong></div>
-          <motion.i style={reduceMotion ? undefined : { scaleX: progressX }} aria-hidden="true" />
+          <motion.i style={reduceMotion ? { scaleX: 1 } : { scaleX: progressX }} aria-hidden="true" />
         </motion.div>
 
         <motion.div
           className={styles.boundaryCopy}
-          style={reduceMotion ? undefined : { opacity: copyOpacity, y: copyY }}
+          style={reduceMotion ? { opacity: 1, y: 0 } : { opacity: copyOpacity, y: copyY }}
         >
           <p>FLIGHT PLAN ACCEPTED</p>
           <h2>Every run gets a boundary.</h2>
@@ -83,7 +83,7 @@ export function RunBoundary() {
 
         <motion.aside
           className={styles.boundaryRail}
-          style={reduceMotion ? undefined : { opacity: telemetryOpacity }}
+          style={reduceMotion ? { opacity: 1 } : { opacity: telemetryOpacity }}
           aria-hidden="true"
         >
           <span>AGENT</span>

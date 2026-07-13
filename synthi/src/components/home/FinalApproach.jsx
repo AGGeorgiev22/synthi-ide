@@ -40,7 +40,7 @@ export function FinalApproach() {
       <div id="waitlist" className={styles.finalApproachSticky}>
         <motion.div
           className={styles.finalAtmosphere}
-          style={reduceMotion ? undefined : { opacity: imageOpacity, scale: imageScale }}
+          style={reduceMotion ? { opacity: 1, scale: 1 } : { opacity: imageOpacity, scale: imageScale }}
           aria-hidden="true"
         >
           <Image
@@ -55,7 +55,7 @@ export function FinalApproach() {
 
         <motion.div
           className={styles.finalMarkWrap}
-          style={reduceMotion ? undefined : { opacity: copyOpacity, scale: markScale }}
+          style={reduceMotion ? { opacity: 1, scale: 1, x: "-50%" } : { opacity: copyOpacity, scale: markScale, x: "-50%" }}
           aria-hidden="true"
         >
           <VectantMark gradientId="final-approach-mark" className={styles.finalMark} />
@@ -63,7 +63,7 @@ export function FinalApproach() {
 
         <motion.div
           className={styles.finalCopy}
-          style={reduceMotion ? undefined : { opacity: copyOpacity, y: copyY }}
+          style={reduceMotion ? { opacity: 1, y: 0 } : { opacity: copyOpacity, y: copyY }}
         >
           <p>LANDING CLEAR / PROOF SEALED</p>
           <h2>
@@ -80,7 +80,7 @@ export function FinalApproach() {
         </motion.div>
 
         <div className={styles.finalClearance} aria-hidden="true">
-          <motion.i style={reduceMotion ? undefined : { scaleX: railScale }} />
+          <motion.i style={reduceMotion ? { scaleX: 1 } : { scaleX: railScale }} />
           <span>BOUNDARY CLOSED</span>
           <span>STATE RETAINED</span>
           <span>REPLAY READY</span>

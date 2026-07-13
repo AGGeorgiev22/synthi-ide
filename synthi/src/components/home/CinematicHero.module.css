@@ -372,6 +372,14 @@
     display: none;
   }
 
+  .cinemaAtmosphere,
+  .cinemaHeroCopy,
+  .cinemaProductReveal,
+  .cinemaProductTelemetry {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
   .cinemaHeroCopy {
     position: relative;
     top: auto;
@@ -387,7 +395,7 @@
     width: 100%;
     height: 72dvh;
     min-height: 520px;
-    clip-path: none;
+    clip-path: none !important;
   }
 
   .cinemaPrimaryAction {

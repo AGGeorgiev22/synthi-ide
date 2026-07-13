@@ -108,7 +108,7 @@ export function RuntimeFeedback() {
 
         <motion.div
           className={styles.proofSeal}
-          style={reduceMotion ? undefined : { opacity: sealOpacity, scale: sealScale }}
+          style={reduceMotion ? { opacity: 1, scale: 1 } : { opacity: sealOpacity, scale: sealScale }}
           aria-hidden="true"
         >
           <VectantMark gradientId="proof-seal-mark" className={styles.proofSealMark} />

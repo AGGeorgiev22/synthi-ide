@@ -50,7 +50,7 @@ export function CinematicHero() {
       <div className={styles.cinemaHeroSticky}>
         <motion.div
           className={styles.cinemaAtmosphere}
-          style={reduceMotion ? undefined : { opacity: atmosphereOpacity, scale: atmosphereScale }}
+          style={reduceMotion ? { opacity: 1, scale: 1 } : { opacity: atmosphereOpacity, scale: atmosphereScale }}
           aria-hidden="true"
         >
           <Image
@@ -73,30 +73,30 @@ export function CinematicHero() {
           <motion.path
             className={styles.cinemaRailPath}
             d="M -40 665 L 800 452"
-            style={reduceMotion ? undefined : { pathLength: railProgress }}
+            style={reduceMotion ? { pathLength: 1 } : { pathLength: railProgress }}
           />
           <motion.path
             className={styles.cinemaRailPath}
             d="M 1640 665 L 800 452"
-            style={reduceMotion ? undefined : { pathLength: railProgress }}
+            style={reduceMotion ? { pathLength: 1 } : { pathLength: railProgress }}
           />
           <motion.path
             className={styles.cinemaInterceptPath}
             d="M 690 -40 C 720 130 906 220 822 398"
-            style={reduceMotion ? undefined : { pathLength: interceptProgress }}
+            style={reduceMotion ? { pathLength: 1 } : { pathLength: interceptProgress }}
           />
           <motion.circle
             className={styles.cinemaConflictPoint}
             cx="818"
             cy="406"
             r="5"
-            style={reduceMotion ? undefined : { opacity: incidentOpacity }}
+            style={reduceMotion ? { opacity: 1 } : { opacity: incidentOpacity }}
           />
         </svg>
 
         <motion.div
           className={styles.cinemaIncident}
-          style={reduceMotion ? undefined : { opacity: incidentOpacity, y: incidentY }}
+          style={reduceMotion ? { opacity: 1, y: 0 } : { opacity: incidentOpacity, y: incidentY }}
         >
           <span>PATH CONFLICT</span>
           <strong>Route 03 moved to holding</strong>
@@ -104,7 +104,7 @@ export function CinematicHero() {
 
         <motion.div
           className={styles.cinemaHeroCopy}
-          style={reduceMotion ? undefined : { opacity: copyOpacity, y: copyY }}
+          style={reduceMotion ? { opacity: 1, y: 0 } : { opacity: copyOpacity, y: copyY }}
         >
           <p className={styles.cinemaEyebrow}>VECTANT CONTROL PLANE</p>
           <h1>
@@ -124,7 +124,7 @@ export function CinematicHero() {
           className={styles.cinemaProductReveal}
           style={
             reduceMotion
-              ? undefined
+              ? { clipPath: OPEN_APERTURE, opacity: 1, scale: 1, y: 0 }
               : {
                   clipPath: productClip,
                   opacity: productOpacity,
@@ -146,7 +146,7 @@ export function CinematicHero() {
           </div>
           <motion.figcaption
             className={styles.cinemaProductTelemetry}
-            style={reduceMotion ? undefined : { opacity: productTelemetryOpacity }}
+            style={reduceMotion ? { opacity: 1 } : { opacity: productTelemetryOpacity }}
           >
             <span>RUN 0713</span>
             <span>SCOPE ATTACHED</span>
@@ -157,7 +157,7 @@ export function CinematicHero() {
 
         <motion.div
           className={styles.cinemaScrollCue}
-          style={reduceMotion ? undefined : { opacity: scrollCueOpacity }}
+          style={reduceMotion ? { opacity: 1 } : { opacity: scrollCueOpacity }}
           aria-hidden="true"
         >
           <span>Follow the run</span>

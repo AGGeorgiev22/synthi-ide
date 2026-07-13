@@ -255,6 +255,17 @@
     position: relative;
   }
 
+  .finalAtmosphere,
+  .finalCopy {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .finalMarkWrap {
+    opacity: 1 !important;
+    transform: translateX(-50%) !important;
+  }
+
   .finalAction {
     transition-duration: 0.01ms;
   }

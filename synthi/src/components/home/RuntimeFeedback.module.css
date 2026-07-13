@@ -391,5 +391,7 @@
 
   .proofSeal {
     min-height: 72dvh;
+    opacity: 1 !important;
+    transform: none !important;
   }
 }

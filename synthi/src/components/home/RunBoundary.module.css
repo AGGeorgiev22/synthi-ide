@@ -254,6 +254,15 @@
   }
 
   .boundaryFrame {
-    clip-path: none;
+    opacity: 1 !important;
+    clip-path: none !important;
+    transform: none !important;
+  }
+
+  .boundaryTelemetry,
+  .boundaryCopy,
+  .boundaryRail {
+    opacity: 1 !important;
+    transform: none !important;
   }
 }
