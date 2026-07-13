@@ -36,7 +36,7 @@ const AUTHORITY_SCENES = [
     phase: "PROVENANCE ATTACHED",
     event: "Transaction, process, and evidence linked",
     title: "Trace authority to the line.",
-    copy: "The source line keeps its transaction, process ancestry, evidence, and reason for existing attached.",
+    copy: "Every source line retains its transaction, process ancestry, evidence, and rationale.",
     src: "/codesite-proof/codesite-line-provenance-desktop.png",
     alt: "Vectant line inspector tracing a source line to its transaction and evidence",
     shot: styles.authorityShotProvenance,
