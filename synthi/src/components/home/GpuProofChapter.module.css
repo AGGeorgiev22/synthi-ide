@@ -1,11 +1,9 @@
 .gpuCinema {
   position: relative;
-  z-index: 1;
-  min-height: 226dvh;
-  overflow: clip;
+  min-height: 258dvh;
   scroll-margin-top: 4.5rem;
   color: #f2efe9;
-  background: #050506;
+  background: #050609;
 }
 
 .gpuStage {
@@ -14,353 +12,323 @@
   min-height: 100dvh;
   overflow: hidden;
   background:
-    radial-gradient(circle at 50% 73%, rgb(94 25 12 / 0.22), transparent 35%),
-    #050506;
+    radial-gradient(circle at 50% 55%, rgb(151 35 25 / 0.12), transparent 32%),
+    radial-gradient(circle at 72% 30%, rgb(93 26 90 / 0.09), transparent 30%),
+    #050609;
+  isolation: isolate;
 }
 
-.gpuHeat {
+.gpuHotPath {
   position: absolute;
-  top: 47%;
-  left: 50%;
-  width: min(64vw, 920px);
-  aspect-ratio: 1.4;
-  transform: translate(-50%, -50%);
-  background: radial-gradient(ellipse, rgb(255 84 46 / 0.24) 0%, rgb(137 38 18 / 0.11) 32%, transparent 70%);
-  filter: blur(28px);
+  z-index: 1;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   pointer-events: none;
 }
 
-.gpuCopy {
-  position: absolute;
-  z-index: 4;
-  top: clamp(6.7rem, 11vh, 9rem);
-  right: clamp(1.5rem, 5vw, 5rem);
-  left: clamp(1.5rem, 5vw, 5rem);
-  max-width: 1040px;
+.gpuHotPath path {
+  fill: none;
+  stroke: rgb(255 118 87 / 0.72);
+  stroke-width: 1.2;
+  filter: drop-shadow(0 0 8px rgb(255 83 46 / 0.52));
+  vector-effect: non-scaling-stroke;
 }
 
-.gpuCopy > p {
-  margin: 0 0 1rem;
+.gpuIntro {
+  position: absolute;
+  z-index: 5;
+  top: clamp(7.5rem, 14vh, 10rem);
+  left: clamp(1.4rem, 5vw, 5.5rem);
+  width: min(57rem, 68vw);
+  padding: 1.1rem 1.3rem 1.3rem;
+  background: linear-gradient(90deg, rgb(5 6 9 / 0.96), rgb(5 6 9 / 0.72) 72%, transparent);
+  will-change: transform, opacity;
+}
+
+.gpuIntro::before {
+  position: absolute;
+  inset-block: 0;
+  left: 0;
+  width: 1px;
+  background: #ff7657;
+  content: "";
+}
+
+.gpuIntro > p {
+  margin: 0 0 0.8rem;
   color: #ff7657;
   font-family: var(--font-geist-mono), ui-monospace, monospace;
   font-size: 0.6rem;
-  font-weight: 680;
-  letter-spacing: 0.15em;
-}
-
-.gpuCopy h2 {
-  max-width: 10ch;
-  margin: 0;
-  color: #f2efe9;
-  font-family: var(--font-cabinet), var(--font-satoshi), ui-sans-serif, sans-serif;
-  font-size: clamp(3.9rem, 7.4vw, 8.3rem);
-  font-weight: 500;
-  line-height: 0.84;
-  letter-spacing: -0.058em;
-  text-wrap: balance;
-}
-
-.gpuCopy > span {
-  display: block;
-  max-width: 37rem;
-  margin-top: 1.35rem;
-  color: rgb(222 224 230 / 0.68);
-  font-size: clamp(0.95rem, 1.2vw, 1.08rem);
-  line-height: 1.58;
-}
-
-.gpuCoil {
-  position: absolute;
-  z-index: 2;
-  inset: 0;
-  transform-origin: 50% 62%;
-}
-
-.gpuCoil svg {
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-}
-
-.gpuCoilGhost,
-.gpuCoilCurrent,
-.gpuCoilReturn,
-.gpuGateTick {
-  fill: none;
-  vector-effect: non-scaling-stroke;
-}
-
-.gpuCoilGhost {
-  stroke: rgb(255 255 255 / 0.11);
-  stroke-width: 1;
-}
-
-.gpuCoilCurrent {
-  stroke: #ff7657;
-  stroke-width: 2;
-  stroke-linecap: round;
-  filter: drop-shadow(0 0 10px rgb(255 83 46 / 0.82));
-}
-
-.gpuCoilReturn {
-  stroke: rgb(255 118 87 / 0.28);
-  stroke-width: 1;
-  stroke-dasharray: 4 9;
-}
-
-.gpuGateHalo {
-  fill: rgb(255 118 87 / 0.06);
-  stroke: rgb(255 118 87 / 0.34);
-  stroke-width: 1;
-  vector-effect: non-scaling-stroke;
-}
-
-.gpuGateCore {
-  fill: #ff7657;
-  filter: drop-shadow(0 0 10px rgb(255 83 46 / 0.85));
-}
-
-.gpuGateTick {
-  stroke: rgb(255 118 87 / 0.34);
-  stroke-width: 1;
-}
-
-.gpuGateLabel {
-  fill: rgb(231 233 239 / 0.62);
-  font-family: var(--font-geist-mono), ui-monospace, monospace;
-  font-size: 9px;
-  letter-spacing: 1.5px;
-}
-
-.gpuCurrentReadout {
-  position: absolute;
-  bottom: clamp(2.2rem, 5vh, 4rem);
-  left: 50%;
-  display: grid;
-  min-width: 16rem;
-  gap: 0.34rem;
-  transform: translateX(-50%);
-  text-align: center;
-  font-family: var(--font-geist-mono), ui-monospace, monospace;
-}
-
-.gpuCurrentReadout span {
-  color: rgb(231 233 239 / 0.42);
-  font-size: 0.54rem;
-  letter-spacing: 0.14em;
-}
-
-.gpuCurrentReadout strong {
-  color: #ff7657;
-  font-size: 0.62rem;
   font-weight: 650;
-  letter-spacing: 0.13em;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
-.gpuOutput {
+.gpuIntro h2 {
+  max-width: 12ch;
+  margin: 0;
+  font-family: var(--font-outfit), var(--font-cabinet), var(--font-satoshi), ui-sans-serif, sans-serif;
+  font-size: clamp(3.5rem, 6.9vw, 7.7rem);
+  font-weight: 500;
+  line-height: 0.86;
+  letter-spacing: -0.061em;
+}
+
+.gpuIntro > span {
+  display: block;
+  max-width: 35rem;
+  margin-top: 1rem;
+  color: rgb(226 227 231 / 0.7);
+  font-size: clamp(0.92rem, 1.15vw, 1.06rem);
+  line-height: 1.56;
+}
+
+.gpuPlate {
   position: absolute;
   z-index: 3;
-  inset: clamp(4.7rem, 7vh, 5.8rem) clamp(0.65rem, 1.5vw, 1.5rem) clamp(0.65rem, 1.5vw, 1.5rem);
-  margin: 0;
-  overflow: hidden;
-  background: #08090c;
-  box-shadow:
-    inset 0 0 0 1px rgb(255 255 255 / 0.11),
-    0 48px 120px rgb(0 0 0 / 0.55);
-  transform-origin: center center;
-}
-
-.gpuOutputPlate {
-  position: absolute;
   top: 50%;
   left: 50%;
-  width: min(76vw, 1040px);
+  width: min(76vw, 1080px);
   aspect-ratio: 4 / 3;
+  margin: 0;
   overflow: hidden;
-  transform: translate(-50%, -50%);
-  background: #000;
+  translate: -50% -46%;
+  background: #030406;
   box-shadow:
-    inset 0 0 0 1px rgb(255 255 255 / 0.12),
-    0 32px 90px rgb(0 0 0 / 0.5);
+    0 0 0 1px rgb(255 255 255 / 0.14),
+    0 44px 120px rgb(0 0 0 / 0.62);
+  transform-origin: center center;
+  will-change: transform, opacity;
 }
 
-.gpuOutputImage {
-  object-fit: contain;
-  object-position: center center;
-  filter: contrast(1.04) saturate(0.98) brightness(1);
-}
-
-.gpuOutputTelemetry {
+.gpuImageLayer {
   position: absolute;
-  z-index: 4;
+  inset: 0;
+  overflow: hidden;
+}
+
+.gpuImage {
+  object-fit: cover;
+  filter: contrast(1.07) saturate(0.98) brightness(1.08);
+}
+
+.gpuAfterLayer {
+  z-index: 2;
+  will-change: clip-path;
+}
+
+.gpuDiffLayer {
+  z-index: 3;
+  mix-blend-mode: screen;
+  will-change: transform, opacity;
+}
+
+.gpuDiffLayer .gpuImage {
+  filter: contrast(1.18) saturate(1.06) brightness(1.15);
+}
+
+.gpuDivider {
+  position: absolute;
+  z-index: 5;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: #f2efe9;
+  box-shadow:
+    0 0 0 1px rgb(5 6 9 / 0.7),
+    0 0 18px rgb(255 255 255 / 0.5);
+  transform: translateX(-50%);
+}
+
+.gpuGates {
+  position: absolute;
+  z-index: 6;
   top: 0;
   right: 0;
   left: 0;
   display: grid;
-  min-height: 3rem;
-  grid-template-columns: repeat(4, auto);
+  min-height: 3.15rem;
+  grid-template-columns: repeat(4, 1fr);
   align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding-inline: clamp(0.85rem, 2vw, 1.7rem);
-  color: rgb(228 230 235 / 0.58);
-  background: rgb(5 6 9 / 0.86);
+  gap: 0.7rem;
+  padding-inline: clamp(0.8rem, 2vw, 1.6rem);
+  color: rgb(231 233 239 / 0.36);
+  background: rgb(5 6 9 / 0.91);
   box-shadow: inset 0 -1px 0 rgb(255 255 255 / 0.1);
   font-family: var(--font-geist-mono), ui-monospace, monospace;
   font-size: 0.56rem;
-  letter-spacing: 0.09em;
-  backdrop-filter: blur(18px);
+  letter-spacing: 0.075em;
+  text-transform: uppercase;
+  backdrop-filter: blur(14px);
 }
 
-.gpuOutputTelemetry strong {
-  color: #ff7657;
-  font-weight: 680;
+.gpuGates span:not(:first-child) {
+  text-align: center;
+}
+
+.gpuGates span:last-child {
+  text-align: right;
 }
 
 .gpuVerdict {
   position: absolute;
-  z-index: 4;
-  right: clamp(1.3rem, 3vw, 3rem);
-  bottom: clamp(1.3rem, 3vw, 3rem);
+  z-index: 7;
+  right: clamp(0.9rem, 2vw, 1.7rem);
+  bottom: clamp(0.9rem, 2vw, 1.7rem);
   display: grid;
-  min-width: min(30rem, 38vw);
-  gap: 0.48rem;
-  padding: 1.1rem 1.2rem;
+  min-width: min(31rem, 52vw);
+  gap: 0.42rem;
+  padding: 1rem 1.15rem 1.1rem;
   border-left: 1px solid #ff7657;
-  background: rgb(5 6 9 / 0.82);
-  backdrop-filter: blur(18px);
+  background: rgb(5 6 9 / 0.91);
+  box-shadow: 0 20px 60px rgb(0 0 0 / 0.4);
+  will-change: transform, opacity;
 }
 
 .gpuVerdict span {
   color: #ff7657;
   font-family: var(--font-geist-mono), ui-monospace, monospace;
   font-size: 0.55rem;
-  font-weight: 680;
-  letter-spacing: 0.14em;
+  font-weight: 650;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
 .gpuVerdict strong {
-  color: #f2efe9;
-  font-family: var(--font-cabinet), var(--font-satoshi), ui-sans-serif, sans-serif;
-  font-size: clamp(1.45rem, 2.3vw, 2.5rem);
+  font-family: var(--font-outfit), var(--font-cabinet), var(--font-satoshi), ui-sans-serif, sans-serif;
+  font-size: clamp(1.8rem, 3.1vw, 3.2rem);
   font-weight: 500;
-  line-height: 1;
-  letter-spacing: -0.035em;
+  line-height: 0.95;
+  letter-spacing: -0.045em;
 }
 
 @media (max-width: 767px) {
   .gpuCinema {
-    min-height: 198dvh;
+    min-height: 232dvh;
   }
 
-  .gpuCopy {
-    top: 6.8rem;
-    right: 1.2rem;
-    left: 1.2rem;
+  .gpuIntro {
+    top: clamp(6.8rem, 13svh, 8rem);
+    right: 1rem;
+    left: 1rem;
+    width: auto;
+    padding: 0.9rem 0.9rem 1rem;
   }
 
-  .gpuCopy h2 {
+  .gpuIntro h2 {
     max-width: 9ch;
-    font-size: clamp(3.2rem, 14.8vw, 4.6rem);
+    font-size: clamp(3.1rem, 14.5vw, 4.45rem);
     line-height: 0.87;
   }
 
-  .gpuCopy > span {
-    max-width: 22rem;
-    margin-top: 1.1rem;
-    font-size: 0.9rem;
+  .gpuIntro > span {
+    max-width: 23rem;
+    font-size: 0.86rem;
+    line-height: 1.5;
   }
 
-  .gpuCoil svg {
-    width: 168%;
-    margin-left: -34%;
-  }
-
-  .gpuGateLabel {
-    font-size: 8px;
-  }
-
-  .gpuOutput {
-    inset: 4.8rem 0.5rem 0.5rem;
-  }
-
-  .gpuOutputPlate {
-    top: 46%;
+  .gpuPlate {
+    top: 54%;
     width: calc(100% - 1rem);
+    aspect-ratio: 1 / 1.08;
+    translate: -50% -46%;
   }
 
-  .gpuOutputTelemetry {
-    min-height: 2.7rem;
-    grid-template-columns: repeat(2, auto);
-    font-size: 0.52rem;
+  .gpuGates {
+    min-height: 4.5rem;
+    grid-template-columns: repeat(2, 1fr);
+    row-gap: 0.35rem;
+    padding-block: 0.5rem;
+    font-size: 0.5rem;
   }
 
-  .gpuOutputTelemetry span:nth-child(2),
-  .gpuOutputTelemetry span:nth-child(3) {
-    display: none;
+  .gpuGates span:nth-child(even) {
+    text-align: right;
+  }
+
+  .gpuGates span:nth-child(3) {
+    text-align: left;
   }
 
   .gpuVerdict {
-    right: 1rem;
-    bottom: 1rem;
-    left: 1rem;
+    right: 0.65rem;
+    bottom: 0.65rem;
+    left: 0.65rem;
     min-width: 0;
+    padding: 0.85rem 0.9rem 0.95rem;
   }
 
   .gpuVerdict strong {
-    font-size: 1.6rem;
+    font-size: clamp(1.75rem, 8vw, 2.4rem);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .gpuCinema {
     min-height: auto;
-    padding: 0.5rem;
+    padding: clamp(5.8rem, 10vw, 8rem) 0 clamp(2rem, 6vw, 5rem);
   }
 
   .gpuStage {
     position: relative;
     min-height: auto;
     overflow: visible;
-    padding-top: 7rem;
   }
 
-  .gpuCopy {
-    position: relative;
-    top: auto;
-    right: auto;
-    left: auto;
-    padding-inline: 1rem;
+  .gpuHotPath {
+    display: none;
   }
 
-  .gpuHeat,
-  .gpuCopy,
-  .gpuCoil,
-  .gpuOutput,
-  .gpuVerdict {
+  .gpuIntro,
+  .gpuPlate,
+  .gpuAfterLayer,
+  .gpuDiffLayer,
+  .gpuDivider,
+  .gpuVerdict,
+  .gpuGates span {
     opacity: 1 !important;
-  }
-
-  .gpuCopy,
-  .gpuCoil,
-  .gpuOutput {
     transform: none !important;
   }
 
-  .gpuCoil {
-    position: relative;
-    height: 66dvh;
-    min-height: 520px;
-  }
-
-  .gpuOutput {
+  .gpuIntro {
     position: relative;
     inset: auto;
-    height: 78dvh;
-    min-height: 560px;
+    width: min(calc(100% - 2rem), 70rem);
+    margin: 0 auto clamp(2rem, 5vw, 4rem);
   }
 
-  .gpuOutputPlate {
-    clip-path: inset(0 0 0 0) !important;
+  .gpuPlate {
+    position: relative;
+    inset: auto;
+    width: min(calc(100% - 1rem), 1080px);
+    margin-inline: auto;
+    translate: none;
+  }
+
+  .gpuAfterLayer {
+    clip-path: inset(0 0 0 50%) !important;
+  }
+
+  .gpuDiffLayer {
+    opacity: 0.34 !important;
+  }
+
+  .gpuDivider {
+    left: 50% !important;
+  }
+}
+
+@media (max-height: 650px) and (min-width: 768px) {
+  .gpuIntro {
+    top: 5.3rem;
+  }
+
+  .gpuIntro h2 {
+    font-size: clamp(3.2rem, 6vw, 5.6rem);
+  }
+
+  .gpuPlate {
+    width: min(70vw, 850px);
   }
 }
