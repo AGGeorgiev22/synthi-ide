@@ -96,7 +96,7 @@ export default function RootLayout({ children }) {
             }}
           />
         </ThemeProvider>
-        <Analytics />
+        {process.env.VERCEL ? <Analytics /> : null}
       </body>
     </html>
   );
