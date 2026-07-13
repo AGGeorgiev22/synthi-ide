@@ -15,8 +15,8 @@ export function VectantLanding() {
       <AuthorityStory />
       <GpuProofChapter />
       <RuntimeFeedback />
-      <FinalApproach />
       <FieldNotes />
+      <FinalApproach />
     </main>
   );
 }
