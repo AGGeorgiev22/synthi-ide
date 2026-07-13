@@ -1,27 +1,39 @@
+"use client";
+
+import { useId } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+
 import { cn } from "@/lib/utils";
 
-/**
- * Vectant mark — bracketed "V" with gradient corner accents.
- * Reproduces /public/Vectant-logo-white.svg as scalable JSX so we can
- * control color and size. Gradient id is unique to allow multiple instances.
- */
-export function VectantMark({ className, gradientId = "vt-mark", monochrome = false }) {
+function safeId(value) {
+  return value.replaceAll(":", "");
+}
+
+export function VectantMark({
+  className,
+  gradientId,
+  monochrome = false,
+  decorative = false,
+}) {
+  const generatedId = useId();
+  const resolvedGradientId = gradientId || `vt-mark-${safeId(generatedId)}`;
   const cornerA = monochrome ? "currentColor" : "#FF3DBE";
   const cornerB = monochrome ? "currentColor" : "#FF5C2A";
   const cornerC = monochrome ? "currentColor" : "#22D3EE";
   const cornerD = monochrome ? "currentColor" : "#7C5CFF";
-  const veeStroke = monochrome ? "currentColor" : `url(#${gradientId})`;
+  const veeStroke = monochrome ? "currentColor" : `url(#${resolvedGradientId})`;
 
   return (
     <svg
       viewBox="16 0 72 64"
       fill="none"
       className={className}
-      role="img"
-      aria-label="Vectant"
+      role={decorative ? undefined : "img"}
+      aria-hidden={decorative || undefined}
+      aria-label={decorative ? undefined : "Vectant"}
     >
       <defs>
-        <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="100%">
+        <linearGradient id={resolvedGradientId} x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stopColor="#FF3DBE" />
           <stop offset="35%" stopColor="#FF5C2A" />
           <stop offset="70%" stopColor="#7C5CFF" />
@@ -34,20 +46,22 @@ export function VectantMark({ className, gradientId = "vt-mark", monochrome = fa
       <path d="M86 6 H80 M86 6 V12" stroke={cornerB} strokeWidth="2" strokeLinecap="square" />
       <path d="M18 58 H24 M18 58 V52" stroke={cornerC} strokeWidth="2" strokeLinecap="square" />
       <path d="M86 58 H80 M86 58 V52" stroke={cornerD} strokeWidth="2" strokeLinecap="square" />
-      <path d={`M38 18 L52 44 L66 18`} stroke={veeStroke} strokeWidth="6" strokeLinecap="square" />
+      <path d="M38 18 L52 44 L66 18" stroke={veeStroke} strokeWidth="6" strokeLinecap="square" />
     </svg>
   );
 }
 
-/**
- * Full lockup: mark + VECTANT wordmark.
- */
-export function Logo({ className, markClassName, gradientId = "vt-logo", showWord = true }) {
+export function Logo({ className, markClassName, gradientId, showWord = true }) {
   return (
-    <span className={cn("inline-flex items-center gap-2 text-ink", className)}>
-      <VectantMark gradientId={gradientId} className={cn("h-6 w-auto", markClassName)} />
+    <span role="img" aria-label="Vectant" className={cn("inline-flex items-center gap-2 text-ink", className)}>
+      <VectantMark
+        decorative
+        gradientId={gradientId}
+        className={cn("h-6 w-auto", markClassName)}
+      />
       {showWord && (
         <span
+          aria-hidden="true"
           style={{ fontFamily: 'var(--font-space-grotesk, "Space Grotesk"), var(--font-satoshi, "Satoshi"), ui-sans-serif, sans-serif' }}
           className="text-[16px] font-semibold tracking-[0.2em] text-ink"
         >
@@ -58,14 +72,9 @@ export function Logo({ className, markClassName, gradientId = "vt-logo", showWor
   );
 }
 
-/* ---- Animated logo: the right bracket opens to hold the wordmark at the top
-   of the page, then compresses to the exact original [V] once you scroll.
-   Both pieces are cut from the SAME coordinates as VectantMark (viewBox
-   16..88), so abutting them reproduces the original logo pixel-for-pixel. ---- */
-function LeftPiece({ gradientId = "vt-vnav" }) {
-  // left corner ticks + left bracket + V chevron (x16..70 of the original)
+function LeftPiece({ gradientId }) {
   return (
-    <svg viewBox="16 0 54 64" fill="none" className="h-6 w-auto shrink-0" role="img" aria-label="Vectant">
+    <svg viewBox="16 0 54 64" fill="none" className="h-6 w-auto shrink-0" aria-hidden="true">
       <defs>
         <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stopColor="#FF3DBE" />
@@ -81,8 +90,8 @@ function LeftPiece({ gradientId = "vt-vnav" }) {
     </svg>
   );
 }
+
 function RightPiece() {
-  // right bracket + right corner ticks (x70..88 of the original)
   return (
     <svg viewBox="70 0 18 64" fill="none" className="h-6 w-auto shrink-0" aria-hidden="true">
       <path d="M74 12 H80 V52 H74" stroke="currentColor" strokeWidth="4" strokeLinecap="square" />
@@ -93,19 +102,45 @@ function RightPiece() {
 }
 
 export function AnimatedLogo({ expanded = true, className }) {
+  const generatedId = useId();
+  const reduceMotion = useReducedMotion();
+  const gradientId = `vt-nav-${safeId(generatedId)}`;
+  const transition = reduceMotion
+    ? { duration: 0 }
+    : { type: "spring", stiffness: 180, damping: 24, mass: 0.62 };
+
   return (
-    <span className={cn("inline-flex items-center text-ink", className)}>
-      <LeftPiece />
-      <span
-        style={{ fontFamily: 'var(--font-space-grotesk, "Space Grotesk"), var(--font-satoshi, "Satoshi"), ui-sans-serif, sans-serif' }}
-        className={cn(
-          "overflow-hidden whitespace-nowrap text-[16px] font-semibold tracking-[0.2em] text-ink transition-[max-width,opacity,margin,filter] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]",
-          expanded ? "mx-2 max-w-[150px] opacity-100 blur-0" : "mx-0 max-w-0 opacity-0 blur-[2px]"
+    <motion.span
+      layout
+      role="img"
+      aria-label="Vectant"
+      transition={transition}
+      className={cn("inline-flex items-center text-[#f1eee8]", className)}
+    >
+      <LeftPiece gradientId={gradientId} />
+      <AnimatePresence initial={false} mode="popLayout">
+        {expanded && (
+          <motion.span
+            key="vectant-wordmark"
+            layout
+            aria-hidden="true"
+            initial={reduceMotion ? false : { opacity: 0, scaleX: 0.72, x: -7 }}
+            animate={{ opacity: 1, scaleX: 1, x: 0 }}
+            exit={reduceMotion ? { opacity: 0 } : { opacity: 0, scaleX: 0.72, x: -7 }}
+            transition={transition}
+            style={{
+              fontFamily: 'var(--font-space-grotesk, "Space Grotesk"), var(--font-satoshi, "Satoshi"), ui-sans-serif, sans-serif',
+              transformOrigin: "left center",
+            }}
+            className="mx-2 whitespace-nowrap text-[16px] font-semibold tracking-[0.2em]"
+          >
+            VECTANT
+          </motion.span>
         )}
-      >
-        VECTANT
-      </span>
-      <RightPiece />
-    </span>
+      </AnimatePresence>
+      <motion.span layout transition={transition} className="inline-flex">
+        <RightPiece />
+      </motion.span>
+    </motion.span>
   );
 }
