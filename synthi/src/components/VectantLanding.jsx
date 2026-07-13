@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { ArrowUpRight } from "@phosphor-icons/react";
 
 import { AuthorityStory } from "@/components/home/AuthorityStory";
 import { CinematicHero } from "@/components/home/CinematicHero";
@@ -98,7 +97,6 @@ function FinalCta() {
             <div className={styles.heroActions}>
               <a href={PILOT_MAILTO} className={styles.primaryButton}>
                 Request pilot
-                <span className={styles.buttonIcon}><ArrowUpRight size={15} weight="bold" /></span>
               </a>
             </div>
           </div>
