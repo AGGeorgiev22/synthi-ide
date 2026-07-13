@@ -30,7 +30,7 @@ export function CinematicHero() {
   const copyOpacity = useTransform(camera, [0, 0.28, 0.58], [1, 1, 0]);
   const copyY = useTransform(camera, [0, 0.58], [0, -92]);
   const mediaScale = useTransform(camera, [0, 0.9], [0.82, 1.045]);
-  const mediaY = useTransform(camera, [0, 0.9], [28, -18]);
+  const mediaY = useTransform(camera, [0, 0.9], [28, -410]);
   const leftBracketX = useTransform(camera, [0, 0.9], [0, -96]);
   const rightBracketX = useTransform(camera, [0, 0.9], [0, 96]);
   const frameOpacity = useTransform(camera, [0, 0.12, 1], [0.72, 1, 1]);
