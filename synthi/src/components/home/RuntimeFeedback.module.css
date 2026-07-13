@@ -49,9 +49,9 @@
 
 .proofHeader > span {
   padding-bottom: 0.35rem;
-  color: rgb(229 231 237 / 0.42);
+  color: rgb(229 231 237 / 0.66);
   font-family: var(--font-geist-mono), ui-monospace, monospace;
-  font-size: 0.56rem;
+  font-size: 0.62rem;
   letter-spacing: 0.11em;
   text-transform: uppercase;
 }

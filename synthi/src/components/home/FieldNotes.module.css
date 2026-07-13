@@ -43,9 +43,9 @@
 
 .fieldNotesHeader > span {
   padding-bottom: 0.35rem;
-  color: rgb(229 231 237 / 0.4);
+  color: rgb(229 231 237 / 0.64);
   font-family: var(--font-geist-mono), ui-monospace, monospace;
-  font-size: 0.55rem;
+  font-size: 0.62rem;
   letter-spacing: 0.11em;
   text-transform: uppercase;
 }
