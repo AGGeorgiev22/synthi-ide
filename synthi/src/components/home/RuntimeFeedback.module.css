@@ -1,0 +1,395 @@
+.proofCinema {
+  position: relative;
+  min-height: 302dvh;
+  overflow: clip;
+  scroll-margin-top: 4.5rem;
+  color: #f2efe9;
+  background: #050609;
+}
+
+.proofStage {
+  position: sticky;
+  top: 0;
+  min-height: 100dvh;
+  overflow: hidden;
+  background: #050609;
+}
+
+.proofHeader {
+  position: absolute;
+  z-index: 7;
+  top: clamp(5.4rem, 8vh, 7rem);
+  right: clamp(1.2rem, 3vw, 3rem);
+  left: clamp(1.2rem, 3vw, 3rem);
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.proofHeader p {
+  margin: 0 0 0.75rem;
+  color: #ff7657;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.57rem;
+  font-weight: 680;
+  letter-spacing: 0.15em;
+}
+
+.proofHeader h2 {
+  max-width: 13ch;
+  margin: 0;
+  color: #f2efe9;
+  font-family: var(--font-cabinet), var(--font-satoshi), ui-sans-serif, sans-serif;
+  font-size: clamp(2.7rem, 4.7vw, 5.6rem);
+  font-weight: 500;
+  line-height: 0.88;
+  letter-spacing: -0.055em;
+}
+
+.proofHeader > span {
+  padding-bottom: 0.35rem;
+  color: rgb(229 231 237 / 0.42);
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.56rem;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.proofAccordion {
+  position: absolute;
+  z-index: 2;
+  top: clamp(16.5rem, 27vh, 21rem);
+  right: clamp(0.55rem, 1vw, 1rem);
+  bottom: clamp(0.55rem, 1vw, 1rem);
+  left: clamp(0.55rem, 1vw, 1rem);
+  display: flex;
+  gap: 1px;
+  background: rgb(255 255 255 / 0.11);
+}
+
+.proofPanel {
+  position: relative;
+  flex: 0 0 10.5%;
+  min-width: 0;
+  overflow: hidden;
+  background: #090a0f;
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.08);
+  transition: flex 850ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.proofPanelActive {
+  flex: 1 1 auto;
+}
+
+.proofPanelImage {
+  object-fit: cover;
+  filter: contrast(1.05) saturate(0.92) brightness(0.64);
+  transform: scale(1.04);
+  transition:
+    filter 800ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 1100ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.proofPanelActive .proofPanelImage {
+  filter: contrast(1.05) saturate(0.94) brightness(0.92);
+  transform: scale(1);
+}
+
+.proofImageCheckride {
+  object-position: center 5%;
+}
+
+.proofImageHandoff {
+  object-position: center 3%;
+}
+
+.proofImageMemory {
+  object-position: center 2%;
+}
+
+.proofPanelGrade {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background:
+    linear-gradient(0deg, rgb(4 5 8 / 0.9) 0%, rgb(4 5 8 / 0.4) 33%, transparent 66%),
+    linear-gradient(90deg, rgb(4 5 8 / 0.24), transparent 15% 85%, rgb(4 5 8 / 0.24));
+}
+
+.proofPanelButton {
+  position: absolute;
+  z-index: 4;
+  top: 0;
+  right: 0;
+  left: 0;
+  display: flex;
+  min-height: 3.6rem;
+  align-items: center;
+  gap: 0.8rem;
+  padding-inline: 1rem;
+  color: rgb(236 234 229 / 0.72);
+  background: rgb(5 6 9 / 0.82);
+  box-shadow: inset 0 -1px 0 rgb(255 255 255 / 0.1);
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.57rem;
+  letter-spacing: 0.12em;
+  text-align: left;
+  outline: none;
+  backdrop-filter: blur(16px);
+  transition:
+    color 420ms cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 420ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.proofPanelButton b {
+  color: #ff7657;
+  font-weight: 650;
+}
+
+.proofPanelButton:hover,
+.proofPanelButton:focus-visible,
+.proofPanelActive .proofPanelButton {
+  color: #f2efe9;
+  background: rgb(5 6 9 / 0.92);
+}
+
+.proofPanelButton:focus-visible {
+  box-shadow: inset 0 0 0 2px #8ae7f1;
+}
+
+.proofPanel:not(.proofPanelActive) .proofPanelButton {
+  bottom: 0;
+  min-height: 100%;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding-top: 1.25rem;
+}
+
+.proofPanel:not(.proofPanelActive) .proofPanelButton span {
+  writing-mode: vertical-rl;
+}
+
+.proofPanelCaption {
+  position: absolute;
+  z-index: 4;
+  right: clamp(1.4rem, 3vw, 3rem);
+  bottom: clamp(1.6rem, 3.5vw, 3.4rem);
+  left: clamp(1.4rem, 3vw, 3rem);
+  max-width: 760px;
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 520ms 120ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 700ms 120ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.proofPanelActive .proofPanelCaption {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.proofPanelCaption h3 {
+  max-width: 13ch;
+  margin: 0;
+  color: #f2efe9;
+  font-family: var(--font-cabinet), var(--font-satoshi), ui-sans-serif, sans-serif;
+  font-size: clamp(2.35rem, 4.25vw, 5rem);
+  font-weight: 500;
+  line-height: 0.9;
+  letter-spacing: -0.052em;
+  text-wrap: balance;
+}
+
+.proofPanelCaption p {
+  max-width: 39rem;
+  margin: 1rem 0 0;
+  color: rgb(225 227 233 / 0.72);
+  font-size: clamp(0.92rem, 1.1vw, 1.04rem);
+  line-height: 1.58;
+}
+
+.proofSeal {
+  position: absolute;
+  z-index: 10;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  color: #f2efe9;
+  background:
+    radial-gradient(circle at center, rgb(255 118 87 / 0.09), transparent 26%),
+    rgb(5 6 9 / 0.93);
+  text-align: center;
+  pointer-events: none;
+  transform-origin: center center;
+}
+
+.proofSealMark {
+  width: clamp(4.5rem, 7vw, 7rem);
+  height: auto;
+  color: #f2efe9;
+}
+
+.proofSeal p {
+  margin: 1.5rem 0 0;
+  color: #ff7657;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.6rem;
+  font-weight: 680;
+  letter-spacing: 0.16em;
+}
+
+.proofSeal strong {
+  margin-top: 0.65rem;
+  font-family: var(--font-cabinet), var(--font-satoshi), ui-sans-serif, sans-serif;
+  font-size: clamp(3.2rem, 6.5vw, 7rem);
+  font-weight: 500;
+  line-height: 0.9;
+  letter-spacing: -0.055em;
+}
+
+.proofSeal > span {
+  margin-top: 1rem;
+  color: rgb(226 228 234 / 0.48);
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.56rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 767px) {
+  .proofCinema {
+    min-height: auto;
+    padding: 7rem 0.5rem 0.5rem;
+  }
+
+  .proofStage {
+    position: relative;
+    min-height: auto;
+    overflow: visible;
+  }
+
+  .proofHeader {
+    position: relative;
+    top: auto;
+    right: auto;
+    left: auto;
+    display: block;
+    padding: 0 0.8rem 3.5rem;
+  }
+
+  .proofHeader h2 {
+    max-width: 10ch;
+    font-size: clamp(3.05rem, 14vw, 4.4rem);
+    line-height: 0.89;
+  }
+
+  .proofHeader > span {
+    display: none;
+  }
+
+  .proofAccordion {
+    position: relative;
+    inset: auto;
+    display: grid;
+    gap: 0.5rem;
+    background: transparent;
+  }
+
+  .proofPanel,
+  .proofPanelActive {
+    flex: none;
+    min-height: 74dvh;
+  }
+
+  .proofPanelImage,
+  .proofPanelActive .proofPanelImage {
+    width: 940px !important;
+    max-width: none !important;
+    opacity: 1;
+    filter: contrast(1.05) saturate(0.94) brightness(0.88);
+    transform: none;
+  }
+
+  .proofImageCheckride {
+    object-position: 15% 5%;
+  }
+
+  .proofImageHandoff,
+  .proofImageMemory {
+    object-position: 13% 3%;
+  }
+
+  .proofPanel:not(.proofPanelActive) .proofPanelButton,
+  .proofPanelButton {
+    right: 0;
+    bottom: auto;
+    left: 0;
+    min-height: 3.2rem;
+    align-items: center;
+    padding: 0 0.9rem;
+  }
+
+  .proofPanel:not(.proofPanelActive) .proofPanelButton span {
+    writing-mode: horizontal-tb;
+  }
+
+  .proofPanelCaption,
+  .proofPanelActive .proofPanelCaption {
+    right: 1.2rem;
+    bottom: 1.5rem;
+    left: 1.2rem;
+    opacity: 1;
+    transform: none;
+  }
+
+  .proofPanelCaption h3 {
+    max-width: 11ch;
+    font-size: clamp(2.65rem, 11.5vw, 3.5rem);
+    line-height: 0.91;
+  }
+
+  .proofPanelCaption p {
+    max-width: 24rem;
+    font-size: 0.88rem;
+    line-height: 1.5;
+  }
+
+  .proofSeal {
+    position: relative;
+    min-height: 74dvh;
+    margin-top: 0.5rem;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .proofCinema {
+    min-height: auto;
+    padding: 7rem 0.5rem 0.5rem;
+  }
+
+  .proofStage {
+    position: relative;
+    min-height: auto;
+    overflow: visible;
+  }
+
+  .proofHeader,
+  .proofAccordion,
+  .proofSeal {
+    position: relative;
+    inset: auto;
+  }
+
+  .proofAccordion {
+    min-height: 78dvh;
+  }
+
+  .proofSeal {
+    min-height: 72dvh;
+  }
+}

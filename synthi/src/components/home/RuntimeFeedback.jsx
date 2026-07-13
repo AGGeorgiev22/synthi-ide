@@ -1,129 +1,121 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
-import { ArrowLeft, ArrowRight, ImageBroken } from "@phosphor-icons/react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import {
+  motion,
+  useMotionValueEvent,
+  useReducedMotion,
+  useScroll,
+  useTransform,
+} from "framer-motion";
 
-import styles from "@/components/home/VectantHome.module.css";
+import { VectantMark } from "@/components/Logo";
+import styles from "@/components/home/RuntimeFeedback.module.css";
 
 const EVIDENCE = [
   {
     key: "checkride",
-    tab: "Checkride",
+    label: "CHECKRIDE",
     title: "The workflow passed. The proof stayed.",
     copy: "Plan coverage, denied writes, provenance, black-box replay, runtime events, and exported artifacts remain reviewable after the run.",
     src: "/product-proof/senior-real-codesite-workflow-proof.png",
+    alt: "Vectant checkride showing a passed workflow and its retained proof bundle",
     position: styles.proofImageCheckride,
   },
   {
     key: "handoff",
-    tab: "Handoff",
+    label: "HANDOFF",
     title: "The handoff carries its assertions.",
-    copy: "Clearance, transaction state, proof bundles, quarantined writes, and commit trailers travel with the change instead of disappearing into chat.",
+    copy: "Clearance, transaction state, proof bundles, quarantined writes, and commit trailers travel with the change.",
     src: "/product-proof/codesite-full-workflow-proof.png",
+    alt: "Vectant handoff showing clearance, transaction state, and proof attached to a change",
     position: styles.proofImageHandoff,
   },
   {
     key: "memory",
-    tab: "Memory",
-    title: "Past near-misses change the next decision.",
+    label: "MEMORY",
+    title: "The next run remembers the near-miss.",
     copy: "Counterfactual policy deltas can influence a later route while hard safety gates remain in force and visible to the reviewer.",
     src: "/product-proof/codesite-counterfactual-memory-proof.png",
+    alt: "Vectant memory proof showing a prior near-miss influencing a later route",
     position: styles.proofImageMemory,
   },
 ];
 
-function EvidenceImage({ item }) {
-  const [loaded, setLoaded] = useState(false);
-  const [error, setError] = useState(false);
-
-  if (error) {
-    return (
-      <div className={styles.proofCinemaError} role="status">
-        <ImageBroken size={28} weight="light" />
-        <strong>Evidence image unavailable</strong>
-        <span>The proof description remains available below this frame.</span>
-      </div>
-    );
-  }
-
-  return (
-    <div className={styles.proofCinemaImage}>
-      {!loaded && <div className={styles.proofCinemaLoading} role="status">Loading evidence</div>}
-      <Image
-        src={item.src}
-        alt=""
-        fill
-        sizes="(min-width: 1500px) 1480px, 100vw"
-        onLoad={() => setLoaded(true)}
-        onError={() => setError(true)}
-        className={`${styles.proofCinemaImageAsset} ${item.position} ${loaded ? styles.proofCinemaImageLoaded : ""}`}
-      />
-    </div>
-  );
-}
-
 export function RuntimeFeedback() {
-  const [index, setIndex] = useState(0);
+  const rootRef = useRef(null);
+  const [activeIndex, setActiveIndex] = useState(0);
   const reduceMotion = useReducedMotion();
-  const item = EVIDENCE[index];
+  const { scrollYProgress } = useScroll({
+    target: rootRef,
+    offset: ["start start", "end end"],
+  });
+  const sealOpacity = useTransform(scrollYProgress, [0.82, 0.95], [0, 1]);
+  const sealScale = useTransform(scrollYProgress, [0.82, 0.95], [1.08, 1]);
 
-  const move = (direction) => {
-    setIndex((current) => (current + direction + EVIDENCE.length) % EVIDENCE.length);
-  };
+  useMotionValueEvent(scrollYProgress, "change", (progress) => {
+    if (reduceMotion) return;
+    const nextIndex = progress < 0.34 ? 0 : progress < 0.67 ? 1 : 2;
+    setActiveIndex((current) => (current === nextIndex ? current : nextIndex));
+  });
 
   return (
-    <section id="proof" className={styles.proofCinema}>
-      <div className={styles.proofCinemaShell}>
-        <div className={styles.proofCinemaIntro}>
-          <h2>The proof is part of the work.</h2>
-          <p>Open the evidence that changed the decision. Leave the rest collapsed.</p>
-        </div>
-
-        <div className={styles.proofCinemaTabs} role="tablist" aria-label="Runtime proof views">
-          {EVIDENCE.map((entry, entryIndex) => (
-            <button
-              key={entry.key}
-              type="button"
-              role="tab"
-              aria-selected={entryIndex === index}
-              onClick={() => setIndex(entryIndex)}
-              className={entryIndex === index ? styles.proofCinemaTabActive : undefined}
-            >
-              {entry.tab}
-            </button>
-          ))}
-        </div>
-
-        <div className={styles.proofCinemaReel}>
-          <AnimatePresence mode="wait" initial={false}>
-            <motion.article
-              key={item.key}
-              role="tabpanel"
-              initial={reduceMotion ? false : { opacity: 0, scale: 0.985, x: 28 }}
-              animate={{ opacity: 1, scale: 1, x: 0 }}
-              exit={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.985, x: -24 }}
-              transition={{ duration: 0.62, ease: [0.16, 1, 0.3, 1] }}
-              className={styles.proofCinemaSlide}
-            >
-              <EvidenceImage item={item} />
-              <div className={styles.proofCinemaCaption}>
-                <h3>{item.title}</h3>
-                <p>{item.copy}</p>
-              </div>
-            </motion.article>
-          </AnimatePresence>
-
-          <div className={styles.proofCinemaControls}>
-            <button type="button" onClick={() => move(-1)} aria-label="Previous proof view">
-              <ArrowLeft size={18} weight="bold" />
-            </button>
-            <button type="button" onClick={() => move(1)} aria-label="Next proof view">
-              <ArrowRight size={18} weight="bold" />
-            </button>
+    <section id="proof" ref={rootRef} className={styles.proofCinema}>
+      <div className={styles.proofStage}>
+        <header className={styles.proofHeader}>
+          <div>
+            <p>INCIDENT RECORDER / 07 13</p>
+            <h2>The proof lands with the work.</h2>
           </div>
+          <span>Scroll to replay the evidence</span>
+        </header>
+
+        <div className={styles.proofAccordion}>
+          {EVIDENCE.map((item, index) => {
+            const active = index === activeIndex;
+            return (
+              <article
+                key={item.key}
+                className={`${styles.proofPanel} ${active ? styles.proofPanelActive : ""}`}
+              >
+                <Image
+                  src={item.src}
+                  alt={item.alt}
+                  fill
+                  sizes={active ? "(min-width: 768px) 78vw, 100vw" : "20vw"}
+                  className={`${styles.proofPanelImage} ${item.position}`}
+                />
+                <div className={styles.proofPanelGrade} aria-hidden="true" />
+                <button
+                  type="button"
+                  aria-expanded={active}
+                  aria-controls={`proof-panel-${item.key}`}
+                  onClick={() => setActiveIndex(index)}
+                  className={styles.proofPanelButton}
+                >
+                  <b>0{index + 1}</b>
+                  <span>{item.label}</span>
+                </button>
+                <div id={`proof-panel-${item.key}`} className={styles.proofPanelCaption}>
+                  <h3>{item.title}</h3>
+                  <p>{item.copy}</p>
+                </div>
+              </article>
+            );
+          })}
         </div>
+
+        <motion.div
+          className={styles.proofSeal}
+          style={reduceMotion ? undefined : { opacity: sealOpacity, scale: sealScale }}
+          aria-hidden="true"
+        >
+          <VectantMark gradientId="proof-seal-mark" className={styles.proofSealMark} />
+          <p>PROOF BUNDLE SEALED</p>
+          <strong>Replay ready</strong>
+          <span>Plan / authority / runtime / artifacts</span>
+        </motion.div>
       </div>
     </section>
   );
