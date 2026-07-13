@@ -1,7 +1,6 @@
 .boundary {
   position: relative;
-  min-height: 178dvh;
-  scroll-margin-top: 4.5rem;
+  min-height: 214dvh;
   color: #f2efe9;
   background: #050609;
 }
@@ -11,258 +10,262 @@
   top: 0;
   min-height: 100dvh;
   overflow: hidden;
-  background: #050609;
+  background:
+    radial-gradient(circle at 16% 46%, rgb(116 24 54 / 0.1), transparent 34%),
+    #050609;
+  isolation: isolate;
 }
 
 .boundaryFrame {
   position: absolute;
-  inset: clamp(4.7rem, 7vh, 6rem) clamp(0.7rem, 1.6vw, 1.7rem) clamp(0.7rem, 1.6vw, 1.7rem);
+  z-index: 1;
+  inset: clamp(4.65rem, 7vh, 5.8rem) clamp(0.7rem, 1.5vw, 1.6rem) clamp(0.7rem, 1.5vw, 1.6rem);
   margin: 0;
   overflow: hidden;
-  background: #090a0f;
+  background: #07080c;
   box-shadow:
-    inset 0 0 0 1px rgb(255 255 255 / 0.11),
-    0 48px 120px rgb(0 0 0 / 0.55);
-  transform-origin: center center;
+    0 0 0 1px rgb(255 255 255 / 0.12),
+    0 48px 120px rgb(0 0 0 / 0.58);
+  transform-origin: 50% 50%;
+  will-change: transform, clip-path;
+}
+
+.boundaryCamera {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  will-change: transform;
 }
 
 .boundaryImage {
   object-fit: cover;
-  object-position: 52% 50%;
-  filter: contrast(1.06) saturate(0.97) brightness(1.04);
+  object-position: center center;
+  filter: contrast(1.04) saturate(0.96) brightness(1.13);
 }
 
-.boundaryGrade {
+.boundaryVignette {
   position: absolute;
   inset: 0;
   pointer-events: none;
   background:
-    linear-gradient(90deg, rgb(4 5 8 / 0.76) 0%, rgb(4 5 8 / 0.3) 31%, transparent 58%),
-    linear-gradient(0deg, rgb(4 5 8 / 0.72) 0%, transparent 40%);
-}
-
-.boundaryTelemetry {
-  position: absolute;
-  z-index: 3;
-  top: clamp(5.35rem, 8vh, 6.8rem);
-  right: clamp(1.4rem, 3vw, 3.2rem);
-  left: clamp(1.4rem, 3vw, 3.2rem);
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1px;
-  background: rgb(255 255 255 / 0.1);
-  box-shadow: 0 1px 0 rgb(255 255 255 / 0.08);
-  font-family: var(--font-geist-mono), ui-monospace, monospace;
-}
-
-.boundaryTelemetry div {
-  display: flex;
-  min-height: 3.1rem;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-  padding-inline: clamp(0.55rem, 1.25vw, 1rem);
-  background: rgb(5 6 9 / 0.84);
-  backdrop-filter: blur(18px);
-}
-
-.boundaryTelemetry span {
-  color: rgb(229 231 237 / 0.43);
-  font-size: 0.57rem;
-  letter-spacing: 0.12em;
-}
-
-.boundaryTelemetry strong {
-  color: rgb(239 237 232 / 0.9);
-  font-size: 0.57rem;
-  font-weight: 600;
-  letter-spacing: 0.075em;
-}
-
-.boundaryTelemetry div:nth-child(2) strong,
-.boundaryTelemetry div:nth-child(4) strong {
-  color: #ff7657;
-}
-
-.boundaryTelemetry i {
-  position: absolute;
-  right: 0;
-  bottom: -1px;
-  left: 0;
-  height: 1px;
-  transform-origin: left center;
-  background: #ff7657;
-  box-shadow: 0 0 12px rgb(255 84 46 / 0.72);
+    linear-gradient(180deg, rgb(3 4 7 / 0.08), transparent 16%, transparent 84%, rgb(3 4 7 / 0.28)),
+    radial-gradient(circle at center, transparent 55%, rgb(3 4 7 / 0.22) 100%);
 }
 
 .boundaryCopy {
   position: absolute;
   z-index: 3;
-  right: clamp(2rem, 5.5vw, 6rem);
-  bottom: clamp(2.6rem, 6vw, 5.5rem);
-  left: clamp(2rem, 5.5vw, 6rem);
-  max-width: 920px;
+  right: clamp(1.7rem, 5vw, 5rem);
+  bottom: clamp(2.2rem, 7vh, 5.5rem);
+  width: min(46rem, 63vw);
+  padding: clamp(1rem, 2vw, 1.8rem) clamp(1.1rem, 2.5vw, 2.25rem);
+  background: linear-gradient(90deg, rgb(5 6 9 / 0.95), rgb(5 6 9 / 0.78) 72%, transparent);
+  will-change: transform, opacity;
 }
 
-.boundaryCopy > p {
-  margin: 0 0 1rem;
-  color: #ff7657;
-  font-family: var(--font-geist-mono), ui-monospace, monospace;
-  font-size: 0.61rem;
-  font-weight: 650;
-  letter-spacing: 0.14em;
+.boundaryCopy::before {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 1px;
+  background: #ff7657;
+  content: "";
 }
 
 .boundaryCopy h2 {
-  max-width: 9ch;
+  max-width: 10ch;
   margin: 0;
-  color: #f2efe9;
-  font-family: var(--font-cabinet), var(--font-satoshi), ui-sans-serif, sans-serif;
-  font-size: clamp(4rem, 7.5vw, 8.3rem);
+  font-family: var(--font-outfit), var(--font-cabinet), var(--font-satoshi), ui-sans-serif, sans-serif;
+  font-size: clamp(3.2rem, 6.7vw, 7.2rem);
   font-weight: 500;
-  line-height: 0.84;
-  letter-spacing: -0.058em;
-  text-wrap: balance;
+  line-height: 0.88;
+  letter-spacing: -0.055em;
 }
 
-.boundaryCopyFooter {
-  display: grid;
-  max-width: 54rem;
-  margin-top: 1.45rem;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: end;
-  gap: 2rem;
-}
-
-.boundaryCopyFooter span {
-  max-width: 35rem;
-  color: rgb(223 225 231 / 0.68);
-  font-size: clamp(0.94rem, 1.18vw, 1.08rem);
+.boundaryCopy p {
+  max-width: 34rem;
+  margin: 1rem 0 0;
+  color: rgb(225 227 232 / 0.68);
+  font-size: clamp(0.92rem, 1.2vw, 1.08rem);
   line-height: 1.58;
 }
 
-.boundaryCopyFooter strong {
-  color: rgb(235 237 242 / 0.55);
-  font-family: var(--font-geist-mono), ui-monospace, monospace;
-  font-size: 0.57rem;
-  font-weight: 550;
-  letter-spacing: 0.11em;
-}
-
-.boundaryRail {
+.boundaryConditions {
   position: absolute;
-  z-index: 3;
-  top: 50%;
-  right: clamp(1.1rem, 2vw, 2rem);
-  display: flex;
-  align-items: center;
-  gap: 1.25rem;
-  transform: translate(46%, -50%) rotate(90deg);
-  transform-origin: center;
-  color: rgb(229 231 237 / 0.38);
-  font-family: var(--font-geist-mono), ui-monospace, monospace;
-  font-size: 0.53rem;
-  letter-spacing: 0.12em;
+  z-index: 4;
+  top: 19%;
+  right: clamp(1.8rem, 5vw, 5rem);
+  display: grid;
+  width: min(27rem, 36vw);
+  gap: 0;
+  padding-top: 1.2rem;
+  background: linear-gradient(90deg, rgb(5 6 9 / 0.9), rgb(5 6 9 / 0.68));
+  box-shadow: 0 24px 70px rgb(0 0 0 / 0.32);
 }
 
-.boundaryRail span {
-  display: inline-flex;
-  align-items: center;
-  gap: 1.25rem;
-}
-
-.boundaryRail span:not(:last-child)::after {
-  width: 2.8rem;
+.boundaryConditions > i {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
   height: 1px;
-  content: "";
-  background: rgb(255 255 255 / 0.18);
+  background: #ff7657;
+  transform-origin: left center;
+}
+
+.boundaryCondition {
+  display: grid;
+  grid-template-columns: 5.2rem 1fr;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 1rem 1.1rem;
+  border-bottom: 1px solid rgb(255 255 255 / 0.09);
+  will-change: transform, opacity;
+}
+
+.boundaryCondition span,
+.boundaryCondition strong {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.61rem;
+  letter-spacing: 0.075em;
+  text-transform: uppercase;
+}
+
+.boundaryCondition span {
+  color: #ff7657;
+}
+
+.boundaryCondition strong {
+  color: rgb(240 240 237 / 0.8);
+  font-weight: 520;
+  line-height: 1.45;
+}
+
+@media (max-width: 900px) {
+  .boundaryCopy {
+    right: 1.3rem;
+    left: 1.3rem;
+    width: auto;
+  }
+
+  .boundaryConditions {
+    right: 1.5rem;
+    width: min(25rem, 48vw);
+  }
 }
 
 @media (max-width: 767px) {
   .boundary {
-    min-height: 158dvh;
+    min-height: 198dvh;
   }
 
   .boundaryFrame {
-    inset: 4.9rem 0.5rem 0.5rem;
+    inset: 4.35rem 0.55rem 0.55rem;
+  }
+
+  .boundaryCamera {
+    right: auto;
+    width: 1040px;
   }
 
   .boundaryImage {
-    width: 980px !important;
-    max-width: none !important;
-    object-position: 18% 50%;
-  }
-
-  .boundaryGrade {
-    background:
-      linear-gradient(0deg, rgb(4 5 8 / 0.9) 0%, rgb(4 5 8 / 0.34) 48%, transparent 75%),
-      linear-gradient(90deg, rgb(4 5 8 / 0.42), transparent 72%);
-  }
-
-  .boundaryTelemetry {
-    top: 5.55rem;
-    right: 1rem;
-    left: 1rem;
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .boundaryTelemetry div {
-    min-height: 2.55rem;
-  }
-
-  .boundaryTelemetry div:nth-child(3),
-  .boundaryTelemetry div:nth-child(4) {
-    display: none;
+    object-position: left center;
   }
 
   .boundaryCopy {
-    right: 1.5rem;
-    bottom: 2.2rem;
-    left: 1.5rem;
+    right: 0.9rem;
+    bottom: 1.4rem;
+    left: 0.9rem;
+    padding: 1rem 0.95rem 1.1rem;
   }
 
   .boundaryCopy h2 {
-    max-width: 8ch;
-    font-size: clamp(3.25rem, 15vw, 4.7rem);
-    line-height: 0.87;
+    max-width: 9ch;
+    font-size: clamp(3rem, 14.5vw, 4.4rem);
   }
 
-  .boundaryCopyFooter {
-    grid-template-columns: 1fr;
-    gap: 1.1rem;
+  .boundaryCopy p {
+    max-width: 22rem;
+    font-size: 0.88rem;
   }
 
-  .boundaryCopyFooter span {
-    max-width: 21rem;
-    font-size: 0.9rem;
+  .boundaryConditions {
+    top: auto;
+    right: 0.9rem;
+    bottom: 1.15rem;
+    left: 0.9rem;
+    width: auto;
+    background: rgb(5 6 9 / 0.91);
+    backdrop-filter: blur(14px);
   }
 
-  .boundaryRail {
-    display: none;
+  .boundaryCondition {
+    grid-template-columns: 4.4rem 1fr;
+    gap: 0.7rem;
+    padding: 0.82rem 0.85rem;
+  }
+
+  .boundaryCondition span,
+  .boundaryCondition strong {
+    font-size: 0.55rem;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .boundary {
     min-height: auto;
-    padding: 0.5rem;
+    padding: clamp(5.8rem, 10vw, 8rem) 0 1rem;
   }
 
   .boundarySticky {
     position: relative;
-    min-height: 90dvh;
+    min-height: auto;
+    overflow: visible;
   }
 
   .boundaryFrame {
-    opacity: 1 !important;
+    position: relative;
+    inset: auto;
+    height: min(72svh, 48rem);
+    min-height: 31rem;
+    margin: 0 clamp(0.6rem, 1.5vw, 1.6rem);
     clip-path: none !important;
     transform: none !important;
   }
 
-  .boundaryTelemetry,
+  .boundaryCamera,
   .boundaryCopy,
-  .boundaryRail {
+  .boundaryConditions,
+  .boundaryCondition,
+  .boundaryConditions > i {
     opacity: 1 !important;
     transform: none !important;
+  }
+
+  .boundaryCopy,
+  .boundaryConditions {
+    position: relative;
+    inset: auto;
+    width: auto;
+    margin: 1rem clamp(0.6rem, 1.5vw, 1.6rem) 0;
+  }
+
+  .boundaryCopy h2 {
+    font-size: clamp(3rem, 7vw, 6.4rem);
+  }
+}
+
+@media (max-height: 650px) and (min-width: 768px) {
+  .boundaryFrame {
+    top: 4.35rem;
+  }
+
+  .boundaryCopy h2 {
+    font-size: clamp(3rem, 6vw, 5rem);
+  }
+
+  .boundaryConditions {
+    top: 17%;
   }
 }
