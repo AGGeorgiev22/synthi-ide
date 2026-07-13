@@ -228,6 +228,45 @@
   border-right: 2px solid currentColor;
 }
 
+@media (prefers-reduced-motion: no-preference) {
+  .cinemaHeroCopy h1 {
+    animation: cinema-title-in 1.05s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .cinemaHeroCopy > p {
+    animation: cinema-copy-in 1s 140ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .cinemaHeroActions {
+    animation: cinema-copy-in 1s 240ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .cinemaFrameOuter {
+    animation: cinema-frame-in 1.25s 180ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+}
+
+@keyframes cinema-title-in {
+  from {
+    opacity: 0;
+    transform: translateY(34px) scale(0.985);
+  }
+}
+
+@keyframes cinema-copy-in {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+}
+
+@keyframes cinema-frame-in {
+  from {
+    opacity: 0;
+    transform: translateY(62px) scale(0.965);
+  }
+}
+
 @media (max-width: 767px) {
   .cinemaHero {
     min-height: 142dvh;
