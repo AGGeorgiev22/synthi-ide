@@ -4,14 +4,14 @@ import { ThemeProvider as NextThemesProvider } from "next-themes";
 
 /**
  * Class-based theme provider. Adds `.light` / `.dark` to <html>.
- * Default is light for the marketing site; product "screens" opt out via
- * `.surface-dark` so runtime chrome stays faithful to the IDE.
+ * The marketing surface follows the visitor's system preference. Product
+ * screens keep their dark runtime chrome in either page theme.
  */
 export function ThemeProvider({ children }) {
   return (
     <NextThemesProvider
       attribute="class"
-      defaultTheme="light"
+      defaultTheme="system"
       enableSystem
       disableTransitionOnChange={false}
     >
