@@ -351,6 +351,42 @@
   }
 }
 
+@media (max-height: 700px) {
+  .cinemaHero {
+    min-height: 182dvh;
+  }
+
+  .cinemaHeroCopy {
+    top: 4.15rem;
+  }
+
+  .cinemaEyebrow {
+    margin-bottom: 0.55rem;
+  }
+
+  .cinemaHeroCopy h1 {
+    font-size: clamp(2.35rem, 10.5vh, 3.5rem);
+    line-height: 0.86;
+  }
+
+  .cinemaHeroDek {
+    max-width: 31rem;
+    margin-top: 0.75rem;
+    font-size: 0.8rem;
+    line-height: 1.42;
+  }
+
+  .cinemaPrimaryAction {
+    min-height: 2.7rem;
+    margin-top: 0.85rem;
+    font-size: 0.7rem;
+  }
+
+  .cinemaScrollCue {
+    display: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .cinemaHero {
     min-height: auto;
