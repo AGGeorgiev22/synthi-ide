@@ -15,6 +15,7 @@ import styles from "@/components/home/CinematicHero.module.css";
 import { PILOT_MAILTO } from "@/lib/pilot";
 
 const CLOSED_APERTURE = "polygon(49.2% 48%, 50.8% 48%, 53.2% 94%, 46.8% 94%)";
+const CORRIDOR_APERTURE = "polygon(29% 6%, 71% 6%, 93% 98%, 7% 98%)";
 const OPEN_APERTURE = "polygon(1.4% 1.5%, 98.6% 1.5%, 98.6% 98.5%, 1.4% 98.5%)";
 
 export function CinematicHero() {
@@ -39,7 +40,11 @@ export function CinematicHero() {
   const incidentOpacity = useTransform(camera, [0.16, 0.25, 0.42, 0.5], [0, 1, 1, 0]);
   const incidentY = useTransform(camera, [0.16, 0.42], [18, -10]);
   const productOpacity = useTransform(camera, [0.38, 0.48, 1], [0, 1, 1]);
-  const productClip = useTransform(camera, [0.38, 0.79], [CLOSED_APERTURE, OPEN_APERTURE]);
+  const productClip = useTransform(
+    camera,
+    [0.38, 0.68, 0.83],
+    [CLOSED_APERTURE, CORRIDOR_APERTURE, OPEN_APERTURE],
+  );
   const productScale = useTransform(camera, [0.38, 1], [0.9, 1.035]);
   const productY = useTransform(camera, [0.38, 1], [120, -18]);
   const productTelemetryOpacity = useTransform(camera, [0.7, 0.86], [0, 1]);
