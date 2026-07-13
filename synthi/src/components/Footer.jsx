@@ -1,111 +1,60 @@
 import Link from "next/link";
+
 import { Logo } from "@/components/Logo";
 
 const PILOT_EMAIL = "aleksandar.kolev@vectant.dev";
 const PILOT_MAILTO = `mailto:${PILOT_EMAIL}?subject=${encodeURIComponent("Vectant proof pilot")}`;
 
-const COLUMNS = [
-  {
-    title: "Product",
-    links: [
-      { label: "Runtime", href: "#runtime" },
-      { label: "Collab", href: "#collaboration" },
-      { label: "GPU HMR", href: "#gpu-hmr" },
-      { label: "Proof", href: "#proof" },
-      { label: "Licenses", href: "#licenses" },
-      { label: "Trust", href: "#trust" },
-      { label: "Pilot", href: "#pricing" },
-    ],
-  },
-  {
-    title: "Resources",
-    links: [
-      { label: "FAQ", href: "#faq" },
-      { label: "Docs", href: "#waitlist", soon: true },
-      { label: "Changelog", href: "#waitlist", soon: true },
-      { label: "Contact", href: PILOT_MAILTO },
-    ],
-  },
+const PRODUCT_LINKS = [
+  { label: "Product", href: "#runtime" },
+  { label: "Authority", href: "#runtime-path" },
+  { label: "GPU HMR", href: "#gpu-hmr" },
+  { label: "Proof", href: "#proof" },
+  { label: "FAQ", href: "#faq" },
 ];
+
+const linkClass = "rounded-[6px] text-[13px] text-ink-dim outline-none transition-colors hover:text-ink focus-visible:ring-2 focus-visible:ring-cyan/70 focus-visible:ring-offset-2 focus-visible:ring-offset-bg";
 
 export function Footer() {
   return (
     <footer className="relative border-t border-line bg-bg">
-      <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8">
-        <div className="grid gap-10 md:grid-cols-[1.8fr_1fr_1fr]">
-          <div className="max-w-sm">
+      <div className="mx-auto max-w-[1500px] px-5 py-14 sm:px-8 sm:py-20">
+        <div className="grid gap-12 lg:grid-cols-[minmax(0,1.4fr)_minmax(240px,0.6fr)] lg:items-start">
+          <div>
             <Logo />
-            <p className="mt-4 text-[13.5px] leading-relaxed text-ink-faint">
-              A runtime control plane for AI agents that need to see, run,
-              hot-reload, recover, earn authority, and prove their work.
+            <p className="mt-5 max-w-xl text-[clamp(1.35rem,2.4vw,2.35rem)] font-medium leading-[1.12] tracking-[-0.035em] text-ink">
+              Parallel agents need a shared runtime and a visible boundary.
             </p>
-            <div className="mt-5 inline-flex items-center gap-2 font-mono text-[11px] text-ink-faint">
-              <span className="h-1.5 w-1.5 rounded-full bg-cyan shadow-[0_0_8px_#2dd4ee]" />
-              Controlled rollout / early access
-            </div>
+            <p className="mt-4 max-w-lg text-[13px] leading-6 text-ink-dim">
+              Vectant keeps authority, live state, evidence, and review context attached to the work.
+            </p>
           </div>
 
-          {COLUMNS.map((col) => (
-            <div key={col.title}>
-              <h3 className="font-mono text-[11px] uppercase tracking-[0] text-ink-faint">
-                {col.title}
-              </h3>
-              <ul className="mt-4 space-y-2.5">
-                {col.links.map((l) => {
-                  const isInternalRoute = l.href.startsWith("/");
-                  const content = (
-                    <span className="inline-flex items-center gap-1.5">
-                      {l.label}
-                      {l.soon && (
-                        <span className="rounded border border-line px-1 py-px font-mono text-[9px] uppercase tracking-[0] text-ink-faint">
-                          soon
-                        </span>
-                      )}
-                    </span>
-                  );
-                  const cls = "text-[13.5px] text-ink-dim transition-colors hover:text-ink";
-                  if (isInternalRoute) {
-                    return (
-                      <li key={l.label}>
-                        <Link href={l.href} className={cls}>
-                          {content}
-                        </Link>
-                      </li>
-                    );
-                  }
-                  return (
-                    <li key={l.label}>
-                      <a
-                        href={l.href}
-                        className={cls}
-                        {...(l.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                      >
-                        {content}
-                      </a>
-                    </li>
-                  );
-                })}
+          <div className="grid grid-cols-2 gap-8">
+            <div>
+              <h3 className="font-mono text-[10px] uppercase tracking-[0.12em] text-ink-faint">Explore</h3>
+              <ul className="mt-4 grid gap-3">
+                {PRODUCT_LINKS.map((link) => (
+                  <li key={link.label}><a href={link.href} className={linkClass}>{link.label}</a></li>
+                ))}
               </ul>
             </div>
-          ))}
+            <div>
+              <h3 className="font-mono text-[10px] uppercase tracking-[0.12em] text-ink-faint">Connect</h3>
+              <ul className="mt-4 grid gap-3">
+                <li><a href={PILOT_MAILTO} className={linkClass}>Request pilot</a></li>
+                <li><a href={`mailto:${PILOT_EMAIL}`} className={linkClass}>Email</a></li>
+                <li><Link href="/privacy" className={linkClass}>Privacy</Link></li>
+              </ul>
+            </div>
+          </div>
         </div>
 
-        <div className="mt-14 flex flex-col items-start justify-between gap-4 border-t border-line pt-6 sm:flex-row sm:items-center">
-          <p className="text-[12.5px] text-ink-faint">
-            Copyright {new Date().getFullYear()} Vectant. All rights reserved.
-          </p>
+        <div className="mt-16 flex flex-col gap-4 border-t border-line pt-5 text-[11px] text-ink-faint sm:flex-row sm:items-center sm:justify-between">
+          <p>Copyright {new Date().getFullYear()} Vectant. All rights reserved.</p>
           <div className="flex items-center gap-5">
-            <Link href="/privacy" className="text-[12.5px] text-ink-dim transition-colors hover:text-ink">
-              Privacy
-            </Link>
-            <span className="text-[12.5px] text-ink-faint">Cookie-free analytics</span>
-            <a
-              href="#top"
-              className="inline-flex items-center gap-1.5 text-[12.5px] text-ink-dim transition-colors hover:text-ink"
-            >
-              Back to top
-              <span aria-hidden="true" className="-mt-px text-[13px]">↑</span>
-            </a>
+            <span>Cookie-free analytics</span>
+            <a href="#top" className={linkClass}>Back to top</a>
           </div>
         </div>
       </div>
