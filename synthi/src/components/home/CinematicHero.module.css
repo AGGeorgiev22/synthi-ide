@@ -201,7 +201,7 @@
 .cinemaProductImage {
   object-fit: cover;
   object-position: center 18%;
-  filter: contrast(1.05) saturate(0.95) brightness(0.96);
+  filter: contrast(1.06) saturate(0.98) brightness(1.08);
 }
 
 .cinemaProductGrade {

@@ -92,7 +92,7 @@
 }
 
 .proofPanelActive .proofPanelImage {
-  filter: contrast(1.05) saturate(0.94) brightness(0.92);
+  filter: contrast(1.05) saturate(0.97) brightness(1);
   transform: scale(1);
 }
 
@@ -309,7 +309,7 @@
     width: 940px !important;
     max-width: none !important;
     opacity: 1;
-    filter: contrast(1.05) saturate(0.94) brightness(0.88);
+    filter: contrast(1.05) saturate(0.97) brightness(0.96);
     transform: none;
   }
 

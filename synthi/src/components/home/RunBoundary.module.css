@@ -29,7 +29,7 @@
 .boundaryImage {
   object-fit: cover;
   object-position: 52% 50%;
-  filter: contrast(1.06) saturate(0.94) brightness(0.96);
+  filter: contrast(1.06) saturate(0.97) brightness(1.04);
 }
 
 .boundaryGrade {

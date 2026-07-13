@@ -78,7 +78,7 @@
 
 .authoritySceneImage {
   object-fit: cover;
-  filter: contrast(1.06) saturate(0.94) brightness(0.95);
+  filter: contrast(1.06) saturate(0.97) brightness(1.06);
 }
 
 .authoritySceneGrade {
@@ -363,7 +363,7 @@
   .authoritySceneImage {
     width: 940px !important;
     max-width: none !important;
-    filter: contrast(1.06) saturate(0.94) brightness(0.9);
+    filter: contrast(1.06) saturate(0.97) brightness(1.01);
   }
 
   .authorityShotRadar .authoritySceneImage {

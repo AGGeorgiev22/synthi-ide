@@ -173,7 +173,7 @@
 .gpuOutputImage {
   object-fit: cover;
   object-position: center center;
-  filter: contrast(1.04) saturate(0.96) brightness(0.94);
+  filter: contrast(1.04) saturate(0.98) brightness(1);
 }
 
 .gpuOutputAfter {
