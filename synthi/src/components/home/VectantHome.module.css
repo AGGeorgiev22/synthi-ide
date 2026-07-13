@@ -2172,6 +2172,438 @@
   }
 }
 
+/* Runtime interlude -------------------------------------------------------- */
+.runInterlude {
+  position: relative;
+  overflow: hidden;
+  scroll-margin-top: 4.5rem;
+  color: #f1eee8;
+  background: #07080a;
+}
+
+.runInterludeShell {
+  display: grid;
+  width: min(calc(100% - 2rem), 1500px);
+  min-height: 108dvh;
+  margin-inline: auto;
+  padding-block: clamp(8rem, 13vw, 13rem);
+  grid-template-columns: minmax(0, 1.08fr) minmax(380px, 0.92fr);
+  align-items: center;
+  gap: clamp(3rem, 8vw, 9rem);
+}
+
+.runInterludeCopy h2 {
+  max-width: 9.5ch;
+  margin: 0;
+  font-family: var(--font-satoshi), ui-sans-serif, system-ui, sans-serif;
+  font-size: clamp(3.6rem, 7.1vw, 7.8rem);
+  font-weight: 560;
+  line-height: 0.9;
+  letter-spacing: -0.065em;
+  text-wrap: balance;
+}
+
+.runInterludeCopy p {
+  max-width: 38rem;
+  margin-top: 1.5rem;
+  color: #9b9ea7;
+  font-size: clamp(1rem, 1.34vw, 1.18rem);
+  line-height: 1.58;
+}
+
+.runInterludeMedia {
+  position: relative;
+  height: min(78dvh, 780px);
+  overflow: hidden;
+  border-radius: 10px;
+  background: #090a0e;
+  box-shadow:
+    0 0 0 5px rgb(255 255 255 / 0.04),
+    inset 0 0 0 1px rgb(255 255 255 / 0.09),
+    0 48px 120px rgb(0 0 0 / 0.52);
+}
+
+.runInterludeMedia::after {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  content: "";
+  background:
+    linear-gradient(90deg, transparent 68%, rgb(7 8 10 / 0.7)),
+    linear-gradient(0deg, rgb(7 8 10 / 0.52), transparent 28%);
+}
+
+.runInterludeImage {
+  object-fit: cover;
+  object-position: left center;
+  filter: contrast(1.08) saturate(0.92) brightness(0.9);
+}
+
+.systemsTrack {
+  overflow: hidden;
+  color: #72757e;
+  background: #090a0d;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.075),
+    inset 0 -1px 0 rgb(255 255 255 / 0.075);
+}
+
+.systemsTrackInner {
+  display: flex;
+  width: max-content;
+  min-width: 100%;
+  align-items: center;
+  padding-block: 1.5rem;
+  white-space: nowrap;
+  animation: systems-track 34s linear infinite;
+}
+
+.systemsTrackInner span {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-satoshi), ui-sans-serif, system-ui, sans-serif;
+  font-size: clamp(1.05rem, 1.8vw, 1.6rem);
+  font-weight: 520;
+  letter-spacing: -0.025em;
+}
+
+.systemsTrackInner span::after {
+  margin-inline: clamp(1.5rem, 3.5vw, 3.5rem);
+  color: #ff7657;
+  content: "/";
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.85em;
+}
+
+@keyframes systems-track {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* FAQ ---------------------------------------------------------------------- */
+.faqCinema {
+  position: relative;
+  scroll-margin-top: 4.5rem;
+  color: #f1eee8;
+  background: #090a0d;
+}
+
+.faqCinemaShell {
+  display: grid;
+  width: min(calc(100% - 2rem), 1500px);
+  margin-inline: auto;
+  padding-block: clamp(9rem, 15vw, 15rem);
+  grid-template-columns: minmax(0, 0.82fr) minmax(520px, 1.18fr);
+  align-items: start;
+  gap: clamp(4rem, 10vw, 11rem);
+}
+
+.faqCinemaIntro {
+  position: sticky;
+  top: 8rem;
+}
+
+.faqCinemaIntro h2 {
+  max-width: 10ch;
+  margin: 0;
+  font-family: var(--font-satoshi), ui-sans-serif, system-ui, sans-serif;
+  font-size: clamp(3.25rem, 5.8vw, 6.5rem);
+  font-weight: 560;
+  line-height: 0.91;
+  letter-spacing: -0.062em;
+  text-wrap: balance;
+}
+
+.faqCinemaIntro p {
+  max-width: 31rem;
+  margin-top: 1.35rem;
+  color: #92959e;
+  font-size: 0.98rem;
+  line-height: 1.58;
+}
+
+.faqCinemaList details {
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.1);
+}
+
+.faqCinemaList details:last-child {
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.1),
+    inset 0 -1px 0 rgb(255 255 255 / 0.1);
+}
+
+.faqCinemaList summary {
+  display: grid;
+  min-height: 7.5rem;
+  padding-block: 2rem;
+  cursor: pointer;
+  list-style: none;
+  grid-template-columns: minmax(0, 1fr) 2rem;
+  align-items: center;
+  gap: 1.5rem;
+  color: #f1eee8;
+  font-family: var(--font-satoshi), ui-sans-serif, system-ui, sans-serif;
+  font-size: clamp(1.35rem, 2.4vw, 2.2rem);
+  font-weight: 540;
+  line-height: 1.08;
+  letter-spacing: -0.036em;
+  outline: none;
+}
+
+.faqCinemaList summary::-webkit-details-marker {
+  display: none;
+}
+
+.faqCinemaList summary > span {
+  position: relative;
+  display: block;
+  width: 1.2rem;
+  height: 1.2rem;
+  justify-self: end;
+}
+
+.faqCinemaList summary > span::before,
+.faqCinemaList summary > span::after {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1.15rem;
+  height: 1px;
+  content: "";
+  transform: translate(-50%, -50%);
+  background: #ff7657;
+  transition: transform 480ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.faqCinemaList summary > span::after {
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+
+.faqCinemaList details[open] summary > span::after {
+  transform: translate(-50%, -50%) rotate(0deg);
+}
+
+.faqCinemaList summary:focus-visible {
+  box-shadow: inset 0 0 0 2px #55d8e8;
+}
+
+.faqCinemaList details p {
+  max-width: 43rem;
+  margin: -0.65rem 0 0;
+  padding: 0 4rem 2.4rem 0;
+  color: #999ca5;
+  font-size: 0.98rem;
+  line-height: 1.68;
+}
+
+/* Closing frame ------------------------------------------------------------ */
+.finalScene {
+  position: relative;
+  color: #f4f0ea;
+  background: #07080a;
+}
+
+.finalSceneInner {
+  position: relative;
+  min-height: calc(100dvh - 1rem);
+  margin: 0.5rem;
+  overflow: hidden;
+  border-radius: 10px;
+  background: #08090c;
+}
+
+.finalSceneImage {
+  object-fit: cover;
+  object-position: center 5%;
+  filter: contrast(1.08) saturate(0.72) brightness(0.34);
+  transform: scale(1.04);
+}
+
+.finalSceneScrim {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 42%, transparent 0%, rgb(7 8 10 / 0.34) 38%, rgb(7 8 10 / 0.9) 86%),
+    linear-gradient(0deg, rgb(7 8 10 / 0.96), rgb(7 8 10 / 0.22) 58%, rgb(7 8 10 / 0.72));
+}
+
+.finalSceneAperture {
+  position: absolute;
+  z-index: 2;
+  top: clamp(6rem, 12vh, 9rem);
+  left: 50%;
+  transform: translateX(-50%);
+  color: #f4f0ea;
+}
+
+.finalSceneMark {
+  width: clamp(4.2rem, 6vw, 6.2rem);
+  height: auto;
+}
+
+.finalSceneCopy {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  left: 50%;
+  width: min(calc(100% - 2rem), 1180px);
+  transform: translate(-50%, -42%);
+  text-align: center;
+}
+
+.finalSceneCopy h2 {
+  max-width: 1120px;
+  margin: 0 auto;
+  font-family: var(--font-satoshi), ui-sans-serif, system-ui, sans-serif;
+  font-size: clamp(3.4rem, 6.8vw, 7.6rem);
+  font-weight: 560;
+  line-height: 0.9;
+  letter-spacing: -0.065em;
+  text-wrap: balance;
+}
+
+.finalSceneCopy p {
+  max-width: 34rem;
+  margin: 1.4rem auto 0;
+  color: #a4a6ad;
+  font-size: clamp(0.98rem, 1.28vw, 1.12rem);
+  line-height: 1.55;
+}
+
+.finalSceneAction {
+  display: inline-flex;
+  min-height: 3.3rem;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1.7rem;
+  border-radius: 999px;
+  padding-inline: 1.35rem;
+  color: #17100e;
+  background: #ff7657;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.38);
+  font-size: 0.88rem;
+  font-weight: 680;
+  outline: none;
+  transition: transform 420ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.finalSceneAction:hover {
+  transform: translateY(-2px);
+}
+
+.finalSceneAction:active {
+  transform: scale(0.98);
+}
+
+.finalSceneAction:focus-visible {
+  box-shadow:
+    0 0 0 2px #07080a,
+    0 0 0 4px #55d8e8;
+}
+
+@media (max-width: 900px) {
+  .runInterludeShell {
+    min-height: 0;
+    grid-template-columns: 1fr;
+  }
+
+  .runInterludeMedia {
+    width: 100%;
+    height: min(76dvh, 700px);
+  }
+
+  .faqCinemaShell {
+    grid-template-columns: 1fr;
+  }
+
+  .faqCinemaIntro {
+    position: relative;
+    top: auto;
+  }
+}
+
+@media (max-width: 767px) {
+  .runInterludeShell {
+    width: calc(100% - 2rem);
+    padding-block: 7rem;
+    gap: 4rem;
+  }
+
+  .runInterludeCopy h2 {
+    font-size: clamp(3.15rem, 14.8vw, 4.7rem);
+    line-height: 0.91;
+  }
+
+  .runInterludeCopy p {
+    font-size: 0.94rem;
+  }
+
+  .runInterludeMedia {
+    height: min(72dvh, 650px);
+  }
+
+  .systemsTrackInner {
+    padding-block: 1.2rem;
+  }
+
+  .faqCinemaShell {
+    width: calc(100% - 2rem);
+    padding-block: 7rem;
+    gap: 4.5rem;
+  }
+
+  .faqCinemaIntro h2 {
+    font-size: clamp(3.1rem, 14.5vw, 4.55rem);
+  }
+
+  .faqCinemaList summary {
+    min-height: 6.5rem;
+    font-size: clamp(1.35rem, 6.5vw, 1.8rem);
+  }
+
+  .faqCinemaList details p {
+    padding-right: 2rem;
+    font-size: 0.92rem;
+  }
+
+  .finalSceneInner {
+    min-height: 100dvh;
+  }
+
+  .finalSceneImage {
+    object-position: 14% 4%;
+    transform: scale(1.15);
+  }
+
+  .finalSceneAperture {
+    top: 6.5rem;
+  }
+
+  .finalSceneCopy {
+    transform: translate(-50%, -40%);
+  }
+
+  .finalSceneCopy h2 {
+    max-width: 9ch;
+    font-size: clamp(3rem, 14vw, 4.35rem);
+    line-height: 0.91;
+  }
+
+  .finalSceneCopy p {
+    max-width: 21rem;
+    font-size: 0.94rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .systemsTrackInner {
+    width: auto;
+    min-width: max-content;
+    animation: none;
+  }
+}
+
 @media (prefers-reduced-transparency: reduce) {
   .workbenchOuter {
     background: #12151a;

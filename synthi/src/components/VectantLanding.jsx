@@ -4,18 +4,20 @@ import { AuthorityStory } from "@/components/home/AuthorityStory";
 import { CinematicHero } from "@/components/home/CinematicHero";
 import { GpuProofChapter } from "@/components/home/GpuProofChapter";
 import { RuntimeFeedback } from "@/components/home/RuntimeFeedback";
+import { VectantMark } from "@/components/Logo";
 import styles from "@/components/home/VectantHome.module.css";
 import { PILOT_MAILTO } from "@/lib/pilot";
 
 const CAPABILITIES = [
-  "Any coding agent",
+  "Codex",
+  "Claude Code",
+  "Terminal agents",
+  "MCP tools",
+  "VS Code extensions",
   "Cloud workspaces",
-  "MCP eyes and hands",
   "Mutation leases",
   "Replay ledgers",
-  "GPU HMR proof",
-  "VS Code extensions",
-  "Shared agent rooms",
+  "GPU HMR",
 ];
 
 const FAQ = [
@@ -41,16 +43,28 @@ function ProductManifesto() {
   const items = [...CAPABILITIES, ...CAPABILITIES];
 
   return (
-    <section id="runtime" className={styles.sectionShell}>
-      <div className={styles.manifesto}>
-        <h2>The run is the unit of work.</h2>
-        <p>Chats disappear. Runs keep authority, live state, artifacts, decisions, and the reviewer’s path back to the evidence.</p>
+    <section id="runtime" className={styles.runInterlude}>
+      <div className={styles.runInterludeShell}>
+        <div className={styles.runInterludeCopy}>
+          <h2>The run is the unit of work.</h2>
+          <p>Chats disappear. A run keeps authority, runtime state, artifacts, decisions, and the reviewer’s path back to the evidence.</p>
+        </div>
+
+        <figure className={styles.runInterludeMedia}>
+          <Image
+            src="/product-proof/browser-workflow-observe-ui.png"
+            alt="Vectant workflow controls for runtime, observation, trace, contract, and replay"
+            fill
+            sizes="(min-width: 1000px) 42vw, 100vw"
+            className={styles.runInterludeImage}
+          />
+        </figure>
       </div>
 
-      <div className={styles.marquee} aria-label="Vectant runtime capabilities">
-        <div className={styles.marqueeTrack}>
+      <div className={styles.systemsTrack} aria-label="Agents and systems supported by the Vectant runtime">
+        <div className={styles.systemsTrackInner}>
           {items.map((item, index) => (
-            <span key={`${item}-${index}`} className={styles.marqueeItem} aria-hidden={index >= CAPABILITIES.length ? "true" : undefined}>
+            <span key={`${item}-${index}`} aria-hidden={index >= CAPABILITIES.length ? "true" : undefined}>
               {item}
             </span>
           ))}
@@ -62,13 +76,16 @@ function ProductManifesto() {
 
 function FaqSection() {
   return (
-    <section id="faq" className={styles.chapter}>
-      <div className={styles.sectionShell}>
-        <h2 className={styles.chapterTitle}>The questions serious teams ask first.</h2>
-        <div className={styles.faq}>
+    <section id="faq" className={styles.faqCinema}>
+      <div className={styles.faqCinemaShell}>
+        <div className={styles.faqCinemaIntro}>
+          <h2>What serious teams ask first.</h2>
+          <p>Concrete answers for the people responsible for what reaches production.</p>
+        </div>
+        <div className={styles.faqCinemaList}>
           {FAQ.map(({ question, answer }) => (
             <details key={question}>
-              <summary>{question}</summary>
+              <summary>{question}<span aria-hidden="true" /></summary>
               <p>{answer}</p>
             </details>
           ))}
@@ -80,26 +97,23 @@ function FaqSection() {
 
 function FinalCta() {
   return (
-    <section id="pricing" className={`${styles.chapter} px-2 sm:px-4`}>
-      <div id="waitlist" className={`${styles.ctaShell} ${styles.sectionShell}`}>
+    <section id="pricing" className={styles.finalScene}>
+      <div id="waitlist" className={styles.finalSceneInner}>
         <Image
-          src="/visuals/vectant-authority-aperture.png"
+          src="/product-proof/senior-real-codesite-workflow-proof.png"
           alt=""
           fill
-          sizes="(min-width: 1500px) 1500px, 100vw"
-          className={styles.ctaImage}
+          sizes="100vw"
+          className={styles.finalSceneImage}
         />
-        <div className={styles.ctaScrim} aria-hidden="true" />
-        <div className={styles.closingGrid}>
-          <div>
-            <h2>Give the next agent a boundary worth trusting.</h2>
-            <p>Bring the repository your team is not ready to hand to an autonomous agent. Vectant will make the control model visible.</p>
-            <div className={styles.heroActions}>
-              <a href={PILOT_MAILTO} className={styles.primaryButton}>
-                Request pilot
-              </a>
-            </div>
-          </div>
+        <div className={styles.finalSceneScrim} aria-hidden="true" />
+        <div className={styles.finalSceneAperture} aria-hidden="true">
+          <VectantMark gradientId="final-vectant-mark" className={styles.finalSceneMark} />
+        </div>
+        <div className={styles.finalSceneCopy}>
+          <h2>Bring the repo you still will not hand to an agent.</h2>
+          <p>Vectant will make its boundary, live state, and proof path visible.</p>
+          <a href={PILOT_MAILTO} className={styles.finalSceneAction}>Request pilot</a>
         </div>
       </div>
     </section>
