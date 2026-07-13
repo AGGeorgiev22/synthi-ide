@@ -1,13 +1,10 @@
-import Image from "next/image";
-
 import { AuthorityStory } from "@/components/home/AuthorityStory";
 import { CinematicHero } from "@/components/home/CinematicHero";
+import { FinalApproach } from "@/components/home/FinalApproach";
 import { GpuProofChapter } from "@/components/home/GpuProofChapter";
 import { RunBoundary } from "@/components/home/RunBoundary";
 import { RuntimeFeedback } from "@/components/home/RuntimeFeedback";
-import { VectantMark } from "@/components/Logo";
 import styles from "@/components/home/VectantHome.module.css";
-import { PILOT_MAILTO } from "@/lib/pilot";
 
 const FAQ = [
   {
@@ -49,31 +46,6 @@ function FaqSection() {
   );
 }
 
-function FinalCta() {
-  return (
-    <section id="pricing" className={styles.finalScene}>
-      <div id="waitlist" className={styles.finalSceneInner}>
-        <Image
-          src="/product-proof/senior-real-codesite-workflow-proof.png"
-          alt=""
-          fill
-          sizes="100vw"
-          className={styles.finalSceneImage}
-        />
-        <div className={styles.finalSceneScrim} aria-hidden="true" />
-        <div className={styles.finalSceneAperture} aria-hidden="true">
-          <VectantMark gradientId="final-vectant-mark" className={styles.finalSceneMark} />
-        </div>
-        <div className={styles.finalSceneCopy}>
-          <h2>Bring the repo you still will not hand to an agent.</h2>
-          <p>Vectant will make its boundary, live state, and proof path visible.</p>
-          <a href={PILOT_MAILTO} className={styles.finalSceneAction}>Request pilot</a>
-        </div>
-      </div>
-    </section>
-  );
-}
-
 export function VectantLanding() {
   return (
     <main id="main-content" className={styles.page}>
@@ -82,8 +54,8 @@ export function VectantLanding() {
       <AuthorityStory />
       <GpuProofChapter />
       <RuntimeFeedback />
+      <FinalApproach />
       <FaqSection />
-      <FinalCta />
     </main>
   );
 }
