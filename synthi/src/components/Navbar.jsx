@@ -33,6 +33,7 @@ const reducedLinkMotion = {
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
+  const [proofSealed, setProofSealed] = useState(false);
   const [open, setOpen] = useState(false);
   const menuButtonRef = useRef(null);
   const firstLinkRef = useRef(null);
@@ -44,6 +45,11 @@ export function Navbar() {
     const update = () => {
       frame = 0;
       setScrolled(window.scrollY > Math.max(120, window.innerHeight * 0.72));
+      const finalApproach = document.getElementById("pricing");
+      setProofSealed(
+        Boolean(finalApproach) &&
+          window.scrollY >= finalApproach.offsetTop - window.innerHeight * 0.42,
+      );
     };
     const onScroll = () => {
       if (!frame) frame = window.requestAnimationFrame(update);
@@ -139,7 +145,7 @@ export function Navbar() {
               aria-hidden="true"
             >
               <i />
-              <span>AUTHORITY IN FORCE</span>
+              <span>{proofSealed ? "PROOF SEALED" : "AUTHORITY IN FORCE"}</span>
             </motion.div>
           )}
         </AnimatePresence>
