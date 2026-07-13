@@ -3,22 +3,11 @@ import Image from "next/image";
 import { AuthorityStory } from "@/components/home/AuthorityStory";
 import { CinematicHero } from "@/components/home/CinematicHero";
 import { GpuProofChapter } from "@/components/home/GpuProofChapter";
+import { RunBoundary } from "@/components/home/RunBoundary";
 import { RuntimeFeedback } from "@/components/home/RuntimeFeedback";
 import { VectantMark } from "@/components/Logo";
 import styles from "@/components/home/VectantHome.module.css";
 import { PILOT_MAILTO } from "@/lib/pilot";
-
-const CAPABILITIES = [
-  "Codex",
-  "Claude Code",
-  "Terminal agents",
-  "MCP tools",
-  "VS Code extensions",
-  "Cloud workspaces",
-  "Mutation leases",
-  "Replay ledgers",
-  "GPU HMR",
-];
 
 const FAQ = [
   {
@@ -38,41 +27,6 @@ const FAQ = [
     answer: "Yes. Shared rooms keep presence, routes, claims, conflicts, runtime state, and handoff context in the same governed session.",
   },
 ];
-
-function ProductManifesto() {
-  const items = [...CAPABILITIES, ...CAPABILITIES];
-
-  return (
-    <section id="runtime" className={styles.runInterlude}>
-      <div className={styles.runInterludeShell}>
-        <div className={styles.runInterludeCopy}>
-          <h2>The run is the unit of work.</h2>
-          <p>Chats disappear. A run keeps authority, runtime state, artifacts, decisions, and the reviewer’s path back to the evidence.</p>
-        </div>
-
-        <figure className={styles.runInterludeMedia}>
-          <Image
-            src="/product-proof/browser-workflow-observe-ui.png"
-            alt="Vectant workflow controls for runtime, observation, trace, contract, and replay"
-            fill
-            sizes="(min-width: 1000px) 42vw, 100vw"
-            className={styles.runInterludeImage}
-          />
-        </figure>
-      </div>
-
-      <div className={styles.systemsTrack} aria-label="Agents and systems supported by the Vectant runtime">
-        <div className={styles.systemsTrackInner}>
-          {items.map((item, index) => (
-            <span key={`${item}-${index}`} aria-hidden={index >= CAPABILITIES.length ? "true" : undefined}>
-              {item}
-            </span>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
 
 function FaqSection() {
   return (
@@ -124,7 +78,7 @@ export function VectantLanding() {
   return (
     <main id="main-content" className={styles.page}>
       <CinematicHero />
-      <ProductManifesto />
+      <RunBoundary />
       <AuthorityStory />
       <GpuProofChapter />
       <RuntimeFeedback />

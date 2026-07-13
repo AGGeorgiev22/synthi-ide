@@ -1,0 +1,259 @@
+.boundary {
+  position: relative;
+  min-height: 178dvh;
+  scroll-margin-top: 4.5rem;
+  color: #f2efe9;
+  background: #050609;
+}
+
+.boundarySticky {
+  position: sticky;
+  top: 0;
+  min-height: 100dvh;
+  overflow: hidden;
+  background: #050609;
+}
+
+.boundaryFrame {
+  position: absolute;
+  inset: clamp(4.7rem, 7vh, 6rem) clamp(0.7rem, 1.6vw, 1.7rem) clamp(0.7rem, 1.6vw, 1.7rem);
+  margin: 0;
+  overflow: hidden;
+  background: #090a0f;
+  box-shadow:
+    inset 0 0 0 1px rgb(255 255 255 / 0.11),
+    0 48px 120px rgb(0 0 0 / 0.55);
+  transform-origin: center center;
+}
+
+.boundaryImage {
+  object-fit: cover;
+  object-position: 52% 50%;
+  filter: contrast(1.06) saturate(0.94) brightness(0.96);
+}
+
+.boundaryGrade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgb(4 5 8 / 0.76) 0%, rgb(4 5 8 / 0.3) 31%, transparent 58%),
+    linear-gradient(0deg, rgb(4 5 8 / 0.72) 0%, transparent 40%);
+}
+
+.boundaryTelemetry {
+  position: absolute;
+  z-index: 3;
+  top: clamp(5.35rem, 8vh, 6.8rem);
+  right: clamp(1.4rem, 3vw, 3.2rem);
+  left: clamp(1.4rem, 3vw, 3.2rem);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: rgb(255 255 255 / 0.1);
+  box-shadow: 0 1px 0 rgb(255 255 255 / 0.08);
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+}
+
+.boundaryTelemetry div {
+  display: flex;
+  min-height: 3.1rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding-inline: clamp(0.55rem, 1.25vw, 1rem);
+  background: rgb(5 6 9 / 0.84);
+  backdrop-filter: blur(18px);
+}
+
+.boundaryTelemetry span {
+  color: rgb(229 231 237 / 0.43);
+  font-size: 0.57rem;
+  letter-spacing: 0.12em;
+}
+
+.boundaryTelemetry strong {
+  color: rgb(239 237 232 / 0.9);
+  font-size: 0.57rem;
+  font-weight: 600;
+  letter-spacing: 0.075em;
+}
+
+.boundaryTelemetry div:nth-child(2) strong,
+.boundaryTelemetry div:nth-child(4) strong {
+  color: #ff7657;
+}
+
+.boundaryTelemetry i {
+  position: absolute;
+  right: 0;
+  bottom: -1px;
+  left: 0;
+  height: 1px;
+  transform-origin: left center;
+  background: #ff7657;
+  box-shadow: 0 0 12px rgb(255 84 46 / 0.72);
+}
+
+.boundaryCopy {
+  position: absolute;
+  z-index: 3;
+  right: clamp(2rem, 5.5vw, 6rem);
+  bottom: clamp(2.6rem, 6vw, 5.5rem);
+  left: clamp(2rem, 5.5vw, 6rem);
+  max-width: 920px;
+}
+
+.boundaryCopy > p {
+  margin: 0 0 1rem;
+  color: #ff7657;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.61rem;
+  font-weight: 650;
+  letter-spacing: 0.14em;
+}
+
+.boundaryCopy h2 {
+  max-width: 9ch;
+  margin: 0;
+  color: #f2efe9;
+  font-family: var(--font-cabinet), var(--font-satoshi), ui-sans-serif, sans-serif;
+  font-size: clamp(4rem, 7.5vw, 8.3rem);
+  font-weight: 500;
+  line-height: 0.84;
+  letter-spacing: -0.058em;
+  text-wrap: balance;
+}
+
+.boundaryCopyFooter {
+  display: grid;
+  max-width: 54rem;
+  margin-top: 1.45rem;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 2rem;
+}
+
+.boundaryCopyFooter span {
+  max-width: 35rem;
+  color: rgb(223 225 231 / 0.68);
+  font-size: clamp(0.94rem, 1.18vw, 1.08rem);
+  line-height: 1.58;
+}
+
+.boundaryCopyFooter strong {
+  color: rgb(235 237 242 / 0.55);
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.57rem;
+  font-weight: 550;
+  letter-spacing: 0.11em;
+}
+
+.boundaryRail {
+  position: absolute;
+  z-index: 3;
+  top: 50%;
+  right: clamp(1.1rem, 2vw, 2rem);
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  transform: translate(46%, -50%) rotate(90deg);
+  transform-origin: center;
+  color: rgb(229 231 237 / 0.38);
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.53rem;
+  letter-spacing: 0.12em;
+}
+
+.boundaryRail span {
+  display: inline-flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.boundaryRail span:not(:last-child)::after {
+  width: 2.8rem;
+  height: 1px;
+  content: "";
+  background: rgb(255 255 255 / 0.18);
+}
+
+@media (max-width: 767px) {
+  .boundary {
+    min-height: 158dvh;
+  }
+
+  .boundaryFrame {
+    inset: 4.9rem 0.5rem 0.5rem;
+  }
+
+  .boundaryImage {
+    width: 980px !important;
+    max-width: none !important;
+    object-position: 18% 50%;
+  }
+
+  .boundaryGrade {
+    background:
+      linear-gradient(0deg, rgb(4 5 8 / 0.9) 0%, rgb(4 5 8 / 0.34) 48%, transparent 75%),
+      linear-gradient(90deg, rgb(4 5 8 / 0.42), transparent 72%);
+  }
+
+  .boundaryTelemetry {
+    top: 5.55rem;
+    right: 1rem;
+    left: 1rem;
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .boundaryTelemetry div {
+    min-height: 2.55rem;
+  }
+
+  .boundaryTelemetry div:nth-child(3),
+  .boundaryTelemetry div:nth-child(4) {
+    display: none;
+  }
+
+  .boundaryCopy {
+    right: 1.5rem;
+    bottom: 2.2rem;
+    left: 1.5rem;
+  }
+
+  .boundaryCopy h2 {
+    max-width: 8ch;
+    font-size: clamp(3.25rem, 15vw, 4.7rem);
+    line-height: 0.87;
+  }
+
+  .boundaryCopyFooter {
+    grid-template-columns: 1fr;
+    gap: 1.1rem;
+  }
+
+  .boundaryCopyFooter span {
+    max-width: 21rem;
+    font-size: 0.9rem;
+  }
+
+  .boundaryRail {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .boundary {
+    min-height: auto;
+    padding: 0.5rem;
+  }
+
+  .boundarySticky {
+    position: relative;
+    min-height: 90dvh;
+  }
+
+  .boundaryFrame {
+    clip-path: none;
+  }
+}
