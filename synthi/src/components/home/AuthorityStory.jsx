@@ -5,112 +5,111 @@ import Image from "next/image";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useReducedMotion } from "framer-motion";
-import { ArrowRight, Eye, ShieldCheck, Stack, Stamp } from "@phosphor-icons/react";
 
 import styles from "@/components/home/VectantHome.module.css";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const AUTHORITY_STEPS = [
+const AUTHORITY_SCENES = [
   {
-    action: "Request",
-    title: "Start with the smallest useful scope.",
-    copy: "Files, routes, commands, protected paths, and required evidence become a mutation lease before the agent writes.",
-    detail: "Permission boundary",
-    icon: ShieldCheck,
-    src: "/product-proof/senior-real-codesite-ui-desktop-loaded.png",
+    key: "radar",
+    title: "See the collision before it lands.",
+    copy: "Parallel agents share one map of protected paths, active leases, conflicts, and the order work is allowed to move.",
+    src: "/codesite-proof/codesite-radar-desktop.png",
+    width: 1440,
+    height: 1973,
+    position: styles.authorityImageRadar,
+  },
+  {
+    key: "black-box",
+    title: "Keep the replay, not just the result.",
+    copy: "Every denied write, quarantine, instruction, and proof bundle stays in the same ordered event stream.",
+    src: "/codesite-proof/codesite-black-box-desktop.png",
+    width: 1440,
+    height: 1313,
+    position: styles.authorityImageBlackBox,
+  },
+  {
+    key: "provenance",
+    title: "Trace authority to the line.",
+    copy: "The source line keeps its transaction, process ancestry, evidence, and reason for existing attached.",
+    src: "/codesite-proof/codesite-line-provenance-desktop.png",
     width: 1440,
     height: 1100,
+    position: styles.authorityImageProvenance,
   },
   {
-    action: "Observe",
-    title: "Keep the running system attached.",
-    copy: "Browser, terminal, services, screenshots, HMR, and repository state remain part of one inspectable session.",
-    detail: "Runtime state",
-    icon: Eye,
-    src: "/product-proof/browser-workflow-observe-ui.png",
-    width: 1500,
-    height: 1000,
-  },
-  {
-    action: "Constrain",
-    title: "Make risk visible before it spreads.",
-    copy: "Protected paths, collisions, output checks, and counterfactual branches can block or narrow a mutation before promotion.",
-    detail: "Policy gate",
-    icon: Stack,
-    src: "/product-proof/codesite-shadow-simulator-ui-desktop.png",
+    key: "landing",
+    title: "Stop the landing when proof fails.",
+    copy: "A failed verification is not polished away. Vectant holds the change and shows the exact condition that blocked it.",
+    src: "/codesite-proof/codesite-landing-desktop.png",
     width: 1440,
-    height: 1100,
-  },
-  {
-    action: "Prove",
-    title: "Land the change with its evidence.",
-    copy: "Replay, line provenance, output proof, and review context travel with the change into the final handoff.",
-    detail: "Proof capsule",
-    icon: Stamp,
-    src: "/product-proof/codesite-full-workflow-proof.png",
-    width: 1280,
-    height: 1567,
+    height: 1199,
+    position: styles.authorityImageLanding,
   },
 ];
 
-const STATEMENT = "Parallel work is easy. Safe convergence is the hard part. Vectant makes every agent earn the right to land.";
+const STATEMENT = "One change. Every decision still attached.";
 
 export function AuthorityStory() {
   const rootRef = useRef(null);
-  const scrubRef = useRef(null);
+  const statementRef = useRef(null);
   const stackRef = useRef(null);
   const reduceMotion = useReducedMotion();
 
   useEffect(() => {
-    if (reduceMotion || !rootRef.current || !scrubRef.current || !stackRef.current) return undefined;
+    if (reduceMotion || !rootRef.current || !statementRef.current || !stackRef.current) {
+      return undefined;
+    }
 
     const context = gsap.context(() => {
-      const words = gsap.utils.toArray(`.${styles.scrubWord}`);
+      const words = gsap.utils.toArray(`.${styles.authorityScrubWord}`);
       gsap.fromTo(
         words,
-        { opacity: 0.13 },
+        { opacity: 0.12 },
         {
           opacity: 1,
-          stagger: 0.06,
+          stagger: 0.12,
           ease: "none",
           scrollTrigger: {
-            trigger: scrubRef.current,
+            trigger: statementRef.current,
             start: "top 72%",
             end: "bottom 42%",
-            scrub: 0.7,
+            scrub: 0.8,
           },
         }
       );
 
       const media = gsap.matchMedia();
       media.add("(min-width: 768px)", () => {
-        const cards = gsap.utils.toArray(`.${styles.storyCard}`);
-        cards.forEach((card, index) => {
-          if (index === cards.length - 1) return;
+        const scenes = gsap.utils.toArray(`.${styles.authorityScene}`);
+        gsap.set(scenes, { autoAlpha: 0, scale: 1.035 });
+        gsap.set(scenes[0], { autoAlpha: 1, scale: 1 });
 
-          ScrollTrigger.create({
-            trigger: card,
-            start: "top top+=80",
-            endTrigger: cards[cards.length - 1],
-            end: "top top+=80",
-            pin: true,
-            pinSpacing: false,
-          });
-
-          gsap.to(card, {
-            scale: 0.925,
-            y: -28,
-            opacity: 0.34,
-            ease: "none",
-            scrollTrigger: {
-              trigger: cards[index + 1],
-              start: "top bottom",
-              end: "top top+=80",
-              scrub: 0.8,
-            },
-          });
+        const timeline = gsap.timeline({
+          scrollTrigger: {
+            trigger: stackRef.current,
+            start: "top top",
+            end: "bottom bottom",
+            scrub: 1,
+            invalidateOnRefresh: true,
+          },
         });
+
+        scenes.slice(1).forEach((scene, index) => {
+          const previous = scenes[index];
+          const at = index;
+          timeline
+            .to(previous, { autoAlpha: 0, scale: 0.955, duration: 0.58, ease: "none" }, at)
+            .fromTo(
+              scene,
+              { autoAlpha: 0, scale: 1.035 },
+              { autoAlpha: 1, scale: 1, duration: 0.72, ease: "none" },
+              at + 0.22
+            );
+        });
+
+        return () => timeline.kill();
       });
 
       return () => media.revert();
@@ -120,42 +119,42 @@ export function AuthorityStory() {
   }, [reduceMotion]);
 
   return (
-    <section id="runtime-path" ref={rootRef} className={styles.chapter}>
-      <div className={styles.sectionShell}>
-        <div ref={scrubRef} className={styles.scrubStatement} aria-label={STATEMENT}>
-          {STATEMENT.split(" ").map((word, index) => (
-            <span key={`${word}-${index}`} className={styles.scrubWord} aria-hidden="true">
-              {word}{" "}
-            </span>
-          ))}
-        </div>
+    <section id="runtime-path" ref={rootRef} className={styles.authorityFilm}>
+      <div ref={statementRef} className={styles.authorityIntertitle} aria-label={STATEMENT}>
+        <span className={styles.authorityScrubWord} aria-hidden="true">One</span>{" "}
+        <span className={styles.authorityScrubWord} aria-hidden="true">change.</span>{" "}
+        <span className={styles.authorityInlineImage} aria-hidden="true">
+          <Image
+            src="/codesite-proof/codesite-black-box-desktop.png"
+            alt=""
+            fill
+            sizes="180px"
+            className="object-cover object-center"
+          />
+        </span>{" "}
+        <span className={styles.authorityScrubWord} aria-hidden="true">Every</span>{" "}
+        <span className={styles.authorityScrubWord} aria-hidden="true">decision</span>{" "}
+        <span className={styles.authorityScrubWord} aria-hidden="true">still</span>{" "}
+        <span className={styles.authorityScrubWord} aria-hidden="true">attached.</span>
+      </div>
 
-        <div ref={stackRef} className={styles.storyStack}>
-          {AUTHORITY_STEPS.map(({ action, title, copy, detail, icon: Icon, src, width, height }) => (
-            <article key={action} className={styles.storyCard}>
-              <div className={styles.storyCardInner}>
-                <div className={styles.storyMedia}>
-                  <Image
-                    src={src}
-                    alt=""
-                    width={width}
-                    height={height}
-                    sizes="(min-width: 1280px) 62vw, (min-width: 768px) 58vw, 100vw"
-                    className="h-full w-full object-contain object-top"
-                  />
-                </div>
-                <div className={styles.storyContent}>
-                  <div className={styles.storyAction}>
-                    <span><Icon size={16} weight="duotone" /></span>
-                    {action}
-                  </div>
-                  <h3>{title}</h3>
-                  <p>{copy}</p>
-                  <div className={styles.storyDetail}>
-                    <span>{detail}</span>
-                    <ArrowRight size={14} />
-                  </div>
-                </div>
+      <div ref={stackRef} className={styles.authorityStack}>
+        <div className={styles.authorityStage}>
+          {AUTHORITY_SCENES.map(({ key, title, copy, src, width, height, position }) => (
+            <article key={key} className={styles.authorityScene}>
+              <div className={styles.authoritySceneMedia}>
+                <Image
+                  src={src}
+                  alt=""
+                  fill
+                  sizes="100vw"
+                  className={`${styles.authoritySceneImage} ${position}`}
+                />
+                <div className={styles.authoritySceneScrim} aria-hidden="true" />
+              </div>
+              <div className={styles.authoritySceneCopy}>
+                <h2>{title}</h2>
+                <p>{copy}</p>
               </div>
             </article>
           ))}

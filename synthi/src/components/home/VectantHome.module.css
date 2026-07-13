@@ -1404,6 +1404,268 @@
   }
 }
 
+/* The authority film ------------------------------------------------------- */
+.authorityFilm {
+  position: relative;
+  background: #07080a;
+  scroll-margin-top: 4.5rem;
+}
+
+.authorityIntertitle {
+  display: block;
+  width: min(calc(100% - 2rem), 1360px);
+  min-height: 100dvh;
+  margin-inline: auto;
+  padding-block: clamp(8rem, 16vh, 12rem);
+  align-content: center;
+  color: #f0ede7;
+  font-family: var(--font-satoshi), ui-sans-serif, system-ui, sans-serif;
+  font-size: clamp(3.5rem, 7.5vw, 8.2rem);
+  font-weight: 550;
+  line-height: 0.91;
+  letter-spacing: -0.066em;
+  text-wrap: balance;
+}
+
+.authorityScrubWord {
+  opacity: 0.12;
+}
+
+.authorityInlineImage {
+  position: relative;
+  display: inline-block;
+  width: clamp(7.4rem, 12vw, 11.5rem);
+  height: 0.54em;
+  min-height: 3.2rem;
+  overflow: hidden;
+  border-radius: 8px;
+  vertical-align: 0.02em;
+  background: #0d0f14;
+  box-shadow:
+    inset 0 0 0 1px rgb(255 255 255 / 0.14),
+    0 18px 48px rgb(0 0 0 / 0.38);
+}
+
+.authorityInlineImage img {
+  filter: contrast(1.14) saturate(0.78);
+}
+
+.authorityStack {
+  position: relative;
+  height: 410dvh;
+}
+
+.authorityStage {
+  position: sticky;
+  top: 0;
+  height: 100dvh;
+  overflow: hidden;
+  background: #07080a;
+}
+
+.authorityScene {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+  transform-origin: center center;
+  background: #07080a;
+}
+
+.authorityScene:first-child {
+  opacity: 1;
+  visibility: visible;
+}
+
+.authoritySceneMedia {
+  position: absolute;
+  inset: clamp(4.6rem, 8vh, 6rem) clamp(0.75rem, 2vw, 2rem) clamp(0.75rem, 2vw, 2rem);
+  overflow: hidden;
+  border-radius: 10px;
+  background: #05060a;
+  box-shadow:
+    inset 0 0 0 1px rgb(255 255 255 / 0.085),
+    0 45px 110px rgb(0 0 0 / 0.5);
+}
+
+.authoritySceneImage {
+  object-fit: cover;
+  filter: contrast(1.03) saturate(0.88) brightness(0.83);
+}
+
+.authorityImageRadar {
+  object-position: center 21%;
+}
+
+.authorityImageBlackBox {
+  object-position: center 50%;
+}
+
+.authorityImageProvenance {
+  object-position: center 8%;
+}
+
+.authorityImageLanding {
+  object-position: center 69%;
+}
+
+.authoritySceneScrim {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgb(5 6 10 / 0.92) 0%, rgb(5 6 10 / 0.62) 28%, transparent 64%),
+    linear-gradient(0deg, rgb(5 6 10 / 0.94) 0%, rgb(5 6 10 / 0.36) 34%, transparent 72%);
+}
+
+.authoritySceneCopy {
+  position: absolute;
+  z-index: 2;
+  bottom: clamp(3.2rem, 8vh, 6.5rem);
+  left: clamp(2rem, 6vw, 6.5rem);
+  max-width: min(44rem, 54vw);
+}
+
+.authoritySceneCopy h2 {
+  max-width: 12ch;
+  margin: 0;
+  color: #f3efe9;
+  font-family: var(--font-satoshi), ui-sans-serif, system-ui, sans-serif;
+  font-size: clamp(3rem, 5.7vw, 6.8rem);
+  font-weight: 560;
+  line-height: 0.91;
+  letter-spacing: -0.06em;
+  text-wrap: balance;
+}
+
+.authoritySceneCopy p {
+  max-width: 37rem;
+  margin-top: 1.35rem;
+  color: #b5b5bb;
+  font-size: clamp(0.98rem, 1.35vw, 1.18rem);
+  line-height: 1.56;
+}
+
+@media (max-width: 767px) {
+  .authorityIntertitle {
+    width: calc(100% - 2rem);
+    min-height: 84dvh;
+    padding-block: 7rem;
+    font-size: clamp(3.15rem, 14.8vw, 4.6rem);
+    line-height: 0.93;
+  }
+
+  .authorityInlineImage {
+    width: 6.6rem;
+    min-height: 2.5rem;
+    vertical-align: 0.04em;
+  }
+
+  .authorityStack {
+    height: auto;
+    padding-inline: 0.5rem;
+  }
+
+  .authorityStage {
+    position: relative;
+    height: auto;
+    overflow: visible;
+  }
+
+  .authorityScene,
+  .authorityScene:first-child {
+    position: relative;
+    inset: auto;
+    min-height: min(760px, 92dvh);
+    margin-bottom: 0.75rem;
+    border-radius: 10px;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+  }
+
+  .authoritySceneMedia {
+    inset: 0;
+    border-radius: 10px;
+  }
+
+  .authoritySceneImage {
+    filter: contrast(1.06) saturate(0.86) brightness(0.68);
+  }
+
+  .authorityImageRadar {
+    object-position: 26% 20%;
+  }
+
+  .authorityImageBlackBox {
+    object-position: 84% 50%;
+  }
+
+  .authorityImageProvenance {
+    object-position: 21% 7%;
+  }
+
+  .authorityImageLanding {
+    object-position: 85% 70%;
+  }
+
+  .authoritySceneScrim {
+    background:
+      linear-gradient(0deg, rgb(5 6 10 / 0.96) 0%, rgb(5 6 10 / 0.6) 38%, transparent 70%),
+      linear-gradient(90deg, rgb(5 6 10 / 0.36), transparent 72%);
+  }
+
+  .authoritySceneCopy {
+    bottom: 2rem;
+    left: 1.5rem;
+    width: calc(100% - 3rem);
+    max-width: none;
+  }
+
+  .authoritySceneCopy h2 {
+    max-width: 11ch;
+    font-size: clamp(2.65rem, 12vw, 3.65rem);
+    line-height: 0.93;
+  }
+
+  .authoritySceneCopy p {
+    max-width: 28rem;
+    margin-top: 1rem;
+    font-size: 0.92rem;
+    line-height: 1.5;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .authorityScrubWord {
+    opacity: 1;
+  }
+
+  .authorityStack {
+    height: auto;
+    padding-inline: 0.75rem;
+  }
+
+  .authorityStage {
+    position: relative;
+    height: auto;
+    overflow: visible;
+  }
+
+  .authorityScene,
+  .authorityScene:first-child {
+    position: relative;
+    inset: auto;
+    min-height: 92dvh;
+    margin-bottom: 0.75rem;
+    border-radius: 10px;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+  }
+}
+
 @media (prefers-reduced-transparency: reduce) {
   .workbenchOuter {
     background: #12151a;
