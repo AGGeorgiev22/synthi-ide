@@ -14,13 +14,27 @@ import { AnimatedLogo } from "@/components/Logo";
 import styles from "@/components/Navbar.module.css";
 import { PILOT_MAILTO } from "@/lib/pilot";
 
-const LINKS = [
-  { label: "Product", detail: "Run boundary", href: "#runtime" },
-  { label: "Authority", detail: "Controlled flight", href: "#runtime-path" },
-  { label: "GPU HMR", detail: "Live engine", href: "#gpu-hmr" },
-  { label: "Proof", detail: "Incident recorder", href: "#proof" },
-  { label: "Field notes", detail: "Pilot briefing", href: "#faq" },
+const NAV_GROUPS = [
+  {
+    label: "Product",
+    detail: "Control path",
+    links: [
+      { label: "Run boundary", detail: "Scope the repository", href: "#runtime" },
+      { label: "Authority", detail: "Forecast and constrain", href: "#runtime-path" },
+      { label: "GPU HMR", detail: "Patch without restart", href: "#gpu-hmr" },
+    ],
+  },
+  {
+    label: "Evidence",
+    detail: "Review path",
+    links: [
+      { label: "Proof reel", detail: "Replay and handoff", href: "#proof" },
+      { label: "Technical questions", detail: "Pilot constraints", href: "#faq" },
+    ],
+  },
 ];
+
+const NAV_LINKS = NAV_GROUPS.flatMap((group) => group.links);
 
 const linkMotion = {
   hidden: { opacity: 0, y: 34, clipPath: "inset(0 0 100% 0)" },
@@ -153,7 +167,7 @@ export function Navbar() {
               transition={reduceMotion ? { duration: 0 } : undefined}
               className={styles.navLinks}
             >
-              {LINKS.slice(0, 4).map((link) => (
+              {NAV_LINKS.slice(0, 4).map((link) => (
                 <a key={link.label} href={link.href}>{link.label}</a>
               ))}
             </motion.div>
@@ -204,26 +218,50 @@ export function Navbar() {
           >
             <div className={styles.navIndexCorridor} aria-hidden="true"><i /><i /></div>
             <div className={styles.navIndexShell}>
-              <p className={styles.navIndexEyebrow}>VECTANT / FLIGHT INDEX</p>
-              <nav aria-label="Page sections" className={styles.navIndexLinks}>
-                {LINKS.map((link, index) => (
-                  <motion.a
-                    key={link.label}
-                    ref={index === 0 ? firstLinkRef : undefined}
-                    href={link.href}
-                    data-scroll-focus="true"
-                    custom={index}
-                    variants={reduceMotion ? reducedLinkMotion : linkMotion}
-                    initial="hidden"
-                    animate="visible"
-                    onClick={closeMenu}
-                  >
-                    <b>0{index + 1}</b>
-                    <span>{link.label}</span>
-                    <em>{link.detail}</em>
-                    <ArrowUpRight size={20} weight="bold" />
-                  </motion.a>
-                ))}
+              <div className={styles.navIndexIntro}>
+                <h2>Inspect the run from boundary to proof.</h2>
+                <p>Open only the system surface you need. Every chapter stays attached to the same controlled flight.</p>
+              </div>
+
+              <nav aria-label="Page sections" className={styles.navIndexGroups}>
+                {NAV_GROUPS.map((group, groupIndex) => {
+                  const groupOffset = NAV_GROUPS
+                    .slice(0, groupIndex)
+                    .reduce((total, item) => total + item.links.length, 0);
+
+                  return (
+                    <details key={group.label} open>
+                      <summary>
+                        <span aria-hidden="true"><i /><i /></span>
+                        <b>{group.label}</b>
+                        <em>{group.detail}</em>
+                        <small aria-hidden="true" />
+                      </summary>
+                      <div className={styles.navIndexLinks}>
+                        {group.links.map((link, index) => {
+                          const linkIndex = groupOffset + index;
+                          return (
+                            <motion.a
+                              key={link.label}
+                              ref={linkIndex === 0 ? firstLinkRef : undefined}
+                              href={link.href}
+                              data-scroll-focus="true"
+                              custom={linkIndex}
+                              variants={reduceMotion ? reducedLinkMotion : linkMotion}
+                              initial="hidden"
+                              animate="visible"
+                              onClick={closeMenu}
+                            >
+                              <span>{link.label}</span>
+                              <em>{link.detail}</em>
+                              <ArrowUpRight size={20} weight="bold" />
+                            </motion.a>
+                          );
+                        })}
+                      </div>
+                    </details>
+                  );
+                })}
               </nav>
 
               <motion.div
@@ -232,7 +270,7 @@ export function Navbar() {
                 transition={reduceMotion ? { duration: 0 } : { delay: 0.38, duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
                 className={styles.navIndexFooter}
               >
-                <p>A governed runtime for the repositories you still will not hand to an agent.</p>
+                <p>Bring the repository you still will not hand to an agent.</p>
                 <a href={PILOT_MAILTO} onClick={closeMenu}>
                   Request a proof pilot
                   <ArrowUpRight size={16} weight="bold" />
