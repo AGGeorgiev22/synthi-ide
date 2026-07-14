@@ -153,7 +153,7 @@ export function AnimatedLogo({ expanded = true, className }) {
       </motion.span>
       <motion.span
         initial={false}
-        animate={{ x: expanded ? 0 : -108 }}
+        animate={{ x: expanded ? 0 : -110.40625 }}
         transition={transition}
         className="inline-flex"
       >
