@@ -22,6 +22,7 @@ const RECEIPT = [
 export function FinalApproach() {
   const rootRef = useRef(null);
   const surfaceRef = useRef(null);
+  const atmosphereRef = useRef(null);
   const leftShutterRef = useRef(null);
   const rightShutterRef = useRef(null);
   const handoffMarkRef = useRef(null);
@@ -36,6 +37,7 @@ export function FinalApproach() {
 
       media.add("(prefers-reduced-motion: no-preference)", () => {
         gsap.set(surfaceRef.current, { autoAlpha: 0.18, scale: 1.025 });
+        gsap.set(atmosphereRef.current, { scale: 1.09, yPercent: 2.5 });
         gsap.set(copyRef.current, { autoAlpha: 0, y: 54 });
         gsap.set(productRef.current, { autoAlpha: 0, y: 130, rotateX: 8, scale: 0.92 });
         gsap.set(receiptRef.current, { autoAlpha: 0, y: 28 });
@@ -58,6 +60,7 @@ export function FinalApproach() {
           .to(leftShutterRef.current, { xPercent: -104, duration: 0.62 }, "open")
           .to(rightShutterRef.current, { xPercent: 104, duration: 0.62 }, "open")
           .to(surfaceRef.current, { autoAlpha: 1, scale: 1, duration: 0.58 }, "open+=0.04")
+          .to(atmosphereRef.current, { scale: 1, yPercent: 0, duration: 1.12, ease: "power2.out" }, "open")
           .to(handoffMarkRef.current, { autoAlpha: 0, scale: 0.72, duration: 0.24, ease: "power2.in" }, "open+=0.12")
           .to(runwayRef.current, { scaleX: 1, duration: 0.54 }, "open+=0.18")
           .addLabel("invitation", 0.42)
@@ -78,6 +81,17 @@ export function FinalApproach() {
     <section id="pricing" ref={rootRef} className={styles.finalApproach} data-film-act="daylight">
       <div id="waitlist" className={styles.finalApproachSticky}>
         <div ref={surfaceRef} className={styles.finalSurface}>
+          <Image
+            ref={atmosphereRef}
+            src="/cinema/controlled-flight-dawn.png"
+            alt=""
+            fill
+            sizes="100vw"
+            className={styles.finalAtmosphere}
+            aria-hidden="true"
+          />
+          <div className={styles.finalAtmosphereGrade} aria-hidden="true" />
+
           <div className={styles.finalRunway} aria-hidden="true">
             <i ref={runwayRef} />
             <i />

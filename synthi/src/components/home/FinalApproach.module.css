@@ -18,34 +18,52 @@
   position: absolute;
   inset: 0;
   overflow: hidden;
-  background:
-    radial-gradient(circle at 81% 11%, rgb(255 126 91 / 0.22), transparent 24%),
-    linear-gradient(112deg, #e8e1d7 0%, #d8d0c5 58%, #c7bdb1 100%);
+  background: #07090e;
   transform-origin: center center;
+}
+
+.finalAtmosphere {
+  z-index: 0;
+  object-fit: cover;
+  object-position: center 54%;
+  filter: contrast(1.08) saturate(1.06) brightness(0.88);
+  transform-origin: center center;
+  will-change: transform;
+}
+
+.finalAtmosphereGrade {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgb(4 5 8 / 0.88) 0%, rgb(4 5 8 / 0.66) 41%, rgb(4 5 8 / 0.22) 72%, rgb(4 5 8 / 0.48) 100%),
+    linear-gradient(180deg, rgb(4 5 8 / 0.4), transparent 44%, rgb(4 5 8 / 0.86));
+  pointer-events: none;
 }
 
 .finalSurface::before {
   position: absolute;
+  z-index: 2;
   inset: 0;
   content: "";
-  opacity: 0.25;
+  opacity: 0.14;
   background-image: url("/noise.svg");
-  mix-blend-mode: multiply;
+  mix-blend-mode: soft-light;
   pointer-events: none;
 }
 
 .finalSurface::after {
   position: absolute;
-  z-index: 1;
+  z-index: 2;
   inset: 0;
   content: "";
-  background: linear-gradient(180deg, rgb(255 255 255 / 0.16), transparent 35%, rgb(24 18 15 / 0.08));
+  background: linear-gradient(180deg, rgb(255 255 255 / 0.04), transparent 35%, rgb(0 0 0 / 0.18));
   pointer-events: none;
 }
 
 .finalRunway {
   position: absolute;
-  z-index: 2;
+  z-index: 3;
   inset: 0;
   overflow: hidden;
   pointer-events: none;
@@ -55,7 +73,7 @@
   position: absolute;
   display: block;
   height: 1px;
-  background: rgb(62 50 44 / 0.2);
+  background: rgb(242 239 233 / 0.14);
   transform-origin: center center;
 }
 
@@ -63,7 +81,7 @@
   top: 45%;
   right: 3vw;
   left: 3vw;
-  background: rgb(210 72 46 / 0.52);
+  background: rgb(255 118 87 / 0.66);
 }
 
 .finalRunway i:nth-child(2),
@@ -94,7 +112,7 @@
 
 .finalCopy h2 {
   margin: 0;
-  color: #171513;
+  color: #f2efe9;
   font-family: var(--font-outfit), var(--font-satoshi), ui-sans-serif, sans-serif;
   font-size: clamp(4.5rem, 6.35vw, 7.45rem);
   font-weight: 500;
@@ -108,13 +126,13 @@
 }
 
 .finalCopy h2 span:last-child {
-  color: #c53f29;
+  color: #ff7657;
 }
 
 .finalCopy > p {
   max-width: 31rem;
   margin: clamp(1.4rem, 2.4vw, 2.2rem) 0 0;
-  color: rgb(32 27 24 / 0.68);
+  color: rgb(232 233 238 / 0.7);
   font-size: clamp(0.95rem, 1.12vw, 1.08rem);
   line-height: 1.58;
 }
@@ -126,12 +144,12 @@
   align-items: center;
   justify-content: center;
   gap: 0.8rem;
-  border: 1px solid #171513;
+  border: 1px solid #f2efe9;
   border-radius: 2px;
   padding-inline: 1.15rem;
-  color: #f7f1e8;
-  background: #171513;
-  box-shadow: 0 16px 38px rgb(36 24 18 / 0.18);
+  color: #08090d;
+  background: #f2efe9;
+  box-shadow: 0 16px 38px rgb(0 0 0 / 0.28);
   font-size: 0.77rem;
   font-weight: 720;
   outline: none;
@@ -142,7 +160,7 @@
 }
 
 .finalAction:hover {
-  color: #171513;
+  color: #f2efe9;
   background: transparent;
   transform: translateY(-2px);
 }
@@ -153,7 +171,7 @@
 
 .finalAction:focus-visible {
   box-shadow:
-    0 0 0 2px #e8e1d7,
+    0 0 0 2px #050609,
     0 0 0 4px #175c66;
 }
 
@@ -166,11 +184,11 @@
   height: min(58dvh, 39rem);
   margin: 0;
   overflow: hidden;
-  border: 1px solid rgb(26 23 22 / 0.42);
+  border: 1px solid rgb(242 239 233 / 0.24);
   background: #08090d;
   box-shadow:
-    0 44px 86px rgb(36 24 18 / 0.28),
-    0 2px 0 rgb(255 255 255 / 0.22) inset;
+    0 44px 86px rgb(0 0 0 / 0.48),
+    0 2px 0 rgb(255 255 255 / 0.14) inset;
   transform-origin: 80% 100%;
 }
 
@@ -223,9 +241,9 @@
   min-height: 4rem;
   margin: 0;
   grid-template-columns: repeat(3, 1fr);
-  color: #171513;
-  background: rgb(232 225 215 / 0.88);
-  box-shadow: inset 0 1px 0 rgb(39 31 27 / 0.24);
+  color: #f2efe9;
+  background: rgb(5 6 9 / 0.86);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.14);
   backdrop-filter: blur(18px);
 }
 
@@ -235,7 +253,7 @@
   align-items: center;
   gap: 0.75rem;
   padding-inline: clamp(1rem, 2vw, 2rem);
-  box-shadow: inset -1px 0 0 rgb(39 31 27 / 0.14);
+  box-shadow: inset -1px 0 0 rgb(255 255 255 / 0.1);
 }
 
 .finalReceipt > div:last-child {
@@ -251,13 +269,13 @@
 }
 
 .finalReceipt dt {
-  color: #a62d1e;
+  color: #ff7657;
   font-weight: 720;
   text-transform: uppercase;
 }
 
 .finalReceipt dd {
-  color: rgb(32 27 24 / 0.58);
+  color: rgb(232 233 238 / 0.58);
 }
 
 .finalShutters {
@@ -333,6 +351,10 @@
     right: 1rem;
     left: 1rem;
     width: auto;
+  }
+
+  .finalAtmosphere {
+    object-position: 50% 52%;
   }
 
   .finalCopy h2 {
@@ -442,6 +464,7 @@
   }
 
   .finalSurface,
+  .finalAtmosphere,
   .finalCopy,
   .finalProduct,
   .finalReceipt {
