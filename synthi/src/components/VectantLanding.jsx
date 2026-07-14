@@ -1,5 +1,6 @@
 import { AuthorityStory } from "@/components/home/AuthorityStory";
 import { CinematicHero } from "@/components/home/CinematicHero";
+import { ControlPlaneAtlas } from "@/components/home/ControlPlaneAtlas";
 import { FieldNotes } from "@/components/home/FieldNotes";
 import { FinalApproach } from "@/components/home/FinalApproach";
 import { GpuProofChapter } from "@/components/home/GpuProofChapter";
@@ -16,6 +17,7 @@ export function VectantLanding() {
       <AuthorityStory />
       <GpuProofChapter />
       <RuntimeFeedback />
+      <ControlPlaneAtlas />
       <MissionProfiles />
       <FieldNotes />
       <FinalApproach />
