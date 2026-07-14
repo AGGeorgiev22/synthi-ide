@@ -49,13 +49,13 @@
       "name": "Rejected patch",
       "href": "/sample-proof/rejected.patch",
       "mediaType": "text/x-diff",
-      "sha256": "7c58d56f6601f2e101021acfa8c962ab506eee982cf711218be5ea527d664589"
+      "sha256": "18468c399bfc49381fd016fec2cb1fcbf4f8f7571e6a2e42cf75efc97dc7835a"
     },
     {
       "name": "Approved patch",
       "href": "/sample-proof/approved.patch",
       "mediaType": "text/x-diff",
-      "sha256": "68abcbf62c167feab7e4da4b0a6967f0e4bfdc7fc97e279b538da63a237f91bc"
+      "sha256": "a729831c9e14f4a162ca3095b7bc426880924c93b565d49d7d1ce036bfd40ecd"
     },
     {
       "name": "Runtime events",
