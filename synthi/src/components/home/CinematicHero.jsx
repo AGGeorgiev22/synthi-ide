@@ -77,7 +77,11 @@ export function CinematicHero() {
 
         timeline
           .addLabel("coldOpen", 0)
-          .to(atmosphereRef.current, { scale: 1.065, yPercent: -1.8, duration: 1.25 }, "coldOpen")
+          .to(
+            atmosphereRef.current,
+            { scale: 1.085, xPercent: -1.8, yPercent: -2.2, duration: 1.25 },
+            "coldOpen",
+          )
           .to(routePath, { strokeDashoffset: 0, duration: 0.72 }, 0.08)
           .to(
             routeTokenRef.current,
@@ -144,18 +148,17 @@ export function CinematicHero() {
           preserveAspectRatio="none"
           aria-hidden="true"
         >
-          <path className={styles.cinemaBoundaryPath} d="M -80 706 L 800 455 L 1680 706" />
           <path
             ref={routePathRef}
             className={styles.cinemaIntrusionPath}
             pathLength="1"
-            d="M 1115 -55 C 1080 125 940 210 808 430"
+            d="M 1175 -55 C 1120 115 930 228 724 430"
           />
           <g ref={routeTokenRef} className={styles.cinemaRouteToken}>
             <rect x="-7" y="-7" width="14" height="14" rx="1" />
             <path d="M -14 0 H 14 M 0 -14 V 14" />
           </g>
-          <g ref={conflictRef} className={styles.cinemaConflictPoint} transform="translate(808 430)">
+          <g ref={conflictRef} className={styles.cinemaConflictPoint} transform="translate(724 430)">
             <circle r="5" />
             <circle r="20" />
           </g>

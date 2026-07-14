@@ -25,21 +25,22 @@
 
 .cinemaAtmosphere {
   z-index: 0;
-  transform-origin: 56% 56%;
+  transform-origin: 62% 54%;
   will-change: transform;
 }
 
 .cinemaAtmosphereImage {
   object-fit: cover;
-  object-position: center center;
-  filter: saturate(0.82) contrast(1.05) brightness(0.9);
+  object-position: 57% center;
+  filter: saturate(0.58) contrast(1.12) brightness(0.78);
 }
 
 .cinemaAtmosphereGrade {
   background:
-    linear-gradient(90deg, rgb(3 4 7 / 0.38) 0%, transparent 47%, rgb(3 4 7 / 0.18) 100%),
-    linear-gradient(180deg, rgb(3 4 7 / 0.7) 0%, transparent 32%, transparent 68%, rgb(3 4 7 / 0.72) 100%),
-    radial-gradient(circle at 58% 48%, transparent 0 14%, rgb(3 4 7 / 0.12) 38%, rgb(3 4 7 / 0.52) 100%);
+    radial-gradient(ellipse at 8% 88%, rgb(3 4 7 / 0.72), transparent 42%),
+    radial-gradient(ellipse at 82% 72%, rgb(3 4 7 / 0.42), transparent 38%),
+    linear-gradient(102deg, rgb(3 4 7 / 0.56) 0%, rgb(3 4 7 / 0.12) 49%, rgb(3 4 7 / 0.34) 100%),
+    linear-gradient(180deg, rgb(3 4 7 / 0.78) 0%, transparent 34%, transparent 64%, rgb(3 4 7 / 0.8) 100%);
 }
 
 .cinemaFlightPaths {
@@ -50,17 +51,10 @@
   pointer-events: none;
 }
 
-.cinemaBoundaryPath,
 .cinemaIntrusionPath,
 .cinemaRouteToken path {
   fill: none;
   stroke-linecap: round;
-}
-
-.cinemaBoundaryPath {
-  stroke: rgb(255 118 87 / 0.72);
-  stroke-width: 1.3;
-  filter: drop-shadow(0 0 7px rgb(255 83 46 / 0.58));
 }
 
 .cinemaIntrusionPath {
@@ -95,7 +89,7 @@
   position: absolute;
   z-index: 9;
   top: 46%;
-  left: calc(50% + 1.7rem);
+  left: calc(45.25% + 1.7rem);
   display: grid;
   gap: 0.28rem;
   padding-left: 0.9rem;
@@ -345,13 +339,14 @@
   }
 
   .cinemaAtmosphereImage {
-    object-position: 50% center;
+    object-position: 54% center;
   }
 
   .cinemaAtmosphereGrade {
     background:
-      linear-gradient(180deg, rgb(3 4 7 / 0.68) 0%, transparent 29%, transparent 63%, rgb(3 4 7 / 0.82) 100%),
-      radial-gradient(circle at 54% 46%, transparent 0 12%, rgb(3 4 7 / 0.2) 42%, rgb(3 4 7 / 0.58) 100%);
+      radial-gradient(ellipse at 4% 82%, rgb(3 4 7 / 0.66), transparent 46%),
+      linear-gradient(180deg, rgb(3 4 7 / 0.76) 0%, transparent 31%, transparent 61%, rgb(3 4 7 / 0.86) 100%),
+      radial-gradient(circle at 59% 46%, transparent 0 12%, rgb(3 4 7 / 0.2) 42%, rgb(3 4 7 / 0.62) 100%);
   }
 
   .cinemaHeroCopy {
@@ -394,7 +389,7 @@
 
   .cinemaIncident {
     top: 48%;
-    left: calc(50% + 0.8rem);
+    left: calc(45.25% + 0.8rem);
     max-width: 10.5rem;
   }
 
