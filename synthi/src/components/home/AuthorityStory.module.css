@@ -73,13 +73,6 @@
 
 .authoritySceneImage {
   object-fit: cover;
-  filter: contrast(1.05) saturate(0.97) brightness(1.12);
-}
-
-.authoritySceneGrade {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
 }
 
 .authoritySceneCopy {
@@ -210,22 +203,12 @@
   object-position: center 20%;
 }
 
-.authorityShotRadar .authoritySceneGrade {
-  background:
-    linear-gradient(90deg, rgb(4 5 8 / 0.42), transparent 37%),
-    linear-gradient(0deg, rgb(4 5 8 / 0.5), transparent 38%);
-}
-
 .authorityShotBlackBox .authoritySceneMedia {
   left: 34%;
 }
 
 .authorityShotBlackBox .authoritySceneImage {
   object-position: 74% 48%;
-}
-
-.authorityShotBlackBox .authoritySceneGrade {
-  background: linear-gradient(90deg, rgb(4 5 8 / 0.14), transparent 23% 78%, rgb(4 5 8 / 0.18));
 }
 
 .authorityShotBlackBox .authoritySceneCopy {
@@ -249,12 +232,6 @@
   object-position: center 9%;
 }
 
-.authorityShotProvenance .authoritySceneGrade {
-  background:
-    linear-gradient(180deg, rgb(4 5 8 / 0.08), transparent 22% 74%, rgb(4 5 8 / 0.42)),
-    linear-gradient(90deg, rgb(4 5 8 / 0.16), transparent 18% 84%, rgb(4 5 8 / 0.16));
-}
-
 .authorityShotProvenance .authoritySceneCopy {
   top: clamp(5.8rem, 9vh, 7.6rem);
   bottom: auto;
@@ -268,12 +245,6 @@
 
 .authorityShotLanding .authoritySceneImage {
   object-position: center 67%;
-}
-
-.authorityShotLanding .authoritySceneGrade {
-  background:
-    linear-gradient(270deg, rgb(4 5 8 / 0.58) 0%, rgb(4 5 8 / 0.24) 36%, transparent 66%),
-    linear-gradient(0deg, rgb(4 5 8 / 0.46), transparent 42%);
 }
 
 .authorityShotLanding .authoritySceneCopy {
@@ -319,7 +290,6 @@
     width: 980px !important;
     max-width: none !important;
     object-fit: cover;
-    filter: contrast(1.05) saturate(0.96) brightness(1.09);
   }
 
   .authorityShotRadar .authoritySceneImage {
@@ -336,14 +306,6 @@
 
   .authorityShotLanding .authoritySceneImage {
     object-position: 80% 69%;
-  }
-
-  .authoritySceneGrade,
-  .authorityShotRadar .authoritySceneGrade,
-  .authorityShotBlackBox .authoritySceneGrade,
-  .authorityShotProvenance .authoritySceneGrade,
-  .authorityShotLanding .authoritySceneGrade {
-    background: linear-gradient(0deg, rgb(4 5 8 / 0.86) 0%, rgb(4 5 8 / 0.34) 38%, transparent 66%);
   }
 
   .authoritySceneCopy,

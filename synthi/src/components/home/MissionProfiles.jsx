@@ -48,7 +48,6 @@ export function MissionProfiles() {
   const profileRefs = useRef([]);
   const mediaRefs = useRef([]);
   const copyRefs = useRef([]);
-  const sweepRefs = useRef([]);
   const indexItemRefs = useRef([]);
 
   useGSAP(
@@ -59,7 +58,6 @@ export function MissionProfiles() {
         const profiles = profileRefs.current.filter(Boolean);
         const profileMedia = mediaRefs.current.filter(Boolean);
         const profileCopy = copyRefs.current.filter(Boolean);
-        const sweeps = sweepRefs.current.filter(Boolean);
         const indexItems = indexItemRefs.current.filter(Boolean);
         const timeline = gsap.timeline({
           scrollTrigger: {
@@ -74,7 +72,6 @@ export function MissionProfiles() {
         gsap.set(profiles, { autoAlpha: 0 });
         gsap.set(profileMedia, { clipPath: "inset(100% 0 0 0)" });
         gsap.set(profileCopy, { autoAlpha: 0, x: 42 });
-        gsap.set(sweeps, { autoAlpha: 0, xPercent: -125 });
         gsap.set(indexRef.current, { autoAlpha: 0, y: -10 });
         gsap.set(indexItems, { color: "rgba(228, 230, 236, 0.34)" });
         gsap.set(progressRef.current, { scaleX: 0, transformOrigin: "left center" });
@@ -98,12 +95,6 @@ export function MissionProfiles() {
           timeline
             .set(profile, { autoAlpha: 1 }, at)
             .to(profileMedia[index], { clipPath: "inset(0% 0 0 0)", duration: 0.44, ease: "power3.inOut" }, at)
-            .to(
-              sweeps[index],
-              { autoAlpha: 0.72, xPercent: 125, duration: 0.44, ease: "power2.inOut" },
-              at,
-            )
-            .to(sweeps[index], { autoAlpha: 0, duration: 0.08 }, at + 0.4)
             .to(profileCopy[index], { autoAlpha: 1, x: 0, duration: 0.34, ease: "power3.out" }, at + 0.1)
             .to(indexItems[index], { color: "#928cb5", duration: 0.18 }, at)
             .to(
@@ -158,8 +149,6 @@ export function MissionProfiles() {
                   className={styles.missionImage}
                   style={{ objectPosition: profile.position }}
                 />
-                <div className={styles.missionMediaGrade} aria-hidden="true" />
-                <i ref={(node) => { sweepRefs.current[index] = node; }} className={styles.missionSweep} aria-hidden="true" />
               </figure>
 
               <div ref={(node) => { copyRefs.current[index] = node; }} className={styles.missionCopy}>

@@ -107,28 +107,6 @@
 
 .missionImage {
   object-fit: cover;
-  filter: contrast(1.05) saturate(0.94) brightness(1.08);
-}
-
-.missionMediaGrade {
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(180deg, rgb(3 4 7 / 0.02), transparent 72%, rgb(3 4 7 / 0.5)),
-    linear-gradient(90deg, rgb(3 4 7 / 0.12), transparent 18%, transparent 84%, rgb(3 4 7 / 0.28));
-  pointer-events: none;
-}
-
-.missionSweep {
-  position: absolute;
-  z-index: 3;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  width: 20%;
-  background: linear-gradient(90deg, transparent, rgb(var(--vectant-accent-rgb) / 0.2), rgb(242 239 233 / 0.2), transparent);
-  transform: skewX(-14deg);
-  pointer-events: none;
 }
 
 .missionCopy {
@@ -318,13 +296,8 @@
   .missionIntro,
   .missionProfile,
   .missionMedia,
-  .missionCopy,
-  .missionSweep {
+  .missionCopy {
     opacity: 1 !important;
     transform: none !important;
-  }
-
-  .missionSweep {
-    display: none;
   }
 }

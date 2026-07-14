@@ -102,7 +102,6 @@
 
 .proofPanelImage {
   object-fit: cover;
-  filter: contrast(1.04) saturate(0.96) brightness(1.15);
 }
 
 .proofImageCheckride {
@@ -115,15 +114,6 @@
 
 .proofImageMemory {
   object-position: center 38%;
-}
-
-.proofPanelGrade {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background:
-    linear-gradient(90deg, rgb(4 5 8 / 0.16), transparent 28%),
-    linear-gradient(0deg, rgb(4 5 8 / 0.58), transparent 43%);
 }
 
 .proofPanelCaption {

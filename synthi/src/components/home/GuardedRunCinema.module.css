@@ -231,20 +231,9 @@
     0 34px 100px rgb(0 0 0 / 0.48);
 }
 
-.sceneMedia::after {
-  position: absolute;
-  inset: 0;
-  content: "";
-  pointer-events: none;
-  background:
-    linear-gradient(180deg, rgb(8 7 13 / 0.08), transparent 42%, rgb(8 7 13 / 0.48)),
-    linear-gradient(90deg, rgb(8 7 13 / 0.18), transparent 18%);
-}
-
 .sceneImage {
   object-fit: cover;
   object-position: center 14%;
-  filter: contrast(1.06) saturate(0.94) brightness(1.08);
 }
 
 .blackBoxImage {
@@ -647,13 +636,11 @@
   }
 
   .boundaryImage {
-    filter: contrast(1.08) saturate(0.96) brightness(1.28);
     transform: scale(1.28);
     transform-origin: 18% 22%;
   }
 
   .blackBoxImage {
-    filter: contrast(1.08) saturate(0.96) brightness(1.24);
     transform: scale(1.16);
     transform-origin: 62% 24%;
   }

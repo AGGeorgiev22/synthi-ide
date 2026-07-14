@@ -135,7 +135,6 @@ export function RunBoundary() {
               className={styles.boundaryImage}
             />
           </div>
-          <div className={styles.boundaryVignette} aria-hidden="true" />
         </figure>
 
         <div ref={copyRef} className={styles.boundaryCopy}>

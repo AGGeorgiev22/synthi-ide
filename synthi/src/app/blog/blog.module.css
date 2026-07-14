@@ -121,15 +121,6 @@
   min-height: min(57vw, 43rem);
 }
 
-.featuredImage::after,
-.postImage::after {
-  position: absolute;
-  inset: 0;
-  content: "";
-  pointer-events: none;
-  background: linear-gradient(125deg, transparent 50%, rgb(11 11 13 / 0.24));
-}
-
 .featuredImage img,
 .postImage img {
   object-fit: cover;

@@ -150,15 +150,6 @@ export function HeroProductFloat() {
                 sizes="(min-width: 1280px) 78vw, (min-width: 768px) 88vw, 100vw"
                 className="hero-primary-shot-image"
               />
-              <div className="hero-shot-brand-mask" aria-hidden="true">
-                <span>[V]</span>
-                <strong>Vectant</strong>
-              </div>
-              <div className="hero-proof-scan" aria-hidden="true">
-                <span>lease observed</span>
-                <span>replay attached</span>
-                <span>proof ready</span>
-              </div>
             </div>
           </motion.div>
         </motion.div>
@@ -185,10 +176,6 @@ export function HeroProductFloat() {
                 sizes="360px"
                 className="h-auto w-full"
               />
-              <div className="hero-workflow-brand-mask" aria-hidden="true">
-                <span>[V]</span>
-                <strong>Vectant proof</strong>
-              </div>
               <figcaption>
                 <strong>Workflow proof rail</strong>
                 <span>browser attach, observe, trace, contract, replay</span>

@@ -17,9 +17,6 @@
 .cinemaAtmosphere,
 .cinemaAtmosphereDepth,
 .cinemaAtmosphereFar,
-.cinemaAtmosphereNear,
-.cinemaAtmosphereGrade,
-.cinemaWarningGrade,
 .cinemaFlightPaths,
 .cinemaProductFrame,
 .cinemaShutters {
@@ -47,32 +44,6 @@
 .cinemaAtmosphereImage {
   object-fit: cover;
   object-position: 57% center;
-  filter: hue-rotate(226deg) saturate(0.48) contrast(1.12) brightness(0.74);
-}
-
-.cinemaAtmosphereNear {
-  opacity: 0.82;
-  filter: brightness(0.62) contrast(1.16);
-  mask-image: linear-gradient(to top, #000 0%, rgb(0 0 0 / 0.92) 17%, transparent 44%);
-}
-
-.cinemaAtmosphereGrade {
-  background:
-    radial-gradient(ellipse at 8% 88%, rgb(3 4 7 / 0.72), transparent 42%),
-    radial-gradient(ellipse at 82% 72%, rgb(3 4 7 / 0.42), transparent 38%),
-    linear-gradient(102deg, rgb(3 4 7 / 0.56) 0%, rgb(3 4 7 / 0.12) 49%, rgb(3 4 7 / 0.34) 100%),
-    linear-gradient(180deg, rgb(3 4 7 / 0.78) 0%, transparent 34%, transparent 64%, rgb(3 4 7 / 0.8) 100%);
-}
-
-.cinemaWarningGrade {
-  opacity: 0;
-  background:
-    radial-gradient(circle at 45% 48%, rgb(var(--vectant-accent-rgb) / 0.19), transparent 15%),
-    radial-gradient(ellipse at 63% 68%, rgb(var(--vectant-accent-rgb) / 0.24), transparent 38%),
-    linear-gradient(180deg, rgb(8 7 13 / 0.08), rgb(13 11 20 / 0.31));
-  mix-blend-mode: screen;
-  pointer-events: none;
-  will-change: opacity;
 }
 
 .cinemaEarlyProof {
@@ -93,16 +64,6 @@
   will-change: transform, opacity;
 }
 
-.cinemaEarlyProof::after {
-  position: absolute;
-  inset: 0;
-  content: "";
-  pointer-events: none;
-  background:
-    linear-gradient(90deg, rgb(8 7 13 / 0.64), transparent 24%),
-    linear-gradient(180deg, transparent 72%, rgb(8 7 13 / 0.52));
-}
-
 .cinemaEarlyProofCamera {
   position: absolute;
   inset: 0;
@@ -112,7 +73,6 @@
 .cinemaEarlyProofImage {
   object-fit: cover;
   object-position: center 8%;
-  filter: contrast(1.04) saturate(0.9) brightness(1.08);
 }
 
 .cinemaVisuallyHidden {
@@ -374,16 +334,6 @@
 .cinemaProductImage {
   object-fit: cover;
   object-position: center 17%;
-  filter: contrast(1.04) saturate(0.96) brightness(1.12);
-}
-
-.cinemaProductGrade {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background:
-    linear-gradient(180deg, rgb(3 4 7 / 0.12), transparent 18%, transparent 82%, rgb(3 4 7 / 0.38)),
-    linear-gradient(90deg, rgb(3 4 7 / 0.17), transparent 10%, transparent 90%, rgb(3 4 7 / 0.17));
 }
 
 .cinemaProductFrame {
@@ -491,18 +441,6 @@
 
   .cinemaAtmosphereImage {
     object-position: 54% center;
-  }
-
-  .cinemaAtmosphereNear {
-    opacity: 0.68;
-    mask-image: linear-gradient(to top, #000 0%, rgb(0 0 0 / 0.84) 14%, transparent 38%);
-  }
-
-  .cinemaAtmosphereGrade {
-    background:
-      radial-gradient(ellipse at 4% 82%, rgb(3 4 7 / 0.66), transparent 46%),
-      linear-gradient(180deg, rgb(3 4 7 / 0.76) 0%, transparent 31%, transparent 61%, rgb(3 4 7 / 0.86) 100%),
-      radial-gradient(circle at 59% 46%, transparent 0 12%, rgb(3 4 7 / 0.2) 42%, rgb(3 4 7 / 0.62) 100%);
   }
 
   .cinemaHeroCopy {

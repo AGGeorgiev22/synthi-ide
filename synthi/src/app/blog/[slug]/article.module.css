@@ -95,14 +95,6 @@
   background: var(--vectant-black-ink);
 }
 
-.figure::after {
-  position: absolute;
-  inset: 0;
-  content: "";
-  pointer-events: none;
-  background: linear-gradient(125deg, transparent 48%, rgb(11 11 13 / 0.26));
-}
-
 .figure img {
   object-fit: cover;
 }

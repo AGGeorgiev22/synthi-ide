@@ -110,7 +110,6 @@
 
 .gpuImage {
   object-fit: cover;
-  filter: contrast(1.07) saturate(0.98) brightness(1.08);
 }
 
 .gpuAfterLayer {
@@ -120,12 +119,8 @@
 
 .gpuDiffLayer {
   z-index: 3;
-  mix-blend-mode: screen;
+  mix-blend-mode: normal;
   will-change: transform, opacity;
-}
-
-.gpuDiffLayer .gpuImage {
-  filter: contrast(1.18) saturate(1.06) brightness(1.15);
 }
 
 .gpuDivider {

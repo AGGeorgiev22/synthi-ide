@@ -7,14 +7,3 @@
   color: #f2efe9;
   background: var(--vectant-black);
 }
-
-.page::before {
-  position: fixed;
-  z-index: 30;
-  inset: 0;
-  pointer-events: none;
-  content: "";
-  opacity: 0.014;
-  background-image: url("/noise.svg");
-  background-size: 180px 180px;
-}

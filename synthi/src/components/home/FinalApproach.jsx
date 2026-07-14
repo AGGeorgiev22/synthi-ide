@@ -114,8 +114,6 @@ export function FinalApproach() {
             className={styles.finalAtmosphere}
             aria-hidden="true"
           />
-          <div className={styles.finalAtmosphereGrade} aria-hidden="true" />
-
           <div className={styles.finalRunway} aria-hidden="true">
             <i ref={runwayRef} />
             <i />

@@ -216,7 +216,6 @@ export function AuthorityStory() {
                   sizes="(max-width: 767px) 980px, 100vw"
                   className={styles.authoritySceneImage}
                 />
-                <div className={styles.authoritySceneGrade} aria-hidden="true" />
               </div>
               <div
                 ref={(node) => { copyRefs.current[index] = node; }}

@@ -18,8 +18,6 @@ export function CinematicHero() {
   const atmosphereRef = useRef(null);
   const atmosphereDepthRef = useRef(null);
   const atmosphereFarRef = useRef(null);
-  const atmosphereNearRef = useRef(null);
-  const warningGradeRef = useRef(null);
   const flightPathsRef = useRef(null);
   const routePathRef = useRef(null);
   const routeTokenRef = useRef(null);
@@ -66,10 +64,8 @@ export function CinematicHero() {
           },
         });
         gsap.set([conflictRef.current, incidentRef.current], { autoAlpha: 0 });
-        gsap.set(warningGradeRef.current, { autoAlpha: 0 });
         gsap.set(earlyProofRef.current, { autoAlpha: 0, scale: 0.88, xPercent: 8, yPercent: 7 });
         gsap.set(earlyProofImageRef.current, { scale: 1.08, xPercent: 2.5 });
-        gsap.set(atmosphereNearRef.current, { scale: 1.065, xPercent: 0, yPercent: 0 });
         gsap.set(shutterLeftRef.current, { xPercent: -108 });
         gsap.set(shutterRightRef.current, { xPercent: 108 });
         gsap.set(productRef.current, { autoAlpha: 0, scale: 0.82, yPercent: 7 });
@@ -98,11 +94,6 @@ export function CinematicHero() {
           .to(
             atmosphereFarRef.current,
             { scale: 1.045, xPercent: -0.7, yPercent: -0.45, duration: 1.25 },
-            "coldOpen",
-          )
-          .to(
-            atmosphereNearRef.current,
-            { scale: 1.15, xPercent: -3.8, yPercent: -2.7, duration: 1.25 },
             "coldOpen",
           )
           .to(routePath, { strokeDashoffset: 0, duration: 0.72 }, 0.08)
@@ -139,9 +130,6 @@ export function CinematicHero() {
           .addLabel("conflict", 0.69)
           .to(conflictRef.current, { autoAlpha: 1, scale: 1.15, duration: 0.07, ease: "power3.out" }, "conflict")
           .to(incidentRef.current, { autoAlpha: 1, y: -8, duration: 0.12, ease: "power3.out" }, "conflict")
-          .to(warningGradeRef.current, { autoAlpha: 1, duration: 0.055, ease: "power3.out" }, "conflict")
-          .to(warningGradeRef.current, { autoAlpha: 0.34, duration: 0.13, ease: "power2.out" }, "conflict+=0.055")
-          .to(atmosphereNearRef.current, { scale: 1.18, duration: 0.09, ease: "power3.out" }, "conflict")
           .to(agentsLineRef.current, { xPercent: 4.5, yPercent: -28, autoAlpha: 0, duration: 0.18, ease: "power2.in" }, 0.75)
           .to(authorityLineRef.current, { scaleX: 0.86, yPercent: 24, autoAlpha: 0, duration: 0.2, ease: "power2.in" }, 0.75)
           .to(copyRef.current, { autoAlpha: 0, y: -26, duration: 0.2, ease: "power2.in" }, 0.79)
@@ -240,18 +228,7 @@ export function CinematicHero() {
                 className={styles.cinemaAtmosphereImage}
               />
             </div>
-            <div ref={atmosphereNearRef} className={styles.cinemaAtmosphereNear}>
-              <Image
-                src="/cinema/controlled-flight-night.png"
-                alt=""
-                fill
-                sizes="100vw"
-                className={styles.cinemaAtmosphereImage}
-              />
-            </div>
           </div>
-          <div className={styles.cinemaAtmosphereGrade} />
-          <div ref={warningGradeRef} className={styles.cinemaWarningGrade} />
         </div>
 
         <figure ref={earlyProofRef} className={styles.cinemaEarlyProof}>
@@ -298,7 +275,7 @@ export function CinematicHero() {
         </div>
 
         <div ref={copyRef} className={styles.cinemaHeroCopy}>
-          <p className={styles.cinemaEyebrow}>Vectant control plane</p>
+          <p className={styles.cinemaEyebrow}>TRUST IS EVERYTHING</p>
           <h1>
             <span ref={agentsLineRef}>Agents move.</span>
             <span ref={authorityLineRef}>Authority stays bounded.</span>
@@ -332,7 +309,6 @@ export function CinematicHero() {
                 className={styles.cinemaProductImage}
               />
             </div>
-            <div className={styles.cinemaProductGrade} aria-hidden="true" />
             <svg
               ref={productFrameRef}
               className={styles.cinemaProductFrame}

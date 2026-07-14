@@ -159,7 +159,6 @@ export function ControlPlaneAtlas() {
                 className={styles.systemImage}
               />
             </div>
-            <div className={styles.systemImageGrade} aria-hidden="true" />
             <div className={styles.systemCopy}>
               <SystemMode>Live control system</SystemMode>
               <h2>Air traffic control for AI coding agents.</h2>
@@ -251,7 +250,6 @@ export function ControlPlaneAtlas() {
                 className={styles.systemImage}
               />
             </div>
-            <div className={styles.programsGrade} aria-hidden="true" />
             <div className={styles.programsCopy}>
               <SystemMode>Isolated workspace runtime</SystemMode>
               <h2>Your workspace is not a preview. It is a machine.</h2>
@@ -286,7 +284,6 @@ export function ControlPlaneAtlas() {
                 className={styles.systemImage}
               />
             </div>
-            <div className={styles.openGrade} aria-hidden="true" />
             <div className={styles.openCopy}>
               <SystemMode tone="open">Open control plane</SystemMode>
               <h2>Bring the agent. Keep the environment.</h2>

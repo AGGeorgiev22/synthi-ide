@@ -167,7 +167,6 @@ export function RuntimeFeedback() {
                   sizes="(max-width: 767px) 96vw, (min-width: 768px) 76vw"
                   className={`${styles.proofPanelImage} ${item.position}`}
                 />
-                <div className={styles.proofPanelGrade} aria-hidden="true" />
               </div>
               <div
                 ref={(node) => { captionRefs.current[index] = node; }}

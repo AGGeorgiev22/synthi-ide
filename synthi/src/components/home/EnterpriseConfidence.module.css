@@ -179,18 +179,9 @@
   box-shadow: 0 0 0 1px rgb(255 255 255 / 0.09);
 }
 
-.confidenceInner figure::after {
-  position: absolute;
-  inset: 0;
-  content: "";
-  background: linear-gradient(180deg, transparent 52%, rgb(8 7 13 / 0.42));
-  pointer-events: none;
-}
-
 .confidenceInner figure img {
   object-fit: cover;
   object-position: center 14%;
-  filter: contrast(1.06) saturate(0.92) brightness(1.16);
 }
 
 .confidenceCell[data-cell="evidence"] .confidenceInner {

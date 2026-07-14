@@ -40,16 +40,6 @@
 .boundaryImage {
   object-fit: cover;
   object-position: center center;
-  filter: contrast(1.04) saturate(0.96) brightness(1.13);
-}
-
-.boundaryVignette {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background:
-    linear-gradient(180deg, rgb(3 4 7 / 0.08), transparent 16%, transparent 84%, rgb(3 4 7 / 0.28)),
-    radial-gradient(circle at center, transparent 55%, rgb(3 4 7 / 0.22) 100%);
 }
 
 .boundaryCopy {

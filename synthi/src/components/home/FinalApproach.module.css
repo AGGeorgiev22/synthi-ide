@@ -26,39 +26,8 @@
   z-index: 0;
   object-fit: cover;
   object-position: center 54%;
-  filter: hue-rotate(226deg) contrast(1.08) saturate(0.54) brightness(0.82);
   transform-origin: center center;
   will-change: transform;
-}
-
-.finalAtmosphereGrade {
-  position: absolute;
-  z-index: 1;
-  inset: 0;
-  background:
-    linear-gradient(90deg, rgb(8 7 13 / 0.88) 0%, rgb(8 7 13 / 0.66) 41%, rgb(8 7 13 / 0.22) 72%, rgb(8 7 13 / 0.48) 100%),
-    linear-gradient(180deg, rgb(8 7 13 / 0.4), transparent 44%, rgb(8 7 13 / 0.86));
-  pointer-events: none;
-}
-
-.finalSurface::before {
-  position: absolute;
-  z-index: 2;
-  inset: 0;
-  content: "";
-  opacity: 0.14;
-  background-image: url("/noise.svg");
-  mix-blend-mode: soft-light;
-  pointer-events: none;
-}
-
-.finalSurface::after {
-  position: absolute;
-  z-index: 2;
-  inset: 0;
-  content: "";
-  background: linear-gradient(180deg, rgb(255 255 255 / 0.04), transparent 35%, rgb(0 0 0 / 0.18));
-  pointer-events: none;
 }
 
 .finalRunway {

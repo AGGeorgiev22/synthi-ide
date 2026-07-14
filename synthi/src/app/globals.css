@@ -1670,87 +1670,8 @@ html.light .hero-product-depth {
   height: min(62dvh, 680px);
   min-height: 520px;
   border-radius: 12px;
-  filter: brightness(1.1) contrast(1.06) saturate(1.04);
   object-fit: cover;
   object-position: top center;
-}
-
-.hero-shot-brand-mask {
-  position: absolute;
-  top: 41px;
-  left: 9px;
-  z-index: 3;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  min-width: 252px;
-  height: 70px;
-  border-radius: 12px;
-  background:
-    linear-gradient(90deg, rgba(8, 8, 9, 1), rgba(8, 8, 9, 0.97) 74%, rgba(8, 8, 9, 0));
-  padding: 0 18px;
-  font-family: var(--font-satoshi), ui-sans-serif, system-ui, sans-serif;
-  color: #fff7ef;
-  pointer-events: none;
-}
-
-.hero-shot-brand-mask span {
-  font-family: var(--font-mono);
-  font-size: 18px;
-  font-weight: 760;
-  letter-spacing: 0;
-  color: #ff62ad;
-  text-shadow: 0 0 18px rgba(255, 98, 173, 0.5);
-}
-
-.hero-shot-brand-mask strong {
-  font-size: 16px;
-  font-weight: 760;
-}
-
-.hero-proof-scan {
-  position: absolute;
-  right: 3.4%;
-  left: 3.4%;
-  top: 24%;
-  z-index: 3;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 8px;
-  border-top: 1px solid rgba(255, 247, 239, 0.12);
-  border-bottom: 1px solid rgba(255, 247, 239, 0.08);
-  background:
-    linear-gradient(90deg, transparent, rgba(255, 247, 239, 0.055), transparent),
-    linear-gradient(180deg, rgba(8, 8, 9, 0.34), transparent);
-  padding: 7px 10px;
-  color: rgba(255, 247, 239, 0.46);
-  font-family: var(--font-mono);
-  font-size: 9px;
-  font-weight: 650;
-  line-height: 1;
-  opacity: 0.68;
-  pointer-events: none;
-  text-transform: lowercase;
-  transform: translate3d(0, -10px, 0);
-}
-
-.hero-proof-scan::before {
-  content: none;
-}
-
-.hero-proof-scan span {
-  position: relative;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-html.light .hero-proof-scan {
-  background:
-    linear-gradient(90deg, transparent, rgba(255, 247, 239, 0.06), transparent),
-    linear-gradient(180deg, rgba(8, 8, 9, 0.3), transparent);
-  color: rgba(255, 247, 239, 0.5);
 }
 
 .hero-product-card {
@@ -1806,7 +1727,6 @@ html.light .hero-proof-scan {
 
 .hero-product-card-anchor:hover .hero-product-card,
 .hero-code-collab-anchor:hover .hero-code-collab-card {
-  filter: brightness(1.08) saturate(1.06);
   box-shadow:
     0 60px 150px rgba(0, 0, 0, 0.7),
     0 22px 82px rgba(81, 215, 233, 0.14),
@@ -1867,40 +1787,6 @@ html.light .hero-product-card {
   font-size: 9.5px;
   line-height: 1.45;
   color: rgba(255, 247, 239, 0.52);
-}
-
-.hero-workflow-brand-mask {
-  position: absolute;
-  top: 6px;
-  right: 6px;
-  left: 6px;
-  z-index: 3;
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  border: 1px solid rgba(255, 247, 239, 0.13);
-  border-radius: 9px;
-  background:
-    linear-gradient(90deg, rgba(8, 8, 9, 0.98), rgba(8, 8, 9, 0.92));
-  padding: 7px 10px;
-  color: #fff7ef;
-  pointer-events: none;
-}
-
-.hero-workflow-brand-mask span {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 760;
-  color: #ff62ad;
-}
-
-.hero-workflow-brand-mask strong {
-  min-width: 0;
-  overflow: hidden;
-  font-size: 11px;
-  font-weight: 760;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .hero-collab-typing {
@@ -5515,25 +5401,6 @@ html.light .belief-proof-rail em {
   .hero-primary-shot-image {
     height: 360px;
     min-height: 0;
-  }
-
-  .hero-shot-brand-mask {
-    top: 43px;
-    min-width: 138px;
-    height: 42px;
-    padding-inline: 12px;
-  }
-
-  .hero-shot-brand-mask span {
-    font-size: 14px;
-  }
-
-  .hero-shot-brand-mask strong {
-    font-size: 13px;
-  }
-
-  .hero-proof-scan {
-    display: none;
   }
 
   .hero-code-window-top {
