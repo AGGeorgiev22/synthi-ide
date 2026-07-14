@@ -263,17 +263,36 @@ export function GuardedRunCinema() {
                   <strong>{replayEvent.title}</strong>
                   <p>{replayEvent.detail}</p>
                 </div>
-                <label>
-                  <span>Scrub Black Box replay</span>
-                  <input
-                    type="range"
-                    min="0"
-                    max={REPLAY_EVENTS.length - 1}
-                    step="1"
-                    value={replayIndex}
-                    onChange={(event) => setReplayIndex(Number(event.target.value))}
-                    aria-valuetext={`${replayEvent.state}: ${replayEvent.title}`}
-                  />
+                <label className={styles.replayScrubber}>
+                  <span className={styles.replayLabel}>
+                    <span>Scrub Black Box replay</span>
+                    <b>{String(replayIndex + 1).padStart(2, "0")} / {String(REPLAY_EVENTS.length).padStart(2, "0")}</b>
+                  </span>
+                  <span className={styles.scrubControl}>
+                    <span className={styles.scrubTrack} aria-hidden="true">
+                      <b
+                        className={styles.scrubProgress}
+                        style={{ transform: `scaleX(${replayIndex / (REPLAY_EVENTS.length - 1)})` }}
+                      />
+                      {REPLAY_EVENTS.map((event, index) => (
+                        <i
+                          key={event.state}
+                          className={styles.scrubMarker}
+                          data-reached={index <= replayIndex}
+                        />
+                      ))}
+                    </span>
+                    <input
+                      type="range"
+                      min="0"
+                      max={REPLAY_EVENTS.length - 1}
+                      step="1"
+                      value={replayIndex}
+                      onChange={(event) => setReplayIndex(Number(event.target.value))}
+                      aria-label="Scrub Black Box replay"
+                      aria-valuetext={`${replayEvent.state}: ${replayEvent.title}`}
+                    />
+                  </span>
                 </label>
                 <ol aria-label="Black Box replay events">
                   {REPLAY_EVENTS.map((event, index) => (
