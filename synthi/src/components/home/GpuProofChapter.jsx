@@ -22,6 +22,7 @@ export function GpuProofChapter() {
   const afterMaskRef = useRef(null);
   const dividerRef = useRef(null);
   const verdictRef = useRef(null);
+  const latencyRef = useRef(null);
 
   useGSAP(
     () => {
@@ -29,6 +30,7 @@ export function GpuProofChapter() {
 
       media.add("(prefers-reduced-motion: no-preference)", () => {
         const gates = gateRefs.current.filter(Boolean);
+        const latency = { value: 0 };
         const timeline = gsap.timeline({
           scrollTrigger: {
             trigger: rootRef.current,
@@ -47,6 +49,7 @@ export function GpuProofChapter() {
         gsap.set(afterMaskRef.current, { clipPath: "inset(0 100% 0 0)" });
         gsap.set(dividerRef.current, { left: "0%", autoAlpha: 0 });
         gsap.set(verdictRef.current, { autoAlpha: 0, y: 24 });
+        if (latencyRef.current) latencyRef.current.textContent = "0";
 
         timeline
           .addLabel("pressure", 0)
@@ -66,6 +69,19 @@ export function GpuProofChapter() {
           .to(diffRef.current, { autoAlpha: 0, duration: 0.28 }, 1.34)
           .to(gates[3], { color: "#ff7657", duration: 0.12 }, 1.5)
           .to(verdictRef.current, { autoAlpha: 1, y: 0, duration: 0.24, ease: "power3.out" }, 1.52)
+          .to(
+            latency,
+            {
+              value: 90,
+              duration: 0.28,
+              ease: "power2.out",
+              snap: { value: 1 },
+              onUpdate: () => {
+                if (latencyRef.current) latencyRef.current.textContent = String(Math.round(latency.value));
+              },
+            },
+            1.52,
+          )
           .to(dividerRef.current, { autoAlpha: 0, duration: 0.16 }, 1.64)
           .to(plateRef.current, { scale: 1.025, duration: 0.42, ease: "none" }, 1.58)
           .to({}, { duration: 0.24 });
@@ -134,9 +150,20 @@ export function GpuProofChapter() {
             ))}
           </figcaption>
 
-          <div ref={verdictRef} className={styles.gpuVerdict} role="status">
-            <span>No reset</span>
-            <strong>Live state stayed attached.</strong>
+          <div ref={verdictRef} className={styles.gpuVerdict}>
+            <div className={styles.gpuVerdictCopy}>
+              <span>No reset</span>
+              <strong>Live state stayed attached.</strong>
+            </div>
+            <div className={styles.gpuLatency}>
+              <p>Measured edit-to-visual</p>
+              <b aria-label="Under 90 milliseconds">
+                <i aria-hidden="true">&lt;</i>
+                <em ref={latencyRef}>90</em>
+                <small>ms</small>
+              </b>
+              <span>No matter the project size, only the changed boundary enters the hot path.</span>
+            </div>
           </div>
         </figure>
       </div>
