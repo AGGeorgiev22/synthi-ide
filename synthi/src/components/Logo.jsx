@@ -1,7 +1,7 @@
 "use client";
 
 import { useId } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 
 import { cn } from "@/lib/utils";
 
@@ -111,34 +111,30 @@ export function AnimatedLogo({ expanded = true, className }) {
 
   return (
     <motion.span
-      layout
       role="img"
       aria-label="Vectant"
-      transition={transition}
       className={cn("inline-flex items-center text-[#f1eee8]", className)}
     >
       <LeftPiece gradientId={gradientId} />
-      <AnimatePresence initial={false} mode="popLayout">
-        {expanded && (
-          <motion.span
-            key="vectant-wordmark"
-            layout
-            aria-hidden="true"
-            initial={reduceMotion ? false : { opacity: 0, scaleX: 0.72, x: -7 }}
-            animate={{ opacity: 1, scaleX: 1, x: 0 }}
-            exit={reduceMotion ? { opacity: 0 } : { opacity: 0, scaleX: 0.72, x: -7 }}
-            transition={transition}
-            style={{
-              fontFamily: 'var(--font-space-grotesk, "Space Grotesk"), var(--font-satoshi, "Satoshi"), ui-sans-serif, sans-serif',
-              transformOrigin: "left center",
-            }}
-            className="mx-2 whitespace-nowrap text-[16px] font-semibold tracking-[0.2em]"
-          >
-            VECTANT
-          </motion.span>
-        )}
-      </AnimatePresence>
-      <motion.span layout transition={transition} className="inline-flex">
+      <motion.span
+        aria-hidden="true"
+        initial={false}
+        animate={expanded ? { opacity: 1, scaleX: 1, x: 0 } : { opacity: 0, scaleX: 0.72, x: -7 }}
+        transition={transition}
+        style={{
+          fontFamily: 'var(--font-space-grotesk, "Space Grotesk"), var(--font-satoshi, "Satoshi"), ui-sans-serif, sans-serif',
+          transformOrigin: "left center",
+        }}
+        className="mx-2 whitespace-nowrap text-[16px] font-semibold tracking-[0.2em]"
+      >
+        VECTANT
+      </motion.span>
+      <motion.span
+        initial={false}
+        animate={{ x: expanded ? 0 : -108 }}
+        transition={transition}
+        className="inline-flex"
+      >
         <RightPiece />
       </motion.span>
     </motion.span>

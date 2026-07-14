@@ -148,8 +148,7 @@ export function Navbar() {
 
   return (
     <header className={styles.navHeader}>
-      <motion.nav
-        layout={!reduceMotion}
+      <nav
         aria-label="Primary navigation"
         className={`${styles.navRail} ${scrolled || open ? styles.navRailContracted : ""}`}
       >
@@ -199,7 +198,7 @@ export function Navbar() {
           <span>{open ? "Close" : "Index"}</span>
           <i className={open ? styles.navIndexIconOpen : undefined} aria-hidden="true"><b /><b /></i>
         </button>
-      </motion.nav>
+      </nav>
 
       <AnimatePresence>
         {open && (
