@@ -1,0 +1,27 @@
+{
+  "schemaVersion": "vectant.boundary.v1",
+  "sample": true,
+  "runId": "VCT-SAMPLE-001",
+  "attachedAt": "2026-07-14T12:00:00.000000Z",
+  "repository": {
+    "name": "sample/gpu-kernel",
+    "revision": "9f6b2d75d5fa4ec9d4cf77c51ceda1f8cd5fa47e",
+    "workspace": "isolated-demo-workspace"
+  },
+  "requestedChange": "Adjust the fluid simulation kernel while retaining live runtime state",
+  "actors": {
+    "requester": "sample-developer",
+    "agent": "sample-coding-agent",
+    "reviewer": "sample-reviewer"
+  },
+  "authority": {
+    "read": ["src/kernels/**", "runtime/state/**", "tests/gpu/**"],
+    "write": ["src/kernels/**"],
+    "execute": ["vectant-demo verify gpu-hmr --run VCT-SAMPLE-001"],
+    "protected": ["infra/**", ".github/**"],
+    "requiredConditions": ["abi_match", "state_retained", "output_verified"],
+    "network": "denied",
+    "expiresAt": "2026-07-14T12:15:00.000000Z"
+  },
+  "notice": "Synthetic public demonstration contract. It grants no production access and describes no customer environment."
+}

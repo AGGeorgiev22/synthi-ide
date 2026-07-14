@@ -274,6 +274,23 @@
   line-height: 1.45;
 }
 
+.gpuLatency a {
+  color: var(--vectant-ui-text);
+  text-decoration: underline;
+  text-decoration-color: rgb(var(--vectant-ui-text-rgb) / 0.52);
+  text-underline-offset: 0.18em;
+}
+
+.gpuLatency a:hover,
+.gpuLatency a:focus-visible {
+  color: #f2efe9;
+}
+
+.gpuLatency a:focus-visible {
+  outline: 2px solid var(--vectant-ui-action);
+  outline-offset: 3px;
+}
+
 @media (max-width: 767px) {
   .gpuCinema {
     min-height: 232dvh;

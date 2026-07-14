@@ -1,67 +1,89 @@
 {
-  "schemaVersion": "vectant.sample-proof.v1",
+  "schemaVersion": "vectant.sample-proof.v2",
   "sample": true,
-  "title": "Sample guarded GPU hot-reload run",
-  "notice": "This is a product demonstration artifact, not a customer record or production benchmark.",
-  "scope": {
-    "repository": "sample/gpu-kernel",
-    "environment": "isolated-demo-workspace",
-    "requestedChange": "Update a GPU kernel while retaining live runtime state",
-    "authority": [
-      "read workspace",
-      "write src/kernels/**",
-      "run scoped test command"
-    ],
-    "protectedPaths": [
-      "infra/**",
-      ".github/**"
-    ]
+  "runId": "VCT-SAMPLE-001",
+  "title": "Synthetic guarded GPU hot-reload run",
+  "createdAt": "2026-07-14T12:00:04.000000Z",
+  "notice": "This is a synthetic product demonstration bundle, not a customer record, production telemetry export, independently reproduced benchmark, or service-level commitment.",
+  "story": {
+    "requestedChange": "Adjust the fluid simulation kernel while retaining live runtime state",
+    "before": "The repository, isolated workspace, actors, permissions, protected paths, required runtime conditions, and expiry attach to the run.",
+    "during": "A read is allowed; an ABI-breaking patch is blocked and retained; a corrected patch is escalated and approved under a one-use lease.",
+    "after": "The approved patch, rejected patch, decisions, approval, runtime events, verification, and measurement leave under the same run ID."
   },
-  "decisionTrail": [
-    {
-      "sequence": 1,
-      "state": "allowed",
-      "action": "Read the scoped kernel source and active runtime state",
-      "reason": "Read access is inside the attached workspace contract"
-    },
-    {
-      "sequence": 2,
-      "state": "blocked",
-      "action": "Write outside the scoped kernel path",
-      "reason": "The target is protected by the workspace contract"
-    },
-    {
-      "sequence": 3,
-      "state": "escalated",
-      "action": "Request a temporary exception for the rejected write",
-      "reason": "The change needs explicit human review"
-    },
-    {
-      "sequence": 4,
-      "state": "approved",
-      "action": "Apply the reviewed scoped patch",
-      "reason": "A temporary permission lease was approved"
-    }
-  ],
-  "artifacts": [
-    "boundary contract",
-    "ordered action log",
-    "rejected action and reason",
-    "approval record",
-    "source diff",
-    "runtime event record",
-    "test result"
+  "decisionSummary": [
+    { "sequence": 1, "eventId": "evt-001", "state": "allowed", "target": "src/kernels/fluid_sim.comp" },
+    { "sequence": 2, "eventId": "evt-002", "state": "blocked", "target": "src/kernels/fluid_sim.comp", "reasonCode": "ABI_CONDITION_FAILED" },
+    { "sequence": 3, "eventId": "evt-003", "state": "escalated", "target": "src/kernels/fluid_sim.comp", "reasonCode": "REVIEW_REQUIRED" },
+    { "sequence": 4, "eventId": "evt-004", "state": "approved", "target": "src/kernels/fluid_sim.comp", "approvalId": "apr-sample-001" }
   ],
   "performanceEvidence": {
-    "claim": "Under 90 ms edit-to-visual on the shown GPU hot-reload run",
-    "measurementBoundary": "From accepted source edit to the updated visual output event",
-    "environment": "The Vectant product demonstration shown on this site",
-    "qualification": "This sample describes one shown run and is not a general latency guarantee. Pilot success criteria are measured against the scoped buyer workflow."
+    "metric": "edit_to_visual_ms",
+    "value": 89.7,
+    "display": "<90 ms",
+    "startEventId": "evt-005",
+    "endEventId": "evt-008",
+    "sampleCount": 1,
+    "qualification": "One synthetic demonstration trace. See measurement.json and methodology.md for the boundary and limitations."
   },
-  "methodology": [
-    "Attach repository, environment, permissions, and limits before execution.",
-    "Record allowed, blocked, escalated, and approved actions in sequence.",
-    "Retain the rejected branch alongside the approved change.",
-    "Export the boundary, decision trail, change, runtime evidence, and test result together."
-  ]
+  "artifacts": [
+    {
+      "name": "Boundary contract",
+      "href": "/sample-proof/boundary-contract.json",
+      "mediaType": "application/json",
+      "sha256": "ad34714803a69e7a565cec84d9f6d6e6ba2f58841227cc6063f330b221aa9061"
+    },
+    {
+      "name": "Ordered action events",
+      "href": "/sample-proof/action-events.json",
+      "mediaType": "application/json",
+      "sha256": "0a9cba6b7a89dc2e48498d2d7ee906df2946eb6f2a1b0711a93813a3691262c1"
+    },
+    {
+      "name": "Approval record",
+      "href": "/sample-proof/approval-record.json",
+      "mediaType": "application/json",
+      "sha256": "c7e7dd5de1df601db072b601084be10c6b295eda9e1af13ee9b2f379d3f40dbd"
+    },
+    {
+      "name": "Rejected patch",
+      "href": "/sample-proof/rejected.patch",
+      "mediaType": "text/x-diff",
+      "sha256": "7c58d56f6601f2e101021acfa8c962ab506eee982cf711218be5ea527d664589"
+    },
+    {
+      "name": "Approved patch",
+      "href": "/sample-proof/approved.patch",
+      "mediaType": "text/x-diff",
+      "sha256": "68abcbf62c167feab7e4da4b0a6967f0e4bfdc7fc97e279b538da63a237f91bc"
+    },
+    {
+      "name": "Runtime events",
+      "href": "/sample-proof/runtime-events.json",
+      "mediaType": "application/json",
+      "sha256": "b04389d64c404d0d4f2a1a909cace2fb9881024636d7f1e56d209a742e038f23"
+    },
+    {
+      "name": "Verification result",
+      "href": "/sample-proof/verification-result.json",
+      "mediaType": "application/json",
+      "sha256": "f9c26729a1c7d496579e1dd35775267e1fdc34c10851988d94200abbaed97021"
+    },
+    {
+      "name": "Measurement record",
+      "href": "/sample-proof/measurement.json",
+      "mediaType": "application/json",
+      "sha256": "726720348a9f28bd3bad894354af9ecce87cafaa85617d7de92bb5d3233e80ae"
+    },
+    {
+      "name": "Methodology and limitations",
+      "href": "/sample-proof/methodology.md",
+      "mediaType": "text/markdown",
+      "sha256": "fddb9252dfa067344f2318d87ed0eb17467b68036ff18e867b956d8b9490d292"
+    }
+  ],
+  "integrity": {
+    "algorithm": "SHA-256",
+    "scope": "Each digest covers the exact bytes of the linked public artifact. The manifest does not hash itself."
+  }
 }

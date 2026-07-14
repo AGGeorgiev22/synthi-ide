@@ -1,0 +1,17 @@
+diff --git a/src/kernels/fluid_sim.comp b/src/kernels/fluid_sim.comp
+index 4d8ef41..105f5e1 100644
+--- a/src/kernels/fluid_sim.comp
++++ b/src/kernels/fluid_sim.comp
+@@ -1,7 +1,6 @@
+ #version 460
+ layout(local_size_x = 16, local_size_y = 16) in;
+ layout(set = 0, binding = 1) readonly buffer Velocity { vec2 velocity[]; };
+-layout(set = 0, binding = 2) writeonly buffer Output { vec4 color[]; };
+ 
+ void main() {
+   uint id = gl_GlobalInvocationID.x;
+@@ -9,5 +8,5 @@ void main() {
+   vec2 flow = velocity[id];
+-  color[id] = vec4(flow * 0.5 + 0.5, 0.62, 1.0);
++  imageStore(outputImage, ivec2(gl_GlobalInvocationID.xy), vec4(flow, 0.0, 1.0));
+ }

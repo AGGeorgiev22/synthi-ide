@@ -55,6 +55,15 @@
   margin: 0;
 }
 
+.sampleRun {
+  color: var(--vectant-ui-text);
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.56rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
 .runHeader h2 {
   max-width: 22ch;
   font-family: var(--font-display);

@@ -32,9 +32,9 @@ const EVIDENCE_LINKS = [
   },
   {
     key: "performance",
-    label: "Measured GPU HMR proof",
-    value: "Under 90 ms edit-to-visual on the shown run",
-    href: "#gpu-hmr",
+    label: "GPU HMR measurement",
+    value: "89.7 ms synthetic trace with timestamps, boundary, context, and limitations",
+    href: "/sample-proof/measurement.json",
   },
 ];
 

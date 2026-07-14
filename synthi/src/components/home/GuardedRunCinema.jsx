@@ -12,42 +12,43 @@ import styles from "@/components/home/GuardedRunCinema.module.css";
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 const ACTS = ["Before execution", "During execution", "After execution"];
+const SAMPLE_RUN_ID = "VCT-SAMPLE-001";
 
 const BOUNDARY = [
-  ["Repository", "Guarded workspace attached"],
-  ["Environment", "Isolated runtime online"],
-  ["Authority", "Read plus scoped write"],
-  ["Limit", "Protected paths require review"],
+  ["Repository", "sample/gpu-kernel attached"],
+  ["Environment", "Isolated demo runtime online"],
+  ["Authority", "Read plus src/kernels/** write"],
+  ["Limit", "ABI, state, and output must verify"],
 ];
 
 const REPLAY_EVENTS = [
   {
     state: "Allowed",
     title: "Runtime state read",
-    detail: "The agent inspects the live environment without broadening its write scope.",
+    detail: "The agent reads fluid_sim.comp and the attached state token inside the sample boundary.",
   },
   {
     state: "Blocked",
-    title: "Protected write held",
-    detail: "The mutation leaves the landing path and enters quarantine with its reason attached.",
+    title: "ABI-breaking patch held",
+    detail: "A proposal removes output binding 2. It leaves the hot path with the failed ABI condition attached.",
   },
   {
     state: "Escalated",
     title: "Scoped lease requested",
-    detail: "A reviewer sees the exact path, proposed change, runtime state, and failed condition.",
+    detail: "The reviewer receives the rejected proposal, corrected patch, ABI result, and expected visual boundary.",
   },
   {
     state: "Approved",
-    title: "Bounded mutation resumes",
-    detail: "Only the reviewed path receives a temporary lease. The rejected branch stays in the record.",
+    title: "Corrected kernel patch resumes",
+    detail: "A one-use lease admits only approved.patch. rejected.patch remains in the same run record.",
   },
 ];
 
 const PROOF_BUNDLE = [
-  ["Change", "Reviewed diff and landing state"],
-  ["Decisions", "Block, escalation, and approval"],
-  ["Runtime", "Environment events and live state"],
-  ["Proof", "Replayable export with provenance"],
+  ["Change", "approved.patch + rejected.patch"],
+  ["Decisions", "evt-001 through evt-004"],
+  ["Runtime", "Retained state + visual event"],
+  ["Proof", "Versioned JSON + SHA-256 index"],
 ];
 
 function useOptionalRunSound(replayIndex) {
@@ -198,8 +199,9 @@ export function GuardedRunCinema() {
       <div ref={stageRef} className={styles.stage}>
         <header className={styles.runHeader}>
           <div>
+            <span className={styles.sampleRun}>Synthetic sample · {SAMPLE_RUN_ID}</span>
             <h2 id="guarded-run-title">One guarded run. Three acts. One record.</h2>
-            <p>Watch authority move from boundary to approved change without losing the rejected path.</p>
+            <p>Trace one GPU kernel change from boundary to approved patch without losing the rejected path.</p>
           </div>
           <button
             type="button"
@@ -228,7 +230,7 @@ export function GuardedRunCinema() {
             <div className={styles.sceneCopy}>
               <span>Before execution</span>
               <h3>The boundary exists before the first mutation.</h3>
-              <p>Repository, environment, permissions, and hard limits attach to the run as one reviewable contract.</p>
+              <p>The sample GPU repository, runtime, path authority, and verification gates attach under one run ID.</p>
               <dl className={styles.boundaryList}>
                 {BOUNDARY.map(([term, detail]) => (
                   <div key={term}><dt>{term}</dt><dd>{detail}</dd></div>
@@ -331,7 +333,7 @@ export function GuardedRunCinema() {
             <div className={styles.sceneCopy}>
               <span>After execution</span>
               <h3>The change leaves with its reasons.</h3>
-              <p>The approved diff, rejected branch, runtime state, and review trail travel together.</p>
+              <p>The approved GPU diff, rejected ABI branch, retained state, and review trail travel together.</p>
               <dl className={styles.proofList}>
                 {PROOF_BUNDLE.map(([term, detail]) => (
                   <div key={term}><dt>{term}</dt><dd>{detail}</dd></div>

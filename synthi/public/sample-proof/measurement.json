@@ -1,0 +1,25 @@
+{
+  "schemaVersion": "vectant.measurement.v1",
+  "sample": true,
+  "runId": "VCT-SAMPLE-001",
+  "metric": "edit_to_visual_ms",
+  "value": 89.7,
+  "displayRule": "Render as <90 ms; animate the visible counter to 90 before revealing the underline.",
+  "boundary": {
+    "startEventId": "evt-005",
+    "start": "accepted source edit enters the scoped hot path",
+    "startMonotonicNs": 4821000000000,
+    "endEventId": "evt-008",
+    "end": "updated visual output event is observed",
+    "endMonotonicNs": 4821089700000,
+    "deltaNs": 89700000
+  },
+  "context": {
+    "project": "synthetic fluid simulation demonstration fixture",
+    "workspace": "isolated-demo-workspace",
+    "viewport": "1600x900",
+    "capture": "instrumented public product demonstration",
+    "sampleCount": 1
+  },
+  "qualification": "This is one synthetic demonstration trace, not an independently reproduced benchmark, service-level objective, general latency guarantee, or claim about every project. Pilot performance is measured against the buyer's scoped workflow."
+}

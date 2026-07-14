@@ -150,7 +150,7 @@ export default function DocsPage() {
             <div className={styles.exportCard}>
               <div>
                 <p>vectant.sample-proof.v2</p>
-                <strong>sample-gpu-hmr-2026-07-14-001</strong>
+                <strong>VCT-SAMPLE-001</strong>
               </div>
               <a href="/sample-guarded-run-proof.json" download>
                 Download JSON

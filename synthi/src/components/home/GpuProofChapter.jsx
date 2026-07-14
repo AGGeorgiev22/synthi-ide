@@ -109,7 +109,7 @@ export function GpuProofChapter() {
         </svg>
 
         <div ref={introRef} className={styles.gpuIntro}>
-          <p>GPU hot reload</p>
+          <p>GPU hot reload · synthetic run VCT-SAMPLE-001</p>
           <h2>Change the kernel. Keep the moment.</h2>
           <span>A compiled patch moves only when live state, ABI, output, and evidence agree.</span>
         </div>
@@ -166,7 +166,10 @@ export function GpuProofChapter() {
                 <small>ms</small>
                 <span ref={latencyRuleRef} className={styles.gpuLatencyRule} aria-hidden="true" />
               </b>
-              <span>No matter the project size, only the changed boundary enters the hot path.</span>
+              <span>
+                One synthetic trace measured 89.7 ms. Not a general benchmark.{" "}
+                <a href="/sample-proof/measurement.json">Read the method.</a>
+              </span>
             </div>
           </div>
         </figure>
