@@ -1,9 +1,11 @@
 "use client";
 
-import { useId } from "react";
+import { useId, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 
 import { cn } from "@/lib/utils";
+
+import styles from "./Logo.module.css";
 
 function safeId(value) {
   return value.replaceAll(":", "");
@@ -53,19 +55,22 @@ export function VectantMark({
 
 export function Logo({ className, markClassName, gradientId, showWord = true }) {
   return (
-    <span role="img" aria-label="Vectant" className={cn("inline-flex items-center gap-2 text-ink", className)}>
+    <span role="img" aria-label="Vectant" className={cn(styles.logo, "text-ink", className)}>
       <VectantMark
         decorative
         gradientId={gradientId}
         className={cn("h-6 w-auto", markClassName)}
       />
       {showWord && (
-        <span
-          aria-hidden="true"
-          style={{ fontFamily: 'var(--font-space-grotesk, "Space Grotesk"), var(--font-satoshi, "Satoshi"), ui-sans-serif, sans-serif' }}
-          className="text-[16px] font-semibold tracking-[0.2em] text-ink"
-        >
-          VECTANT
+        <span aria-hidden="true" className={styles.wordShell}>
+          <span className={styles.wordTrack}>
+            <span
+              style={{ fontFamily: 'var(--font-space-grotesk, "Space Grotesk"), var(--font-satoshi, "Satoshi"), ui-sans-serif, sans-serif' }}
+              className={styles.word}
+            >
+              VECTANT
+            </span>
+          </span>
         </span>
       )}
     </span>
@@ -75,35 +80,42 @@ export function Logo({ className, markClassName, gradientId, showWord = true }) 
 export function AnimatedLogo({ expanded = true, className }) {
   const generatedId = useId();
   const reduceMotion = useReducedMotion();
+  const [hovered, setHovered] = useState(false);
   const gradientId = `vt-nav-${safeId(generatedId)}`;
-  const transition = reduceMotion
-    ? { duration: 0 }
-    : { type: "spring", stiffness: 180, damping: 24, mass: 0.62 };
+  const showWord = expanded || hovered;
 
   return (
     <motion.span
       role="img"
       aria-label="Vectant"
-      className={cn("inline-flex items-center text-[#f1eee8]", className)}
+      onHoverStart={() => setHovered(true)}
+      onHoverEnd={() => setHovered(false)}
+      className={cn(
+        styles.animatedLogo,
+        "text-[#f1eee8]",
+        showWord && styles.animatedLogoExpanded,
+        reduceMotion && styles.reduceMotion,
+        className
+      )}
     >
       <VectantMark
         decorative
         gradientId={gradientId}
         className="h-6 w-auto shrink-0"
       />
-      <motion.span
+      <span
         aria-hidden="true"
-        initial={false}
-        animate={expanded ? { opacity: 1, scaleX: 1, x: 0 } : { opacity: 0, scaleX: 0.72, x: -7 }}
-        transition={transition}
-        style={{
-          fontFamily: 'var(--font-space-grotesk, "Space Grotesk"), var(--font-satoshi, "Satoshi"), ui-sans-serif, sans-serif',
-          transformOrigin: "left center",
-        }}
-        className="mx-2 whitespace-nowrap text-[16px] font-semibold tracking-[0.2em]"
+        className={styles.wordShell}
       >
-        VECTANT
-      </motion.span>
+        <span className={styles.wordTrack}>
+          <span
+            style={{ fontFamily: 'var(--font-space-grotesk, "Space Grotesk"), var(--font-satoshi, "Satoshi"), ui-sans-serif, sans-serif' }}
+            className={styles.word}
+          >
+            VECTANT
+          </span>
+        </span>
+      </span>
     </motion.span>
   );
 }

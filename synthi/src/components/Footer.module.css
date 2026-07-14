@@ -48,6 +48,18 @@
   color: #171513 !important;
 }
 
+.footerBrand {
+  display: inline-flex;
+  width: fit-content;
+  outline: none;
+}
+
+.footerBrand:focus-visible {
+  box-shadow:
+    0 0 0 2px #d8d0c5,
+    0 0 0 4px #175c66;
+}
+
 .footerMark {
   width: 2.5rem;
   height: auto;

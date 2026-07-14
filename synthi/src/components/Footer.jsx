@@ -36,7 +36,9 @@ export function Footer() {
     <footer className={styles.footer}>
       <div className={styles.footerShell}>
         <div className={styles.footerLead}>
-          <Logo className={styles.footerLogo} markClassName={styles.footerMark} />
+          <Link href="/" className={styles.footerBrand} aria-label="Vectant home">
+            <Logo className={styles.footerLogo} markClassName={styles.footerMark} />
+          </Link>
           <div>
             <h2>
               <span>Control the run.</span>

@@ -1,0 +1,48 @@
+.logo,
+.animatedLogo {
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.wordShell {
+  display: grid;
+  grid-template-columns: 0fr;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateX(-0.34rem);
+  transition:
+    grid-template-columns 440ms cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 180ms ease,
+    transform 440ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.wordTrack {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.word {
+  display: block;
+  width: max-content;
+  margin-left: 0.58rem;
+  white-space: nowrap;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+}
+
+.logo:hover .wordShell,
+.logo:focus-within .wordShell,
+:global(a:focus-visible) .logo .wordShell,
+.animatedLogoExpanded .wordShell {
+  grid-template-columns: 1fr;
+  opacity: 1;
+  transform: translateX(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wordShell {
+    transition-duration: 0.01ms;
+  }
+}

@@ -82,7 +82,9 @@ export default function BlogPage() {
       </section>
 
       <footer className={styles.footer}>
-        <Logo className={styles.footerLogo} markClassName={styles.footerMark} />
+        <Link href="/" aria-label="Vectant home">
+          <Logo className={styles.footerLogo} markClassName={styles.footerMark} />
+        </Link>
         <div>
           <Link href="/privacy">Privacy</Link>
           <Link href="/terms">Terms</Link>
