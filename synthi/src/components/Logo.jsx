@@ -104,11 +104,11 @@ export function Logo({ className, markClassName, gradientId, showWord = true }) 
     <span
       role="img"
       aria-label="Vectant"
-      className={cn(styles.logo, showWord && styles.logoExpanded, "text-ink", className)}
+      className={cn(styles.logo, showWord && styles.logoExpanded, "text-ink", markClassName, className)}
     >
       <VectantSignatureStart
         gradientId={resolvedGradientId}
-        className={cn(styles.signatureStart, "h-6 w-auto", markClassName)}
+        className={styles.signatureStart}
       />
       {showWord && <SignatureWord />}
       <VectantSignatureEnd className={styles.signatureEnd} />
@@ -129,12 +129,13 @@ export function AnimatedLogo({ expanded = true, interactive = true, className, m
         interactive && styles.animatedLogoInteractive,
         "text-[#f1eee8]",
         expanded && styles.animatedLogoExpanded,
+        markClassName,
         className
       )}
     >
       <VectantSignatureStart
         gradientId={gradientId}
-        className={cn(styles.signatureStart, "h-6 w-auto shrink-0", markClassName)}
+        className={styles.signatureStart}
       />
       <SignatureWord />
       <VectantSignatureEnd className={styles.signatureEnd} />

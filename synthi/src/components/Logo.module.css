@@ -1,5 +1,7 @@
 .logo,
 .animatedLogo {
+  --vectant-signature-height: 1.5rem;
+
   display: inline-flex;
   align-items: center;
   min-width: 0;
@@ -8,12 +10,12 @@
 .signatureStart,
 .signatureEnd {
   flex: 0 0 auto;
+  width: auto;
+  height: var(--vectant-signature-height);
 }
 
 .signatureEnd {
-  width: 0.375rem;
-  height: 1.5rem;
-  margin-left: -0.03rem;
+  margin-left: calc(var(--vectant-signature-height) / 64);
 }
 
 .wordShell {
@@ -36,9 +38,11 @@
 .word {
   display: block;
   width: max-content;
-  margin-inline: 0.52rem 0.45rem;
+  margin-inline:
+    calc(var(--vectant-signature-height) * 0.3467)
+    calc(var(--vectant-signature-height) * 0.3);
   white-space: nowrap;
-  font-size: 1rem;
+  font-size: calc(var(--vectant-signature-height) * 0.6667);
   font-weight: 600;
   letter-spacing: 0.2em;
 }

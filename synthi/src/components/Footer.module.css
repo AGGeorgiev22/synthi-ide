@@ -61,8 +61,7 @@
 }
 
 .footerMark {
-  width: 2.5rem;
-  height: auto;
+  --vectant-signature-height: 2.5rem;
 }
 
 .footerLead h2 {

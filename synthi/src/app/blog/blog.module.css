@@ -31,7 +31,7 @@
 
 .mark,
 .footerMark {
-  width: 2rem;
+  --vectant-signature-height: 2rem;
 }
 
 .header nav,

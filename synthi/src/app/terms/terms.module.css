@@ -27,7 +27,7 @@
 }
 
 .mark {
-  width: 2rem;
+  --vectant-signature-height: 2rem;
 }
 
 .backLink,
