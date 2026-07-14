@@ -1,0 +1,67 @@
+{
+  "schemaVersion": "vectant.sample-proof.v1",
+  "sample": true,
+  "title": "Sample guarded GPU hot-reload run",
+  "notice": "This is a product demonstration artifact, not a customer record or production benchmark.",
+  "scope": {
+    "repository": "sample/gpu-kernel",
+    "environment": "isolated-demo-workspace",
+    "requestedChange": "Update a GPU kernel while retaining live runtime state",
+    "authority": [
+      "read workspace",
+      "write src/kernels/**",
+      "run scoped test command"
+    ],
+    "protectedPaths": [
+      "infra/**",
+      ".github/**"
+    ]
+  },
+  "decisionTrail": [
+    {
+      "sequence": 1,
+      "state": "allowed",
+      "action": "Read the scoped kernel source and active runtime state",
+      "reason": "Read access is inside the attached workspace contract"
+    },
+    {
+      "sequence": 2,
+      "state": "blocked",
+      "action": "Write outside the scoped kernel path",
+      "reason": "The target is protected by the workspace contract"
+    },
+    {
+      "sequence": 3,
+      "state": "escalated",
+      "action": "Request a temporary exception for the rejected write",
+      "reason": "The change needs explicit human review"
+    },
+    {
+      "sequence": 4,
+      "state": "approved",
+      "action": "Apply the reviewed scoped patch",
+      "reason": "A temporary permission lease was approved"
+    }
+  ],
+  "artifacts": [
+    "boundary contract",
+    "ordered action log",
+    "rejected action and reason",
+    "approval record",
+    "source diff",
+    "runtime event record",
+    "test result"
+  ],
+  "performanceEvidence": {
+    "claim": "Under 90 ms edit-to-visual on the shown GPU hot-reload run",
+    "measurementBoundary": "From accepted source edit to the updated visual output event",
+    "environment": "The Vectant product demonstration shown on this site",
+    "qualification": "This sample describes one shown run and is not a general latency guarantee. Pilot success criteria are measured against the scoped buyer workflow."
+  },
+  "methodology": [
+    "Attach repository, environment, permissions, and limits before execution.",
+    "Record allowed, blocked, escalated, and approved actions in sequence.",
+    "Retain the rejected branch alongside the approved change.",
+    "Export the boundary, decision trail, change, runtime evidence, and test result together."
+  ]
+}

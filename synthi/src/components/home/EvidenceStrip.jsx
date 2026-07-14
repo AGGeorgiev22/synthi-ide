@@ -13,9 +13,10 @@ const EVIDENCE_LINKS = [
   },
   {
     key: "bundle",
-    label: "Proof bundle",
-    value: "Plan, provenance, runtime events, and export",
-    href: "#proof",
+    label: "Download sample proof",
+    value: "Plan, provenance, runtime events, decision trail, and methodology",
+    href: "/sample-guarded-run-proof.json",
+    download: true,
   },
   {
     key: "controls",
@@ -65,6 +66,7 @@ export function EvidenceStrip() {
             <Link
               key={item.key}
               href={item.href}
+              download={item.download || undefined}
               className={`${styles.evidenceCell} ${styles[item.key]}`}
             >
               <span>{item.label}</span>
