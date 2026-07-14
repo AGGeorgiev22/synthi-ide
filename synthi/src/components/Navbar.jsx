@@ -22,6 +22,7 @@ const NAV_GROUPS = [
       { label: "Run boundary", detail: "Scope the repository", href: "#runtime" },
       { label: "Authority", detail: "Forecast and constrain", href: "#runtime-path" },
       { label: "GPU HMR", detail: "Patch without restart", href: "#gpu-hmr" },
+      { label: "System atlas", detail: "Inspect the full control plane", href: "#systems" },
     ],
   },
   {
