@@ -105,6 +105,7 @@
 
 .figure img {
   object-fit: cover;
+  filter: grayscale(1) sepia(0.88) hue-rotate(210deg) saturate(1.6) contrast(1.08) brightness(1.02);
 }
 
 .body {
@@ -168,6 +169,7 @@
 
 .inlineImage img {
   object-fit: cover;
+  filter: grayscale(1) sepia(0.88) hue-rotate(210deg) saturate(1.6) contrast(1.08) brightness(1.02);
 }
 
 .inlineFigure figcaption {

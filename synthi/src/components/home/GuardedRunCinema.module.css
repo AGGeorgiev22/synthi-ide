@@ -244,7 +244,7 @@
 .sceneImage {
   object-fit: cover;
   object-position: center 14%;
-  filter: contrast(1.06) saturate(0.94) brightness(1.08);
+  filter: grayscale(1) sepia(0.88) hue-rotate(210deg) saturate(1.6) contrast(1.08) brightness(0.98);
 }
 
 .blackBoxImage {
@@ -647,13 +647,13 @@
   }
 
   .boundaryImage {
-    filter: contrast(1.08) saturate(0.96) brightness(1.28);
+    filter: grayscale(1) sepia(0.88) hue-rotate(210deg) saturate(1.6) contrast(1.08) brightness(1.14);
     transform: scale(1.28);
     transform-origin: 18% 22%;
   }
 
   .blackBoxImage {
-    filter: contrast(1.08) saturate(0.96) brightness(1.24);
+    filter: grayscale(1) sepia(0.88) hue-rotate(210deg) saturate(1.6) contrast(1.08) brightness(1.1);
     transform: scale(1.16);
     transform-origin: 62% 24%;
   }

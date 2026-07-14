@@ -107,7 +107,7 @@
 
 .missionImage {
   object-fit: cover;
-  filter: contrast(1.05) saturate(0.94) brightness(1.08);
+  filter: grayscale(1) sepia(0.88) hue-rotate(210deg) saturate(1.6) contrast(1.08) brightness(1.02);
 }
 
 .missionMediaGrade {

@@ -190,7 +190,7 @@
 .confidenceInner figure img {
   object-fit: cover;
   object-position: center 14%;
-  filter: contrast(1.06) saturate(0.92) brightness(1.16);
+  filter: grayscale(1) sepia(0.88) hue-rotate(210deg) saturate(1.6) contrast(1.08) brightness(1.08);
 }
 
 .confidenceCell[data-cell="evidence"] .confidenceInner {
