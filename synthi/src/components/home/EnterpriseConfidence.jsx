@@ -13,48 +13,48 @@ const GROUPS = [
   {
     key: "data",
     title: "Data boundary",
-    status: "Configured per pilot",
+    status: "Defined before access",
     Icon: HardDrives,
     items: [
       [
         "What leaves the environment",
-        "Data can leave only when an authorized connected model, MCP server, or service is invoked. Each integration flow is documented during scoping.",
+        "The pilot contract must list every model, MCP server, tool, or service allowed to receive data. The public sample invokes no external service.",
       ],
       [
         "What is retained",
-        "Workspace content and operational records follow the signed pilot agreement, security needs, and published privacy policy. Retention is not hidden behind a default claim.",
+        "Workspace content, proof records, operational logs, export timing, deletion triggers, backup expiry, and permitted holds are recorded as separate terms before access.",
       ],
     ],
   },
   {
     key: "authority",
     title: "Authority controls",
-    status: "Live in pilot",
+    status: "Public schema · pilot-scoped",
     Icon: ShieldCheck,
     items: [
       [
         "Models and MCP servers",
-        "Allowed models, servers, tools, and connected services are chosen before the run and can be excluded from the workspace contract.",
+        "The public schema supports an explicit allow-list. Actual exclusions and enforcement depth must be validated in the signed pilot boundary.",
       ],
       [
         "Permission scope",
-        "Read, write, path, runtime, and time limits attach as explicit conditions. Temporary leases expire instead of silently becoming permanent access.",
+        "The sample records read, write, path, runtime, and time conditions plus an expiring one-use lease. Buyer-specific behavior is a pilot success criterion.",
       ],
     ],
   },
   {
     key: "evidence",
     title: "Evidence and deployment",
-    status: "Live in pilot",
+    status: "Public sample · validate in pilot",
     Icon: FlowArrow,
     items: [
       [
         "Replay and export",
-        "Allowed actions, denied writes, escalations, approvals, provenance, and runtime events remain ordered and exportable with the change.",
+        "The downloadable sample orders actions, denial, escalation, approval, patches, runtime events, verification, and hashes. A buyer run must reproduce the agreed export.",
       ],
       [
         "Deployment today",
-        "The current pilot runs in a Vectant-managed isolated workspace. Additional deployment models are scoped explicitly and are not presented as generally available.",
+        "The public pilot format is a Vectant-managed isolated workspace. Exact availability and architecture are confirmed in the order form; other models are not advertised as live.",
       ],
     ],
     image: "/product-proof/codesite-line-inspector-ui-desktop.png",
@@ -63,12 +63,12 @@ const GROUPS = [
   {
     key: "operations",
     title: "Enterprise operations",
-    status: "Live and planned",
+    status: "Pilot service · roadmap",
     Icon: Buildings,
     items: [
       [
         "Identity and audit",
-        "Run-level audit evidence is available in the pilot. SSO, SCIM, and organization-wide administration are planned and are not sold as live controls.",
+        "Run-level evidence is a pilot validation target. SSO, SCIM, and organization-wide administration remain planned and are not sold as live controls.",
       ],
       [
         "Implementation owner",
@@ -85,8 +85,8 @@ export function EnterpriseConfidence() {
         <header className={styles.confidenceHeader}>
           <h2 id="confidence-title">Know what crosses the boundary.</h2>
           <p>
-            Live controls, per-pilot configuration, and planned enterprise features are labeled separately.
-            Review the full <Link href="/privacy">data policy</Link> before access is granted.
+            Public sample behavior, buyer-specific pilot validation, and planned enterprise features are labeled separately.
+            Review the <Link href="/docs">technical reference</Link> and <Link href="/privacy">data policy</Link> before access is granted.
           </p>
         </header>
 

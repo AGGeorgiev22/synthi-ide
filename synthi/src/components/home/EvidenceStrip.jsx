@@ -44,16 +44,16 @@ export function EvidenceStrip() {
       <div className={styles.evidenceShell}>
         <header className={styles.evidenceHeader}>
           <h2 id="evidence-title">Inspect the system before the pilot.</h2>
-          <p>Every claim below points to the product surface or policy that supports it.</p>
+          <p>Public samples, policy, pilot-scoping examples, and measured evidence are labeled by what they prove.</p>
         </header>
 
         <div className={styles.evidenceGrid}>
           <article className={`${styles.evidenceCell} ${styles.agentCell}`}>
             <div>
-              <span>Supported agent clients</span>
-              <strong>Bring the agent stack you already use.</strong>
+              <span>Pilot client paths</span>
+              <strong>Examples to confirm during scoping—not a universal connector claim.</strong>
             </div>
-            <ul aria-label="Supported agent clients">
+            <ul aria-label="Example agent clients to scope for a pilot">
               {AGENTS.map(({ name, Mark }) => (
                 <li key={name} aria-label={name} title={name}>
                   <Mark size={20} />
