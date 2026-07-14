@@ -1,5 +1,185 @@
 export const POSTS = [
   {
+    slug: "the-cache-stampede",
+    category: "Scalability",
+    educational: true,
+    title: "The cache stampede",
+    summary: "A cache stampede is not a cache problem. It is a coordination problem that begins at expiry.",
+    image: "/blog/cache-stampede-hero.png",
+    alt: "Dark data center aisle with server racks, cooling equipment, and restrained amber service lights",
+    sections: [
+      {
+        heading: "Expiry is a synchronized starting gun",
+        body: [
+          "A cached value feels quiet right up until its expiry. Then the next request has no answer, so it asks the origin. If a hundred requests arrive at nearly the same moment, they can all discover the same miss and all make the same expensive request.",
+          "The cache did not merely stop helping. Its shared expiry turned many independent readers into one correlated burst. That is why an otherwise healthy database, API, or rendering tier can suddenly look overloaded at the exact moment a popular key goes cold.",
+        ],
+      },
+      {
+        heading: "Let one request do the refresh",
+        body: [
+          "The most direct response is request coalescing, often called single-flight. The first request that notices a miss becomes the refresher. Other requests for the same key wait for its result instead of starting their own identical fetch.",
+          "The detail that matters is scope. Coalescing inside one process helps one process. A fleet needs a shared coordination mechanism or a cache layer that can protect the origin across instances. Whichever approach you use, put a timeout on the refresh lock and make the failed-refresh path explicit. A stuck lock is just a quieter outage.",
+        ],
+      },
+      {
+        heading: "Serve stale data on purpose",
+        body: [
+          "For data that can be a little old, stale-while-revalidate changes the trade. Return the last known response immediately, then refresh it in the background. The reader keeps moving and the refresh work becomes a controlled event instead of a pile-on at the origin.",
+          "This is not permission to hide every failure behind old data. Decide which responses can safely age, how long they can age, and what the user should see when they cannot. Price quotes and authorisation checks deserve different rules from a product thumbnail or a documentation page.",
+        ],
+      },
+      {
+        heading: "Spread renewal across time",
+        body: [
+          "A uniform time-to-live gives every key the same appointment with failure. Add bounded jitter to expirations, pre-warm the keys that have predictable demand, or refresh ahead of expiry when the source has room. The goal is not randomness for its own sake. It is to stop identical work from choosing the same second.",
+          "Jitter also belongs in retries. If every client retries on the same schedule, a partial failure becomes a metronome that keeps hitting a struggling dependency. Backoff creates space. Jitter stops that space from lining up again.",
+        ],
+      },
+      {
+        heading: "Protect the origin after the miss",
+        body: [
+          "Even a careful cache will miss sometimes. The origin still needs a budget: concurrency limits, queue depth, deadlines, and a response when the budget is gone. It may be better to serve a deliberately limited response, return a retryable error, or shed optional work than to let every caller wait until the whole tier runs out of connections.",
+          "The useful dashboard question is not only cache hit rate. Ask how many refreshes are in flight for the same key, how old the served values are, how long callers wait after a miss, and whether the origin is doing duplicate work. Those signals describe the coordination problem before it becomes an outage.",
+        ],
+      },
+    ],
+    sources: [
+      {
+        label: "RFC 5861: stale-while-revalidate and stale-if-error",
+        href: "https://www.rfc-editor.org/rfc/rfc5861.html",
+      },
+      {
+        label: "AWS Builders' Library: Timeouts, retries, and backoff with jitter",
+        href: "https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/",
+      },
+      {
+        label: "Redis documentation: EXPIRE",
+        href: "https://redis.io/docs/latest/commands/expire/",
+      },
+    ],
+  },
+  {
+    slug: "agents-need-a-work-queue",
+    category: "ML agents",
+    educational: true,
+    title: "Agents need a work queue",
+    summary: "Once an agent retries, calls tools, and waits on a worker, its useful failure modes stop being local.",
+    image: "/blog/agent-workers-hero.png",
+    alt: "Industrial sorting facility with controlled conveyor lanes and neutral crates moving through a queue",
+    sections: [
+      {
+        heading: "A tool call is a distributed-systems boundary",
+        body: [
+          "An agent can look like a single loop: read context, choose a tool, inspect the result, continue. The moment that tool reaches a service, a browser, a repository, or a queue, the loop crosses a boundary where timeouts, partial results, duplicate requests, and restarts are normal.",
+          "That changes the design question. Instead of asking whether the model will make the right next choice, also ask what happens when the choice takes two minutes, succeeds after the caller times out, or returns after the agent has already made another plan.",
+        ],
+      },
+      {
+        heading: "Make work resumable, not merely retryable",
+        body: [
+          "A durable worker needs enough state to continue after a process disappears: the task input, an operation identifier, the current step, the result so far, and a record of what has already caused a side effect. Put that state somewhere the next worker can inspect, not only in the model context that vanished with the first process.",
+          "Retries without state create a second agent that guesses what the first agent did. A resumable task gives the replacement a receipt. It can decide to continue, reconcile, or ask for review from a known point instead of replaying a whole chain blindly.",
+        ],
+      },
+      {
+        heading: "Bound the loop before it meets the queue",
+        body: [
+          "Set an overall deadline, a tool-call budget, a maximum concurrency, and a per-step timeout. Those limits turn an unbounded conversation into a piece of work with a cost. They also make overload visible early: a queue growing faster than workers can acknowledge is a capacity signal, not a prompt-quality problem.",
+          "Prefetch is part of that contract. Letting a worker reserve too much work can improve a benchmark while hiding a growing buffer of unacknowledged tasks. Tune the number against the job duration, failure rate, and memory budget. The right number is a property of the workload, not a constant copied from another service.",
+        ],
+      },
+      {
+        heading: "Retries need a memory",
+        body: [
+          "A timeout says the caller does not know whether an action happened. It does not say the action did not happen. Give every mutation a stable operation ID, record the outcome with the side effect where possible, and return the same semantic result when that ID appears again.",
+          "This is idempotency in practical terms. The worker can retry a network failure without creating a second ticket, charging a second invoice, or sending a second destructive command. It is especially important for agents because their natural response to uncertainty is often to try again with slightly different words.",
+        ],
+      },
+      {
+        heading: "A queue is a contract, not a buffer",
+        body: [
+          "A queue does more than absorb bursts. It defines when work is accepted, when it is acknowledged, what is redelivered, and where work goes when it keeps failing. Those decisions belong in the task protocol, with visible retry counts and an operator path for a poisoned job.",
+          "The most trustworthy agent systems treat their queue like an operations surface. A person should be able to see why a task is waiting, which attempt owns it, what it is allowed to call next, and how to stop it. That is how a model loop becomes serviceable infrastructure.",
+        ],
+      },
+    ],
+    sources: [
+      {
+        label: "AWS Builders' Library: Making retries safe with idempotent APIs",
+        href: "https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/",
+      },
+      {
+        label: "RabbitMQ documentation: Consumer prefetch",
+        href: "https://www.rabbitmq.com/docs/3.13/consumer-prefetch",
+      },
+      {
+        label: "RabbitMQ documentation: Consumer acknowledgements and publisher confirms",
+        href: "https://www.rabbitmq.com/docs/next/confirms",
+      },
+    ],
+  },
+  {
+    slug: "the-second-webhook-is-the-real-test",
+    category: "How to",
+    educational: true,
+    title: "The second webhook is the real test",
+    summary: "Build for retries, reordering, and duplicate delivery before you build for the happy path.",
+    image: "/blog/idempotent-webhooks-hero.png",
+    alt: "Close view of a hardened network relay cabinet with paired modules and neatly routed braided cables",
+    sections: [
+      {
+        heading: "Assume every event can arrive twice",
+        body: [
+          "Webhook delivery is a request across a boundary you do not control. If the sender cannot tell whether your endpoint accepted an event, it will often retry. That is sensible behaviour, but it means the same event can reach your code more than once. Separate events can also arrive in an order your database never expected.",
+          "Make duplicate handling part of the first design. Keep a durable record keyed by the provider's event ID, or by a provider-approved combination that represents the underlying event. If the key already exists, return a successful acknowledgement without repeating the side effect.",
+        ],
+      },
+      {
+        heading: "Verify before you trust the payload",
+        body: [
+          "Check the provider's signature against the original request body before you parse and act on it. Signature verification is about proving the request came from a trusted sender and that the body was not changed on the way to your handler.",
+          "This detail is easy to lose in framework middleware. Some parsers consume or transform the body before your verification code sees it. Keep a route that exposes the raw payload exactly as the provider signed it, verify it, then decode it. Reject requests that fail verification before they become work.",
+        ],
+      },
+      {
+        heading: "Store the receipt with the side effect",
+        body: [
+          "The awkward failure is a crash after you change your database but before you record that the event was processed. The retry arrives and you have no receipt. Where your storage permits it, write the event receipt and the business mutation in the same transaction.",
+          "If the side effect lives in another system, carry an idempotency key into that system too. The aim is not to prove that networks never fail. It is to make a repeated delivery converge on one business outcome instead of multiplying it.",
+        ],
+      },
+      {
+        heading: "Return quickly, work deliberately",
+        body: [
+          "A webhook endpoint should normally validate, persist a minimal receipt, enqueue the real work, and acknowledge promptly. Long-running enrichment, API calls, email, or file processing belongs in a worker where it can be retried, measured, and limited without forcing the sender to guess whether your endpoint is alive.",
+          "That separation also gives you a clean overload policy. You can protect the worker queue, delay optional work, and expose a backlog without making the delivery provider create an escalating storm of HTTP retries.",
+        ],
+      },
+      {
+        heading: "Replays are part of the protocol",
+        body: [
+          "A good webhook system can replay an event safely, inspect its attempts, and explain why it was ignored, deferred, or completed. Keep enough of the validated payload, metadata, and processing result to debug a dispute without relying on a transient log line.",
+          "Test the second delivery on purpose. Send the same event twice. Send a later event before an earlier one. Simulate a timeout after the side effect. If the system reaches the same final state each time, the happy path has earned some trust.",
+        ],
+      },
+    ],
+    sources: [
+      {
+        label: "Stripe documentation: Receive Stripe events in your webhook endpoint",
+        href: "https://docs.stripe.com/webhooks?lang=node",
+      },
+      {
+        label: "Stripe documentation: Resolve webhook signature verification errors",
+        href: "https://docs.stripe.com/webhooks/signature",
+      },
+      {
+        label: "AWS Builders' Library: Making retries safe with idempotent APIs",
+        href: "https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/",
+      },
+    ],
+  },
+  {
     slug: "what-zero-downtime-deploys-actually-do",
     category: "Dev infrastructure",
     educational: true,
