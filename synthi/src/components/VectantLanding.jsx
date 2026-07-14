@@ -1,5 +1,6 @@
 import { CinematicHero } from "@/components/home/CinematicHero";
 import { EvidenceStrip } from "@/components/home/EvidenceStrip";
+import { EnterpriseConfidence } from "@/components/home/EnterpriseConfidence";
 import { FieldNotes } from "@/components/home/FieldNotes";
 import { FinalApproach } from "@/components/home/FinalApproach";
 import { GpuProofChapter } from "@/components/home/GpuProofChapter";
@@ -17,6 +18,7 @@ export function VectantLanding() {
       <GpuProofChapter />
       <OutcomeChapters />
       <MissionProfiles />
+      <EnterpriseConfidence />
       <FieldNotes />
       <FinalApproach />
     </main>
