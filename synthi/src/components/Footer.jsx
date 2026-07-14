@@ -3,21 +3,23 @@ import { ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
 
 import { Logo } from "@/components/Logo";
 import styles from "@/components/Footer.module.css";
-import { PILOT_EMAIL, PILOT_MAILTO } from "@/lib/pilot";
+import { PILOT_EMAIL } from "@/lib/pilot";
 
 const GROUPS = [
   {
     label: "Product",
     links: [
-      { label: "Run boundary", href: "#runtime" },
-      { label: "Authority", href: "#runtime-path" },
+      { label: "Guarded run", href: "#guarded-run" },
       { label: "GPU HMR", href: "#gpu-hmr" },
+      { label: "Buyer outcomes", href: "#systems" },
+      { label: "Who it is for", href: "#teams" },
     ],
   },
   {
     label: "Evidence",
     links: [
-      { label: "Proof reel", href: "#proof" },
+      { label: "Proof bundle", href: "#proof" },
+      { label: "Enterprise controls", href: "#technical-confidence" },
       { label: "Technical questions", href: "#faq" },
     ],
   },
@@ -44,8 +46,8 @@ export function Footer() {
               <span>Control the run.</span>
               <span>Keep the proof.</span>
             </h2>
-            <a href={PILOT_MAILTO} className={styles.footerAction}>
-              Request a proof pilot
+            <a href="#pilot" className={styles.footerAction}>
+              Scope the proof pilot
               <ArrowUpRight size={17} weight="bold" />
             </a>
           </div>

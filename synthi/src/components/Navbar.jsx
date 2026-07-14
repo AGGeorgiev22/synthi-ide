@@ -12,26 +12,26 @@ import { ArrowUpRight } from "@phosphor-icons/react";
 
 import { AnimatedLogo } from "@/components/Logo";
 import styles from "@/components/Navbar.module.css";
-import { PILOT_MAILTO } from "@/lib/pilot";
 
 const NAV_GROUPS = [
   {
     label: "Product",
     detail: "Control path",
     links: [
-      { label: "Run boundary", detail: "Scope the repository", href: "#runtime" },
-      { label: "Authority", detail: "Forecast and constrain", href: "#runtime-path" },
+      { label: "Guarded run", detail: "Constrain, execute, and replay", href: "#guarded-run" },
       { label: "GPU HMR", detail: "Patch without restart", href: "#gpu-hmr" },
-      { label: "System atlas", detail: "Inspect the full control plane", href: "#systems" },
+      { label: "Buyer outcomes", detail: "Inspect the control-plane results", href: "#systems" },
+      { label: "Who it is for", detail: "Teams with difficult systems", href: "#teams" },
     ],
   },
   {
     label: "Evidence",
     detail: "Review path",
     links: [
-      { label: "Proof reel", detail: "Replay and handoff", href: "#proof" },
-      { label: "Who it is for", detail: "Teams under control", href: "#teams" },
+      { label: "Proof bundle", detail: "Replay the decision trail", href: "#proof" },
+      { label: "Enterprise controls", detail: "Data, deployment, and roadmap", href: "#technical-confidence" },
       { label: "Technical questions", detail: "Pilot constraints", href: "#faq" },
+      { label: "Proof pilot", detail: "Scope the defined offer", href: "#pilot" },
     ],
   },
 ];
@@ -73,7 +73,7 @@ export function Navbar() {
   });
 
   useEffect(() => {
-    const finalApproach = document.getElementById("pricing");
+    const finalApproach = document.getElementById("pilot");
     if (!finalApproach) return undefined;
 
     const observer = new IntersectionObserver(
@@ -272,8 +272,8 @@ export function Navbar() {
                 className={styles.navIndexFooter}
               >
                 <p>Bring the repository you still will not hand to an agent.</p>
-                <a href={PILOT_MAILTO} onClick={closeMenu}>
-                  Request a proof pilot
+                <a href="#pilot" onClick={closeMenu}>
+                  Scope the proof pilot
                   <ArrowUpRight size={16} weight="bold" />
                 </a>
               </motion.div>
