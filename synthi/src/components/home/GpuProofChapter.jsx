@@ -23,6 +23,7 @@ export function GpuProofChapter() {
   const dividerRef = useRef(null);
   const verdictRef = useRef(null);
   const latencyRef = useRef(null);
+  const latencyRuleRef = useRef(null);
 
   useGSAP(
     () => {
@@ -49,6 +50,7 @@ export function GpuProofChapter() {
         gsap.set(afterMaskRef.current, { clipPath: "inset(0 100% 0 0)" });
         gsap.set(dividerRef.current, { left: "0%", autoAlpha: 0 });
         gsap.set(verdictRef.current, { autoAlpha: 0, y: 24 });
+        gsap.set(latencyRuleRef.current, { scaleX: 0, transformOrigin: "left center" });
         if (latencyRef.current) latencyRef.current.textContent = "0";
 
         timeline
@@ -82,6 +84,7 @@ export function GpuProofChapter() {
             },
             1.52,
           )
+          .to(latencyRuleRef.current, { scaleX: 1, duration: 0.2, ease: "power3.out" }, 1.8)
           .to(dividerRef.current, { autoAlpha: 0, duration: 0.16 }, 1.64)
           .to(plateRef.current, { scale: 1.025, duration: 0.42, ease: "none" }, 1.58)
           .to({}, { duration: 0.24 });
@@ -161,6 +164,7 @@ export function GpuProofChapter() {
                 <i aria-hidden="true">&lt;</i>
                 <em ref={latencyRef}>90</em>
                 <small>ms</small>
+                <span ref={latencyRuleRef} className={styles.gpuLatencyRule} aria-hidden="true" />
               </b>
               <span>No matter the project size, only the changed boundary enters the hot path.</span>
             </div>

@@ -228,6 +228,7 @@
 }
 
 .gpuLatency b {
+  position: relative;
   display: flex;
   align-items: baseline;
   color: #ff7657;
@@ -236,6 +237,19 @@
   font-weight: 520;
   line-height: 0.78;
   letter-spacing: -0.075em;
+}
+
+.gpuLatencyRule {
+  position: absolute;
+  right: 0;
+  bottom: -0.14em;
+  left: 0.12em;
+  height: 2px;
+  background: #ff7657;
+  box-shadow: 0 0 10px rgb(255 83 46 / 0.56);
+  transform: scaleX(0);
+  transform-origin: left center;
+  will-change: transform;
 }
 
 .gpuLatency i,
@@ -397,6 +411,10 @@
 
   .gpuDivider {
     left: 50% !important;
+  }
+
+  .gpuLatencyRule {
+    transform: scaleX(1) !important;
   }
 }
 
