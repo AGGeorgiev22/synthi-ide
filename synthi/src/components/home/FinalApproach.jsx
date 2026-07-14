@@ -2,21 +2,39 @@
 
 import { useRef } from "react";
 import Image from "next/image";
-import { ArrowUpRight } from "@phosphor-icons/react";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import { VectantMark } from "@/components/Logo";
+import { PilotForm } from "@/components/home/PilotForm";
 import styles from "@/components/home/FinalApproach.module.css";
-import { PILOT_MAILTO } from "@/lib/pilot";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 const RECEIPT = [
-  { term: "Boundary", detail: "Scoped before work" },
-  { term: "Runtime", detail: "State held live" },
-  { term: "Evidence", detail: "Replay attached" },
+  { term: "Timeline", detail: "10 working days after access" },
+  { term: "Support", detail: "Kickoff, working sessions, handoff" },
+  { term: "Pricing", detail: "Fixed quote before access" },
+];
+
+const OFFER_DETAILS = [
+  {
+    term: "Required access",
+    detail: "One repository or difficult system, a non-production environment, and one technical owner.",
+  },
+  {
+    term: "Vectant configures",
+    detail: "The workspace boundary, model and MCP access, permission leases, guarded workflow, and proof export.",
+  },
+  {
+    term: "Deliverables",
+    detail: "A configured workflow, boundary contract, replayable decision trail, change evidence, and proof review.",
+  },
+  {
+    term: "Success criteria",
+    detail: "One meaningful scoped change lands, a rejected action stays visible, and the evidence export replays.",
+  },
 ];
 
 export function FinalApproach() {
@@ -27,7 +45,7 @@ export function FinalApproach() {
   const rightShutterRef = useRef(null);
   const handoffMarkRef = useRef(null);
   const copyRef = useRef(null);
-  const productRef = useRef(null);
+  const offerRef = useRef(null);
   const receiptRef = useRef(null);
   const runwayRef = useRef(null);
 
@@ -35,11 +53,11 @@ export function FinalApproach() {
     () => {
       const media = gsap.matchMedia();
 
-      media.add("(prefers-reduced-motion: no-preference)", () => {
+      media.add("(min-width: 768px) and (prefers-reduced-motion: no-preference)", () => {
         gsap.set(surfaceRef.current, { autoAlpha: 0.18, scale: 1.025 });
         gsap.set(atmosphereRef.current, { scale: 1.09, yPercent: 2.5 });
         gsap.set(copyRef.current, { autoAlpha: 0, y: 54 });
-        gsap.set(productRef.current, { autoAlpha: 0, y: 130, rotateX: 8, scale: 0.92 });
+        gsap.set(offerRef.current, { autoAlpha: 0, y: 130, rotateX: 8, scale: 0.92 });
         gsap.set(receiptRef.current, { autoAlpha: 0, y: 28 });
         gsap.set(runwayRef.current, { scaleX: 0.08 });
         gsap.set(handoffMarkRef.current, { autoAlpha: 1, scale: 1 });
@@ -65,7 +83,7 @@ export function FinalApproach() {
           .to(runwayRef.current, { scaleX: 1, duration: 0.54 }, "open+=0.18")
           .addLabel("invitation", 0.42)
           .to(copyRef.current, { autoAlpha: 1, y: 0, duration: 0.48, ease: "power3.out" }, "invitation")
-          .to(productRef.current, { autoAlpha: 1, y: 0, rotateX: 0, scale: 1, duration: 0.68, ease: "power3.out" }, "invitation+=0.18")
+          .to(offerRef.current, { autoAlpha: 1, y: 0, rotateX: 0, scale: 1, duration: 0.68, ease: "power3.out" }, "invitation+=0.18")
           .to(receiptRef.current, { autoAlpha: 1, y: 0, duration: 0.36, ease: "power2.out" }, "invitation+=0.62")
           .to({}, { duration: 0.4 });
 
@@ -78,7 +96,13 @@ export function FinalApproach() {
   );
 
   return (
-    <section id="pricing" ref={rootRef} className={styles.finalApproach} data-film-act="daylight">
+    <section
+      id="pilot"
+      ref={rootRef}
+      className={styles.finalApproach}
+      data-film-act="daylight"
+      aria-labelledby="pilot-title"
+    >
       <div id="waitlist" className={styles.finalApproachSticky}>
         <div ref={surfaceRef} className={styles.finalSurface}>
           <Image
@@ -99,38 +123,35 @@ export function FinalApproach() {
           </div>
 
           <div ref={copyRef} className={styles.finalCopy}>
-            <h2>
-              <span>Put one hard system</span>
-              <span>under control.</span>
+            <h2 id="pilot-title">
+              <span>One difficult system.</span>
+              <span>One guarded workflow.</span>
+              <span>One replayable proof bundle.</span>
             </h2>
             <p>
-              Start with the repository you still will not hand to an agent. Scope its authority,
-              keep live state visible, and leave with proof your team can replay.
+              A typical pilot runs for 10 working days after access is approved. We configure the
+              boundary with your technical owner, support the run, and hand back the evidence.
             </p>
-            <a href={PILOT_MAILTO} className={styles.finalAction}>
-              Request a proof pilot
-              <ArrowUpRight size={17} weight="bold" />
-            </a>
+            <p className={styles.pricingNote}>
+              A fixed quote is confirmed before access. A public price range is not published yet.
+            </p>
           </div>
 
-          <figure ref={productRef} className={styles.finalProduct}>
-            <div className={styles.finalProductMedia}>
-              <Image
-                src="/product-proof/codesite-full-workflow-ui.png"
-                alt="Vectant control plane showing a full workflow, airspace map, collision forecast, and landing queue"
-                fill
-                sizes="(max-width: 767px) calc(100vw - 2rem), 64vw"
-                className={styles.finalProductImage}
-              />
-            </div>
-            <figcaption>
-              <span>Full workflow proof</span>
-              <b>3 flights</b>
-              <b>1 lease</b>
-              <b>2 transactions</b>
-              <b>0 required</b>
-            </figcaption>
-          </figure>
+          <aside id="pricing" ref={offerRef} className={styles.finalOffer} aria-label="Proof pilot details">
+            <header>
+              <span>Defined proof pilot</span>
+              <strong>Scope first. Access second.</strong>
+            </header>
+            <dl className={styles.offerDetails}>
+              {OFFER_DETAILS.map((item) => (
+                <div key={item.term}>
+                  <dt>{item.term}</dt>
+                  <dd>{item.detail}</dd>
+                </div>
+              ))}
+            </dl>
+            <PilotForm />
+          </aside>
 
           <dl ref={receiptRef} className={styles.finalReceipt}>
             {RECEIPT.map((item) => (
