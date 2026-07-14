@@ -72,57 +72,6 @@ export function Logo({ className, markClassName, gradientId, showWord = true }) 
   );
 }
 
-function LeftPiece({ expanded, gradientId, transition }) {
-  return (
-    <svg
-      viewBox="16 0 54 64"
-      fill="none"
-      className="h-6 w-auto shrink-0 overflow-visible"
-      aria-hidden="true"
-    >
-      <defs>
-        <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#FF3DBE" />
-          <stop offset="35%" stopColor="#FF5C2A" />
-          <stop offset="70%" stopColor="#7C5CFF" />
-          <stop offset="100%" stopColor="#22D3EE" />
-        </linearGradient>
-      </defs>
-      <motion.g
-        initial={false}
-        animate={{ x: expanded ? 0 : -5 }}
-        transition={transition}
-      >
-        <path d="M30 12 H24 V52 H30" stroke="currentColor" strokeWidth="4" strokeLinecap="square" />
-        <path d="M18 6 H24 M18 6 V12" stroke="#FF3DBE" strokeWidth="2" strokeLinecap="square" />
-        <path d="M18 58 H24 M18 58 V52" stroke="#22D3EE" strokeWidth="2" strokeLinecap="square" />
-      </motion.g>
-      <path d="M38 18 L52 44 L66 18" stroke={`url(#${gradientId})`} strokeWidth="6" strokeLinecap="square" />
-    </svg>
-  );
-}
-
-function RightPiece({ expanded, transition }) {
-  return (
-    <svg
-      viewBox="70 0 18 64"
-      fill="none"
-      className="h-6 w-auto shrink-0 overflow-visible"
-      aria-hidden="true"
-    >
-      <motion.g
-        initial={false}
-        animate={{ x: expanded ? 0 : 5 }}
-        transition={transition}
-      >
-        <path d="M74 12 H80 V52 H74" stroke="currentColor" strokeWidth="4" strokeLinecap="square" />
-        <path d="M86 6 H80 M86 6 V12" stroke="#FF5C2A" strokeWidth="2" strokeLinecap="square" />
-        <path d="M86 58 H80 M86 58 V52" stroke="#7C5CFF" strokeWidth="2" strokeLinecap="square" />
-      </motion.g>
-    </svg>
-  );
-}
-
 export function AnimatedLogo({ expanded = true, className }) {
   const generatedId = useId();
   const reduceMotion = useReducedMotion();
@@ -137,7 +86,11 @@ export function AnimatedLogo({ expanded = true, className }) {
       aria-label="Vectant"
       className={cn("inline-flex items-center text-[#f1eee8]", className)}
     >
-      <LeftPiece expanded={expanded} gradientId={gradientId} transition={transition} />
+      <VectantMark
+        decorative
+        gradientId={gradientId}
+        className="h-6 w-auto shrink-0"
+      />
       <motion.span
         aria-hidden="true"
         initial={false}
@@ -150,14 +103,6 @@ export function AnimatedLogo({ expanded = true, className }) {
         className="mx-2 whitespace-nowrap text-[16px] font-semibold tracking-[0.2em]"
       >
         VECTANT
-      </motion.span>
-      <motion.span
-        initial={false}
-        animate={{ x: expanded ? 0 : -110.40625 }}
-        transition={transition}
-        className="inline-flex"
-      >
-        <RightPiece expanded={expanded} transition={transition} />
       </motion.span>
     </motion.span>
   );
