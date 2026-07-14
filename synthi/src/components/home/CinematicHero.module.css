@@ -47,7 +47,7 @@
 .cinemaAtmosphereImage {
   object-fit: cover;
   object-position: 57% center;
-  filter: grayscale(1) sepia(0.88) hue-rotate(210deg) saturate(1.6) contrast(1.12) brightness(0.74);
+  filter: hue-rotate(226deg) saturate(0.48) contrast(1.12) brightness(0.74);
 }
 
 .cinemaAtmosphereNear {
@@ -112,7 +112,7 @@
 .cinemaEarlyProofImage {
   object-fit: cover;
   object-position: center 8%;
-  filter: grayscale(1) sepia(0.88) hue-rotate(210deg) saturate(1.6) contrast(1.08) brightness(1.02);
+  filter: contrast(1.04) saturate(0.9) brightness(1.08);
 }
 
 .cinemaVisuallyHidden {
@@ -374,7 +374,7 @@
 .cinemaProductImage {
   object-fit: cover;
   object-position: center 17%;
-  filter: grayscale(1) sepia(0.88) hue-rotate(210deg) saturate(1.6) contrast(1.08) brightness(1.04);
+  filter: contrast(1.04) saturate(0.96) brightness(1.12);
 }
 
 .cinemaProductGrade {

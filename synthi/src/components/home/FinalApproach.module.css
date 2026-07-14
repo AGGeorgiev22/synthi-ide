@@ -26,7 +26,7 @@
   z-index: 0;
   object-fit: cover;
   object-position: center 54%;
-  filter: grayscale(1) sepia(0.88) hue-rotate(210deg) saturate(1.6) contrast(1.08) brightness(0.82);
+  filter: hue-rotate(226deg) contrast(1.08) saturate(0.54) brightness(0.82);
   transform-origin: center center;
   will-change: transform;
 }

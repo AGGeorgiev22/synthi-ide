@@ -110,7 +110,7 @@
 
 .gpuImage {
   object-fit: cover;
-  filter: grayscale(1) sepia(0.88) hue-rotate(210deg) saturate(1.6) contrast(1.08) brightness(0.98);
+  filter: contrast(1.07) saturate(0.98) brightness(1.08);
 }
 
 .gpuAfterLayer {
@@ -125,7 +125,7 @@
 }
 
 .gpuDiffLayer .gpuImage {
-  filter: grayscale(1) sepia(0.88) hue-rotate(210deg) saturate(1.7) contrast(1.16) brightness(1.06);
+  filter: contrast(1.18) saturate(1.06) brightness(1.15);
 }
 
 .gpuDivider {
