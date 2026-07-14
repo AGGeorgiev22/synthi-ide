@@ -41,7 +41,7 @@ const CODE = [
     <C k="type">Runtime</C>, <C k="type">Session</C>
     {" };"}
   </>,
-  <span> </span>,
+  <span key="blank-after-import"> </span>,
   <>
     <C k="kw">pub</C> <C k="kw">async</C> <C k="kw">fn</C> <C k="fn">create_session</C>(
     <C k="prop">opts</C>: <C k="type">Opts</C>) -&gt; <C k="type">Session</C> {"{"}
@@ -54,7 +54,7 @@ const CODE = [
   <>
     {"    "}rt.<C k="fn">on_crash</C>(|<C k="prop">e</C>| <C k="fn">report</C>(<C k="prop">e</C>));
   </>,
-  <span> </span>,
+  <span key="blank-before-session"> </span>,
   <>
     {"    "}
     <C k="type">Session</C> {"{"}

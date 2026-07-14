@@ -324,7 +324,7 @@ export function usePlaygroundCollection(onUnlock) {
     const aBody = bodies[aId];
     const bBody = bodies[bId];
     if (aBody?.orbit && bBody?.orbit) unlock('merge_conflict');
-  }, [s, unlock]);
+  }, [unlock]);
 
   /** Called when orbit count changes. */
   const onOrbitChange = useCallback((orbitCount) => {
@@ -353,7 +353,7 @@ export function usePlaygroundCollection(onUnlock) {
     if (prevScore < s.thresholds.coldBootScore && newScore >= s.thresholds.coldBootScore) unlock('cold_boot');
     // Overflow: score >= 5000 (just marks eligibility — clicking the glitch unlocks it)
     // (handled in page.js via overflowEligible)
-  }, [unlock]);
+  }, [s.thresholds.coldBootScore, unlock]);
 
   /** Called when repel force is activated. */
   const onRepelActivated = useCallback(() => {
@@ -370,7 +370,7 @@ export function usePlaygroundCollection(onUnlock) {
   /** Phase 2: Called to check gravity well collectible (3 wells, 8+ objects in pull). */
   const onGravityWellCheck = useCallback((wellCount, caughtCount) => {
     if (wellCount >= s.thresholds.chaosWellCount && caughtCount >= s.thresholds.chaosCaughtCount) unlock('singularity');
-  }, [unlock]);
+  }, [s.thresholds.chaosCaughtCount, s.thresholds.chaosWellCount, unlock]);
 
   /** Phase 2: Called when an arena mutation completes. */
   const onArenaMutationSurvived = useCallback(() => {
