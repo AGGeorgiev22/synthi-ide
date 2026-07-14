@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ArrowLeft, ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
 import { notFound } from "next/navigation";
 
-import { Logo } from "@/components/Logo";
+import { AnimatedLogo } from "@/components/Logo";
 import { PILOT_MAILTO } from "@/lib/pilot";
 
 import { POSTS, getPost } from "../posts";
@@ -35,7 +35,7 @@ export default async function ArticlePage({ params }) {
     <main className={styles.page} id="top">
       <header className={styles.header}>
         <Link href="/" className={styles.brand} aria-label="Vectant home">
-          <Logo className={styles.logo} markClassName={styles.mark} />
+          <AnimatedLogo expanded={false} className={styles.logo} markClassName={styles.mark} />
         </Link>
         <Link href="/blog" className={styles.backLink}>
           <ArrowLeft size={15} weight="bold" />

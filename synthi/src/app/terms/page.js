@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowLeft, ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
 
-import { Logo } from "@/components/Logo";
+import { AnimatedLogo } from "@/components/Logo";
 import { PILOT_EMAIL, PILOT_MAILTO } from "@/lib/pilot";
 
 import styles from "./terms.module.css";
@@ -55,7 +55,7 @@ export default function TermsPage() {
     <main className={styles.page} id="top">
       <header className={styles.header}>
         <Link href="/" className={styles.brand} aria-label="Vectant home">
-          <Logo className={styles.logo} markClassName={styles.mark} />
+          <AnimatedLogo expanded={false} className={styles.logo} markClassName={styles.mark} />
         </Link>
         <Link href="/" className={styles.backLink}>
           <ArrowLeft size={15} weight="bold" />

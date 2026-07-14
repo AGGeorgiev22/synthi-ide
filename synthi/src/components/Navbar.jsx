@@ -155,7 +155,7 @@ export function Navbar() {
         className={`${styles.navRail} ${scrolled || open ? styles.navRailContracted : ""}`}
       >
         <a href="#top" aria-label="Vectant home" className={styles.navHome}>
-          <AnimatedLogo expanded={false} />
+          <AnimatedLogo expanded={!scrolled && !open} interactive={false} />
         </a>
 
         <AnimatePresence mode="wait" initial={false}>

@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
 
-import { Logo } from "@/components/Logo";
+import { AnimatedLogo, Logo } from "@/components/Logo";
 import { PILOT_MAILTO } from "@/lib/pilot";
 
 import { POSTS } from "./posts";
@@ -20,7 +20,7 @@ export default function BlogPage() {
     <main className={styles.page} id="top">
       <header className={styles.header}>
         <Link href="/" className={styles.brand} aria-label="Vectant home">
-          <Logo className={styles.logo} markClassName={styles.mark} />
+          <AnimatedLogo expanded={false} className={styles.logo} markClassName={styles.mark} />
         </Link>
         <nav aria-label="Journal navigation">
           <Link href="/">Product</Link>

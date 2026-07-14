@@ -5,6 +5,17 @@
   min-width: 0;
 }
 
+.signatureStart,
+.signatureEnd {
+  flex: 0 0 auto;
+}
+
+.signatureEnd {
+  width: 0.375rem;
+  height: 1.5rem;
+  margin-left: -0.03rem;
+}
+
 .wordShell {
   display: grid;
   grid-template-columns: 0fr;
@@ -13,7 +24,7 @@
   transform: translateX(-0.34rem);
   transition:
     grid-template-columns 440ms cubic-bezier(0.16, 1, 0.3, 1),
-    opacity 180ms ease,
+    opacity 180ms cubic-bezier(0.16, 1, 0.3, 1),
     transform 440ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -25,17 +36,19 @@
 .word {
   display: block;
   width: max-content;
-  margin-left: 0.58rem;
+  margin-inline: 0.52rem 0.45rem;
   white-space: nowrap;
   font-size: 1rem;
   font-weight: 600;
   letter-spacing: 0.2em;
 }
 
-.logo:hover .wordShell,
+.logoExpanded .wordShell,
 .logo:focus-within .wordShell,
 :global(a:focus-visible) .logo .wordShell,
-.animatedLogoExpanded .wordShell {
+.animatedLogoExpanded .wordShell,
+.animatedLogoInteractive:hover .wordShell,
+:global(a:focus-visible) .animatedLogoInteractive .wordShell {
   grid-template-columns: 1fr;
   opacity: 1;
   transform: translateX(0);
