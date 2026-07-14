@@ -3,8 +3,8 @@
   overflow: hidden;
   color: #e6e0d8;
   background:
-    radial-gradient(circle at 88% 8%, rgb(197 63 41 / 0.15), transparent 25rem),
-    #0b0b0d;
+    radial-gradient(circle at 88% 8%, rgb(var(--vectant-accent-rgb) / 0.15), transparent 25rem),
+    var(--vectant-black);
 }
 
 .header,
@@ -59,7 +59,7 @@
 .header nav a:focus-visible,
 .footer a:hover,
 .footer a:focus-visible {
-  color: #dd5c44;
+  color: var(--vectant-accent-readable);
 }
 
 .hero {
@@ -75,7 +75,7 @@
 .hero > p,
 .featuredCopy > p {
   margin: 0;
-  color: #dd5c44;
+  color: var(--vectant-accent-readable);
   font-family: var(--font-geist-mono), ui-monospace, monospace;
   font-size: 0.62rem;
   font-weight: 700;
@@ -114,7 +114,7 @@
 .postImage {
   position: relative;
   overflow: hidden;
-  background: #171513;
+  background: var(--vectant-black-ink);
 }
 
 .featuredImage {
@@ -190,7 +190,7 @@
 .featuredCopy a:focus-visible,
 .readLink:hover,
 .readLink:focus-visible {
-  color: #dd5c44;
+  color: var(--vectant-accent-readable);
   transform: translateX(3px);
 }
 
@@ -257,7 +257,7 @@
 .readLink:focus-visible,
 .header nav a:focus-visible,
 .footer a:focus-visible {
-  box-shadow: 0 0 0 2px #0b0b0d, 0 0 0 4px #dd5c44;
+  box-shadow: 0 0 0 2px var(--vectant-black), 0 0 0 4px var(--vectant-accent);
 }
 
 .post h3 {
@@ -277,7 +277,7 @@
 
 .post h3 a:hover,
 .post h3 a:focus-visible {
-  color: #dd5c44;
+  color: var(--vectant-accent-readable);
 }
 
 .footer {

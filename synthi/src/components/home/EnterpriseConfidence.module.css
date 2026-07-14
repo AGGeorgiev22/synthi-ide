@@ -2,7 +2,7 @@
   position: relative;
   scroll-margin-top: 4.5rem;
   color: #f2efe9;
-  background: #050609;
+  background: var(--vectant-black);
 }
 
 .confidenceShell {
@@ -40,9 +40,9 @@
 }
 
 .confidenceHeader a {
-  color: #ff8a6e;
+  color: var(--vectant-accent-readable);
   text-decoration: underline;
-  text-decoration-color: rgb(255 118 87 / 0.42);
+  text-decoration-color: rgb(var(--vectant-accent-rgb) / 0.42);
   text-underline-offset: 0.22em;
   outline: none;
 }
@@ -85,20 +85,20 @@
   padding: clamp(1.25rem, 2.8vw, 2.25rem);
   background:
     linear-gradient(138deg, rgb(255 255 255 / 0.035), transparent 45%),
-    #090a0e;
+    var(--vectant-black-raised);
   box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.07);
 }
 
 .confidenceCell[data-cell="data"] .confidenceInner {
   background:
-    radial-gradient(circle at 92% 8%, rgb(167 47 30 / 0.16), transparent 18rem),
-    #090a0e;
+    radial-gradient(circle at 92% 8%, rgb(var(--vectant-accent-rgb) / 0.16), transparent 18rem),
+    var(--vectant-black-raised);
 }
 
 .confidenceCell[data-cell="operations"] .confidenceInner {
   background:
-    linear-gradient(130deg, transparent 38%, rgb(255 118 87 / 0.055)),
-    #0a0b0f;
+    linear-gradient(130deg, transparent 38%, rgb(var(--vectant-accent-rgb) / 0.055)),
+    var(--vectant-black-elevated);
 }
 
 .confidenceInner > header {
@@ -114,7 +114,7 @@
   flex: 0 0 auto;
   align-items: center;
   justify-content: center;
-  color: #ff7657;
+  color: var(--vectant-accent-readable);
   background: rgb(255 255 255 / 0.045);
   box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.1);
 }
@@ -132,7 +132,7 @@
 
 .confidenceInner header p {
   margin-top: 0.28rem;
-  color: #ff8a6e;
+  color: var(--vectant-accent-readable);
   font-family: var(--font-geist-mono), ui-monospace, monospace;
   font-size: 0.52rem;
   letter-spacing: 0.08em;
@@ -175,7 +175,7 @@
   min-height: 12rem;
   margin: 2rem 0 0;
   overflow: hidden;
-  background: #050609;
+  background: var(--vectant-black);
   box-shadow: 0 0 0 1px rgb(255 255 255 / 0.09);
 }
 
@@ -183,7 +183,7 @@
   position: absolute;
   inset: 0;
   content: "";
-  background: linear-gradient(180deg, transparent 52%, rgb(5 6 9 / 0.42));
+  background: linear-gradient(180deg, transparent 52%, rgb(8 7 13 / 0.42));
   pointer-events: none;
 }
 

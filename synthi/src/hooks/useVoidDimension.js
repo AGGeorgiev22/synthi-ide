@@ -8,7 +8,7 @@ const VOID_RELIC_POOL = [
   { id: "abyssal_lens", name: "Abyssal Lens", desc: "Gain extra time whenever a depth collapses.", color: "#60A5FA", minDepth: 2 },
   { id: "null_anchor", name: "Null Anchor", desc: "Void drift becomes easier to stabilize.", color: "#A78BFA", minDepth: 3 },
   { id: "shard_forge", name: "Shard Forge", desc: "Void scoring ramps faster at high depth.", color: "#F472B6", minDepth: 4 },
-  { id: "anomaly_key", name: "Anomaly Key", desc: "Chaos loadouts gain an extra authored slot.", color: "#FBBF24", minDepth: 5 },
+  { id: "anomaly_key", name: "Anomaly Key", desc: "Chaos loadouts gain an extra authored slot.", color: "#928cb5", minDepth: 5 },
 ];
 
 function clamp(value, min, max) {

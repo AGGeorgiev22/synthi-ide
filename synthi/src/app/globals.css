@@ -3,17 +3,29 @@
 
 @custom-variant dark (&:is(.dark *));
 
+:root {
+  --vectant-black: #08070d;
+  --vectant-black-raised: #0d0b14;
+  --vectant-black-elevated: #12101a;
+  --vectant-black-ink: #17131f;
+  --vectant-accent: #4d4870;
+  --vectant-accent-rgb: 77 72 112;
+  --vectant-accent-display: #6f698f;
+  --vectant-accent-readable: #928cb5;
+  --vectant-accent-pale: #c5c1da;
+}
+
 /* ============================================================
    Vectant brand theme
    Graphite / black / charcoal base, warm off-white ink,
    cyan + violet signal accents. Maps to Tailwind v4 utilities.
    ============================================================ */
 @theme {
-  --color-bg: #090909;
-  --color-bg-2: #0c0c0d;
-  --color-panel: #100f11;
-  --color-panel-2: #151416;
-  --color-graphite: #1a191c;
+  --color-bg: var(--vectant-black);
+  --color-bg-2: var(--vectant-black-raised);
+  --color-panel: var(--vectant-black-elevated);
+  --color-panel-2: #181521;
+  --color-graphite: #211d2b;
   --color-ink: #ede9e1;
   --color-ink-dim: #a8a39a;
   --color-ink-faint: #6d6963;
@@ -28,14 +40,12 @@
   --color-violet: #8b7bff;
   --color-blue: #5b9dff;
   --color-ok: #46e0a0;
-  --color-warn: #f5b13d;
+  --color-warn: #928cb5;
   --color-err: #ff6b6b;
 
-  /* warm signature accent (from the logo gradient) - brand chrome.
-     named `brand` to avoid colliding with shadcn's --color-accent.
-     cyan stays the "live runtime" colour inside product screens. */
-  --color-brand: #ff7a4d;
-  --color-brand-2: #ff5c8a;
+  /* Aubergine signature accent. Lighter companions preserve readable labels. */
+  --color-brand: var(--vectant-accent);
+  --color-brand-2: var(--vectant-accent-readable);
 
   --font-display: var(--font-satoshi), ui-sans-serif, system-ui, sans-serif;
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
@@ -71,20 +81,20 @@ html.light {
   --color-violet: #4c35c9;
   --color-blue: #0057ff;
   --color-ok: #0a9a64;
-  --color-warn: #b4690e;
+  --color-warn: #4d4870;
   --color-err: #d6453f;
-  --color-brand: #d5291f;
-  --color-brand-2: #d23b6e;
+  --color-brand: #4d4870;
+  --color-brand-2: #625c85;
 }
 
 /* Product-screen wrapper - always renders dark regardless of page theme,
    like Vercel/Linear keeping code blocks dark on light pages. */
 .surface-dark {
-  --color-bg: #090909;
-  --color-bg-2: #0c0c0d;
-  --color-panel: #100f11;
-  --color-panel-2: #151416;
-  --color-graphite: #1a191c;
+  --color-bg: var(--vectant-black);
+  --color-bg-2: var(--vectant-black-raised);
+  --color-panel: var(--vectant-black-elevated);
+  --color-panel-2: #181521;
+  --color-graphite: #211d2b;
   --color-ink: #ede9e1;
   --color-ink-dim: #a8a39a;
   --color-ink-faint: #6d6963;
@@ -96,10 +106,10 @@ html.light {
   --color-violet: #8b7bff;
   --color-blue: #5b9dff;
   --color-ok: #46e0a0;
-  --color-warn: #f5b13d;
+  --color-warn: #928cb5;
   --color-err: #ff6b6b;
-  --color-brand: #ff7a4d;
-  --color-brand-2: #ff5c8a;
+  --color-brand: var(--vectant-accent);
+  --color-brand-2: var(--vectant-accent-readable);
   color: var(--color-ink);
 }
 
@@ -323,7 +333,7 @@ html {
 .tok-kw { color: #c792ff; }
 .tok-fn { color: #4fd6e6; }
 .tok-str { color: #7fe3a4; }
-.tok-num { color: #f5b13d; }
+.tok-num { color: #928cb5; }
 .tok-com { color: #5b5f68; font-style: italic; }
 .tok-type { color: #6fb1ff; }
 .tok-prop { color: #d9d8d3; }
@@ -621,7 +631,7 @@ html {
   width: 6px;
   height: 6px;
   border-radius: 9999px;
-  background: #ff9f7e;
+  background: #928cb5;
   box-shadow: 0 0 26px rgba(255, 122, 77, 0.6);
 }
 
@@ -774,7 +784,7 @@ html {
   justify-content: center;
   border-radius: 9999px;
   border: 1px solid rgba(255, 122, 77, 0.28);
-  color: #ff9f7e;
+  color: #928cb5;
   background: rgba(255, 122, 77, 0.08);
 }
 
@@ -1057,7 +1067,7 @@ html {
 
 /* ---- Top scroll-progress bar ---- */
 .scroll-progress {
-  background: linear-gradient(90deg, #ff3dbe, #ff5c2a 30%, #7c5cff 65%, #22d3ee);
+  background: linear-gradient(90deg, #ff3dbe, #4d4870 30%, #7c5cff 65%, #22d3ee);
   transform-origin: 0 50%;
 }
 
@@ -1218,7 +1228,7 @@ html.light .spotlight {
   --campaign-faint: rgba(255, 247, 239, 0.44);
   --campaign-line: rgba(255, 247, 239, 0.12);
   --campaign-line-strong: rgba(255, 247, 239, 0.2);
-  --campaign-accent: #ff6a3d;
+  --campaign-accent: #4d4870;
   --campaign-accent-soft: rgba(255, 106, 61, 0.12);
   background: var(--campaign-bg);
   color: var(--campaign-ink);
@@ -1234,7 +1244,7 @@ html.light .runtime-campaign {
   --campaign-faint: rgba(18, 21, 27, 0.48);
   --campaign-line: rgba(18, 21, 27, 0.14);
   --campaign-line-strong: rgba(18, 21, 27, 0.24);
-  --campaign-accent: #d84b2a;
+  --campaign-accent: #4d4870;
   --campaign-accent-soft: rgba(216, 75, 42, 0.12);
 }
 
@@ -1336,7 +1346,7 @@ html.light .campaign-atmosphere {
   font-weight: 600;
   line-height: 1.2;
   letter-spacing: 0;
-  color: #ffb199;
+  color: #928cb5;
 }
 
 .hero-proof-path {
@@ -1363,7 +1373,7 @@ html.light .hero-proof-path {
 .hero-proof-path span {
   font-size: 11px;
   font-weight: 760;
-  color: #ff9b76;
+  color: #928cb5;
 }
 
 .hero-proof-path strong {
@@ -1373,7 +1383,7 @@ html.light .hero-proof-path {
 }
 
 html.light .hero-proof-path span {
-  color: #b74c29;
+  color: #4d4870;
 }
 
 html.light .hero-proof-path strong {
@@ -1487,7 +1497,7 @@ html.light .secondary-cta {
 .primary-cta:hover {
   border-color: rgba(255, 106, 61, 0.85);
   background:
-    linear-gradient(180deg, #ff8a61, var(--campaign-accent));
+    linear-gradient(180deg, #6f698f, var(--campaign-accent));
   box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.22), 0 24px 58px rgba(255, 106, 61, 0.22);
 }
 
@@ -1923,7 +1933,7 @@ html.light .hero-product-card {
 }
 
 .hero-collab-line-human {
-  color: #ffb199;
+  color: #928cb5;
 }
 
 .hero-collab-line-agent {
@@ -2036,7 +2046,7 @@ html.light .hero-product-card {
 }
 
 .hero-code-window-dots i:nth-child(2) {
-  background: #ffbd2e;
+  background: #928cb5;
 }
 
 .hero-code-window-dots i:nth-child(3) {
@@ -2348,7 +2358,7 @@ html.light .hero-product-card {
 
 .live-collab-topline span,
 .live-collab-footer span {
-  color: #ffb199;
+  color: #928cb5;
 }
 
 .live-collab-topline strong {
@@ -2442,7 +2452,7 @@ html.light .hero-product-card {
 }
 
 .live-collab-type-0 {
-  color: #ffb199;
+  color: #928cb5;
 }
 
 .live-collab-type-1 {
@@ -2480,7 +2490,7 @@ html.light .hero-product-card {
 }
 
 .collab-cursor-human {
-  color: #ff8a61;
+  color: #6f698f;
 }
 
 .collab-cursor-agent {
@@ -2567,7 +2577,7 @@ html.light .hero-proof-cell {
   position: absolute;
   inset: 0 auto 0 0;
   width: 3px;
-  background: linear-gradient(180deg, #ff3dbe, #ff6a3d 42%, #55d8ef);
+  background: linear-gradient(180deg, #ff3dbe, #4d4870 42%, #55d8ef);
   opacity: 0.28;
   transform: scaleY(0.42);
   transform-origin: top center;
@@ -2804,7 +2814,7 @@ html.light .agent-onramp-panel {
 }
 
 .agent-onramp-panel-top span {
-  color: #ffb199;
+  color: #928cb5;
 }
 
 .agent-onramp-panel-top strong {
@@ -2889,16 +2899,16 @@ html.light .agent-onramp-panel {
   top: 0;
   left: 0;
   background:
-    linear-gradient(90deg, #ff4bd8, #ff6a3d) left top / 42px 2px no-repeat,
-    linear-gradient(180deg, #ff4bd8, #ff6a3d) left top / 2px 42px no-repeat;
+    linear-gradient(90deg, #ff4bd8, #4d4870) left top / 42px 2px no-repeat,
+    linear-gradient(180deg, #ff4bd8, #4d4870) left top / 2px 42px no-repeat;
 }
 
 .agent-onramp-card-brackets i:nth-child(2) {
   top: 0;
   right: 0;
   background:
-    linear-gradient(90deg, #ff6a3d, #ffd166) right top / 42px 2px no-repeat,
-    linear-gradient(180deg, #ff6a3d, #ffd166) right top / 2px 42px no-repeat;
+    linear-gradient(90deg, #4d4870, #c5c1da) right top / 42px 2px no-repeat,
+    linear-gradient(180deg, #4d4870, #c5c1da) right top / 2px 42px no-repeat;
 }
 
 .agent-onramp-card-brackets i:nth-child(3) {
@@ -3089,7 +3099,7 @@ html.light .agent-onramp-panel {
   width: 9px;
   height: 76px;
   border-radius: 9999px;
-  background: linear-gradient(180deg, #ff3dbe, #ff6a3d 45%, #55d8ef);
+  background: linear-gradient(180deg, #ff3dbe, #4d4870 45%, #55d8ef);
   box-shadow: 0 0 28px rgba(255, 106, 61, 0.34);
 }
 
@@ -3223,7 +3233,7 @@ html.light .agent-onramp-panel {
   font-family: var(--font-mono);
   font-size: 10px;
   font-weight: 700;
-  color: #ffb199;
+  color: #928cb5;
 }
 
 .agent-onramp-step-card h3 {
@@ -3451,7 +3461,7 @@ html.light .agent-onramp-panel {
   left: 20px;
   width: 42px;
   height: 2px;
-  background: linear-gradient(90deg, #ff62ad, #ff8a61, #51d7e9);
+  background: linear-gradient(90deg, #ff62ad, #6f698f, #51d7e9);
   opacity: 0.78;
   transform: scaleX(0.42);
   transform-origin: left center;
@@ -3653,7 +3663,7 @@ html.light .belief-proof-rail em {
   position: absolute;
   inset: 0 auto 0 0;
   width: 3px;
-  background: linear-gradient(180deg, #ff4bd8, #ff6a3d 44%, #5ee7ff 72%, #8b7bff);
+  background: linear-gradient(180deg, #ff4bd8, #4d4870 44%, #5ee7ff 72%, #8b7bff);
   opacity: 0.44;
 }
 
@@ -3669,7 +3679,7 @@ html.light .belief-proof-rail em {
   font-family: var(--font-mono);
   font-size: 10.5px;
   font-weight: 760;
-  color: #ffb199;
+  color: #928cb5;
 }
 
 .runtime-path-steps h3 {
@@ -3727,7 +3737,7 @@ html.light .belief-proof-rail em {
   border-bottom: 1px solid rgba(255, 247, 239, 0.08);
   background:
     radial-gradient(circle at 18px 50%, #ff5f56 0 5px, transparent 6px),
-    radial-gradient(circle at 42px 50%, #ffbd2e 0 5px, transparent 6px),
+    radial-gradient(circle at 42px 50%, #928cb5 0 5px, transparent 6px),
     radial-gradient(circle at 66px 50%, #27c93f 0 5px, transparent 6px);
   pointer-events: none;
 }
@@ -3896,7 +3906,7 @@ html.light .belief-proof-rail em {
   font-size: 10px;
   font-weight: 700;
   line-height: 1;
-  color: #ffb199;
+  color: #928cb5;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.09),
     inset 0 -1px 0 rgba(0, 0, 0, 0.72),
@@ -3912,7 +3922,7 @@ html.light .belief-proof-rail em {
   inset: 3px auto 3px 4px;
   width: 3px;
   border-radius: 9999px;
-  background: linear-gradient(180deg, #ff3dbe, #ff6a3d 48%, #55d8ef);
+  background: linear-gradient(180deg, #ff3dbe, #4d4870 48%, #55d8ef);
   opacity: 0.72;
 }
 
@@ -4056,7 +4066,7 @@ html.light .belief-proof-rail em {
 }
 
 .collab-room-header strong {
-  color: #ffb199;
+  color: #928cb5;
   font-weight: 700;
 }
 
@@ -4154,7 +4164,7 @@ html.light .belief-proof-rail em {
 }
 
 .dogfood-status span {
-  color: #ffb199;
+  color: #928cb5;
 }
 
 .dogfood-status strong {
@@ -4226,7 +4236,7 @@ html.light .belief-proof-rail em {
 
 .dogfood-proof-line span:last-child {
   border-right: 0;
-  color: #ffb199;
+  color: #928cb5;
 }
 
 .dogfood-console {
@@ -4272,7 +4282,7 @@ html.light .belief-proof-rail em {
   font-family: var(--font-mono);
   font-size: 10px;
   font-weight: 700;
-  color: #ffb199;
+  color: #928cb5;
 }
 
 .dogfood-ledger p {
@@ -4338,7 +4348,7 @@ html.light .belief-proof-rail em {
   border-radius: 8px;
   background: var(--campaign-accent);
   padding: 32px;
-  color: #130b08;
+  color: #0d0b14;
 }
 
 .gpu-copy .section-mark {
@@ -4349,7 +4359,7 @@ html.light .belief-proof-rail em {
 
 .gpu-copy h2,
 .gpu-copy p {
-  color: #130b08;
+  color: #0d0b14;
 }
 
 .gpu-copy p {
@@ -4390,7 +4400,7 @@ html.light .belief-proof-rail em {
   font-weight: 860;
   letter-spacing: 0;
   line-height: 0.88;
-  color: #100805;
+  color: #08070d;
 }
 
 .gpu-latency-counter strong > span:first-child,
@@ -4424,7 +4434,7 @@ html.light .belief-proof-rail em {
 
 .gpu-latency-underline path {
   fill: none;
-  stroke: #130b08;
+  stroke: #0d0b14;
   stroke-width: 7;
   stroke-linecap: round;
   stroke-linejoin: round;
@@ -4548,7 +4558,7 @@ html.light .belief-proof-rail em {
   font-weight: 840;
   line-height: 0.98;
   letter-spacing: 0;
-  color: #100805;
+  color: #08070d;
 }
 
 .gpu-proof-grid p {
@@ -4589,7 +4599,7 @@ html.light .belief-proof-rail em {
   font-family: var(--font-mono);
   font-size: 10px;
   font-weight: 700;
-  color: #ffb199;
+  color: #928cb5;
 }
 
 .gpu-compare-toolbar strong {
@@ -4929,7 +4939,7 @@ html.light .belief-proof-rail em {
   margin-top: 10px;
   font-size: 17px;
   line-height: 1.35;
-  color: #ffb199;
+  color: #928cb5;
 }
 
 .trust-system p {
@@ -5054,7 +5064,7 @@ html.light .belief-proof-rail em {
 }
 
 .pilot-panel-top span {
-  color: #ffb199;
+  color: #928cb5;
   font-size: 13px;
   font-weight: 700;
 }
@@ -5101,7 +5111,7 @@ html.light .belief-proof-rail em {
   height: 10px;
   margin-top: 4px;
   border-radius: 2px;
-  background: #ffb199;
+  background: #928cb5;
   box-shadow: 0 0 0 4px rgba(255, 106, 61, 0.1);
 }
 

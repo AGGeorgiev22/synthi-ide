@@ -2,7 +2,7 @@
   position: relative;
   min-height: 214dvh;
   color: #f2efe9;
-  background: #050609;
+  background: var(--vectant-black);
 }
 
 .boundarySticky {
@@ -12,7 +12,7 @@
   overflow: hidden;
   background:
     radial-gradient(circle at 16% 46%, rgb(116 24 54 / 0.1), transparent 34%),
-    #050609;
+    var(--vectant-black);
   isolation: isolate;
 }
 
@@ -69,7 +69,7 @@
   bottom: 0;
   left: 0;
   width: 1px;
-  background: #ff7657;
+  background: var(--vectant-accent);
   content: "";
 }
 
@@ -110,7 +110,7 @@
   right: 0;
   left: 0;
   height: 1px;
-  background: #ff7657;
+  background: var(--vectant-accent);
   transform-origin: left center;
 }
 
@@ -133,7 +133,7 @@
 }
 
 .boundaryCondition span {
-  color: #ff7657;
+  color: var(--vectant-accent-readable);
 }
 
 .boundaryCondition strong {

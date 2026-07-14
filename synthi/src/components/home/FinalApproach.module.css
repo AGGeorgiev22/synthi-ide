@@ -1,8 +1,8 @@
 .finalApproach {
   position: relative;
   min-height: 200dvh;
-  color: #171513;
-  background: #050609;
+  color: var(--vectant-black-ink);
+  background: var(--vectant-black);
 }
 
 .finalApproachSticky {
@@ -10,7 +10,7 @@
   top: 0;
   min-height: 100dvh;
   overflow: hidden;
-  background: #050609;
+  background: var(--vectant-black);
   perspective: 1400px;
 }
 
@@ -18,7 +18,7 @@
   position: absolute;
   inset: 0;
   overflow: hidden;
-  background: #07090e;
+  background: var(--vectant-black-raised);
   transform-origin: center center;
 }
 
@@ -26,7 +26,7 @@
   z-index: 0;
   object-fit: cover;
   object-position: center 54%;
-  filter: contrast(1.08) saturate(1.06) brightness(0.88);
+  filter: hue-rotate(226deg) contrast(1.08) saturate(0.54) brightness(0.82);
   transform-origin: center center;
   will-change: transform;
 }
@@ -36,8 +36,8 @@
   z-index: 1;
   inset: 0;
   background:
-    linear-gradient(90deg, rgb(4 5 8 / 0.88) 0%, rgb(4 5 8 / 0.66) 41%, rgb(4 5 8 / 0.22) 72%, rgb(4 5 8 / 0.48) 100%),
-    linear-gradient(180deg, rgb(4 5 8 / 0.4), transparent 44%, rgb(4 5 8 / 0.86));
+    linear-gradient(90deg, rgb(8 7 13 / 0.88) 0%, rgb(8 7 13 / 0.66) 41%, rgb(8 7 13 / 0.22) 72%, rgb(8 7 13 / 0.48) 100%),
+    linear-gradient(180deg, rgb(8 7 13 / 0.4), transparent 44%, rgb(8 7 13 / 0.86));
   pointer-events: none;
 }
 
@@ -81,7 +81,7 @@
   top: 45%;
   right: 3vw;
   left: 3vw;
-  background: rgb(255 118 87 / 0.66);
+  background: rgb(var(--vectant-accent-rgb) / 0.66);
 }
 
 .finalRunway i:nth-child(2),
@@ -126,7 +126,7 @@
 }
 
 .finalCopy h2 span:nth-child(2) {
-  color: #ff7657;
+  color: var(--vectant-accent-display);
 }
 
 .finalCopy > p {
@@ -162,7 +162,7 @@
   color: #f2efe9;
   background:
     linear-gradient(145deg, rgb(255 255 255 / 0.055), transparent 38%),
-    rgb(7 8 12 / 0.91);
+    rgb(13 11 20 / 0.91);
   box-shadow:
     inset 0 0 0 1px rgb(242 239 233 / 0.18),
     inset 0 0 0 5px rgb(255 255 255 / 0.025),
@@ -179,7 +179,7 @@
 }
 
 .finalOffer > header span {
-  color: #ff7657;
+  color: var(--vectant-accent-readable);
   font-family: var(--font-geist-mono), ui-monospace, monospace;
   font-size: 0.55rem;
   font-weight: 720;
@@ -250,7 +250,7 @@
   margin: 0;
   grid-template-columns: repeat(3, 1fr);
   color: #f2efe9;
-  background: rgb(5 6 9 / 0.86);
+  background: rgb(8 7 13 / 0.86);
   box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.14);
   backdrop-filter: blur(18px);
 }
@@ -277,7 +277,7 @@
 }
 
 .finalReceipt dt {
-  color: #ff7657;
+  color: var(--vectant-accent-readable);
   font-weight: 720;
   text-transform: uppercase;
 }
@@ -298,7 +298,7 @@
   position: absolute;
   inset: -2px;
   display: block;
-  background: #050609;
+  background: var(--vectant-black);
   will-change: transform;
 }
 
@@ -315,7 +315,7 @@
   width: 1px;
   height: 112%;
   content: "";
-  background: linear-gradient(180deg, transparent, rgb(255 118 87 / 0.66) 28% 72%, transparent);
+  background: linear-gradient(180deg, transparent, rgb(var(--vectant-accent-rgb) / 0.66) 28% 72%, transparent);
 }
 
 .finalShutterLeft::after {
@@ -337,7 +337,7 @@
   left: 50%;
   width: clamp(4.2rem, 6vw, 6.4rem);
   color: #f2efe9;
-  filter: drop-shadow(0 0 24px rgb(255 118 87 / 0.2));
+  filter: drop-shadow(0 0 24px rgb(var(--vectant-accent-rgb) / 0.2));
   transform: translate(-50%, -50%);
   transform-origin: center center;
   pointer-events: none;

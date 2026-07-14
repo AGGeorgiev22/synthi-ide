@@ -112,7 +112,7 @@
 }
 
 .submitRow p[data-status="error"] {
-  color: #ffb6a6;
+  color: var(--vectant-accent-pale);
 }
 
 .submitRow p[data-status="success"] {

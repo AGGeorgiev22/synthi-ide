@@ -2,8 +2,8 @@
   min-height: 100dvh;
   color: #e6e0d8;
   background:
-    radial-gradient(circle at 16% -10%, rgb(197 63 41 / 0.17), transparent 26rem),
-    #0b0b0d;
+    radial-gradient(circle at 16% -10%, rgb(var(--vectant-accent-rgb) / 0.17), transparent 26rem),
+    var(--vectant-black);
 }
 
 .header,
@@ -63,7 +63,7 @@
 .summary > p,
 .contact p {
   margin: 0;
-  color: #dd5c44;
+  color: var(--vectant-accent-readable);
   font-family: var(--font-geist-mono), ui-monospace, monospace;
   font-size: 0.62rem;
   font-weight: 700;
@@ -112,7 +112,7 @@
   top: 1.75rem;
   align-self: start;
   padding: 1.25rem 1.4rem 1.45rem;
-  border-left: 1px solid #dd5c44;
+  border-left: 1px solid var(--vectant-accent);
   background: rgb(255 255 255 / 0.035);
 }
 
@@ -175,13 +175,13 @@
 .section p a {
   color: #f4eee7;
   text-decoration: underline;
-  text-decoration-color: rgb(221 92 68 / 0.55);
+  text-decoration-color: rgb(var(--vectant-accent-rgb) / 0.55);
   text-underline-offset: 0.22em;
 }
 
 .section p a:hover,
 .section p a:focus-visible {
-  color: #dd5c44;
+  color: var(--vectant-accent-readable);
 }
 
 .details {
@@ -235,7 +235,7 @@
 .contact a:not(.email) {
   min-height: 3rem;
   padding-inline: 1rem;
-  color: #101012;
+  color: var(--vectant-black-elevated);
   background: #e6e0d8;
   font-size: 0.74rem;
   font-weight: 720;
@@ -244,7 +244,7 @@
 .contact a:not(.email):hover,
 .contact a:not(.email):focus-visible {
   color: #f4eee7;
-  background: #c53f29;
+  background: var(--vectant-accent);
   transform: translateY(-2px);
 }
 
@@ -259,13 +259,13 @@
 
 .email:hover,
 .email:focus-visible {
-  color: #dd5c44;
+  color: var(--vectant-accent-readable);
 }
 
 .backLink:focus-visible,
 .contact a:focus-visible,
 .section p a:focus-visible {
-  box-shadow: 0 0 0 2px #0b0b0d, 0 0 0 4px #dd5c44;
+  box-shadow: 0 0 0 2px var(--vectant-black), 0 0 0 4px var(--vectant-accent);
 }
 
 @media (max-width: 767px) {

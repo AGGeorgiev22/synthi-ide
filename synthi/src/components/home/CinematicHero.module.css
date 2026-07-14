@@ -2,7 +2,7 @@
   position: relative;
   min-height: 244dvh;
   color: #f2efe9;
-  background: #050609;
+  background: var(--vectant-black);
 }
 
 .cinemaHeroSticky {
@@ -10,7 +10,7 @@
   top: 0;
   min-height: 100dvh;
   overflow: hidden;
-  background: #050609;
+  background: var(--vectant-black);
   isolation: isolate;
 }
 
@@ -47,7 +47,7 @@
 .cinemaAtmosphereImage {
   object-fit: cover;
   object-position: 57% center;
-  filter: saturate(0.58) contrast(1.12) brightness(0.78);
+  filter: hue-rotate(226deg) saturate(0.48) contrast(1.12) brightness(0.74);
 }
 
 .cinemaAtmosphereNear {
@@ -67,9 +67,9 @@
 .cinemaWarningGrade {
   opacity: 0;
   background:
-    radial-gradient(circle at 45% 48%, rgb(255 72 44 / 0.19), transparent 15%),
-    radial-gradient(ellipse at 63% 68%, rgb(99 14 8 / 0.24), transparent 38%),
-    linear-gradient(180deg, rgb(4 4 7 / 0.08), rgb(25 5 4 / 0.31));
+    radial-gradient(circle at 45% 48%, rgb(var(--vectant-accent-rgb) / 0.19), transparent 15%),
+    radial-gradient(ellipse at 63% 68%, rgb(var(--vectant-accent-rgb) / 0.24), transparent 38%),
+    linear-gradient(180deg, rgb(8 7 13 / 0.08), rgb(13 11 20 / 0.31));
   mix-blend-mode: screen;
   pointer-events: none;
   will-change: opacity;
@@ -84,7 +84,7 @@
   height: min(72dvh, 45rem);
   margin: 0;
   overflow: hidden;
-  background: #06070a;
+  background: var(--vectant-black-raised);
   box-shadow:
     inset 0 0 0 1px rgb(255 255 255 / 0.15),
     -34px 48px 96px rgb(0 0 0 / 0.46);
@@ -99,8 +99,8 @@
   content: "";
   pointer-events: none;
   background:
-    linear-gradient(90deg, rgb(4 5 8 / 0.64), transparent 24%),
-    linear-gradient(180deg, transparent 72%, rgb(4 5 8 / 0.52));
+    linear-gradient(90deg, rgb(8 7 13 / 0.64), transparent 24%),
+    linear-gradient(180deg, transparent 72%, rgb(8 7 13 / 0.52));
 }
 
 .cinemaEarlyProofCamera {
@@ -148,7 +148,7 @@
 
 .cinemaRouteToken rect {
   fill: #f2efe9;
-  stroke: #050609;
+  stroke: var(--vectant-black);
   stroke-width: 2;
 }
 
@@ -158,13 +158,13 @@
 }
 
 .cinemaConflictPoint circle:first-child {
-  fill: #ff7657;
-  filter: drop-shadow(0 0 10px rgb(255 83 46 / 0.92));
+  fill: var(--vectant-accent);
+  filter: drop-shadow(0 0 10px rgb(var(--vectant-accent-rgb) / 0.92));
 }
 
 .cinemaConflictPoint circle:last-child {
-  fill: rgb(255 118 87 / 0.08);
-  stroke: rgb(255 118 87 / 0.48);
+  fill: rgb(var(--vectant-accent-rgb) / 0.08);
+  stroke: rgb(var(--vectant-accent-rgb) / 0.48);
   stroke-width: 1;
 }
 
@@ -176,7 +176,7 @@
   display: grid;
   gap: 0.28rem;
   padding-left: 0.9rem;
-  border-left: 1px solid #ff7657;
+  border-left: 1px solid var(--vectant-accent);
   font-family: var(--font-geist-mono), ui-monospace, monospace;
   letter-spacing: 0.045em;
   text-transform: uppercase;
@@ -184,7 +184,7 @@
 }
 
 .cinemaIncident span {
-  color: #ff7657;
+  color: var(--vectant-accent-readable);
   font-size: 0.62rem;
   font-weight: 700;
 }
@@ -232,7 +232,7 @@
 }
 
 .cinemaHeroCopy h1 span:last-child {
-  color: #ff7657;
+  color: var(--vectant-accent-display);
 }
 
 .cinemaHeroFooter {
@@ -280,16 +280,16 @@
 }
 
 .cinemaPrimaryAction {
-  color: #170d0a;
-  background: #ff7657;
+  color: #f2efe9;
+  background: var(--vectant-accent);
   box-shadow:
     inset 0 1px 0 rgb(255 255 255 / 0.32),
-    0 18px 46px rgb(100 24 8 / 0.24);
+    0 18px 46px rgb(var(--vectant-accent-rgb) / 0.24);
 }
 
 .cinemaSecondaryAction {
   color: #f2efe9;
-  background: rgb(5 6 9 / 0.7);
+  background: rgb(8 7 13 / 0.7);
   box-shadow:
     inset 0 0 0 1px rgb(242 239 233 / 0.28),
     inset 0 1px 0 rgb(255 255 255 / 0.08);
@@ -302,7 +302,7 @@
   height: 2.45rem;
   align-items: center;
   justify-content: center;
-  background: rgb(23 13 10 / 0.1);
+  background: rgb(23 19 31 / 0.1);
   transition: transform 420ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -316,13 +316,13 @@
 }
 
 .cinemaPrimaryAction:hover {
-  background: #ff896d;
+  background: #817ba3;
 }
 
 .cinemaSecondaryAction:hover {
   color: #fff7f2;
-  background: rgb(255 118 87 / 0.12);
-  box-shadow: inset 0 0 0 1px rgb(255 118 87 / 0.62);
+  background: rgb(var(--vectant-accent-rgb) / 0.12);
+  box-shadow: inset 0 0 0 1px rgb(var(--vectant-accent-rgb) / 0.62);
 }
 
 .cinemaPrimaryAction:hover > span,
@@ -338,7 +338,7 @@
 .cinemaPrimaryAction:focus-visible,
 .cinemaSecondaryAction:focus-visible {
   box-shadow:
-    0 0 0 2px #050609,
+    0 0 0 2px var(--vectant-black),
     0 0 0 4px #8ae7f1;
 }
 
@@ -352,7 +352,7 @@
   inset: clamp(4.65rem, 7vh, 5.8rem) clamp(0.65rem, 1.4vw, 1.5rem) clamp(0.7rem, 1.4vw, 1.5rem);
   margin: 0;
   overflow: hidden;
-  background: #06070a;
+  background: var(--vectant-black-raised);
   box-shadow:
     0 0 0 1px rgb(255 255 255 / 0.13),
     0 52px 130px rgb(0 0 0 / 0.68);
@@ -394,9 +394,9 @@
 
 .cinemaProductFrame path {
   fill: none;
-  stroke: rgb(255 118 87 / 0.58);
+  stroke: rgb(var(--vectant-accent-rgb) / 0.58);
   stroke-width: 1.1;
-  filter: drop-shadow(0 0 5px rgb(255 83 46 / 0.46));
+  filter: drop-shadow(0 0 5px rgb(var(--vectant-accent-rgb) / 0.46));
 }
 
 .cinemaProductTelemetry {
@@ -413,7 +413,7 @@
   gap: 1rem;
   padding-inline: clamp(0.85rem, 2vw, 1.8rem);
   color: rgb(228 230 235 / 0.58);
-  background: rgb(5 6 9 / 0.9);
+  background: rgb(8 7 13 / 0.9);
   box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.11);
   font-family: var(--font-geist-mono), ui-monospace, monospace;
   font-size: 0.6rem;
@@ -441,8 +441,8 @@
   width: 57%;
   display: block;
   background:
-    radial-gradient(circle at 50% 50%, rgb(20 23 29 / 0.95), #050609 58%),
-    #050609;
+    radial-gradient(circle at 50% 50%, rgb(20 23 29 / 0.95), var(--vectant-black) 58%),
+    var(--vectant-black);
   will-change: transform;
 }
 
@@ -680,11 +680,11 @@
     align-content: space-between;
     gap: 1rem;
     padding: 1.15rem;
-    background: #090a0e;
+    background: var(--vectant-black-raised);
   }
 
   .cinemaReducedNarrative span {
-    color: #ff7657;
+    color: var(--vectant-accent-readable);
     font-family: var(--font-geist-mono), ui-monospace, monospace;
     font-size: 0.57rem;
     font-weight: 700;

@@ -3,7 +3,7 @@
   min-height: 286dvh;
   scroll-margin-top: 4.5rem;
   color: #f2efe9;
-  background: #050609;
+  background: var(--vectant-black);
 }
 
 .proofStage {
@@ -13,7 +13,7 @@
   overflow: hidden;
   background:
     radial-gradient(circle at 50% 52%, rgb(74 24 77 / 0.09), transparent 34%),
-    #050609;
+    var(--vectant-black);
   isolation: isolate;
 }
 
@@ -33,7 +33,7 @@
   inset-block: 0;
   left: 0;
   width: 1px;
-  background: #ff7657;
+  background: var(--vectant-accent);
   content: "";
 }
 
@@ -134,14 +134,14 @@
   left: clamp(1rem, 2.5vw, 2rem);
   max-width: 48rem;
   padding: 1rem 1.15rem 1.15rem;
-  border-left: 1px solid #ff7657;
+  border-left: 1px solid var(--vectant-accent);
   background: linear-gradient(90deg, rgb(5 6 9 / 0.95), rgb(5 6 9 / 0.78) 78%, transparent);
 }
 
 .proofPanelCaption > span {
   display: block;
   margin-bottom: 0.6rem;
-  color: #ff7657;
+  color: var(--vectant-accent-readable);
   font-family: var(--font-geist-mono), ui-monospace, monospace;
   font-size: 0.57rem;
   font-weight: 650;
@@ -189,7 +189,7 @@
   top: 50%;
   width: 52vw;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgb(255 118 87 / 0.56));
+  background: linear-gradient(90deg, transparent, rgb(var(--vectant-accent-rgb) / 0.56));
   content: "";
 }
 
@@ -277,7 +277,7 @@
   width: 4rem;
   height: 1px;
   margin-inline: 1.3rem;
-  background: rgb(255 118 87 / 0.42);
+  background: rgb(var(--vectant-accent-rgb) / 0.42);
   content: "";
 }
 

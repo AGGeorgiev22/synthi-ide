@@ -30,7 +30,7 @@ const TONE = {
   run: { dot: "#2dd4ee", text: "text-cyan", ring: "border-cyan/30", bg: "bg-cyan/[0.07]" },
   info: { dot: "#5b9dff", text: "text-blue", ring: "border-blue/30", bg: "bg-blue/[0.07]" },
   ok: { dot: "#46e0a0", text: "text-ok", ring: "border-ok/30", bg: "bg-ok/[0.07]" },
-  warn: { dot: "#f5b13d", text: "text-warn", ring: "border-warn/30", bg: "bg-warn/[0.07]" },
+  warn: { dot: "#928cb5", text: "text-warn", ring: "border-warn/30", bg: "bg-warn/[0.07]" },
   err: { dot: "#ff6b6b", text: "text-err", ring: "border-err/30", bg: "bg-err/[0.07]" },
 };
 
@@ -73,7 +73,7 @@ export function WindowFrame({ title = "vectant", path, pills, topRight, children
         <div className="flex items-center gap-3 border-b border-line bg-bg-2/80 px-4 py-2.5">
           <div className="flex items-center gap-1.5">
             <span className="h-3 w-3 rounded-full bg-[#ff5f57]" />
-            <span className="h-3 w-3 rounded-full bg-[#febc2e]" />
+            <span className="h-3 w-3 rounded-full bg-[#c5c1da]" />
             <span className="h-3 w-3 rounded-full bg-[#28c840]" />
           </div>
           <div className="ml-1 flex min-w-0 items-center gap-2 font-mono text-[11px] text-ink-faint">

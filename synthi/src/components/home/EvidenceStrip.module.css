@@ -1,7 +1,7 @@
 .evidence {
   position: relative;
   color: #f2efe9;
-  background: #050609;
+  background: var(--vectant-black);
 }
 
 .evidenceShell {
@@ -57,7 +57,7 @@
   color: #f2efe9;
   background:
     linear-gradient(135deg, rgb(255 255 255 / 0.035), transparent 52%),
-    #090a0e;
+    var(--vectant-black-raised);
   outline: none;
   transition:
     color 440ms cubic-bezier(0.16, 1, 0.3, 1),
@@ -85,7 +85,7 @@
 
 .evidenceCell span {
   display: block;
-  color: #ff7657;
+  color: var(--vectant-accent-readable);
   font-family: var(--font-geist-mono), ui-monospace, monospace;
   font-size: 0.58rem;
   font-weight: 700;
@@ -123,7 +123,7 @@
 
 .evidenceCell[href]:hover {
   color: #fff;
-  background-color: #0d0f14;
+  background-color: var(--vectant-black-elevated);
   transform: translateY(-2px);
 }
 

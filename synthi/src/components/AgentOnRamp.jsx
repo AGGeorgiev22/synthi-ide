@@ -11,7 +11,7 @@ const STEPS = [
     copy: "CLI agents, MCP tools, VS Code paths, repo state, browser state, and terminal context share one runtime view.",
     signal: "repo, tools, browser, terminal",
     accent: "#ff3dbe",
-    accent2: "#ff6a3d",
+    accent2: "#4d4870",
     tracks: ["CLI agent", "MCP tools", "VS Code path"],
   },
   {
@@ -20,8 +20,8 @@ const STEPS = [
     title: "Lease every write before it starts.",
     copy: "MutationLeases define files, routes, inputs, protected paths, and required proof before an agent mutates code.",
     signal: "leases, policy, protected paths",
-    accent: "#ff9f43",
-    accent2: "#ffd166",
+    accent: "#6f698f",
+    accent2: "#c5c1da",
     tracks: ["MutationLease", "protected paths", "proof gate"],
   },
   {

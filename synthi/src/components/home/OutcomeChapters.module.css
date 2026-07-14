@@ -2,7 +2,7 @@
   position: relative;
   scroll-margin-top: 4.5rem;
   color: #f2efe9;
-  background: #050609;
+  background: var(--vectant-black);
 }
 
 .outcomesShell {
@@ -40,8 +40,8 @@
   margin-inline: 0.16em;
   overflow: hidden;
   vertical-align: 0.08em;
-  background: #111218;
-  box-shadow: 0 0 0 1px rgb(255 118 87 / 0.46);
+  background: var(--vectant-black-elevated);
+  box-shadow: 0 0 0 1px rgb(var(--vectant-accent-rgb) / 0.46);
 }
 
 .inlineProof img {
@@ -73,7 +73,7 @@
   flex: 1 1 0;
   grid-template-rows: auto minmax(0, 1fr);
   overflow: hidden;
-  background: #090a0e;
+  background: var(--vectant-black-raised);
   transition: flex 880ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -92,7 +92,7 @@
   gap: 0.8rem;
   padding-inline: 1rem;
   color: rgb(242 239 233 / 0.62);
-  background: #0c0d11;
+  background: var(--vectant-black-elevated);
   box-shadow: inset 0 -1px 0 rgb(255 255 255 / 0.1);
   outline: none;
   transition:
@@ -125,7 +125,7 @@
 
 .outcome[data-active="true"] > button {
   color: #f2efe9;
-  background: #111216;
+  background: var(--vectant-black-elevated);
 }
 
 .outcome[data-active="true"] > button span {
@@ -137,7 +137,7 @@
 }
 
 .outcome[data-active="true"] > button svg {
-  color: #ff7657;
+  color: var(--vectant-accent-readable);
   transform: rotate(90deg);
 }
 
@@ -170,7 +170,7 @@
   min-height: 0;
   margin: 0;
   overflow: hidden;
-  background: #07080b;
+  background: var(--vectant-black-raised);
 }
 
 .outcomeBody figure::after {
@@ -178,7 +178,7 @@
   inset: 0;
   content: "";
   pointer-events: none;
-  background: linear-gradient(180deg, transparent 58%, rgb(5 6 9 / 0.46));
+  background: linear-gradient(180deg, transparent 58%, rgb(8 7 13 / 0.46));
 }
 
 .outcomeBody figure img {
@@ -198,7 +198,7 @@
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 0.9rem 2rem;
   align-content: center;
-  background: #0c0d11;
+  background: var(--vectant-black-elevated);
 }
 
 .outcomeCopy p,
@@ -223,7 +223,7 @@
 .outcomeCopy span {
   grid-column: 1 / -1;
   padding-top: 0.85rem;
-  color: #ff7657;
+  color: var(--vectant-accent-readable);
   box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.1);
   font-family: var(--font-geist-mono), ui-monospace, monospace;
   font-size: 0.56rem;

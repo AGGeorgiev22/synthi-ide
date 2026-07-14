@@ -105,7 +105,7 @@ export function MissionProfiles() {
             )
             .to(sweeps[index], { autoAlpha: 0, duration: 0.08 }, at + 0.4)
             .to(profileCopy[index], { autoAlpha: 1, x: 0, duration: 0.34, ease: "power3.out" }, at + 0.1)
-            .to(indexItems[index], { color: "#ff7657", duration: 0.18 }, at)
+            .to(indexItems[index], { color: "#928cb5", duration: 0.18 }, at)
             .to(
               progressRef.current,
               { scaleX: (index + 1) / profiles.length, duration: 0.44, ease: "power2.inOut" },

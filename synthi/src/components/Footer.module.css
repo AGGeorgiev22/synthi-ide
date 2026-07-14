@@ -1,7 +1,7 @@
 .footer {
   position: relative;
   overflow: hidden;
-  color: #171513;
+  color: var(--vectant-black-ink);
   background: #d8d0c5;
   box-shadow: inset 0 1px 0 rgb(36 29 25 / 0.22);
 }
@@ -13,7 +13,7 @@
   width: 1px;
   height: 58rem;
   content: "";
-  background: linear-gradient(180deg, transparent, rgb(216 73 47 / 0.35));
+  background: linear-gradient(180deg, transparent, rgb(var(--vectant-accent-rgb) / 0.35));
   pointer-events: none;
 }
 
@@ -45,7 +45,7 @@
 }
 
 .footerLogo {
-  color: #171513 !important;
+  color: var(--vectant-black-ink) !important;
 }
 
 .footerBrand {
@@ -66,7 +66,7 @@
 
 .footerLead h2 {
   margin: 0;
-  color: #171513;
+  color: var(--vectant-black-ink);
   font-family: var(--font-outfit), var(--font-satoshi), ui-sans-serif, sans-serif;
   font-size: clamp(4.25rem, 7.5vw, 8.6rem);
   font-weight: 500;
@@ -79,7 +79,7 @@
 }
 
 .footerLead h2 span:last-child {
-  color: #c53f29;
+  color: var(--vectant-accent);
 }
 
 .footerAction {
@@ -88,11 +88,11 @@
   margin-top: clamp(1.6rem, 3vw, 2.4rem);
   align-items: center;
   gap: 0.75rem;
-  border: 1px solid #171513;
+  border: 1px solid var(--vectant-black-ink);
   border-radius: 2px;
   padding-inline: 1.1rem;
   color: #f7f1e8;
-  background: #171513;
+  background: var(--vectant-black-ink);
   font-size: 0.76rem;
   font-weight: 720;
   outline: none;
@@ -103,7 +103,7 @@
 }
 
 .footerAction:hover {
-  color: #171513;
+  color: var(--vectant-black-ink);
   background: transparent;
   transform: translateY(-2px);
 }
@@ -121,7 +121,7 @@
 
 .footerDirectory section > p {
   margin: 0 0 1.25rem;
-  color: #a62d1e;
+  color: var(--vectant-accent);
   font-family: var(--font-geist-mono), ui-monospace, monospace;
   font-size: 0.55rem;
   font-weight: 720;
@@ -149,7 +149,7 @@
 .footerDirectory nav a:focus-visible,
 .footerContact > a:hover,
 .footerContact > a:focus-visible {
-  color: #171513;
+  color: var(--vectant-black-ink);
   transform: translateX(3px);
 }
 
@@ -164,7 +164,7 @@
 .footerContact > a {
   display: inline-block;
   margin-top: 0.95rem;
-  color: #171513;
+  color: var(--vectant-black-ink);
   font-weight: 650;
 }
 
@@ -203,7 +203,7 @@
 }
 
 .footerLegal a:hover {
-  color: #171513;
+  color: var(--vectant-black-ink);
 }
 
 @media (max-width: 960px) {

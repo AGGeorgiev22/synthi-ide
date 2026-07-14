@@ -2,8 +2,8 @@
   min-height: 100dvh;
   color: #e6e0d8;
   background:
-    radial-gradient(circle at 10% -8%, rgb(197 63 41 / 0.13), transparent 24rem),
-    #0b0b0d;
+    radial-gradient(circle at 10% -8%, rgb(var(--vectant-accent-rgb) / 0.13), transparent 24rem),
+    var(--vectant-black);
 }
 
 .header,
@@ -61,7 +61,7 @@
 .cta p,
 .body aside > span {
   margin: 0;
-  color: #dd5c44;
+  color: var(--vectant-accent-readable);
   font-family: var(--font-geist-mono), ui-monospace, monospace;
   font-size: 0.62rem;
   font-weight: 700;
@@ -92,7 +92,7 @@
   position: relative;
   min-height: min(58vw, 45rem);
   overflow: hidden;
-  background: #171513;
+  background: var(--vectant-black-ink);
 }
 
 .figure::after {
@@ -163,7 +163,7 @@
   display: block;
   min-height: min(45vw, 31rem);
   overflow: hidden;
-  background: #171513;
+  background: var(--vectant-black-ink);
 }
 
 .inlineImage img {
@@ -211,7 +211,7 @@
 
 .sources a:hover,
 .sources a:focus-visible {
-  border-color: #dd5c44;
+  border-color: var(--vectant-accent-readable);
   color: #f4eee7;
   transform: translateY(-2px);
 }
@@ -243,7 +243,7 @@
   min-height: 3rem;
   flex: 0 0 auto;
   padding-inline: 1rem;
-  color: #101012;
+  color: var(--vectant-black-elevated);
   background: #e6e0d8;
   font-size: 0.74rem;
   font-weight: 720;
@@ -252,13 +252,13 @@
 .cta a:hover,
 .cta a:focus-visible {
   color: #f4eee7;
-  background: #c53f29;
+  background: var(--vectant-accent);
   transform: translateY(-2px);
 }
 
 .backLink:focus-visible,
 .cta a:focus-visible {
-  box-shadow: 0 0 0 2px #0b0b0d, 0 0 0 4px #dd5c44;
+  box-shadow: 0 0 0 2px var(--vectant-black), 0 0 0 4px var(--vectant-accent);
 }
 
 @media (max-width: 767px) {

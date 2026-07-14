@@ -30,7 +30,7 @@ const EVENTS = [
 const TONE = {
   info: { c: "#5b9dff", text: "text-blue" },
   run: { c: "#2dd4ee", text: "text-cyan" },
-  warn: { c: "#f5b13d", text: "text-warn" },
+  warn: { c: "#928cb5", text: "text-warn" },
   ok: { c: "#46e0a0", text: "text-ok" },
 };
 
@@ -53,7 +53,7 @@ export function DemoTimeline() {
           <div className="flex items-center gap-2 border-b border-line bg-bg-2/80 px-4 py-2.5">
             <div className="flex items-center gap-1.5">
               <span className="h-3 w-3 rounded-full bg-[#ff5f57]" />
-              <span className="h-3 w-3 rounded-full bg-[#febc2e]" />
+              <span className="h-3 w-3 rounded-full bg-[#c5c1da]" />
               <span className="h-3 w-3 rounded-full bg-[#28c840]" />
             </div>
             <span className="ml-1 font-mono text-[11px] text-ink-dim">vectant · run #4812</span>

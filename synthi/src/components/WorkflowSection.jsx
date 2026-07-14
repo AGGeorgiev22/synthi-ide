@@ -184,7 +184,7 @@ const TABS = [
    reduced-motion. */
 const BRACKETS = [
   { x: "left", y: "top", color: "#ff3dbe" },
-  { x: "right", y: "top", color: "#ff5c2a" },
+  { x: "right", y: "top", color: "#4d4870" },
   { x: "left", y: "bottom", color: "#22d3ee" },
   { x: "right", y: "bottom", color: "#7c5cff" },
 ];
