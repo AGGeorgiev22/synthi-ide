@@ -103,7 +103,7 @@ export function AuthorityStory() {
         gsap.set(copies, { autoAlpha: 0, y: 30, clipPath: "inset(0 0 100% 0)" });
         gsap.set(progressRef.current, { scaleX: 0, transformOrigin: "left center" });
         gsap.set(tokenRef.current, { left: "0%" });
-        gsap.set(states, { color: "rgba(231, 233, 239, 0.38)" });
+        gsap.set(states, { color: "rgba(231, 233, 239, 0.68)" });
 
         const timeline = gsap.timeline({
           scrollTrigger: {

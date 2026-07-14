@@ -68,7 +68,7 @@
 }
 
 .footerLead h2 span:last-child {
-  color: #d8492f;
+  color: #c53f29;
 }
 
 .footerAction {
@@ -110,7 +110,7 @@
 
 .footerDirectory section > p {
   margin: 0 0 1.25rem;
-  color: #d8492f;
+  color: #a62d1e;
   font-family: var(--font-geist-mono), ui-monospace, monospace;
   font-size: 0.55rem;
   font-weight: 720;
@@ -145,7 +145,7 @@
 .footerContact > span {
   display: block;
   max-width: 24rem;
-  color: rgb(23 21 19 / 0.62);
+  color: rgb(23 21 19 / 0.68);
   font-size: 0.84rem;
   line-height: 1.55;
 }

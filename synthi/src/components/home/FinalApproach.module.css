@@ -108,7 +108,7 @@
 }
 
 .finalCopy h2 span:last-child {
-  color: #d8492f;
+  color: #c53f29;
 }
 
 .finalCopy > p {
@@ -251,7 +251,7 @@
 }
 
 .finalReceipt dt {
-  color: #d8492f;
+  color: #a62d1e;
   font-weight: 720;
   text-transform: uppercase;
 }
