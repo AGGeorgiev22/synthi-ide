@@ -68,7 +68,21 @@ const SECTIONS = [
   },
   {
     title: "Retention and deletion",
-    body: "We retain information for as long as it is needed to provide the pilot, maintain security and records, resolve disputes, or meet legal obligations. The timing can vary by the information involved and any written pilot agreement. When a pilot ends or access is closed, we will handle workspace content and account information according to the applicable agreement and our operational requirements.",
+    body: "Vectant does not publish one universal retention period for every pilot. Before access, the written pilot agreement must state separate schedules for workspace content and proof or operational records, plus export or deletion triggers, backup expiry, and any permitted security or legal holds.",
+    details: [
+      {
+        label: "Workspace content",
+        copy: "Repositories, prompts, files, configurations, and outputs follow the active-pilot and closeout periods agreed with the customer. The agreement records the export, return, or deletion trigger.",
+      },
+      {
+        label: "Proof and operational records",
+        copy: "Decision trails, approvals, runtime events, diagnostic logs, and security records use a separately stated window appropriate to audit, support, and dispute needs.",
+      },
+      {
+        label: "Closeout and exceptions",
+        copy: "The agreement records backup expiry and any lawful or security hold. Retention is not extended indefinitely by leaving the schedule silent.",
+      },
+    ],
   },
   {
     title: "Security",
