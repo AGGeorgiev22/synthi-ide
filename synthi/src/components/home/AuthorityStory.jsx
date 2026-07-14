@@ -160,7 +160,7 @@ export function AuthorityStory() {
               },
               start,
             )
-            .to(states[index], { color: "#928cb5", duration: 0.12 }, start + 0.08);
+            .to(states[index], { color: "var(--vectant-ui-text)", duration: 0.12 }, start + 0.08);
 
           if (index < scenes.length - 1) {
             timeline.to(

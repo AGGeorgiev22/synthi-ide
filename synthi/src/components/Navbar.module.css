@@ -80,7 +80,7 @@
 .navHome:focus-visible,
 .navLinks a:focus-visible,
 .navIndexButton:focus-visible {
-  box-shadow: 0 0 0 2px #8ae7f1;
+  box-shadow: 0 0 0 2px var(--vectant-ui-action);
 }
 
 .navLinks {
@@ -369,7 +369,7 @@
 }
 
 .navIndexGroups summary:focus-visible {
-  box-shadow: inset 0 0 0 2px #8ae7f1;
+  box-shadow: inset 0 0 0 2px var(--vectant-ui-action);
 }
 
 .navIndexLinks {
@@ -478,7 +478,7 @@
 .navIndexFooter a:focus-visible {
   box-shadow:
     0 0 0 2px var(--vectant-black),
-    0 0 0 4px #8ae7f1;
+    0 0 0 4px var(--vectant-ui-action);
 }
 
 @media (max-width: 899px) {

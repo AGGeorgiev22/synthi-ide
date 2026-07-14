@@ -96,7 +96,7 @@ export function MissionProfiles() {
             .set(profile, { autoAlpha: 1 }, at)
             .to(profileMedia[index], { clipPath: "inset(0% 0 0 0)", duration: 0.44, ease: "power3.inOut" }, at)
             .to(profileCopy[index], { autoAlpha: 1, x: 0, duration: 0.34, ease: "power3.out" }, at + 0.1)
-            .to(indexItems[index], { color: "#928cb5", duration: 0.18 }, at)
+            .to(indexItems[index], { color: "var(--vectant-ui-text)", duration: 0.18 }, at)
             .to(
               progressRef.current,
               { scaleX: (index + 1) / profiles.length, duration: 0.44, ease: "power2.inOut" },

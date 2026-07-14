@@ -248,7 +248,7 @@
 .readLink:focus-visible,
 .header nav a:focus-visible,
 .footer a:focus-visible {
-  box-shadow: 0 0 0 2px var(--vectant-black), 0 0 0 4px var(--vectant-accent);
+  box-shadow: 0 0 0 2px var(--vectant-black), 0 0 0 4px var(--vectant-ui-action);
 }
 
 .post h3 {

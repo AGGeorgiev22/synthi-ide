@@ -61,7 +61,7 @@ export function GpuProofChapter() {
           .to(gates[0], { color: "#f2efe9", duration: 0.12 }, 0.56)
           .to(gates[1], { color: "#f2efe9", duration: 0.12 }, 0.72)
           .addLabel("patch", 0.84)
-          .to(gates[2], { color: "#928cb5", duration: 0.1 }, "patch")
+          .to(gates[2], { color: "var(--vectant-ui-text)", duration: 0.1 }, "patch")
           .to(diffRef.current, { autoAlpha: 1, scale: 1, duration: 0.14, ease: "power3.out" }, "patch")
           .to(diffRef.current, { autoAlpha: 0.48, duration: 0.22 }, 1.02)
           .addLabel("compare", 1.08)
@@ -69,7 +69,7 @@ export function GpuProofChapter() {
           .to(afterMaskRef.current, { clipPath: "inset(0 0% 0 0)", duration: 0.58, ease: "power2.inOut" }, "compare")
           .to(dividerRef.current, { left: "100%", duration: 0.58, ease: "power2.inOut" }, "compare")
           .to(diffRef.current, { autoAlpha: 0, duration: 0.28 }, 1.34)
-          .to(gates[3], { color: "#928cb5", duration: 0.12 }, 1.5)
+          .to(gates[3], { color: "var(--vectant-ui-text)", duration: 0.12 }, 1.5)
           .to(verdictRef.current, { autoAlpha: 1, y: 0, duration: 0.24, ease: "power3.out" }, 1.52)
           .to(
             latency,

@@ -224,7 +224,7 @@
 
 .backLink:focus-visible,
 .contact a:focus-visible {
-  box-shadow: 0 0 0 2px var(--vectant-black), 0 0 0 4px var(--vectant-accent);
+  box-shadow: 0 0 0 2px var(--vectant-black), 0 0 0 4px var(--vectant-ui-action);
 }
 
 @media (max-width: 767px) {

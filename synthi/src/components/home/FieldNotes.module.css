@@ -170,7 +170,7 @@
 }
 
 .fieldNotesList summary:focus-visible {
-  box-shadow: inset 0 0 0 2px #8ae7f1;
+  box-shadow: inset 0 0 0 2px var(--vectant-ui-action);
 }
 
 .fieldNotesList details > p {
