@@ -1,6 +1,7 @@
 import { AuthorityStory } from "@/components/home/AuthorityStory";
 import { CinematicHero } from "@/components/home/CinematicHero";
 import { ControlPlaneAtlas } from "@/components/home/ControlPlaneAtlas";
+import { EvidenceStrip } from "@/components/home/EvidenceStrip";
 import { FieldNotes } from "@/components/home/FieldNotes";
 import { FinalApproach } from "@/components/home/FinalApproach";
 import { GpuProofChapter } from "@/components/home/GpuProofChapter";
@@ -13,6 +14,7 @@ export function VectantLanding() {
   return (
     <main id="main-content" tabIndex={-1} className={styles.page}>
       <CinematicHero />
+      <EvidenceStrip />
       <RunBoundary />
       <AuthorityStory />
       <GpuProofChapter />
