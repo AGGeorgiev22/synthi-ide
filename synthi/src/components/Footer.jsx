@@ -19,6 +19,7 @@ const GROUPS = [
     label: "Evidence",
     links: [
       { label: "Proof bundle", href: "#proof" },
+      { label: "Technical reference", href: "/docs" },
       { label: "Enterprise controls", href: "#technical-confidence" },
       { label: "Technical questions", href: "#faq" },
     ],

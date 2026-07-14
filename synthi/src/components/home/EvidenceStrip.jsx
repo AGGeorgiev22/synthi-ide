@@ -20,9 +20,9 @@ const EVIDENCE_LINKS = [
   },
   {
     key: "controls",
-    label: "Technical controls",
-    value: "Permissions, retention, deployment, and audit",
-    href: "#technical-confidence",
+    label: "Technical reference",
+    value: "Run schema, decision states, boundaries, export, and availability",
+    href: "/docs",
   },
   {
     key: "data",
