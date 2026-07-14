@@ -29,6 +29,7 @@ const NAV_GROUPS = [
     detail: "Review path",
     links: [
       { label: "Proof reel", detail: "Replay and handoff", href: "#proof" },
+      { label: "Who it is for", detail: "Teams under control", href: "#teams" },
       { label: "Technical questions", detail: "Pilot constraints", href: "#faq" },
     ],
   },
