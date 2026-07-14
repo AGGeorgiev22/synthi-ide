@@ -215,7 +215,8 @@
   gap: clamp(3.5rem, 7vw, 8rem) clamp(1.5rem, 4vw, 5rem);
 }
 
-.post:nth-child(3) {
+.post:nth-child(3),
+.post:nth-child(4) {
   grid-column: 1 / -1;
   display: grid;
   grid-template-columns: minmax(0, 0.9fr) minmax(15rem, 0.7fr);
@@ -235,6 +236,15 @@
 
 .post:nth-child(3) .postImage {
   min-height: 30rem;
+}
+
+.post:nth-child(4) {
+  grid-template-columns: minmax(15rem, 0.7fr) minmax(0, 0.9fr);
+}
+
+.post:nth-child(4) .postImage {
+  min-height: 26rem;
+  order: 2;
 }
 
 .postImage:focus-visible,
@@ -306,7 +316,8 @@
   .hero,
   .featured,
   .posts,
-  .post:nth-child(3) {
+  .post:nth-child(3),
+  .post:nth-child(4) {
     grid-template-columns: 1fr;
   }
 
@@ -339,7 +350,8 @@
 
   .postImage,
   .post:nth-child(2) .postImage,
-  .post:nth-child(3) .postImage {
+  .post:nth-child(3) .postImage,
+  .post:nth-child(4) .postImage {
     min-height: 68vw;
   }
 
@@ -347,8 +359,13 @@
     gap: 4rem;
   }
 
-  .post:nth-child(3) {
+  .post:nth-child(3),
+  .post:nth-child(4) {
     gap: 1.5rem;
+  }
+
+  .post:nth-child(4) .postImage {
+    order: initial;
   }
 
   .footer {
