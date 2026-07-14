@@ -113,7 +113,7 @@
 .finalCopy h2 {
   margin: 0;
   color: #f2efe9;
-  font-family: var(--font-outfit), var(--font-satoshi), ui-sans-serif, sans-serif;
+  font-family: var(--font-display);
   font-size: clamp(3.15rem, 3.65vw, 4.75rem);
   font-weight: 500;
   line-height: 0.85;

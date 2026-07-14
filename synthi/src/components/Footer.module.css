@@ -67,7 +67,7 @@
 .footerLead h2 {
   margin: 0;
   color: var(--vectant-black-ink);
-  font-family: var(--font-outfit), var(--font-satoshi), ui-sans-serif, sans-serif;
+  font-family: var(--font-display);
   font-size: clamp(4.25rem, 7.5vw, 8.6rem);
   font-weight: 500;
   line-height: 0.84;

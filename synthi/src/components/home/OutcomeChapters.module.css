@@ -25,7 +25,7 @@
 
 .outcomesHeader h2 {
   max-width: 15ch;
-  font-family: var(--font-outfit), var(--font-satoshi), ui-sans-serif, sans-serif;
+  font-family: var(--font-display);
   font-size: clamp(3.2rem, 7vw, 7.4rem);
   font-weight: 510;
   line-height: 0.9;

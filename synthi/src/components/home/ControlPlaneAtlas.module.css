@@ -188,7 +188,7 @@
 .programsCopy h2,
 .openCopy h2 {
   margin: 0;
-  font-family: var(--font-outfit), var(--font-cabinet), var(--font-satoshi), ui-sans-serif, sans-serif;
+  font-family: var(--font-display);
   font-size: clamp(3.5rem, 6.35vw, 7.25rem);
   font-weight: 500;
   line-height: 0.86;

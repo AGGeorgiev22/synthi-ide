@@ -1,4 +1,4 @@
-import { Geist, Geist_Mono, Outfit, Space_Grotesk } from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
@@ -17,18 +17,24 @@ const geistMono = Geist_Mono({
   display: "swap",
 });
 
-const outfit = Outfit({
-  variable: "--font-outfit",
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
+const aquireLight = localFont({
+  src: "../../fonts/Aquire-Light.otf",
+  variable: "--font-aquire-light",
+  weight: "300",
   display: "swap",
 });
 
-// Brand display face (stands in for Aquire until licensed files are added).
-const spaceGrotesk = Space_Grotesk({
-  variable: "--font-space-grotesk",
-  subsets: ["latin"],
-  weight: ["500", "600", "700"],
+const aquire = localFont({
+  src: "../../fonts/Aquire-Regular.otf",
+  variable: "--font-aquire",
+  weight: "400",
+  display: "swap",
+});
+
+const aquireBold = localFont({
+  src: "../../fonts/Aquire-Bold.otf",
+  variable: "--font-aquire-bold",
+  weight: "700",
   display: "swap",
 });
 
@@ -95,10 +101,12 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} ${outfit.variable} ${satoshi.variable} ${cabinetGrotesk.variable} ${spaceGrotesk.variable} antialiased`}
-      >
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${geistSans.variable} ${geistMono.variable} ${satoshi.variable} ${cabinetGrotesk.variable} ${aquireLight.variable} ${aquire.variable} ${aquireBold.variable}`}
+    >
+      <body className="antialiased">
         <ThemeProvider>
           {children}
           <Toaster

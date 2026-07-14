@@ -43,8 +43,8 @@
     calc(var(--vectant-signature-height) * 0.3);
   white-space: nowrap;
   font-size: calc(var(--vectant-signature-height) * 0.6667);
-  font-weight: 600;
-  letter-spacing: 0.2em;
+  font-weight: 300;
+  letter-spacing: 0.17em;
 }
 
 .logoExpanded .wordShell,

@@ -44,7 +44,7 @@ function SignatureWord() {
     <span aria-hidden="true" className={styles.wordShell}>
       <span className={styles.wordTrack}>
         <span
-          style={{ fontFamily: 'var(--font-space-grotesk, "Space Grotesk"), var(--font-satoshi, "Satoshi"), ui-sans-serif, sans-serif' }}
+          style={{ fontFamily: "var(--font-brand)" }}
           className={styles.word}
         >
           VECTANT
