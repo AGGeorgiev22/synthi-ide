@@ -9,7 +9,6 @@ import { MotionPathPlugin } from "gsap/MotionPathPlugin";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import styles from "@/components/home/CinematicHero.module.css";
-import { PILOT_MAILTO } from "@/lib/pilot";
 
 gsap.registerPlugin(MotionPathPlugin, ScrollTrigger, useGSAP);
 
@@ -306,12 +305,19 @@ export function CinematicHero() {
           </h1>
           <div className={styles.cinemaHeroFooter}>
             <p>
-              Parallel coding agents get live runtime state, scoped authority, and proof your team can replay.
+              Vectant is the cloud runtime for parallel coding agents, with scoped permissions,
+              live environment state, and replayable proof.
             </p>
-            <a href={PILOT_MAILTO} className={styles.cinemaPrimaryAction}>
-              Request a proof pilot
-              <ArrowUpRight size={16} weight="bold" />
-            </a>
+            <div className={styles.cinemaActions}>
+              <a href="#guarded-run" className={styles.cinemaPrimaryAction}>
+                Watch a guarded run
+                <span aria-hidden="true"><ArrowUpRight size={15} weight="bold" /></span>
+              </a>
+              <a href="#pilot" className={styles.cinemaSecondaryAction}>
+                Book a proof pilot
+                <span aria-hidden="true"><ArrowUpRight size={15} weight="bold" /></span>
+              </a>
+            </div>
           </div>
         </div>
 
@@ -344,6 +350,17 @@ export function CinematicHero() {
             <span>Required <strong>0</strong></span>
           </figcaption>
         </figure>
+
+        <div className={styles.cinemaReducedNarrative} aria-label="Guarded run summary">
+          <article>
+            <span>Collision forecast</span>
+            <strong>The protected path is identified before the agent writes.</strong>
+          </article>
+          <article>
+            <span>Write held</span>
+            <strong>The rejected mutation stays attached to the replayable run record.</strong>
+          </article>
+        </div>
 
         <div className={styles.cinemaShutters} aria-hidden="true">
           <i ref={shutterLeftRef} className={styles.cinemaShutterLeft} />
