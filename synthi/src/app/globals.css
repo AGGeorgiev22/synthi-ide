@@ -384,7 +384,7 @@ html {
   margin-left: 0.06em;
   border-radius: 2px;
   background: linear-gradient(180deg, var(--color-brand), var(--color-cyan));
-  box-shadow: 0 0 7px rgba(255, 122, 77, 0.4);
+  box-shadow: 0 0 7px rgb(var(--vectant-accent-rgb) / 0.4);
   vertical-align: -0.05em;
   animation: vt-caret 1.05s steps(1) infinite;
   translate: 0 0.02em;
@@ -491,7 +491,7 @@ html {
     radial-gradient(40% 50% at 25% 30%, rgba(255, 61, 190, 0.16), transparent 70%),
     radial-gradient(45% 55% at 75% 25%, rgba(124, 92, 255, 0.16), transparent 70%),
     radial-gradient(50% 60% at 60% 75%, rgba(34, 211, 238, 0.16), transparent 70%),
-    radial-gradient(35% 45% at 30% 70%, rgba(255, 92, 42, 0.10), transparent 70%);
+    radial-gradient(35% 45% at 30% 70%, rgb(var(--vectant-accent-rgb) / 0.10), transparent 70%);
   filter: blur(40px);
   animation: vt-aurora 26s ease-in-out infinite;
   will-change: transform;
@@ -603,7 +603,7 @@ html {
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.08);
   background:
-    radial-gradient(70% 70% at 52% 42%, rgba(255, 122, 77, 0.12), transparent 68%),
+    radial-gradient(70% 70% at 52% 42%, rgb(var(--vectant-accent-rgb) / 0.12), transparent 68%),
     #0d0d0e;
 }
 
@@ -632,7 +632,7 @@ html {
   height: 6px;
   border-radius: 9999px;
   background: #928cb5;
-  box-shadow: 0 0 26px rgba(255, 122, 77, 0.6);
+  box-shadow: 0 0 26px rgb(var(--vectant-accent-rgb) / 0.6);
 }
 
 .runtime-orbit-a {
@@ -664,7 +664,7 @@ html {
   height: 1px;
   width: 54%;
   transform-origin: 0 50%;
-  background: linear-gradient(90deg, rgba(255, 122, 77, 0), rgba(255, 122, 77, 0.5), rgba(255, 255, 255, 0));
+  background: linear-gradient(90deg, rgb(var(--vectant-accent-rgb) / 0), rgb(var(--vectant-accent-rgb) / 0.5), rgba(255, 255, 255, 0));
   opacity: 0.44;
   pointer-events: none;
 }
@@ -726,7 +726,7 @@ html {
 
 .runtime-node:hover {
   transform: translate(-50%, -50%) translateY(-4px);
-  border-color: rgba(255, 122, 77, 0.42);
+  border-color: rgb(var(--vectant-accent-rgb) / 0.42);
   background: rgba(27, 24, 22, 0.96);
 }
 
@@ -772,8 +772,8 @@ html {
 .proof-cell:hover,
 .hmr-step:hover {
   transform: translateY(-5px);
-  border-color: rgba(255, 122, 77, 0.38);
-  background-color: rgba(255, 122, 77, 0.055);
+  border-color: rgb(var(--vectant-accent-rgb) / 0.38);
+  background-color: rgb(var(--vectant-accent-rgb) / 0.055);
 }
 
 .runtime-lane-icon {
@@ -783,9 +783,9 @@ html {
   align-items: center;
   justify-content: center;
   border-radius: 9999px;
-  border: 1px solid rgba(255, 122, 77, 0.28);
+  border: 1px solid rgb(var(--vectant-accent-rgb) / 0.28);
   color: #928cb5;
-  background: rgba(255, 122, 77, 0.08);
+  background: rgb(var(--vectant-accent-rgb) / 0.08);
 }
 
 .proof-cell {
@@ -800,7 +800,7 @@ html {
 /* ---- Trust-runtime redesign ---- */
 .runtime-atmosphere-proof {
   background:
-    radial-gradient(72% 58% at 50% 0%, rgba(255, 122, 77, 0.18), transparent 70%),
+    radial-gradient(72% 58% at 50% 0%, rgb(var(--vectant-accent-rgb) / 0.18), transparent 70%),
     radial-gradient(60% 44% at 88% 18%, rgba(45, 212, 238, 0.08), transparent 72%),
     linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 32%),
     #070708;
@@ -896,8 +896,8 @@ html {
 
 .hero-proof-tile:hover {
   transform: translateY(-4px);
-  border-color: rgba(255, 122, 77, 0.36);
-  background: rgba(255, 122, 77, 0.06);
+  border-color: rgb(var(--vectant-accent-rgb) / 0.36);
+  background: rgb(var(--vectant-accent-rgb) / 0.06);
 }
 
 .comparison-row {
@@ -942,8 +942,8 @@ html {
 .feature-system-card:hover,
 .trust-system-row:hover {
   transform: translateY(-5px);
-  border-color: rgba(255, 122, 77, 0.34);
-  background-color: rgba(255, 122, 77, 0.045);
+  border-color: rgb(var(--vectant-accent-rgb) / 0.34);
+  background-color: rgb(var(--vectant-accent-rgb) / 0.045);
 }
 
 .feature-chip {
@@ -1089,13 +1089,13 @@ html {
   background:
     radial-gradient(60% 50% at 50% 0%, rgba(124, 92, 255, 0.10), transparent 70%),
     radial-gradient(45% 40% at 78% 12%, rgba(34, 211, 238, 0.08), transparent 70%),
-    radial-gradient(40% 38% at 22% 18%, rgba(255, 92, 42, 0.06), transparent 70%);
+    radial-gradient(40% 38% at 22% 18%, rgb(var(--vectant-accent-rgb) / 0.06), transparent 70%);
 }
 html.light .spotlight {
   background:
     radial-gradient(60% 50% at 50% 0%, rgba(124, 92, 255, 0.10), transparent 70%),
     radial-gradient(45% 40% at 78% 12%, rgba(10, 147, 172, 0.10), transparent 70%),
-    radial-gradient(40% 38% at 22% 18%, rgba(255, 92, 42, 0.07), transparent 70%);
+    radial-gradient(40% 38% at 22% 18%, rgb(var(--vectant-accent-rgb) / 0.07), transparent 70%);
 }
 
 /* ---- Multiplayer presence ---- */
@@ -1161,7 +1161,7 @@ html.light .spotlight {
 /* ---- Warm gradient mesh (static atmosphere behind key sections) ---- */
 .mesh-warm {
   background:
-    radial-gradient(40% 50% at 18% 20%, rgba(255, 122, 77, 0.18), transparent 70%),
+    radial-gradient(40% 50% at 18% 20%, rgb(var(--vectant-accent-rgb) / 0.18), transparent 70%),
     radial-gradient(42% 52% at 82% 18%, rgba(255, 92, 138, 0.14), transparent 72%),
     radial-gradient(50% 55% at 70% 80%, rgba(124, 92, 255, 0.12), transparent 72%),
     radial-gradient(38% 42% at 25% 78%, rgba(34, 211, 238, 0.10), transparent 70%);
@@ -1229,7 +1229,7 @@ html.light .spotlight {
   --campaign-line: rgba(255, 247, 239, 0.12);
   --campaign-line-strong: rgba(255, 247, 239, 0.2);
   --campaign-accent: #4d4870;
-  --campaign-accent-soft: rgba(255, 106, 61, 0.12);
+  --campaign-accent-soft: rgb(var(--vectant-accent-rgb) / 0.12);
   background: var(--campaign-bg);
   color: var(--campaign-ink);
   scroll-margin-top: 112px;
@@ -1245,7 +1245,7 @@ html.light .runtime-campaign {
   --campaign-line: rgba(18, 21, 27, 0.14);
   --campaign-line-strong: rgba(18, 21, 27, 0.24);
   --campaign-accent: #4d4870;
-  --campaign-accent-soft: rgba(216, 75, 42, 0.12);
+  --campaign-accent-soft: rgb(var(--vectant-accent-rgb) / 0.12);
 }
 
 html.light .runtime-pillar-grid,
@@ -1323,7 +1323,7 @@ html.light .feature-cta-strip p {
 
 html.light .campaign-atmosphere {
   background:
-    radial-gradient(circle at 20% 0%, rgba(216, 75, 42, 0.12), transparent 34%),
+    radial-gradient(circle at 20% 0%, rgb(var(--vectant-accent-rgb) / 0.12), transparent 34%),
     radial-gradient(circle at 92% 12%, rgba(0, 119, 168, 0.1), transparent 30%),
     #f6f8fb;
 }
@@ -1337,9 +1337,9 @@ html.light .campaign-atmosphere {
   max-width: 100%;
   width: fit-content;
   align-items: center;
-  border: 1px solid rgba(255, 106, 61, 0.28);
+  border: 1px solid rgb(var(--vectant-accent-rgb) / 0.28);
   border-radius: 6px;
-  background: rgba(255, 106, 61, 0.06);
+  background: rgb(var(--vectant-accent-rgb) / 0.06);
   padding: 8px 10px;
   font-family: var(--font-mono);
   font-size: 10.5px;
@@ -1451,7 +1451,7 @@ html.light .hero-proof-path strong {
     linear-gradient(180deg, rgba(255, 247, 239, 1), rgba(255, 247, 239, 0.88));
   color: #080808;
   padding: 7px 7px 7px 20px;
-  box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.18), 0 20px 48px rgba(255, 106, 61, 0.12);
+  box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.18), 0 20px 48px rgb(var(--vectant-accent-rgb) / 0.12);
 }
 
 .primary-cta-icon {
@@ -1495,10 +1495,10 @@ html.light .secondary-cta {
 }
 
 .primary-cta:hover {
-  border-color: rgba(255, 106, 61, 0.85);
+  border-color: rgb(var(--vectant-accent-rgb) / 0.85);
   background:
     linear-gradient(180deg, #6f698f, var(--campaign-accent));
-  box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.22), 0 24px 58px rgba(255, 106, 61, 0.22);
+  box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.22), 0 24px 58px rgb(var(--vectant-accent-rgb) / 0.22);
 }
 
 .primary-cta:hover .primary-cta-icon {
@@ -1594,7 +1594,7 @@ html.light .secondary-cta:hover {
   background:
     radial-gradient(circle at 62% 42%, rgba(81, 215, 233, 0.28), transparent 34%),
     radial-gradient(circle at 18% 18%, rgba(255, 98, 173, 0.24), transparent 38%),
-    radial-gradient(circle at 54% 96%, rgba(255, 106, 61, 0.18), transparent 42%),
+    radial-gradient(circle at 54% 96%, rgb(var(--vectant-accent-rgb) / 0.18), transparent 42%),
     linear-gradient(135deg, rgba(255, 247, 239, 0.06), transparent 48%);
   opacity: 0.72;
   pointer-events: none;
@@ -1608,7 +1608,7 @@ html.light .hero-product-depth {
   background:
     radial-gradient(circle at 62% 42%, rgba(81, 215, 233, 0.18), transparent 34%),
     radial-gradient(circle at 18% 18%, rgba(255, 98, 173, 0.16), transparent 38%),
-    radial-gradient(circle at 54% 96%, rgba(255, 106, 61, 0.14), transparent 42%),
+    radial-gradient(circle at 54% 96%, rgb(var(--vectant-accent-rgb) / 0.14), transparent 42%),
     linear-gradient(135deg, rgba(18, 21, 27, 0.1), rgba(255, 255, 255, 0.68) 54%, rgba(18, 21, 27, 0.08));
   box-shadow:
     0 80px 180px rgba(18, 21, 27, 0.16),
@@ -2374,7 +2374,7 @@ html.light .hero-product-card {
   overflow: hidden;
   background:
     radial-gradient(70% 70% at 78% 10%, rgba(45, 212, 238, 0.1), transparent 64%),
-    linear-gradient(180deg, rgba(255, 106, 61, 0.08), transparent 46%),
+    linear-gradient(180deg, rgb(var(--vectant-accent-rgb) / 0.08), transparent 46%),
     #050506;
 }
 
@@ -2386,7 +2386,7 @@ html.light .hero-product-card {
   width: 48%;
   height: 42%;
   border-top: 1px solid rgba(85, 216, 239, 0.28);
-  border-right: 1px solid rgba(255, 138, 97, 0.24);
+  border-right: 1px solid rgb(var(--vectant-accent-rgb) / 0.24);
   border-radius: 48% 52% 56% 44%;
   transform: rotate(-8deg);
   opacity: 0.58;
@@ -2568,7 +2568,7 @@ html.light .hero-proof-strip {
 html.light .hero-proof-cell {
   border-right-color: rgba(18, 21, 27, 0.1);
   background:
-    linear-gradient(145deg, rgba(216, 75, 42, 0.045), rgba(255, 255, 255, 0)),
+    linear-gradient(145deg, rgb(var(--vectant-accent-rgb) / 0.045), rgba(255, 255, 255, 0)),
     rgba(255, 255, 255, 0.46);
 }
 
@@ -2671,7 +2671,7 @@ html.light .hero-proof-cell:hover span {
   border-top: 1px solid var(--campaign-line);
   border-bottom: 1px solid var(--campaign-line);
   background:
-    linear-gradient(90deg, rgba(255, 106, 61, 0.07), transparent 34%, rgba(81, 215, 233, 0.055)),
+    linear-gradient(90deg, rgb(var(--vectant-accent-rgb) / 0.07), transparent 34%, rgba(81, 215, 233, 0.055)),
     rgba(255, 255, 255, 0.032);
 }
 
@@ -2727,7 +2727,7 @@ html.light .proof-marquee span {
   height: 44vw;
   min-width: 420px;
   min-height: 420px;
-  border: 1px solid rgba(255, 106, 61, 0.14);
+  border: 1px solid rgb(var(--vectant-accent-rgb) / 0.14);
   border-radius: 9999px;
   transform: translateX(-58%);
   opacity: 0.45;
@@ -2778,7 +2778,7 @@ html.light .proof-marquee span {
     radial-gradient(58% 48% at 14% 8%, rgba(255, 61, 190, 0.18), transparent 70%),
     radial-gradient(62% 52% at 95% 2%, rgba(34, 211, 238, 0.14), transparent 70%),
     radial-gradient(66% 58% at 72% 100%, rgba(139, 123, 255, 0.12), transparent 72%),
-    linear-gradient(135deg, rgba(255, 106, 61, 0.08), transparent 48%),
+    linear-gradient(135deg, rgb(var(--vectant-accent-rgb) / 0.08), transparent 48%),
     #0c0c0d;
   box-shadow: 0 34px 90px rgba(0, 0, 0, 0.3);
 }
@@ -3028,7 +3028,7 @@ html.light .agent-onramp-panel {
   position: absolute;
   inset: 0;
   transform-origin: left center;
-  background: linear-gradient(90deg, rgba(255, 138, 97, 0.28), rgba(85, 216, 239, 0.22));
+  background: linear-gradient(90deg, rgb(var(--vectant-accent-rgb) / 0.28), rgba(85, 216, 239, 0.22));
 }
 
 .agent-onramp-rail-labels {
@@ -3100,7 +3100,7 @@ html.light .agent-onramp-panel {
   height: 76px;
   border-radius: 9999px;
   background: linear-gradient(180deg, #ff3dbe, #4d4870 45%, #55d8ef);
-  box-shadow: 0 0 28px rgba(255, 106, 61, 0.34);
+  box-shadow: 0 0 28px rgb(var(--vectant-accent-rgb) / 0.34);
 }
 
 .agent-onramp-spine-steps {
@@ -3150,8 +3150,8 @@ html.light .agent-onramp-panel {
 }
 
 .agent-onramp-spine-step-active {
-  border-color: rgba(255, 138, 97, 0.34);
-  background: rgba(255, 106, 61, 0.07);
+  border-color: rgb(var(--vectant-accent-rgb) / 0.34);
+  background: rgb(var(--vectant-accent-rgb) / 0.07);
   transform: translateX(-3px);
 }
 
@@ -3185,7 +3185,7 @@ html.light .agent-onramp-panel {
   justify-content: flex-end;
   padding: clamp(24px, 4vw, 44px);
   background:
-    radial-gradient(78% 68% at 82% 0%, rgba(255, 106, 61, 0.13), transparent 72%),
+    radial-gradient(78% 68% at 82% 0%, rgb(var(--vectant-accent-rgb) / 0.13), transparent 72%),
     linear-gradient(180deg, rgba(255, 255, 255, 0.038), rgba(255, 255, 255, 0.012)),
     #101011;
   pointer-events: none;
@@ -3348,7 +3348,7 @@ html.light .agent-onramp-panel {
 .comparison-ledger-row:hover {
   transform: translateX(4px);
   background: rgba(255, 255, 255, 0.022);
-  box-shadow: inset 3px 0 0 rgba(255, 138, 97, 0.72);
+  box-shadow: inset 3px 0 0 rgb(var(--vectant-accent-rgb) / 0.72);
 }
 
 .belief-statement {
@@ -3421,7 +3421,7 @@ html.light .agent-onramp-panel {
   border: 1px solid rgba(255, 247, 239, 0.12);
   border-radius: 14px;
   background:
-    linear-gradient(90deg, rgba(255, 106, 61, 0.06), transparent 42%, rgba(81, 215, 233, 0.055)),
+    linear-gradient(90deg, rgb(var(--vectant-accent-rgb) / 0.06), transparent 42%, rgba(81, 215, 233, 0.055)),
     rgba(7, 7, 8, 0.78);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.065),
@@ -3515,13 +3515,13 @@ html.light .agent-onramp-panel {
   --belief-ring-rotate: -13deg;
   width: min(620px, 62vw);
   height: min(190px, 22vw);
-  border-color: rgba(255, 138, 97, 0.12);
+  border-color: rgb(var(--vectant-accent-rgb) / 0.12);
 }
 
 html.light .belief-statement::before {
   border-color: rgba(18, 21, 27, 0.08);
   background:
-    radial-gradient(46% 50% at 18% 22%, rgba(216, 75, 42, 0.1), transparent 72%),
+    radial-gradient(46% 50% at 18% 22%, rgb(var(--vectant-accent-rgb) / 0.1), transparent 72%),
     radial-gradient(44% 54% at 82% 58%, rgba(0, 119, 168, 0.08), transparent 74%),
     linear-gradient(180deg, rgba(255, 255, 255, 0.74), rgba(246, 248, 251, 0.52));
   box-shadow:
@@ -3536,7 +3536,7 @@ html.light .belief-statement::after {
 html.light .belief-proof-rail {
   border-color: rgba(18, 21, 27, 0.22);
   background:
-    linear-gradient(90deg, rgba(216, 75, 42, 0.18), transparent 42%, rgba(0, 119, 168, 0.16)),
+    linear-gradient(90deg, rgb(var(--vectant-accent-rgb) / 0.18), transparent 42%, rgba(0, 119, 168, 0.16)),
     linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.018)),
     #101114;
   box-shadow:
@@ -3649,7 +3649,7 @@ html.light .belief-proof-rail em {
   border: 1px solid var(--campaign-line);
   border-radius: 10px;
   background:
-    linear-gradient(135deg, rgba(255, 106, 61, 0.08), transparent 42%),
+    linear-gradient(135deg, rgb(var(--vectant-accent-rgb) / 0.08), transparent 42%),
     linear-gradient(180deg, rgba(255, 255, 255, 0.036), rgba(255, 255, 255, 0.012)),
     var(--campaign-panel);
   padding: 14px 18px 15px;
@@ -3672,9 +3672,9 @@ html.light .belief-proof-rail em {
   width: fit-content;
   min-height: 24px;
   align-items: center;
-  border: 1px solid rgba(255, 177, 153, 0.2);
+  border: 1px solid rgb(var(--vectant-accent-rgb) / 0.2);
   border-radius: 999px;
-  background: rgba(255, 177, 153, 0.07);
+  background: rgb(var(--vectant-accent-rgb) / 0.07);
   padding: 4px 8px;
   font-family: var(--font-mono);
   font-size: 10.5px;
@@ -3829,7 +3829,7 @@ html.light .belief-proof-rail em {
   inset: 0;
   background:
     radial-gradient(260px circle at 78% 12%, rgba(255, 247, 239, 0.1), transparent 44%),
-    linear-gradient(90deg, rgba(255, 138, 97, 0.16), transparent 18%);
+    linear-gradient(90deg, rgb(var(--vectant-accent-rgb) / 0.16), transparent 18%);
   opacity: 0;
   transition: opacity 0.72s cubic-bezier(0.16, 1, 0.3, 1);
   pointer-events: none;
@@ -3873,8 +3873,8 @@ html.light .belief-proof-rail em {
 .trust-system:hover,
 .proof-frame:hover {
   transform: translateY(-2px) scale(1.006);
-  border-color: rgba(255, 106, 61, 0.34);
-  background-color: rgba(255, 106, 61, 0.045);
+  border-color: rgb(var(--vectant-accent-rgb) / 0.34);
+  background-color: rgb(var(--vectant-accent-rgb) / 0.045);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.09),
     0 26px 70px rgba(0, 0, 0, 0.32);
@@ -4007,7 +4007,7 @@ html.light .belief-proof-rail em {
   border: 1px solid var(--campaign-line);
   border-radius: 12px;
   background:
-    linear-gradient(135deg, rgba(255, 106, 61, 0.08), transparent 42%),
+    linear-gradient(135deg, rgb(var(--vectant-accent-rgb) / 0.08), transparent 42%),
     #101011;
   padding: 16px;
   box-shadow: 0 34px 90px rgba(0, 0, 0, 0.32);
@@ -4021,7 +4021,7 @@ html.light .belief-proof-rail em {
   border: 1px solid rgba(255, 247, 239, 0.1);
   border-radius: 8px;
   background:
-    radial-gradient(70% 70% at 20% 0%, rgba(255, 106, 61, 0.16), transparent 70%),
+    radial-gradient(70% 70% at 20% 0%, rgb(var(--vectant-accent-rgb) / 0.16), transparent 70%),
     rgba(255, 255, 255, 0.025);
   padding: 30px;
 }
@@ -4137,7 +4137,7 @@ html.light .belief-proof-rail em {
   border-block: 1px solid var(--campaign-line);
   border-radius: 0;
   background:
-    linear-gradient(135deg, rgba(255, 106, 61, 0.08), transparent 38%),
+    linear-gradient(135deg, rgb(var(--vectant-accent-rgb) / 0.08), transparent 38%),
     linear-gradient(90deg, rgba(255, 247, 239, 0.035), transparent 34%),
     #0b0b0c;
 }
@@ -4148,7 +4148,7 @@ html.light .belief-proof-rail em {
   flex-direction: column;
   justify-content: flex-start;
   border-right: 1px solid var(--campaign-line);
-  background: linear-gradient(180deg, rgba(255, 247, 239, 0.035), rgba(255, 106, 61, 0.1));
+  background: linear-gradient(180deg, rgba(255, 247, 239, 0.035), rgb(var(--vectant-accent-rgb) / 0.1));
   padding: clamp(24px, 3vw, 48px);
 }
 
@@ -4207,7 +4207,7 @@ html.light .belief-proof-rail em {
   inset: 0 auto 0 0;
   z-index: 1;
   width: 28%;
-  background: linear-gradient(90deg, transparent, rgba(255, 106, 61, 0.18), rgba(94, 231, 255, 0.2), transparent);
+  background: linear-gradient(90deg, transparent, rgb(var(--vectant-accent-rgb) / 0.18), rgba(94, 231, 255, 0.2), transparent);
   pointer-events: none;
   transform: translate3d(-120%, 0, 0);
   animation: dogfood-proof-sweep 5.2s cubic-bezier(0.16, 1, 0.3, 1) infinite;
@@ -4335,7 +4335,7 @@ html.light .belief-proof-rail em {
   padding: 16px;
   border-radius: 12px;
   background:
-    linear-gradient(135deg, rgba(255, 106, 61, 0.1), transparent 45%),
+    linear-gradient(135deg, rgb(var(--vectant-accent-rgb) / 0.1), transparent 45%),
     #111113;
 }
 
@@ -4378,7 +4378,7 @@ html.light .belief-proof-rail em {
   padding: 20px;
   box-shadow:
     inset 0 1px 0 rgba(255, 247, 239, 0.22),
-    0 22px 50px rgba(89, 31, 10, 0.12);
+    0 22px 50px rgb(31 24 48 / 0.12);
 }
 
 .gpu-latency-counter > span {
@@ -4441,7 +4441,7 @@ html.light .belief-proof-rail em {
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
   opacity: 0;
-  filter: drop-shadow(0 7px 12px rgba(89, 31, 10, 0.18));
+  filter: drop-shadow(0 7px 12px rgb(31 24 48 / 0.18));
 }
 
 .gpu-latency-counter[data-counter-done="true"] .gpu-latency-underline path {
@@ -4659,7 +4659,7 @@ html.light .belief-proof-rail em {
   width: 2px;
   transform: translateX(-50%);
   background: rgba(255, 247, 239, 0.94);
-  box-shadow: 0 0 24px rgba(255, 106, 61, 0.26);
+  box-shadow: 0 0 24px rgb(var(--vectant-accent-rgb) / 0.26);
 }
 
 .gpu-compare-divider span {
@@ -5023,7 +5023,7 @@ html.light .belief-proof-rail em {
   border: 1px solid var(--campaign-line);
   border-radius: 12px;
   background:
-    radial-gradient(74% 90% at 100% 0%, rgba(255, 106, 61, 0.14), transparent 72%),
+    radial-gradient(74% 90% at 100% 0%, rgb(var(--vectant-accent-rgb) / 0.14), transparent 72%),
     linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.018)),
     #0d0d0f;
   padding: clamp(22px, 3vw, 34px);
@@ -5112,7 +5112,7 @@ html.light .belief-proof-rail em {
   margin-top: 4px;
   border-radius: 2px;
   background: #928cb5;
-  box-shadow: 0 0 0 4px rgba(255, 106, 61, 0.1);
+  box-shadow: 0 0 0 4px rgb(var(--vectant-accent-rgb) / 0.1);
 }
 
 .faq-grid {
@@ -5132,7 +5132,7 @@ html.light .belief-proof-rail em {
   padding: 56px 24px;
   text-align: center;
   background:
-    radial-gradient(78% 62% at 50% 0%, rgba(255, 106, 61, 0.16), transparent 72%),
+    radial-gradient(78% 62% at 50% 0%, rgb(var(--vectant-accent-rgb) / 0.16), transparent 72%),
     linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.02)),
     #111113;
 }

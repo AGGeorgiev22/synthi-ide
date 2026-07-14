@@ -9,7 +9,7 @@ export const RARITY = {
   common:       { label: 'Common',       color: '#94A3B8', glow: 'rgba(148,163,184,0.35)', border: 'rgba(148,163,184,0.4)' },
   rare:         { label: 'Rare',         color: '#60A5FA', glow: 'rgba(96,165,250,0.4)',   border: 'rgba(96,165,250,0.5)' },
   epic:         { label: 'Epic',         color: '#A78BFA', glow: 'rgba(167,139,250,0.45)', border: 'rgba(167,139,250,0.5)' },
-  legendary:    { label: 'Legendary',    color: '#928cb5', glow: 'rgba(251,191,36,0.45)',  border: 'rgba(251,191,36,0.5)' },
+  legendary:    { label: 'Legendary',    color: '#928cb5', glow: 'rgba(77,72,112,0.45)',  border: 'rgba(77,72,112,0.5)' },
   mythic:       { label: 'Mythic',       color: '#F472B6', glow: 'rgba(244,114,182,0.5)',  border: 'rgba(244,114,182,0.6)' },
   transcendent: { label: 'Transcendent', color: '#34D399', glow: 'rgba(52,211,153,0.55)',  border: 'rgba(52,211,153,0.65)' },
   secret:        { label: '????',         color: '#FF6B6B', glow: 'rgba(255,107,107,0.5)',   border: 'rgba(255,107,107,0.6)' },
