@@ -24,7 +24,7 @@ const GROUPS = [
   {
     label: "Company",
     links: [
-      { label: "Journal", href: "/blog" },
+      { label: "Blog", href: "/blog" },
       { label: "Terms of service", href: "/terms" },
       { label: "Privacy", href: "/privacy" },
     ],
