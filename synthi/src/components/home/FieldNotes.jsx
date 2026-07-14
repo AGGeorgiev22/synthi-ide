@@ -9,12 +9,12 @@ const QUESTIONS = [
   {
     topic: "Pilot",
     question: "What happens in a proof pilot?",
-    answer: "We connect a guarded repository or compiled system, define its mutation boundary, run real agent work, and return the evidence needed to review what happened.",
+    answer: "A typical pilot runs for 10 working days after access. We connect one guarded repository or difficult system, define one mutation boundary and workflow, run scoped agent work, and hand back the replayable proof bundle.",
   },
   {
     topic: "GPU HMR",
     question: "Is live patching limited to ROCm and HIP?",
-    answer: "The public visual proof is ROCm and HIP. CUDA and other native routes are validated in hardware-backed pilots against the same state, ABI, output, and promotion gates.",
+    answer: "The public visual proof is ROCm and HIP. CUDA and other native routes are not presented as generally validated; each route must be scoped and verified in the pilot environment before it is included.",
   },
   {
     topic: "Workspace",
