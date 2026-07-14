@@ -21,6 +21,14 @@ const GROUPS = [
       { label: "Technical questions", href: "#faq" },
     ],
   },
+  {
+    label: "Company",
+    links: [
+      { label: "Journal", href: "/blog" },
+      { label: "Terms of service", href: "/terms" },
+      { label: "Privacy", href: "/privacy" },
+    ],
+  },
 ];
 
 export function Footer() {
@@ -47,7 +55,11 @@ export function Footer() {
               <p>{group.label}</p>
               <nav aria-label={`${group.label} links`}>
                 {group.links.map((link) => (
-                  <a key={link.label} href={link.href}>{link.label}</a>
+                  link.href.startsWith("/") ? (
+                    <Link key={link.label} href={link.href}>{link.label}</Link>
+                  ) : (
+                    <a key={link.label} href={link.href}>{link.label}</a>
+                  )
                 ))}
               </nav>
             </section>
@@ -63,7 +75,6 @@ export function Footer() {
         <div className={styles.footerLegal}>
           <p>Copyright {new Date().getFullYear()} Vectant. All rights reserved.</p>
           <div>
-            <Link href="/privacy">Privacy</Link>
             <a href="#top">Back to top</a>
           </div>
         </div>
