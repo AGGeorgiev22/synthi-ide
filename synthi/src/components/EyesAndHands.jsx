@@ -31,8 +31,8 @@ export function EyesAndHands() {
         <SectionHeading
           eyebrow="What agents are missing"
           align="center"
-          title="Most agents code blind, and empty-handed.."
-          subtitle="Most agents code blind and empty-handed. They read files and guess. They can't watch the program run or act on what it does. Vectant gives agents eyes and hands inside a cloud workspace, so they can observe, intervene, and verify outcomes before moving on."
+          title="Browser hands exist. Runtime authority is the missing layer."
+          subtitle="Agents can already click through a browser and inspect page structure. What they usually lack is a bounded live workspace that keeps browser action, repository state, runtime signals, permissions, and evidence attached to the same run. Vectant gives every action scoped authority and a replayable record."
         />
 
         <div className="mt-14 grid items-stretch gap-4 lg:grid-cols-[1fr_auto_1fr]">
