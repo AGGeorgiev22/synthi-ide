@@ -1,0 +1,243 @@
+.page {
+  min-height: 100dvh;
+  color: #e6e0d8;
+  background:
+    radial-gradient(circle at 10% -8%, rgb(197 63 41 / 0.13), transparent 24rem),
+    #0b0b0d;
+}
+
+.header,
+.hero,
+.figure,
+.body,
+.cta {
+  width: min(calc(100% - 3rem), 1120px);
+  margin-inline: auto;
+}
+
+.header {
+  display: flex;
+  min-height: 5.1rem;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgb(230 224 216 / 0.14);
+}
+
+.logo {
+  color: #e6e0d8 !important;
+}
+
+.mark {
+  width: 2rem;
+}
+
+.backLink,
+.cta a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  outline: none;
+  transition: color 200ms ease, transform 200ms ease, background-color 200ms ease;
+}
+
+.backLink {
+  color: rgb(230 224 216 / 0.61);
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.04em;
+}
+
+.backLink:hover,
+.backLink:focus-visible {
+  color: #f4eee7;
+  transform: translateX(-3px);
+}
+
+.hero {
+  padding-block: clamp(6rem, 13vw, 12rem) clamp(3.4rem, 6vw, 5.5rem);
+}
+
+.hero > p,
+.cta p,
+.body aside > span {
+  margin: 0;
+  color: #dd5c44;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.hero h1 {
+  max-width: 11ch;
+  margin: 1.25rem 0 1.45rem;
+  color: #f4eee7;
+  font-family: var(--font-outfit), var(--font-satoshi), sans-serif;
+  font-size: clamp(4rem, 8.7vw, 8.6rem);
+  font-weight: 500;
+  letter-spacing: -0.08em;
+  line-height: 0.86;
+}
+
+.hero > span {
+  display: block;
+  max-width: 37rem;
+  color: rgb(230 224 216 / 0.68);
+  font-size: clamp(1rem, 1.35vw, 1.17rem);
+  line-height: 1.6;
+}
+
+.figure {
+  position: relative;
+  min-height: min(58vw, 45rem);
+  overflow: hidden;
+  background: #171513;
+}
+
+.figure::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+  pointer-events: none;
+  background: linear-gradient(125deg, transparent 48%, rgb(11 11 13 / 0.26));
+}
+
+.figure img {
+  object-fit: cover;
+}
+
+.body {
+  display: grid;
+  padding-top: clamp(4.5rem, 9vw, 8rem);
+  grid-template-columns: minmax(10rem, 0.55fr) minmax(0, 1.45fr);
+  gap: clamp(3rem, 9vw, 10rem);
+}
+
+.body aside {
+  position: sticky;
+  top: 1.75rem;
+  align-self: start;
+}
+
+.body aside p {
+  max-width: 12rem;
+  margin: 0.8rem 0 0;
+  color: rgb(230 224 216 / 0.5);
+  font-size: 0.78rem;
+  line-height: 1.55;
+}
+
+.body section + section {
+  margin-top: clamp(3.5rem, 6vw, 5.5rem);
+}
+
+.body h2 {
+  margin: 0 0 1.25rem;
+  color: #f4eee7;
+  font-family: var(--font-outfit), var(--font-satoshi), sans-serif;
+  font-size: clamp(2rem, 3.4vw, 3.45rem);
+  font-weight: 500;
+  letter-spacing: -0.06em;
+  line-height: 0.98;
+}
+
+.body p {
+  max-width: 43rem;
+  margin: 0;
+  color: rgb(230 224 216 / 0.67);
+  font-size: clamp(1rem, 1.25vw, 1.1rem);
+  line-height: 1.75;
+}
+
+.body p + p {
+  margin-top: 1.25rem;
+}
+
+.cta {
+  display: flex;
+  margin-top: clamp(7rem, 12vw, 12rem);
+  padding-block: clamp(2.2rem, 4vw, 3.5rem);
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  border-top: 1px solid rgb(230 224 216 / 0.14);
+}
+
+.cta p {
+  color: #e6e0d8;
+}
+
+.cta span {
+  display: block;
+  max-width: 36rem;
+  margin-top: 0.65rem;
+  color: rgb(230 224 216 / 0.57);
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
+
+.cta a {
+  min-height: 3rem;
+  flex: 0 0 auto;
+  padding-inline: 1rem;
+  color: #101012;
+  background: #e6e0d8;
+  font-size: 0.74rem;
+  font-weight: 720;
+}
+
+.cta a:hover,
+.cta a:focus-visible {
+  color: #f4eee7;
+  background: #c53f29;
+  transform: translateY(-2px);
+}
+
+.backLink:focus-visible,
+.cta a:focus-visible {
+  box-shadow: 0 0 0 2px #0b0b0d, 0 0 0 4px #dd5c44;
+}
+
+@media (max-width: 767px) {
+  .header,
+  .hero,
+  .figure,
+  .body,
+  .cta {
+    width: min(calc(100% - 2rem), 1120px);
+  }
+
+  .hero {
+    padding-block: 5.5rem 4.5rem;
+  }
+
+  .hero h1 {
+    font-size: clamp(3.5rem, 17vw, 5.5rem);
+  }
+
+  .figure {
+    min-height: 68vw;
+  }
+
+  .body {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .body aside {
+    position: static;
+  }
+
+  .cta {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .backLink,
+  .cta a {
+    transition-duration: 0.01ms;
+  }
+}
