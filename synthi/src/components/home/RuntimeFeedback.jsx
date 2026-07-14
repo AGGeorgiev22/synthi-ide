@@ -71,6 +71,26 @@ export function RuntimeFeedback() {
         gsap.set(captions, { autoAlpha: 0, y: 18 });
         gsap.set(sealRef.current, { autoAlpha: 0, scale: 1.08 });
 
+        const ledgerLoop = gsap.fromTo(
+          ledgerTrackRef.current,
+          { xPercent: 0 },
+          {
+            xPercent: -50,
+            duration: 18,
+            ease: "none",
+            repeat: -1,
+            paused: true,
+          },
+        );
+
+        const syncLedgerPlayback = (trigger) => {
+          if (trigger.isActive && trigger.progress >= 0.78) {
+            ledgerLoop.play();
+            return;
+          }
+          ledgerLoop.pause();
+        };
+
         const timeline = gsap.timeline({
           scrollTrigger: {
             trigger: rootRef.current,
@@ -78,6 +98,9 @@ export function RuntimeFeedback() {
             end: "bottom bottom",
             scrub: 0.6,
             invalidateOnRefresh: true,
+            onUpdate: syncLedgerPlayback,
+            onLeave: () => ledgerLoop.pause(),
+            onLeaveBack: () => ledgerLoop.pause(),
           },
         });
 
@@ -105,10 +128,14 @@ export function RuntimeFeedback() {
           .addLabel("seal")
           .to(trackRef.current, { opacity: 0, scale: 0.965, duration: 0.22, ease: "power2.in" }, "seal")
           .to(sealRef.current, { autoAlpha: 1, scale: 1, duration: 0.3, ease: "power3.out" }, "seal+=0.1")
-          .fromTo(ledgerTrackRef.current, { xPercent: 0 }, { xPercent: -18, duration: 0.62, ease: "none" }, "seal+=0.08")
+          .to({}, { duration: 0.62 }, "seal+=0.08")
           .to({}, { duration: 0.34 });
 
-        return () => timeline.kill();
+        return () => {
+          ledgerLoop.kill();
+          timeline.scrollTrigger?.kill();
+          timeline.kill();
+        };
       });
 
       return () => media.revert();
