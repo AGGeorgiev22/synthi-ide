@@ -16,7 +16,7 @@ function VectantSignatureStart({ className, gradientId }) {
       <defs>
         <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stopColor="#FF3DBE" />
-          <stop offset="35%" stopColor="#4D4870" />
+          <stop offset="35%" stopColor="#FF5C2A" />
           <stop offset="70%" stopColor="#7C5CFF" />
           <stop offset="100%" stopColor="#22D3EE" />
         </linearGradient>
@@ -33,7 +33,7 @@ function VectantSignatureEnd({ className }) {
   return (
     <svg viewBox="72 0 16 64" fill="none" className={className} aria-hidden="true">
       <path d="M74 12 H80 V52 H74" stroke="currentColor" strokeWidth="4" strokeLinecap="square" />
-      <path d="M86 6 H80 M86 6 V12" stroke="#4D4870" strokeWidth="2" strokeLinecap="square" />
+      <path d="M86 6 H80 M86 6 V12" stroke="#FF5C2A" strokeWidth="2" strokeLinecap="square" />
       <path d="M86 58 H80 M86 58 V52" stroke="#7C5CFF" strokeWidth="2" strokeLinecap="square" />
     </svg>
   );
@@ -63,7 +63,7 @@ export function VectantMark({
   const generatedId = useId();
   const resolvedGradientId = gradientId || `vt-mark-${safeId(generatedId)}`;
   const cornerA = monochrome ? "currentColor" : "#FF3DBE";
-  const cornerB = monochrome ? "currentColor" : "#4D4870";
+  const cornerB = monochrome ? "currentColor" : "#FF5C2A";
   const cornerC = monochrome ? "currentColor" : "#22D3EE";
   const cornerD = monochrome ? "currentColor" : "#7C5CFF";
   const veeStroke = monochrome ? "currentColor" : `url(#${resolvedGradientId})`;
@@ -80,7 +80,7 @@ export function VectantMark({
       <defs>
         <linearGradient id={resolvedGradientId} x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stopColor="#FF3DBE" />
-          <stop offset="35%" stopColor="#4D4870" />
+          <stop offset="35%" stopColor="#FF5C2A" />
           <stop offset="70%" stopColor="#7C5CFF" />
           <stop offset="100%" stopColor="#22D3EE" />
         </linearGradient>
