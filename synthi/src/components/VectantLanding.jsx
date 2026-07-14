@@ -3,6 +3,7 @@ import { CinematicHero } from "@/components/home/CinematicHero";
 import { FieldNotes } from "@/components/home/FieldNotes";
 import { FinalApproach } from "@/components/home/FinalApproach";
 import { GpuProofChapter } from "@/components/home/GpuProofChapter";
+import { MissionProfiles } from "@/components/home/MissionProfiles";
 import { RunBoundary } from "@/components/home/RunBoundary";
 import { RuntimeFeedback } from "@/components/home/RuntimeFeedback";
 import styles from "@/components/VectantLanding.module.css";
@@ -15,6 +16,7 @@ export function VectantLanding() {
       <AuthorityStory />
       <GpuProofChapter />
       <RuntimeFeedback />
+      <MissionProfiles />
       <FieldNotes />
       <FinalApproach />
     </main>
