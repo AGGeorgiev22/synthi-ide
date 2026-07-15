@@ -262,10 +262,6 @@ html {
   body {
     @apply bg-bg text-ink;
   }
-  h1, h2, h3, h4 {
-    font-family: var(--font-display);
-    letter-spacing: 0;
-  }
 }
 
 /* ============================================================
