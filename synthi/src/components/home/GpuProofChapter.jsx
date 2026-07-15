@@ -88,7 +88,12 @@ export function GpuProofChapter() {
             },
             1.52,
           )
-          .to(latencyRuleRef.current, { scaleX: 1, duration: 0.2, ease: "power3.out" }, 1.8)
+          .addLabel("latencyComplete", 1.82)
+          .to(
+            latencyRuleRef.current,
+            { scaleX: 1, duration: 0.2, ease: "power3.out" },
+            "latencyComplete",
+          )
           .to(dividerRef.current, { autoAlpha: 0, duration: 0.16 }, 1.64)
           .to(plateRef.current, { scale: 1.025, duration: 0.42, ease: "none" }, 1.58)
           .to({}, { duration: 0.24 });
