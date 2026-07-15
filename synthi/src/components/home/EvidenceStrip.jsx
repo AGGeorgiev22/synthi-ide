@@ -32,9 +32,9 @@ const EVIDENCE_LINKS = [
   },
   {
     key: "performance",
-    label: "GPU HMR measurement",
-    value: "89.7 ms synthetic trace with timestamps, boundary, context, and limitations",
-    href: "/sample-proof/measurement.json",
+    label: "Verified evidence integrity",
+    value: "9 / 9 public bundle artifacts match their published SHA-256 digests",
+    href: "/sample-proof/integrity-report.json",
   },
 ];
 
@@ -50,10 +50,10 @@ export function EvidenceStrip() {
         <div className={styles.evidenceGrid}>
           <article className={`${styles.evidenceCell} ${styles.agentCell}`}>
             <div>
-              <span>Pilot client paths</span>
-              <strong>Examples to confirm during scoping—not a universal connector claim.</strong>
+              <span>Published integrations</span>
+              <strong>No generally supported list is claimed yet. Candidate paths are validated per pilot.</strong>
             </div>
-            <ul aria-label="Example agent clients to scope for a pilot">
+            <ul aria-label="Candidate agent clients to validate for a pilot">
               {AGENTS.map(({ name, Mark }) => (
                 <li key={name} aria-label={name} title={name}>
                   <Mark size={20} />

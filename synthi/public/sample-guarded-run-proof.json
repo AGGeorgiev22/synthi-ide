@@ -84,6 +84,7 @@
   ],
   "integrity": {
     "algorithm": "SHA-256",
-    "scope": "Each digest covers the exact bytes of the linked public artifact. The manifest does not hash itself."
+    "scope": "Each digest covers the exact bytes of the linked public artifact. The manifest does not hash itself.",
+    "verificationReport": "/sample-proof/integrity-report.json"
   }
 }
