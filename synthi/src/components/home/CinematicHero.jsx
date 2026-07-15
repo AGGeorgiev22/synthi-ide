@@ -220,11 +220,12 @@ export function CinematicHero() {
           <div ref={atmosphereDepthRef} className={styles.cinemaAtmosphereDepth}>
             <div ref={atmosphereFarRef} className={styles.cinemaAtmosphereFar}>
               <Image
-                src="/cinema/controlled-flight-night.png"
+                src="/cinema/controlled-flight-night-6k.png"
                 alt=""
                 fill
                 priority
-                sizes="100vw"
+                quality={90}
+                sizes="(max-aspect-ratio: 12/5) 260vh, 110vw"
                 className={styles.cinemaAtmosphereImage}
               />
             </div>
