@@ -48,6 +48,28 @@ export function EvidenceStrip() {
         </header>
 
         <div className={styles.evidenceGrid}>
+          <article className={`${styles.evidenceCell} ${styles.buildProof}`}>
+            <div className={styles.buildProofCopy}>
+              <span>Internal build record · methodology attached</span>
+              <h3>One session. Hard systems-level code.</h3>
+              <Link href="/evidence/build-session-methodology.json" className={styles.buildProofLink}>
+                Inspect the commit method
+                <ArrowUpRight size={16} weight="bold" aria-hidden="true" />
+              </Link>
+            </div>
+
+            <dl className={styles.buildProofStats}>
+              <div>
+                <dt>Continuous days</dt>
+                <dd>11</dd>
+              </div>
+              <div>
+                <dt>Production commits</dt>
+                <dd>1.5k</dd>
+              </div>
+            </dl>
+          </article>
+
           <article className={`${styles.evidenceCell} ${styles.agentCell}`}>
             <div>
               <span>Pilot-scoped integrations</span>
