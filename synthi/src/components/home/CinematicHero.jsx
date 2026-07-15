@@ -279,7 +279,7 @@ export function CinematicHero() {
           <p className={styles.cinemaEyebrow}>TRUST IS EVERYTHING</p>
           <h1>
             <span ref={agentsLineRef}>Agents move.</span>
-            <span ref={authorityLineRef}>Authority stays bounded.</span>
+            <span ref={authorityLineRef}>Authority stays bound.</span>
           </h1>
           <div className={styles.cinemaHeroFooter}>
             <p>
