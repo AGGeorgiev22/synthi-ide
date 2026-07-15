@@ -640,6 +640,12 @@
 }
 
 @media (max-width: 560px) {
+  .cinemaHeroCopy h1 span:last-child {
+    max-width: 100%;
+    line-height: 0.96;
+    white-space: normal;
+  }
+
   .cinemaActions,
   .cinemaReducedNarrative {
     grid-template-columns: 1fr;
