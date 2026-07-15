@@ -69,6 +69,7 @@
   min-height: clamp(20rem, 30vw, 27rem);
   grid-column: 1 / -1;
   grid-template-columns: minmax(18rem, 0.8fr) minmax(30rem, 1.2fr);
+  align-content: center;
   align-items: end;
   gap: clamp(3rem, 8vw, 9rem);
   overflow: hidden;
