@@ -124,6 +124,7 @@ export function GpuProofChapter() {
               src="/product-proof/gpu-hmr-before.png"
               alt="GPU scene before a live hot reload patch"
               fill
+              quality={95}
               sizes="(max-width: 767px) 92vw, (min-width: 1200px) 1040px, 88vw"
               className={styles.gpuImage}
             />
@@ -134,6 +135,7 @@ export function GpuProofChapter() {
               src="/product-proof/gpu-hmr-after.png"
               alt="GPU scene after the compiled patch, with live state retained"
               fill
+              quality={95}
               sizes="(max-width: 767px) 92vw, (min-width: 1200px) 1040px, 88vw"
               className={styles.gpuImage}
             />
@@ -144,6 +146,7 @@ export function GpuProofChapter() {
               src="/product-proof/gpu-hmr-diff.png"
               alt=""
               fill
+              quality={95}
               sizes="(max-width: 767px) 92vw, (min-width: 1200px) 1040px, 88vw"
               className={styles.gpuImage}
             />
