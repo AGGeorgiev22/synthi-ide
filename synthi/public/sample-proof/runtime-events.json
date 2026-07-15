@@ -1,0 +1,42 @@
+{
+  "schemaVersion": "vectant.runtime-events.v1",
+  "sample": true,
+  "runId": "VCT-SAMPLE-001",
+  "clock": "monotonic nanoseconds anchored to the synthetic ISO timestamps",
+  "events": [
+    {
+      "eventId": "evt-005",
+      "sequence": 5,
+      "type": "source_edit_accepted",
+      "timestamp": "2026-07-14T12:00:03.700000Z",
+      "monotonicNs": 4821000000000,
+      "artifact": "approved.patch"
+    },
+    {
+      "eventId": "evt-006",
+      "sequence": 6,
+      "type": "kernel_compile_completed",
+      "timestamp": "2026-07-14T12:00:03.748400Z",
+      "monotonicNs": 4821048400000,
+      "durationMs": 48.4,
+      "result": "success"
+    },
+    {
+      "eventId": "evt-007",
+      "sequence": 7,
+      "type": "hot_patch_applied",
+      "timestamp": "2026-07-14T12:00:03.760200Z",
+      "monotonicNs": 4821060200000,
+      "stateTokenBefore": "state-sample-77a1",
+      "stateTokenAfter": "state-sample-77a1"
+    },
+    {
+      "eventId": "evt-008",
+      "sequence": 8,
+      "type": "visual_output_observed",
+      "timestamp": "2026-07-14T12:00:03.789700Z",
+      "monotonicNs": 4821089700000,
+      "output": "gpu-hmr-after.png"
+    }
+  ]
+}

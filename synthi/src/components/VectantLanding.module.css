@@ -1,0 +1,9 @@
+.page {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
+  color: #f2efe9;
+  background: var(--vectant-black);
+}

@@ -1,71 +1,18 @@
+"use client";
+
+import { useId } from "react";
+
 import { cn } from "@/lib/utils";
 
-/**
- * Vectant mark — bracketed "V" with gradient corner accents.
- * Reproduces /public/Vectant-logo-white.svg as scalable JSX so we can
- * control color and size. Gradient id is unique to allow multiple instances.
- */
-export function VectantMark({ className, gradientId = "vt-mark", monochrome = false }) {
-  const cornerA = monochrome ? "currentColor" : "#FF3DBE";
-  const cornerB = monochrome ? "currentColor" : "#FF5C2A";
-  const cornerC = monochrome ? "currentColor" : "#22D3EE";
-  const cornerD = monochrome ? "currentColor" : "#7C5CFF";
-  const veeStroke = monochrome ? "currentColor" : `url(#${gradientId})`;
+import styles from "./Logo.module.css";
 
-  return (
-    <svg
-      viewBox="16 0 72 64"
-      fill="none"
-      className={className}
-      role="img"
-      aria-label="Vectant"
-    >
-      <defs>
-        <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#FF3DBE" />
-          <stop offset="35%" stopColor="#FF5C2A" />
-          <stop offset="70%" stopColor="#7C5CFF" />
-          <stop offset="100%" stopColor="#22D3EE" />
-        </linearGradient>
-      </defs>
-      <path d="M30 12 H24 V52 H30" stroke="currentColor" strokeWidth="4" strokeLinecap="square" />
-      <path d="M74 12 H80 V52 H74" stroke="currentColor" strokeWidth="4" strokeLinecap="square" />
-      <path d="M18 6 H24 M18 6 V12" stroke={cornerA} strokeWidth="2" strokeLinecap="square" />
-      <path d="M86 6 H80 M86 6 V12" stroke={cornerB} strokeWidth="2" strokeLinecap="square" />
-      <path d="M18 58 H24 M18 58 V52" stroke={cornerC} strokeWidth="2" strokeLinecap="square" />
-      <path d="M86 58 H80 M86 58 V52" stroke={cornerD} strokeWidth="2" strokeLinecap="square" />
-      <path d={`M38 18 L52 44 L66 18`} stroke={veeStroke} strokeWidth="6" strokeLinecap="square" />
-    </svg>
-  );
+function safeId(value) {
+  return value.replaceAll(":", "");
 }
 
-/**
- * Full lockup: mark + VECTANT wordmark.
- */
-export function Logo({ className, markClassName, gradientId = "vt-logo", showWord = true }) {
+function VectantSignatureStart({ className, gradientId }) {
   return (
-    <span className={cn("inline-flex items-center gap-2 text-ink", className)}>
-      <VectantMark gradientId={gradientId} className={cn("h-6 w-auto", markClassName)} />
-      {showWord && (
-        <span
-          style={{ fontFamily: 'var(--font-space-grotesk, "Space Grotesk"), var(--font-satoshi, "Satoshi"), ui-sans-serif, sans-serif' }}
-          className="text-[16px] font-semibold tracking-[0.2em] text-ink"
-        >
-          VECTANT
-        </span>
-      )}
-    </span>
-  );
-}
-
-/* ---- Animated logo: the right bracket opens to hold the wordmark at the top
-   of the page, then compresses to the exact original [V] once you scroll.
-   Both pieces are cut from the SAME coordinates as VectantMark (viewBox
-   16..88), so abutting them reproduces the original logo pixel-for-pixel. ---- */
-function LeftPiece({ gradientId = "vt-vnav" }) {
-  // left corner ticks + left bracket + V chevron (x16..70 of the original)
-  return (
-    <svg viewBox="16 0 54 64" fill="none" className="h-6 w-auto shrink-0" role="img" aria-label="Vectant">
+    <svg viewBox="16 0 55 64" fill="none" className={className} aria-hidden="true">
       <defs>
         <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stopColor="#FF3DBE" />
@@ -81,10 +28,10 @@ function LeftPiece({ gradientId = "vt-vnav" }) {
     </svg>
   );
 }
-function RightPiece() {
-  // right bracket + right corner ticks (x70..88 of the original)
+
+function VectantSignatureEnd({ className }) {
   return (
-    <svg viewBox="70 0 18 64" fill="none" className="h-6 w-auto shrink-0" aria-hidden="true">
+    <svg viewBox="72 0 16 64" fill="none" className={className} aria-hidden="true">
       <path d="M74 12 H80 V52 H74" stroke="currentColor" strokeWidth="4" strokeLinecap="square" />
       <path d="M86 6 H80 M86 6 V12" stroke="#FF5C2A" strokeWidth="2" strokeLinecap="square" />
       <path d="M86 58 H80 M86 58 V52" stroke="#7C5CFF" strokeWidth="2" strokeLinecap="square" />
@@ -92,20 +39,106 @@ function RightPiece() {
   );
 }
 
-export function AnimatedLogo({ expanded = true, className }) {
+function SignatureWord() {
   return (
-    <span className={cn("inline-flex items-center text-ink", className)}>
-      <LeftPiece />
-      <span
-        style={{ fontFamily: 'var(--font-space-grotesk, "Space Grotesk"), var(--font-satoshi, "Satoshi"), ui-sans-serif, sans-serif' }}
-        className={cn(
-          "overflow-hidden whitespace-nowrap text-[16px] font-semibold tracking-[0.2em] text-ink transition-[max-width,opacity,margin,filter] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]",
-          expanded ? "mx-2 max-w-[150px] opacity-100 blur-0" : "mx-0 max-w-0 opacity-0 blur-[2px]"
-        )}
-      >
-        VECTANT
+    <span aria-hidden="true" className={styles.wordShell}>
+      <span className={styles.wordTrack}>
+        <span
+          style={{ fontFamily: "var(--font-brand)" }}
+          className={styles.word}
+        >
+          VECTANT
+        </span>
       </span>
-      <RightPiece />
+    </span>
+  );
+}
+
+export function VectantMark({
+  className,
+  gradientId,
+  monochrome = false,
+  decorative = false,
+}) {
+  const generatedId = useId();
+  const resolvedGradientId = gradientId || `vt-mark-${safeId(generatedId)}`;
+  const cornerA = monochrome ? "currentColor" : "#FF3DBE";
+  const cornerB = monochrome ? "currentColor" : "#FF5C2A";
+  const cornerC = monochrome ? "currentColor" : "#22D3EE";
+  const cornerD = monochrome ? "currentColor" : "#7C5CFF";
+  const veeStroke = monochrome ? "currentColor" : `url(#${resolvedGradientId})`;
+
+  return (
+    <svg
+      viewBox="16 0 72 64"
+      fill="none"
+      className={className}
+      role={decorative ? undefined : "img"}
+      aria-hidden={decorative || undefined}
+      aria-label={decorative ? undefined : "Vectant"}
+    >
+      <defs>
+        <linearGradient id={resolvedGradientId} x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#FF3DBE" />
+          <stop offset="35%" stopColor="#FF5C2A" />
+          <stop offset="70%" stopColor="#7C5CFF" />
+          <stop offset="100%" stopColor="#22D3EE" />
+        </linearGradient>
+      </defs>
+      <path d="M30 12 H24 V52 H30" stroke="currentColor" strokeWidth="4" strokeLinecap="square" />
+      <path d="M74 12 H80 V52 H74" stroke="currentColor" strokeWidth="4" strokeLinecap="square" />
+      <path d="M18 6 H24 M18 6 V12" stroke={cornerA} strokeWidth="2" strokeLinecap="square" />
+      <path d="M86 6 H80 M86 6 V12" stroke={cornerB} strokeWidth="2" strokeLinecap="square" />
+      <path d="M18 58 H24 M18 58 V52" stroke={cornerC} strokeWidth="2" strokeLinecap="square" />
+      <path d="M86 58 H80 M86 58 V52" stroke={cornerD} strokeWidth="2" strokeLinecap="square" />
+      <path d="M38 18 L52 44 L66 18" stroke={veeStroke} strokeWidth="6" strokeLinecap="square" />
+    </svg>
+  );
+}
+
+export function Logo({ className, markClassName, gradientId, showWord = true }) {
+  const generatedId = useId();
+  const resolvedGradientId = gradientId || `vt-signature-${safeId(generatedId)}`;
+
+  return (
+    <span
+      role="img"
+      aria-label="Vectant"
+      className={cn(styles.logo, showWord && styles.logoExpanded, "text-ink", markClassName, className)}
+    >
+      <VectantSignatureStart
+        gradientId={resolvedGradientId}
+        className={styles.signatureStart}
+      />
+      {showWord && <SignatureWord />}
+      <VectantSignatureEnd className={styles.signatureEnd} />
+    </span>
+  );
+}
+
+export function AnimatedLogo({ expanded = true, interactive = true, className, markClassName }) {
+  const generatedId = useId();
+  const gradientId = `vt-nav-${safeId(generatedId)}`;
+
+  return (
+    <span
+      role="img"
+      aria-label="Vectant"
+      className={cn(
+        styles.animatedLogo,
+        interactive && styles.animatedLogoInteractive,
+        "text-[#f1eee8]",
+        expanded && styles.animatedLogoExpanded,
+        markClassName,
+        className
+      )}
+    >
+      <VectantSignatureStart
+        gradientId={gradientId}
+        className={styles.signatureStart}
+      />
+      <SignatureWord />
+      <VectantSignatureEnd className={styles.signatureEnd} />
     </span>
   );
 }

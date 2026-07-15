@@ -1,0 +1,90 @@
+{
+  "schemaVersion": "vectant.sample-proof.v2",
+  "sample": true,
+  "runId": "VCT-SAMPLE-001",
+  "title": "Synthetic guarded GPU hot-reload run",
+  "createdAt": "2026-07-14T12:00:04.000000Z",
+  "notice": "This is a synthetic product demonstration bundle, not a customer record, production telemetry export, independently reproduced benchmark, or service-level commitment.",
+  "story": {
+    "requestedChange": "Adjust the fluid simulation kernel while retaining live runtime state",
+    "before": "The repository, isolated workspace, actors, permissions, protected paths, required runtime conditions, and expiry attach to the run.",
+    "during": "A read is allowed; an ABI-breaking patch is blocked and retained; a corrected patch is escalated and approved under a one-use lease.",
+    "after": "The approved patch, rejected patch, decisions, approval, runtime events, verification, and measurement leave under the same run ID."
+  },
+  "decisionSummary": [
+    { "sequence": 1, "eventId": "evt-001", "state": "allowed", "target": "src/kernels/fluid_sim.comp" },
+    { "sequence": 2, "eventId": "evt-002", "state": "blocked", "target": "src/kernels/fluid_sim.comp", "reasonCode": "ABI_CONDITION_FAILED" },
+    { "sequence": 3, "eventId": "evt-003", "state": "escalated", "target": "src/kernels/fluid_sim.comp", "reasonCode": "REVIEW_REQUIRED" },
+    { "sequence": 4, "eventId": "evt-004", "state": "approved", "target": "src/kernels/fluid_sim.comp", "approvalId": "apr-sample-001" }
+  ],
+  "performanceEvidence": {
+    "metric": "edit_to_visual_ms",
+    "value": 89.7,
+    "display": "<90 ms",
+    "startEventId": "evt-005",
+    "endEventId": "evt-008",
+    "sampleCount": 1,
+    "qualification": "One synthetic demonstration trace. See measurement.json and methodology.md for the boundary and limitations."
+  },
+  "artifacts": [
+    {
+      "name": "Boundary contract",
+      "href": "/sample-proof/boundary-contract.json",
+      "mediaType": "application/json",
+      "sha256": "ad34714803a69e7a565cec84d9f6d6e6ba2f58841227cc6063f330b221aa9061"
+    },
+    {
+      "name": "Ordered action events",
+      "href": "/sample-proof/action-events.json",
+      "mediaType": "application/json",
+      "sha256": "0a9cba6b7a89dc2e48498d2d7ee906df2946eb6f2a1b0711a93813a3691262c1"
+    },
+    {
+      "name": "Approval record",
+      "href": "/sample-proof/approval-record.json",
+      "mediaType": "application/json",
+      "sha256": "c7e7dd5de1df601db072b601084be10c6b295eda9e1af13ee9b2f379d3f40dbd"
+    },
+    {
+      "name": "Rejected patch",
+      "href": "/sample-proof/rejected.patch",
+      "mediaType": "text/x-diff",
+      "sha256": "18468c399bfc49381fd016fec2cb1fcbf4f8f7571e6a2e42cf75efc97dc7835a"
+    },
+    {
+      "name": "Approved patch",
+      "href": "/sample-proof/approved.patch",
+      "mediaType": "text/x-diff",
+      "sha256": "a729831c9e14f4a162ca3095b7bc426880924c93b565d49d7d1ce036bfd40ecd"
+    },
+    {
+      "name": "Runtime events",
+      "href": "/sample-proof/runtime-events.json",
+      "mediaType": "application/json",
+      "sha256": "b04389d64c404d0d4f2a1a909cace2fb9881024636d7f1e56d209a742e038f23"
+    },
+    {
+      "name": "Verification result",
+      "href": "/sample-proof/verification-result.json",
+      "mediaType": "application/json",
+      "sha256": "f9c26729a1c7d496579e1dd35775267e1fdc34c10851988d94200abbaed97021"
+    },
+    {
+      "name": "Measurement record",
+      "href": "/sample-proof/measurement.json",
+      "mediaType": "application/json",
+      "sha256": "726720348a9f28bd3bad894354af9ecce87cafaa85617d7de92bb5d3233e80ae"
+    },
+    {
+      "name": "Methodology and limitations",
+      "href": "/sample-proof/methodology.md",
+      "mediaType": "text/markdown",
+      "sha256": "fddb9252dfa067344f2318d87ed0eb17467b68036ff18e867b956d8b9490d292"
+    }
+  ],
+  "integrity": {
+    "algorithm": "SHA-256",
+    "scope": "Each digest covers the exact bytes of the linked public artifact. The manifest does not hash itself.",
+    "verificationReport": "/sample-proof/integrity-report.json"
+  }
+}

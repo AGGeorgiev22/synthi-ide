@@ -320,7 +320,7 @@ export function LivePlayground() {
                 <span className="text-ink-dim">try:</span>
                 <span className="rounded border border-line bg-white/[0.02] px-1.5 py-0.5">shape → wave</span>
                 <span className="rounded border border-line bg-white/[0.02] px-1.5 py-0.5">particles 300</span>
-                <span className="rounded border border-line bg-white/[0.02] px-1.5 py-0.5">#ff5c2a</span>
+                <span className="rounded border border-line bg-white/[0.02] px-1.5 py-0.5">#4d4870</span>
               </div>
             </div>
 

@@ -1,0 +1,261 @@
+.boundary {
+  position: relative;
+  min-height: 214dvh;
+  color: #f2efe9;
+  background: var(--vectant-black);
+}
+
+.boundarySticky {
+  position: sticky;
+  top: 0;
+  min-height: 100dvh;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 16% 46%, rgb(116 24 54 / 0.1), transparent 34%),
+    var(--vectant-black);
+  isolation: isolate;
+}
+
+.boundaryFrame {
+  position: absolute;
+  z-index: 1;
+  inset: clamp(4.65rem, 7vh, 5.8rem) clamp(0.7rem, 1.5vw, 1.6rem) clamp(0.7rem, 1.5vw, 1.6rem);
+  margin: 0;
+  overflow: hidden;
+  background: #07080c;
+  box-shadow:
+    0 0 0 1px rgb(255 255 255 / 0.12),
+    0 48px 120px rgb(0 0 0 / 0.58);
+  transform-origin: 50% 50%;
+  will-change: transform, clip-path;
+}
+
+.boundaryCamera {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  will-change: transform;
+}
+
+.boundaryImage {
+  object-fit: cover;
+  object-position: center center;
+}
+
+.boundaryCopy {
+  position: absolute;
+  z-index: 3;
+  right: clamp(1.7rem, 5vw, 5rem);
+  bottom: clamp(2.2rem, 7vh, 5.5rem);
+  width: min(46rem, 63vw);
+  padding: clamp(1rem, 2vw, 1.8rem) clamp(1.1rem, 2.5vw, 2.25rem);
+  background: linear-gradient(90deg, rgb(5 6 9 / 0.95), rgb(5 6 9 / 0.78) 72%, transparent);
+  will-change: transform, opacity;
+}
+
+.boundaryCopy::before {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 1px;
+  background: var(--vectant-accent);
+  content: "";
+}
+
+.boundaryCopy h2 {
+  max-width: 10ch;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(3.2rem, 6.7vw, 7.2rem);
+  font-weight: 500;
+  line-height: 0.88;
+  letter-spacing: -0.055em;
+}
+
+.boundaryCopy p {
+  max-width: 34rem;
+  margin: 1rem 0 0;
+  color: rgb(225 227 232 / 0.68);
+  font-size: clamp(0.92rem, 1.2vw, 1.08rem);
+  line-height: 1.58;
+}
+
+.boundaryConditions {
+  position: absolute;
+  z-index: 4;
+  top: 19%;
+  right: clamp(1.8rem, 5vw, 5rem);
+  display: grid;
+  width: min(27rem, 36vw);
+  gap: 0;
+  padding-top: 1.2rem;
+  background: linear-gradient(90deg, rgb(5 6 9 / 0.9), rgb(5 6 9 / 0.68));
+  box-shadow: 0 24px 70px rgb(0 0 0 / 0.32);
+}
+
+.boundaryConditions > i {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 1px;
+  background: var(--vectant-accent);
+  transform-origin: left center;
+}
+
+.boundaryCondition {
+  display: grid;
+  grid-template-columns: 5.2rem 1fr;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 1rem 1.1rem;
+  border-bottom: 1px solid rgb(255 255 255 / 0.09);
+  will-change: transform, opacity;
+}
+
+.boundaryCondition span,
+.boundaryCondition strong {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.61rem;
+  letter-spacing: 0.075em;
+  text-transform: uppercase;
+}
+
+.boundaryCondition span {
+  color: var(--vectant-accent-readable);
+}
+
+.boundaryCondition strong {
+  color: rgb(240 240 237 / 0.8);
+  font-weight: 520;
+  line-height: 1.45;
+}
+
+@media (max-width: 900px) {
+  .boundaryCopy {
+    right: 1.3rem;
+    left: 1.3rem;
+    width: auto;
+  }
+
+  .boundaryConditions {
+    right: 1.5rem;
+    width: min(25rem, 48vw);
+  }
+}
+
+@media (max-width: 767px) {
+  .boundary {
+    min-height: 198dvh;
+  }
+
+  .boundaryFrame {
+    inset: 4.35rem 0.55rem 0.55rem;
+  }
+
+  .boundaryCamera {
+    right: auto;
+    width: 1040px;
+  }
+
+  .boundaryImage {
+    object-position: left center;
+  }
+
+  .boundaryCopy {
+    right: 0.9rem;
+    bottom: 1.4rem;
+    left: 0.9rem;
+    padding: 1rem 0.95rem 1.1rem;
+  }
+
+  .boundaryCopy h2 {
+    max-width: 9ch;
+    font-size: clamp(3rem, 14.5vw, 4.4rem);
+  }
+
+  .boundaryCopy p {
+    max-width: 22rem;
+    font-size: 0.88rem;
+  }
+
+  .boundaryConditions {
+    top: auto;
+    right: 0.9rem;
+    bottom: 1.15rem;
+    left: 0.9rem;
+    width: auto;
+    background: rgb(5 6 9 / 0.91);
+    backdrop-filter: blur(14px);
+  }
+
+  .boundaryCondition {
+    grid-template-columns: 4.4rem 1fr;
+    gap: 0.7rem;
+    padding: 0.82rem 0.85rem;
+  }
+
+  .boundaryCondition span,
+  .boundaryCondition strong {
+    font-size: 0.55rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .boundary {
+    min-height: auto;
+    padding: clamp(5.8rem, 10vw, 8rem) 0 1rem;
+  }
+
+  .boundarySticky {
+    position: relative;
+    min-height: auto;
+    overflow: visible;
+  }
+
+  .boundaryFrame {
+    position: relative;
+    inset: auto;
+    height: min(72svh, 48rem);
+    min-height: 31rem;
+    margin: 0 clamp(0.6rem, 1.5vw, 1.6rem);
+    clip-path: none !important;
+    transform: none !important;
+  }
+
+  .boundaryCamera,
+  .boundaryCopy,
+  .boundaryConditions,
+  .boundaryCondition,
+  .boundaryConditions > i {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .boundaryCopy,
+  .boundaryConditions {
+    position: relative;
+    inset: auto;
+    width: auto;
+    margin: 1rem clamp(0.6rem, 1.5vw, 1.6rem) 0;
+  }
+
+  .boundaryCopy h2 {
+    font-size: clamp(3rem, 7vw, 6.4rem);
+  }
+}
+
+@media (max-height: 650px) and (min-width: 768px) {
+  .boundaryFrame {
+    top: 4.35rem;
+  }
+
+  .boundaryCopy h2 {
+    font-size: clamp(3rem, 6vw, 5rem);
+  }
+
+  .boundaryConditions {
+    top: 17%;
+  }
+}

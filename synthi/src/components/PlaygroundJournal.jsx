@@ -66,7 +66,7 @@ export default function PlaygroundJournal({ snapshot, canSeeRareHints, canSeeEpi
             style={{
               width: `${pct}%`,
               background: pct === 100
-                ? 'linear-gradient(90deg, #F472B6, #A78BFA, #60A5FA, #34D399, #FBBF24, #F472B6)'
+                ? 'linear-gradient(90deg, #F472B6, #A78BFA, #60A5FA, #34D399, #928cb5, #F472B6)'
                 : 'linear-gradient(90deg, #58A4B0, #327464)',
               backgroundSize: pct === 100 ? '300% 100%' : '100% 100%',
               animation: pct === 100 ? 'journalRainbow 3s linear infinite' : 'none',

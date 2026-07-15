@@ -14,28 +14,35 @@ export function SmoothScroll() {
     if (prefersReduced || !finePointer) return;
 
     let lenis;
-    let rafId = 0;
     let onClick;
     let offScrollTrigger;
+    let gsapTicker;
+    let gsapInstance;
     let cancelled = false;
+    const stopLenis = () => lenis?.stop();
+    const startLenis = () => lenis?.start();
 
-    Promise.all([import("lenis"), import("gsap/ScrollTrigger")])
-      .then(([{ default: Lenis }, { ScrollTrigger }]) => {
+    window.addEventListener("vectant:scroll-lock", stopLenis);
+    window.addEventListener("vectant:scroll-unlock", startLenis);
+
+    Promise.all([import("lenis"), import("gsap"), import("gsap/ScrollTrigger")])
+      .then(([{ default: Lenis }, { gsap }, { ScrollTrigger }]) => {
         if (cancelled) return;
+        gsap.registerPlugin(ScrollTrigger);
+        gsapInstance = gsap;
         lenis = new Lenis({
           lerp: 0.09,
           smoothWheel: true,
           wheelMultiplier: 1,
           touchMultiplier: 1.5,
+          autoRaf: false,
         });
+        if (document.documentElement.dataset.vectantScrollLock === "true") lenis.stop();
 
         offScrollTrigger = lenis.on("scroll", ScrollTrigger.update);
-
-        const raf = (time) => {
-          lenis.raf(time);
-          rafId = requestAnimationFrame(raf);
-        };
-        rafId = requestAnimationFrame(raf);
+        gsapTicker = (time) => lenis?.raf(time * 1000);
+        gsap.ticker.add(gsapTicker);
+        gsap.ticker.lagSmoothing(0);
 
         // smooth in-page anchor navigation with sticky-nav offset
         onClick = (e) => {
@@ -46,7 +53,17 @@ export function SmoothScroll() {
           const target = document.querySelector(id);
           if (!target) return;
           e.preventDefault();
-          lenis.scrollTo(target, { offset: -72, duration: 1.1 });
+          const shouldFocus = a.dataset.scrollFocus === "true";
+          lenis.scrollTo(target, {
+            offset: -72,
+            duration: 1.1,
+            force: true,
+            onComplete: () => {
+              if (!shouldFocus) return;
+              if (!target.hasAttribute("tabindex")) target.setAttribute("tabindex", "-1");
+              target.focus({ preventScroll: true });
+            },
+          });
           history.replaceState(null, "", id);
         };
         document.addEventListener("click", onClick);
@@ -55,9 +72,12 @@ export function SmoothScroll() {
 
     return () => {
       cancelled = true;
-      cancelAnimationFrame(rafId);
+      window.removeEventListener("vectant:scroll-lock", stopLenis);
+      window.removeEventListener("vectant:scroll-unlock", startLenis);
       if (onClick) document.removeEventListener("click", onClick);
       if (offScrollTrigger) offScrollTrigger();
+      if (gsapTicker && gsapInstance) gsapInstance.ticker.remove(gsapTicker);
+      if (gsapInstance) gsapInstance.ticker.lagSmoothing(500, 33);
       if (lenis) lenis.destroy();
     };
   }, []);

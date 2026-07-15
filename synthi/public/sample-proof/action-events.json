@@ -1,0 +1,54 @@
+{
+  "schemaVersion": "vectant.events.v1",
+  "sample": true,
+  "runId": "VCT-SAMPLE-001",
+  "events": [
+    {
+      "eventId": "evt-001",
+      "sequence": 1,
+      "timestamp": "2026-07-14T12:00:00.250000Z",
+      "actor": "sample-coding-agent",
+      "action": "read",
+      "target": "src/kernels/fluid_sim.comp",
+      "decision": "allowed",
+      "reasonCode": "BOUNDARY_MATCH",
+      "reason": "The source and attached runtime state are inside the read boundary."
+    },
+    {
+      "eventId": "evt-002",
+      "sequence": 2,
+      "timestamp": "2026-07-14T12:00:01.120000Z",
+      "actor": "sample-coding-agent",
+      "action": "apply_patch",
+      "target": "src/kernels/fluid_sim.comp",
+      "decision": "blocked",
+      "reasonCode": "ABI_CONDITION_FAILED",
+      "reason": "The proposed branch removes output binding 2 and cannot enter the live hot path.",
+      "evidence": ["rejected.patch", "verification-result.json#checks/abi"]
+    },
+    {
+      "eventId": "evt-003",
+      "sequence": 3,
+      "timestamp": "2026-07-14T12:00:02.000000Z",
+      "actor": "sample-coding-agent",
+      "action": "request_temporary_lease",
+      "target": "src/kernels/fluid_sim.comp",
+      "decision": "escalated",
+      "reasonCode": "REVIEW_REQUIRED",
+      "reason": "The corrected patch, rejected branch, ABI result, and expected output are presented for review.",
+      "evidence": ["rejected.patch", "approved.patch", "approval-record.json"]
+    },
+    {
+      "eventId": "evt-004",
+      "sequence": 4,
+      "timestamp": "2026-07-14T12:00:03.580000Z",
+      "actor": "sample-reviewer",
+      "action": "approve_temporary_lease",
+      "target": "src/kernels/fluid_sim.comp",
+      "decision": "approved",
+      "reasonCode": "SCOPED_REVIEW_PASSED",
+      "reason": "Only the corrected kernel patch may proceed; the original rejected branch remains attached.",
+      "evidence": ["approval-record.json", "approved.patch"]
+    }
+  ]
+}

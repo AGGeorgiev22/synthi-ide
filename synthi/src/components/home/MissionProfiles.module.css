@@ -1,0 +1,303 @@
+.missionProfiles {
+  position: relative;
+  scroll-margin-top: 4.5rem;
+  color: #f2efe9;
+  background: var(--vectant-black);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.08);
+}
+
+.missionStage {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 24% 72%, rgb(var(--vectant-accent-rgb) / 0.12), transparent 28%),
+    linear-gradient(180deg, var(--vectant-black), var(--vectant-black-raised) 56%, var(--vectant-black));
+  isolation: isolate;
+}
+
+.missionCorridor {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.missionCorridor::before,
+.missionCorridor::after {
+  position: absolute;
+  bottom: -16vh;
+  width: 1px;
+  height: 72vh;
+  background: linear-gradient(180deg, transparent, rgb(var(--vectant-accent-rgb) / 0.28));
+  content: "";
+  transform-origin: bottom center;
+}
+
+.missionCorridor::before {
+  left: 50%;
+  transform: rotate(62deg);
+}
+
+.missionCorridor::after {
+  right: 50%;
+  transform: rotate(-62deg);
+}
+
+.missionIntro {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  min-height: 100dvh;
+  width: min(calc(100% - 2rem), 1460px);
+  flex-direction: column;
+  justify-content: center;
+  gap: 1.6rem;
+  margin-inline: auto;
+  padding-block: 8rem;
+}
+
+.missionIntro h2 {
+  max-width: 15ch;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(4rem, 7.2vw, 8.2rem);
+  font-weight: 400;
+  line-height: 0.89;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+.missionIntro p {
+  max-width: 31rem;
+  margin: 0;
+  color: rgb(228 230 236 / 0.66);
+  font-size: clamp(0.96rem, 1.15vw, 1.08rem);
+  line-height: 1.58;
+}
+
+.missionIndex {
+  display: none;
+}
+
+.missionSequence {
+  position: relative;
+  z-index: 2;
+  width: min(calc(100% - 2rem), 1460px);
+  margin-inline: auto;
+  padding-bottom: 7rem;
+}
+
+.missionProfile {
+  display: grid;
+  gap: 2rem;
+  padding-block: 3rem;
+}
+
+.missionMedia {
+  position: relative;
+  min-height: 24rem;
+  margin: 0;
+  overflow: hidden;
+  background: var(--vectant-black-raised);
+  box-shadow:
+    0 0 0 1px rgb(255 255 255 / 0.12),
+    0 36px 90px rgb(0 0 0 / 0.46);
+}
+
+.missionImage {
+  object-fit: cover;
+}
+
+.missionCopy {
+  align-self: end;
+}
+
+.missionCopy > p {
+  margin: 0 0 1rem;
+  color: var(--vectant-accent-readable);
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.58rem;
+  font-weight: 680;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.missionCopy h3 {
+  max-width: 12ch;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(2.8rem, 5vw, 5.6rem);
+  font-weight: 500;
+  line-height: 0.88;
+  letter-spacing: -0.058em;
+  text-wrap: balance;
+}
+
+.missionCopy > span {
+  display: block;
+  max-width: 30rem;
+  margin-top: 1.35rem;
+  color: rgb(224 226 232 / 0.66);
+  font-size: clamp(0.9rem, 1.06vw, 1rem);
+  line-height: 1.62;
+}
+
+.missionCopy > strong {
+  display: block;
+  margin-top: 1.5rem;
+  color: #f2efe9;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.59rem;
+  font-weight: 620;
+  letter-spacing: 0.075em;
+  text-transform: uppercase;
+}
+
+@media (min-width: 768px) and (prefers-reduced-motion: no-preference) {
+  .missionProfiles {
+    min-height: 410dvh;
+  }
+
+  .missionStage {
+    position: sticky;
+    top: 0;
+    min-height: 100dvh;
+  }
+
+  .missionIntro {
+    position: absolute;
+    inset: 0;
+    width: min(calc(100% - clamp(3rem, 9vw, 10rem)), 1460px);
+    padding-block: 0;
+    will-change: transform, opacity;
+  }
+
+  .missionIndex {
+    position: absolute;
+    z-index: 8;
+    top: clamp(5.2rem, 8vh, 6.5rem);
+    right: clamp(1.5rem, 4.5vw, 5rem);
+    left: clamp(1.5rem, 4.5vw, 5rem);
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    color: rgb(228 230 236 / 0.34);
+    font-family: var(--font-geist-mono), ui-monospace, monospace;
+    font-size: 0.54rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    will-change: transform, opacity;
+  }
+
+  .missionIndex span:nth-child(2) {
+    text-align: center;
+  }
+
+  .missionIndex span:nth-child(3) {
+    text-align: right;
+  }
+
+  .missionIndex > i {
+    position: relative;
+    display: block;
+    height: 1px;
+    grid-column: 1 / -1;
+    overflow: hidden;
+    background: rgb(255 255 255 / 0.1);
+  }
+
+  .missionIndex > i > b {
+    position: absolute;
+    inset: 0;
+    background: var(--vectant-accent);
+    transform: scaleX(0);
+  }
+
+  .missionSequence {
+    position: absolute;
+    inset: 0;
+    width: auto;
+    margin: 0;
+    padding: 0;
+  }
+
+  .missionProfile {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    padding: clamp(8.5rem, 14vh, 11rem) clamp(1.5rem, 4.5vw, 5rem) clamp(2.4rem, 5vh, 4rem);
+    grid-template-columns: minmax(0, 1.62fr) minmax(21rem, 0.78fr);
+    align-items: end;
+    gap: clamp(2.5rem, 6vw, 7rem);
+    opacity: 0;
+  }
+
+  .missionMedia {
+    height: min(69dvh, 760px);
+    min-height: 28rem;
+    clip-path: inset(100% 0 0 0);
+    will-change: clip-path;
+  }
+
+  .missionCopy {
+    padding-bottom: clamp(1rem, 4vh, 3.5rem);
+    will-change: transform, opacity;
+  }
+}
+
+@media (max-width: 767px) {
+  .missionIntro {
+    min-height: auto;
+    padding-block: 7rem 5rem;
+  }
+
+  .missionIntro h2 {
+    max-width: 10.5ch;
+    font-size: clamp(3.25rem, 13.8vw, 4.45rem);
+    line-height: 0.9;
+  }
+
+  .missionIntro p {
+    max-width: 23rem;
+    font-size: 0.9rem;
+  }
+
+  .missionSequence {
+    padding-bottom: 4rem;
+  }
+
+  .missionProfile {
+    gap: 1.6rem;
+    padding-block: 2.4rem 4.5rem;
+  }
+
+  .missionMedia {
+    min-height: 21rem;
+    clip-path: polygon(0 0, 100% 0, 100% 94%, 50% 100%, 0 94%);
+  }
+
+  .missionImage {
+    object-position: 42% 20% !important;
+  }
+
+  .missionCopy h3 {
+    max-width: 10ch;
+    font-size: clamp(3rem, 13vw, 4.15rem);
+  }
+
+  .missionCopy > span {
+    max-width: 23rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .missionIntro,
+  .missionProfile,
+  .missionMedia,
+  .missionCopy {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

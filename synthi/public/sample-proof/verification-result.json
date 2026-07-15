@@ -1,0 +1,23 @@
+{
+  "schemaVersion": "vectant.verification.v1",
+  "sample": true,
+  "runId": "VCT-SAMPLE-001",
+  "command": "vectant-demo verify gpu-hmr --run VCT-SAMPLE-001",
+  "startedAt": "2026-07-14T12:00:03.710000Z",
+  "completedAt": "2026-07-14T12:00:03.799100Z",
+  "exitCode": 0,
+  "checks": {
+    "abi": { "passed": true, "expectedBindings": [1, 2], "observedBindings": [1, 2] },
+    "state": { "passed": true, "before": "state-sample-77a1", "after": "state-sample-77a1" },
+    "patch": { "passed": true, "artifact": "approved.patch" },
+    "output": { "passed": true, "expectedChange": "energy-aware colour mapping", "unexpectedPixels": 0 }
+  },
+  "stdout": [
+    "ABI matched: bindings 1,2",
+    "Live state token retained: state-sample-77a1",
+    "Scoped patch applied once",
+    "Expected visual boundary changed",
+    "Verification passed"
+  ],
+  "notice": "Synthetic verification output supplied to make the public sample schema inspectable; it is not a customer test log."
+}

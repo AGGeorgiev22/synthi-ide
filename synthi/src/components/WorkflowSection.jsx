@@ -19,7 +19,7 @@ function CpuHmrVisual({ active }) {
     <div className="surface-dark overflow-hidden rounded-xl border border-line bg-bg-2/60">
       <div className="grid grid-cols-1 sm:grid-cols-2">
         <div className="border-b border-line p-3 font-mono text-[11.5px] leading-[1.7] sm:border-b-0 sm:border-r">
-          <div className="tok-com">// theme.ts</div>
+          <div className="tok-com">{"// theme.ts"}</div>
           <div>
             <C k="kw">export</C> <C k="kw">const</C> <C k="prop">accent</C> =
           </div>
@@ -184,7 +184,7 @@ const TABS = [
    reduced-motion. */
 const BRACKETS = [
   { x: "left", y: "top", color: "#ff3dbe" },
-  { x: "right", y: "top", color: "#ff5c2a" },
+  { x: "right", y: "top", color: "#4d4870" },
   { x: "left", y: "bottom", color: "#22d3ee" },
   { x: "right", y: "bottom", color: "#7c5cff" },
 ];

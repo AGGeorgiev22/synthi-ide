@@ -1,4 +1,4 @@
-import { Geist, Geist_Mono, Instrument_Serif, Space_Grotesk } from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
@@ -17,19 +17,24 @@ const geistMono = Geist_Mono({
   display: "swap",
 });
 
-const serifDisplay = Instrument_Serif({
-  variable: "--font-serif-display",
-  subsets: ["latin"],
-  weight: "400",
-  style: ["normal", "italic"],
+const aquireLight = localFont({
+  src: "../../fonts/Aquire-Light.otf",
+  variable: "--font-aquire-light",
+  weight: "300",
   display: "swap",
 });
 
-// Brand display face (stands in for Aquire until licensed files are added).
-const spaceGrotesk = Space_Grotesk({
-  variable: "--font-space-grotesk",
-  subsets: ["latin"],
-  weight: ["500", "600", "700"],
+const aquire = localFont({
+  src: "../../fonts/Aquire-Regular.otf",
+  variable: "--font-aquire",
+  weight: "400",
+  display: "swap",
+});
+
+const aquireBold = localFont({
+  src: "../../fonts/Aquire-Bold.otf",
+  variable: "--font-aquire-bold",
+  weight: "700",
   display: "swap",
 });
 
@@ -38,6 +43,16 @@ const satoshi = localFont({
     { path: "../../fonts/Satoshi-Variable.woff2", weight: "300 900", style: "normal" },
   ],
   variable: "--font-satoshi",
+  display: "swap",
+});
+
+const cabinetGrotesk = localFont({
+  src: [
+    { path: "../../fonts/CabinetGrotesk-Regular.woff2", weight: "400", style: "normal" },
+    { path: "../../fonts/CabinetGrotesk-Medium.woff2", weight: "500", style: "normal" },
+    { path: "../../fonts/CabinetGrotesk-Bold.woff2", weight: "700", style: "normal" },
+  ],
+  variable: "--font-cabinet",
   display: "swap",
 });
 
@@ -86,10 +101,12 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} ${serifDisplay.variable} ${satoshi.variable} ${spaceGrotesk.variable} antialiased`}
-      >
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${geistSans.variable} ${geistMono.variable} ${satoshi.variable} ${cabinetGrotesk.variable} ${aquireLight.variable} ${aquire.variable} ${aquireBold.variable}`}
+    >
+      <body className="antialiased">
         <ThemeProvider>
           {children}
           <Toaster
@@ -104,7 +121,7 @@ export default function RootLayout({ children }) {
             }}
           />
         </ThemeProvider>
-        <Analytics />
+        {process.env.VERCEL ? <Analytics /> : null}
       </body>
     </html>
   );

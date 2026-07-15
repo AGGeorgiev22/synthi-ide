@@ -1,0 +1,474 @@
+.finalApproach {
+  position: relative;
+  min-height: 200dvh;
+  color: var(--vectant-black-ink);
+  background: var(--vectant-black);
+}
+
+.finalApproachSticky {
+  position: sticky;
+  top: 0;
+  min-height: 100dvh;
+  overflow: hidden;
+  background: var(--vectant-black);
+  perspective: 1400px;
+}
+
+.finalSurface {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: var(--vectant-black-raised);
+  transform-origin: center center;
+}
+
+.finalAtmosphere {
+  z-index: 0;
+  object-fit: cover;
+  object-position: center 54%;
+  transform-origin: center center;
+  will-change: transform;
+}
+
+.finalRunway {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.finalRunway i {
+  position: absolute;
+  display: block;
+  height: 1px;
+  background: rgb(242 239 233 / 0.14);
+  transform-origin: center center;
+}
+
+.finalRunway i:first-child {
+  top: 45%;
+  right: 3vw;
+  left: 3vw;
+  background: rgb(var(--vectant-accent-rgb) / 0.66);
+}
+
+.finalRunway i:nth-child(2),
+.finalRunway i:nth-child(3) {
+  top: 45%;
+  width: 72vw;
+}
+
+.finalRunway i:nth-child(2) {
+  left: -7vw;
+  transform: rotate(24deg);
+  transform-origin: right center;
+}
+
+.finalRunway i:nth-child(3) {
+  right: -7vw;
+  transform: rotate(-24deg);
+  transform-origin: left center;
+}
+
+.finalCopy {
+  position: absolute;
+  z-index: 5;
+  top: clamp(7.2rem, 13vh, 9.5rem);
+  left: clamp(1.25rem, 5vw, 5.5rem);
+  width: min(47vw, 49rem);
+}
+
+.finalCopy h2 {
+  margin: 0;
+  color: #f2efe9;
+  font-family: var(--font-display);
+  font-size: clamp(3.15rem, 3.65vw, 4.75rem);
+  font-weight: 500;
+  line-height: 0.85;
+  letter-spacing: -0.067em;
+}
+
+.finalCopy h2 span {
+  display: block;
+  white-space: nowrap;
+}
+
+.finalCopy h2 span:nth-child(2) {
+  color: var(--vectant-accent-display);
+}
+
+.finalCopy > p {
+  max-width: 31rem;
+  margin: clamp(1.4rem, 2.4vw, 2.2rem) 0 0;
+  color: rgb(232 233 238 / 0.7);
+  font-size: clamp(0.88rem, 1vw, 1rem);
+  line-height: 1.58;
+}
+
+.finalCopy > p.pricingNote {
+  max-width: 29rem;
+  margin-top: 0.9rem;
+  color: rgb(242 239 233 / 0.46);
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.035em;
+}
+
+.finalOffer {
+  position: absolute;
+  z-index: 5;
+  top: clamp(5.2rem, 8vh, 7rem);
+  right: clamp(1rem, 4vw, 4.5rem);
+  bottom: auto;
+  display: grid;
+  width: min(43vw, 42rem);
+  max-height: calc(100dvh - 10.5rem);
+  align-content: start;
+  gap: 1rem;
+  overflow: auto;
+  padding: clamp(1rem, 1.8vw, 1.55rem);
+  color: #f2efe9;
+  background:
+    linear-gradient(145deg, rgb(255 255 255 / 0.055), transparent 38%),
+    rgb(13 11 20 / 0.91);
+  box-shadow:
+    inset 0 0 0 1px rgb(242 239 233 / 0.18),
+    inset 0 0 0 5px rgb(255 255 255 / 0.025),
+    0 38px 90px rgb(0 0 0 / 0.46);
+  backdrop-filter: blur(20px);
+  transform-origin: 92% 100%;
+}
+
+.finalOffer > header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.finalOffer > header span {
+  color: var(--vectant-accent-readable);
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.55rem;
+  font-weight: 720;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.finalOffer > header strong {
+  color: rgb(242 239 233 / 0.74);
+  font-size: 0.7rem;
+  font-weight: 520;
+}
+
+.offerDetails {
+  display: grid;
+  margin: 0;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0;
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.1);
+}
+
+.offerDetails > div {
+  min-width: 0;
+  padding: 0.8rem;
+  box-shadow:
+    inset -1px 0 0 rgb(255 255 255 / 0.08),
+    inset 0 -1px 0 rgb(255 255 255 / 0.08);
+}
+
+.offerDetails > div:nth-child(even) {
+  box-shadow: inset 0 -1px 0 rgb(255 255 255 / 0.08);
+}
+
+.offerDetails > div:nth-last-child(-n + 2) {
+  box-shadow: inset -1px 0 0 rgb(255 255 255 / 0.08);
+}
+
+.offerDetails > div:last-child {
+  box-shadow: none;
+}
+
+.offerDetails dt,
+.offerDetails dd {
+  margin: 0;
+}
+
+.offerDetails dt {
+  color: #f2efe9;
+  font-size: 0.67rem;
+  font-weight: 680;
+}
+
+.offerDetails dd {
+  margin-top: 0.42rem;
+  color: rgb(232 233 238 / 0.55);
+  font-size: 0.61rem;
+  line-height: 1.48;
+}
+
+.finalReceipt {
+  position: absolute;
+  z-index: 6;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: grid;
+  min-height: 4rem;
+  margin: 0;
+  grid-template-columns: repeat(3, 1fr);
+  color: #f2efe9;
+  background: rgb(8 7 13 / 0.86);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.14);
+  backdrop-filter: blur(18px);
+}
+
+.finalReceipt > div {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 0.75rem;
+  padding-inline: clamp(1rem, 2vw, 2rem);
+  box-shadow: inset -1px 0 0 rgb(255 255 255 / 0.1);
+}
+
+.finalReceipt > div:last-child {
+  box-shadow: none;
+}
+
+.finalReceipt dt,
+.finalReceipt dd {
+  margin: 0;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.08em;
+}
+
+.finalReceipt dt {
+  color: var(--vectant-accent-readable);
+  font-weight: 720;
+  text-transform: uppercase;
+}
+
+.finalReceipt dd {
+  color: rgb(232 233 238 / 0.58);
+}
+
+.finalShutters {
+  position: absolute;
+  z-index: 8;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.finalShutters > i {
+  position: absolute;
+  inset: -2px;
+  display: block;
+  background: var(--vectant-black);
+  will-change: transform;
+}
+
+.finalShutterLeft {
+  clip-path: polygon(0 0, 100% 0, 53% 100%, 0 100%);
+}
+
+.finalShutterRight {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 47% 100%);
+}
+
+.finalShutters > i::after {
+  position: absolute;
+  width: 1px;
+  height: 112%;
+  content: "";
+  background: linear-gradient(180deg, transparent, rgb(var(--vectant-accent-rgb) / 0.66) 28% 72%, transparent);
+}
+
+.finalShutterLeft::after {
+  right: 23.5%;
+  bottom: -5%;
+  transform: rotate(23deg);
+}
+
+.finalShutterRight::after {
+  bottom: -5%;
+  left: 23.5%;
+  transform: rotate(-23deg);
+}
+
+.finalHandoffMark {
+  position: absolute;
+  z-index: 9;
+  top: 50%;
+  left: 50%;
+  width: clamp(4.2rem, 6vw, 6.4rem);
+  color: #f2efe9;
+  filter: drop-shadow(0 0 24px rgb(var(--vectant-accent-rgb) / 0.2));
+  transform: translate(-50%, -50%);
+  transform-origin: center center;
+  pointer-events: none;
+}
+
+.finalHandoffMark svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+@media (max-width: 767px) {
+  .finalApproach {
+    min-height: 0;
+  }
+
+  .finalApproachSticky {
+    position: relative;
+    min-height: 0;
+    overflow: visible;
+  }
+
+  .finalSurface {
+    position: relative;
+    inset: auto;
+    display: grid;
+    min-height: 0;
+    gap: 2rem;
+    overflow: hidden;
+    padding: 7rem 1rem 0;
+  }
+
+  .finalCopy {
+    position: relative;
+    top: auto;
+    right: auto;
+    left: auto;
+    width: auto;
+  }
+
+  .finalAtmosphere {
+    object-position: 50% 52%;
+  }
+
+  .finalCopy h2 {
+    font-size: clamp(3rem, 13.4vw, 4.1rem);
+    line-height: 0.87;
+  }
+
+  .finalCopy h2 span {
+    white-space: normal;
+  }
+
+  .finalCopy > p {
+    max-width: 22rem;
+    margin-top: 1.15rem;
+    font-size: 0.88rem;
+    line-height: 1.5;
+  }
+
+  .finalCopy > p.pricingNote {
+    font-size: 0.56rem;
+  }
+
+  .finalOffer {
+    position: relative;
+    top: auto;
+    right: auto;
+    bottom: auto;
+    width: auto;
+    max-height: none;
+    overflow: visible;
+  }
+
+  .finalOffer > header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .offerDetails {
+    grid-template-columns: 1fr;
+  }
+
+  .finalReceipt {
+    position: relative;
+    right: auto;
+    bottom: auto;
+    left: auto;
+    width: calc(100% + 2rem);
+    min-height: 0;
+    margin-left: -1rem;
+    grid-template-columns: 1fr;
+  }
+
+  .finalReceipt > div {
+    min-height: 3.6rem;
+    padding: 0.8rem 1rem;
+    box-shadow: inset 0 -1px 0 rgb(255 255 255 / 0.1);
+  }
+
+  .finalReceipt dt,
+  .finalReceipt dd {
+    font-size: 0.48rem;
+  }
+
+  .finalReceipt dd {
+    margin-top: 0.25rem;
+    line-height: 1.3;
+  }
+
+  .finalShutters,
+  .finalHandoffMark {
+    display: none;
+  }
+}
+
+@media (max-height: 700px) {
+  .finalCopy {
+    top: 4.8rem;
+  }
+
+  .finalCopy h2 {
+    font-size: clamp(2.8rem, 9vh, 4.3rem);
+  }
+
+  .finalCopy > p {
+    max-width: 31rem;
+    margin-top: 0.8rem;
+    font-size: 0.78rem;
+  }
+
+  .finalOffer {
+    top: 4.5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .finalApproach {
+    min-height: 100dvh;
+  }
+
+  .finalApproachSticky {
+    position: relative;
+  }
+
+  .finalSurface,
+  .finalAtmosphere,
+  .finalCopy,
+  .finalOffer,
+  .finalReceipt {
+    visibility: visible !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .finalShutters,
+  .finalHandoffMark {
+    display: none;
+  }
+
+  .finalRunway i:first-child {
+    transform: none !important;
+  }
+}

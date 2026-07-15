@@ -1,0 +1,255 @@
+.footer {
+  position: relative;
+  overflow: hidden;
+  color: var(--vectant-black-ink);
+  background: #d8d0c5;
+  box-shadow: inset 0 1px 0 rgb(36 29 25 / 0.22);
+}
+
+.footer::before,
+.footer::after {
+  position: absolute;
+  bottom: -18rem;
+  width: 1px;
+  height: 58rem;
+  content: "";
+  background: linear-gradient(180deg, transparent, rgb(var(--vectant-accent-rgb) / 0.35));
+  pointer-events: none;
+}
+
+.footer::before {
+  left: 50%;
+  transform: rotate(36deg);
+  transform-origin: bottom center;
+}
+
+.footer::after {
+  right: 50%;
+  transform: rotate(-36deg);
+  transform-origin: bottom center;
+}
+
+.footerShell {
+  position: relative;
+  z-index: 1;
+  width: min(calc(100% - 2rem), 1460px);
+  margin-inline: auto;
+  padding-block: clamp(4.5rem, 8vw, 8rem) 1.7rem;
+}
+
+.footerLead {
+  display: grid;
+  grid-template-columns: minmax(14rem, 0.52fr) minmax(0, 1.48fr);
+  align-items: start;
+  gap: clamp(3rem, 8vw, 9rem);
+}
+
+.footerLogo {
+  color: var(--vectant-black-ink) !important;
+}
+
+.footerBrand {
+  display: inline-flex;
+  width: fit-content;
+  outline: none;
+}
+
+.footerBrand:focus-visible {
+  box-shadow:
+    0 0 0 2px #d8d0c5,
+    0 0 0 4px #175c66;
+}
+
+.footerMark {
+  --vectant-signature-height: 2.5rem;
+}
+
+.footerLead h2 {
+  margin: 0;
+  color: var(--vectant-black-ink);
+  font-family: var(--font-display);
+  font-size: clamp(4.25rem, 7.5vw, 8.6rem);
+  font-weight: 500;
+  line-height: 0.84;
+  letter-spacing: -0.07em;
+}
+
+.footerLead h2 span {
+  display: block;
+}
+
+.footerLead h2 span:last-child {
+  color: var(--vectant-accent);
+}
+
+.footerAction {
+  display: inline-flex;
+  min-height: 3.15rem;
+  margin-top: clamp(1.6rem, 3vw, 2.4rem);
+  align-items: center;
+  gap: 0.75rem;
+  border: 1px solid var(--vectant-black-ink);
+  border-radius: 2px;
+  padding-inline: 1.1rem;
+  color: #f7f1e8;
+  background: var(--vectant-black-ink);
+  font-size: 0.76rem;
+  font-weight: 720;
+  outline: none;
+  transition:
+    transform 420ms cubic-bezier(0.16, 1, 0.3, 1),
+    color 320ms cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 320ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.footerAction:hover {
+  color: var(--vectant-black-ink);
+  background: transparent;
+  transform: translateY(-2px);
+}
+
+.footerDirectory {
+  display: grid;
+  margin-top: clamp(5rem, 10vw, 10rem);
+  padding-block: clamp(2rem, 4vw, 3.5rem);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(1.5rem, 4vw, 5rem);
+  box-shadow:
+    inset 0 1px 0 rgb(36 29 25 / 0.2),
+    inset 0 -1px 0 rgb(36 29 25 / 0.2);
+}
+
+.footerDirectory section > p {
+  margin: 0 0 1.25rem;
+  color: var(--vectant-accent);
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.55rem;
+  font-weight: 720;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.footerDirectory nav {
+  display: grid;
+  justify-items: start;
+  gap: 0.72rem;
+}
+
+.footerDirectory nav a,
+.footerContact > a {
+  color: rgb(23 21 19 / 0.68);
+  font-size: 0.82rem;
+  outline: none;
+  transition:
+    color 320ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 320ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.footerDirectory nav a:hover,
+.footerDirectory nav a:focus-visible,
+.footerContact > a:hover,
+.footerContact > a:focus-visible {
+  color: var(--vectant-black-ink);
+  transform: translateX(3px);
+}
+
+.footerContact > span {
+  display: block;
+  max-width: 24rem;
+  color: rgb(23 21 19 / 0.68);
+  font-size: 0.84rem;
+  line-height: 1.55;
+}
+
+.footerContact > a {
+  display: inline-block;
+  margin-top: 0.95rem;
+  color: var(--vectant-black-ink);
+  font-weight: 650;
+}
+
+.footerAction:focus-visible,
+.footerDirectory a:focus-visible,
+.footerLegal a:focus-visible {
+  box-shadow:
+    0 0 0 2px #d8d0c5,
+    0 0 0 4px #175c66;
+}
+
+.footerLegal {
+  display: flex;
+  margin-top: 1.55rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  color: rgb(23 21 19 / 0.56);
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.06em;
+}
+
+.footerLegal p {
+  margin: 0;
+}
+
+.footerLegal > div {
+  display: flex;
+  gap: 1.25rem;
+}
+
+.footerLegal a {
+  outline: none;
+  transition: color 320ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.footerLegal a:hover {
+  color: var(--vectant-black-ink);
+}
+
+@media (max-width: 960px) {
+  .footerDirectory {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 3rem 1.5rem;
+  }
+
+  .footerContact {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 767px) {
+  .footerShell {
+    width: calc(100% - 2rem);
+    padding-top: 5rem;
+  }
+
+  .footerLead {
+    grid-template-columns: 1fr;
+    gap: 3.5rem;
+  }
+
+  .footerLead h2 {
+    font-size: clamp(3.8rem, 16vw, 5rem);
+  }
+
+  .footerDirectory {
+    margin-top: 6rem;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .footerLegal {
+    align-items: flex-start;
+    flex-direction: column;
+    line-height: 1.5;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .footerAction,
+  .footerDirectory nav a,
+  .footerContact > a,
+  .footerLegal a {
+    transition-duration: 0.01ms;
+  }
+}

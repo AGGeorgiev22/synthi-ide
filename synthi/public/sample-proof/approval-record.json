@@ -1,0 +1,19 @@
+{
+  "schemaVersion": "vectant.approval.v1",
+  "sample": true,
+  "runId": "VCT-SAMPLE-001",
+  "approvalId": "apr-sample-001",
+  "reviewer": "sample-reviewer",
+  "requestedAt": "2026-07-14T12:00:02.000000Z",
+  "approvedAt": "2026-07-14T12:00:03.580000Z",
+  "scope": {
+    "action": "apply_patch",
+    "target": "src/kernels/fluid_sim.comp",
+    "artifact": "approved.patch",
+    "conditions": ["abi_match", "state_retained", "output_verified"],
+    "uses": 1,
+    "expiresAt": "2026-07-14T12:01:03.580000Z"
+  },
+  "excluded": ["rejected.patch", "infra/**", ".github/**", "network"],
+  "reviewNote": "Approve the corrected scoped patch only. Retain the failed ABI proposal in the proof record."
+}

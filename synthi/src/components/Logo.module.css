@@ -1,0 +1,65 @@
+.logo,
+.animatedLogo {
+  --vectant-signature-height: 1.5rem;
+
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.signatureStart,
+.signatureEnd {
+  flex: 0 0 auto;
+  width: auto;
+  height: var(--vectant-signature-height);
+}
+
+.signatureEnd {
+  margin-left: calc(var(--vectant-signature-height) / 64);
+}
+
+.wordShell {
+  display: grid;
+  grid-template-columns: 0fr;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateX(-0.34rem);
+  transition:
+    grid-template-columns 440ms cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 180ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 440ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.wordTrack {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.word {
+  display: block;
+  width: max-content;
+  margin-inline:
+    calc(var(--vectant-signature-height) * 0.3467)
+    calc(var(--vectant-signature-height) * 0.3);
+  white-space: nowrap;
+  font-size: calc(var(--vectant-signature-height) * 0.6667);
+  font-weight: 300;
+  letter-spacing: 0.17em;
+}
+
+.logoExpanded .wordShell,
+.logo:focus-within .wordShell,
+:global(a:focus-visible) .logo .wordShell,
+.animatedLogoExpanded .wordShell,
+.animatedLogoInteractive:hover .wordShell,
+:global(a:focus-visible) .animatedLogoInteractive .wordShell {
+  grid-template-columns: 1fr;
+  opacity: 1;
+  transform: translateX(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wordShell {
+    transition-duration: 0.01ms;
+  }
+}

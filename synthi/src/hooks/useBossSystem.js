@@ -25,7 +25,7 @@ const BOSS_DEFS = {
     icon: "👻",
     hp: 2,
     scoreThreshold: 4000,
-    color: "#F59E0B",
+    color: "#928cb5",
     size: 48,
     behavior: "teleport",
   },

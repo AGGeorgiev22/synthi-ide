@@ -1,0 +1,445 @@
+.proofCinema {
+  position: relative;
+  min-height: 286dvh;
+  scroll-margin-top: 4.5rem;
+  color: #f2efe9;
+  background: var(--vectant-black);
+}
+
+.proofStage {
+  position: sticky;
+  top: 0;
+  min-height: 100dvh;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 52%, rgb(74 24 77 / 0.09), transparent 34%),
+    var(--vectant-black);
+  isolation: isolate;
+}
+
+.proofHeader {
+  position: absolute;
+  z-index: 4;
+  top: clamp(6.7rem, 11vh, 8.5rem);
+  left: clamp(1.4rem, 5vw, 5.4rem);
+  width: min(59rem, 74vw);
+  padding: 1rem 1.25rem 1.2rem;
+  background: linear-gradient(90deg, rgb(5 6 9 / 0.96), rgb(5 6 9 / 0.74) 70%, transparent);
+  will-change: transform, opacity;
+}
+
+.proofHeader::before {
+  position: absolute;
+  inset-block: 0;
+  left: 0;
+  width: 1px;
+  background: var(--vectant-accent);
+  content: "";
+}
+
+.proofHeader h2 {
+  max-width: 11ch;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(3.6rem, 7.2vw, 8rem);
+  font-weight: 500;
+  line-height: 0.86;
+  letter-spacing: -0.062em;
+}
+
+.proofHeader p {
+  max-width: 38rem;
+  margin: 1rem 0 0;
+  color: rgb(225 227 231 / 0.68);
+  font-size: clamp(0.92rem, 1.14vw, 1.05rem);
+  line-height: 1.56;
+}
+
+.proofTrack {
+  position: absolute;
+  z-index: 2;
+  top: 16%;
+  left: 0;
+  display: flex;
+  width: max-content;
+  align-items: center;
+  gap: clamp(1rem, 2vw, 2rem);
+  padding-inline: 5vw;
+  will-change: transform, opacity;
+}
+
+.proofPanel {
+  position: relative;
+  width: min(76vw, 1120px);
+  height: min(72dvh, 760px);
+  flex: 0 0 auto;
+  overflow: hidden;
+  background: #07080c;
+  box-shadow:
+    0 0 0 1px rgb(255 255 255 / 0.12),
+    0 42px 110px rgb(0 0 0 / 0.56);
+  transform-origin: center center;
+  will-change: transform, opacity;
+}
+
+.proofPanel[data-proof-panel="checkride"] {
+  width: min(78vw, 1160px);
+}
+
+.proofPanel[data-proof-panel="handoff"] {
+  width: min(70vw, 1040px);
+}
+
+.proofPanel[data-proof-panel="memory"] {
+  width: min(64vw, 960px);
+}
+
+.proofPanelMedia {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.proofPanelImage {
+  object-fit: cover;
+}
+
+.proofImageCheckride {
+  object-position: center 34%;
+}
+
+.proofImageHandoff {
+  object-position: center 40%;
+}
+
+.proofImageMemory {
+  object-position: center 38%;
+}
+
+.proofPanelCaption {
+  position: absolute;
+  z-index: 3;
+  right: clamp(1rem, 2.5vw, 2rem);
+  bottom: clamp(1rem, 2.5vw, 2rem);
+  left: clamp(1rem, 2.5vw, 2rem);
+  max-width: 48rem;
+  padding: 1rem 1.15rem 1.15rem;
+  border-left: 1px solid var(--vectant-accent);
+  background: linear-gradient(90deg, rgb(5 6 9 / 0.95), rgb(5 6 9 / 0.78) 78%, transparent);
+}
+
+.proofPanelCaption > span {
+  display: block;
+  margin-bottom: 0.6rem;
+  color: var(--vectant-accent-readable);
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.57rem;
+  font-weight: 650;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.proofPanelCaption h3 {
+  max-width: 15ch;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 4.2vw, 4.7rem);
+  font-weight: 500;
+  line-height: 0.9;
+  letter-spacing: -0.052em;
+}
+
+.proofPanelCaption p {
+  max-width: 36rem;
+  margin: 0.8rem 0 0;
+  color: rgb(225 227 231 / 0.68);
+  font-size: clamp(0.88rem, 1.05vw, 1rem);
+  line-height: 1.52;
+}
+
+.proofSeal {
+  position: absolute;
+  z-index: 5;
+  inset: clamp(4.7rem, 7vh, 5.8rem) clamp(0.7rem, 1.5vw, 1.6rem) clamp(0.7rem, 1.5vw, 1.6rem);
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  overflow: hidden;
+  text-align: center;
+  background:
+    radial-gradient(circle at 50% 49%, rgb(133 34 88 / 0.18), transparent 26%),
+    linear-gradient(180deg, #07080c, #040508);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.11);
+  will-change: transform, opacity;
+}
+
+.proofSeal::before,
+.proofSeal::after {
+  position: absolute;
+  top: 50%;
+  width: 52vw;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgb(var(--vectant-accent-rgb) / 0.56));
+  content: "";
+}
+
+.proofSeal::before {
+  right: 50%;
+  transform: rotate(25deg);
+  transform-origin: right center;
+}
+
+.proofSeal::after {
+  left: 50%;
+  transform: rotate(-25deg);
+  transform-origin: left center;
+}
+
+.proofSealMark {
+  position: relative;
+  z-index: 2;
+  width: clamp(4.5rem, 7vw, 7rem);
+  height: auto;
+  margin-bottom: 1.4rem;
+}
+
+.proofSeal > strong {
+  position: relative;
+  z-index: 2;
+  font-family: var(--font-display);
+  font-size: clamp(4rem, 9vw, 9.6rem);
+  font-weight: 500;
+  line-height: 0.82;
+  letter-spacing: -0.066em;
+}
+
+.proofSeal > p {
+  position: relative;
+  z-index: 2;
+  max-width: 38rem;
+  margin: 1.25rem 1rem 0;
+  color: rgb(225 227 231 / 0.67);
+  font-size: clamp(0.92rem, 1.14vw, 1.05rem);
+  line-height: 1.55;
+}
+
+.proofLedger {
+  position: absolute;
+  z-index: 3;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  overflow: hidden;
+  background: rgb(5 6 9 / 0.9);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.1);
+}
+
+.proofLedgerTrack {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+}
+
+.proofLedgerTrack > ul {
+  display: flex;
+  min-width: 100vw;
+  min-height: 3.2rem;
+  margin: 0;
+  padding: 0;
+  align-items: center;
+  flex: none;
+  justify-content: space-between;
+  list-style: none;
+}
+
+.proofLedgerTrack li {
+  display: inline-flex;
+  align-items: center;
+  color: rgb(231 233 239 / 0.54);
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.58rem;
+  font-weight: 500;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.proofLedgerTrack li::after {
+  width: 4rem;
+  height: 1px;
+  margin-inline: 1.3rem;
+  background: rgb(var(--vectant-accent-rgb) / 0.42);
+  content: "";
+}
+
+.proofLedgerAccessible {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (max-width: 767px) {
+  .proofCinema {
+    min-height: 270dvh;
+  }
+
+  .proofHeader {
+    top: 6.4rem;
+    right: 1rem;
+    left: 1rem;
+    width: auto;
+    padding: 0.9rem 0.9rem 1rem;
+  }
+
+  .proofHeader h2 {
+    max-width: 9ch;
+    font-size: clamp(3.2rem, 15vw, 4.6rem);
+  }
+
+  .proofHeader p {
+    max-width: 23rem;
+    font-size: 0.86rem;
+  }
+
+  .proofTrack {
+    top: 13%;
+    gap: 0.75rem;
+    padding-inline: 0.75rem;
+  }
+
+  .proofPanel {
+    width: calc(100vw - 1.5rem);
+    height: 74dvh;
+  }
+
+  .proofPanel[data-proof-panel="checkride"] {
+    width: calc(100vw - 1.5rem);
+    height: 74dvh;
+  }
+
+  .proofPanel[data-proof-panel="handoff"] {
+    width: calc(100vw - 2.1rem);
+    height: 71dvh;
+  }
+
+  .proofPanel[data-proof-panel="memory"] {
+    width: calc(100vw - 2.8rem);
+    height: 68dvh;
+  }
+
+  .proofImageCheckride {
+    object-position: 24% 32%;
+  }
+
+  .proofImageHandoff {
+    object-position: 57% 40%;
+  }
+
+  .proofImageMemory {
+    object-position: 76% 39%;
+  }
+
+  .proofPanelCaption {
+    right: 0.8rem;
+    bottom: 0.8rem;
+    left: 0.8rem;
+    padding: 0.85rem 0.9rem 0.95rem;
+  }
+
+  .proofPanelCaption h3 {
+    max-width: 11ch;
+    font-size: clamp(2.4rem, 11.5vw, 3.3rem);
+  }
+
+  .proofPanelCaption p {
+    font-size: 0.875rem;
+    line-height: 1.46;
+  }
+
+  .proofSeal {
+    inset: 4.35rem 0.55rem 0.55rem;
+  }
+
+  .proofSealMark {
+    width: 4.5rem;
+  }
+
+  .proofSeal > strong {
+    max-width: calc(100% - 1rem);
+    font-size: clamp(3.45rem, 16.2vw, 5rem);
+  }
+
+  .proofSeal > p {
+    max-width: 20rem;
+    font-size: 0.86rem;
+  }
+
+  .proofLedgerTrack li {
+    font-size: 0.54rem;
+  }
+
+  .proofLedgerTrack li::after {
+    width: 2.5rem;
+    margin-inline: 0.9rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .proofCinema {
+    min-height: auto;
+    padding: clamp(5.8rem, 10vw, 8rem) 0 1rem;
+  }
+
+  .proofStage {
+    position: relative;
+    min-height: auto;
+    overflow: visible;
+  }
+
+  .proofHeader,
+  .proofTrack,
+  .proofPanel,
+  .proofSeal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .proofHeader {
+    position: relative;
+    inset: auto;
+    width: min(calc(100% - 2rem), 70rem);
+    margin: 0 auto 2rem;
+  }
+
+  .proofTrack {
+    position: relative;
+    inset: auto;
+    display: grid;
+    width: auto;
+    gap: 0.75rem;
+    padding-inline: 0.5rem;
+  }
+
+  .proofPanel {
+    width: 100%;
+    height: min(76dvh, 47rem);
+  }
+
+  .proofPanel[data-proof-panel="checkride"],
+  .proofPanel[data-proof-panel="handoff"],
+  .proofPanel[data-proof-panel="memory"] {
+    width: 100%;
+    height: min(76dvh, 47rem);
+  }
+
+  .proofSeal {
+    position: relative;
+    inset: auto;
+    min-height: 76dvh;
+    margin: 0.75rem 0.5rem 0;
+  }
+}

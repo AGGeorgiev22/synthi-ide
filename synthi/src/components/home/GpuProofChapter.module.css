@@ -1,0 +1,445 @@
+.gpuCinema {
+  position: relative;
+  min-height: 258dvh;
+  scroll-margin-top: 4.5rem;
+  color: #f2efe9;
+  background: var(--vectant-black);
+}
+
+.gpuStage {
+  position: sticky;
+  top: 0;
+  min-height: 100dvh;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 55%, rgb(var(--vectant-accent-rgb) / 0.12), transparent 32%),
+    radial-gradient(circle at 72% 30%, rgb(93 26 90 / 0.09), transparent 30%),
+    var(--vectant-black);
+  isolation: isolate;
+}
+
+.gpuHotPath {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.gpuHotPath path {
+  fill: none;
+  stroke: rgb(var(--vectant-accent-rgb) / 0.72);
+  stroke-width: 1.2;
+  filter: drop-shadow(0 0 8px rgb(var(--vectant-accent-rgb) / 0.52));
+  vector-effect: non-scaling-stroke;
+}
+
+.gpuIntro {
+  position: absolute;
+  z-index: 5;
+  top: clamp(7.5rem, 14vh, 10rem);
+  left: clamp(1.4rem, 5vw, 5.5rem);
+  width: min(57rem, 68vw);
+  padding: 1.1rem 1.3rem 1.3rem;
+  background: linear-gradient(90deg, rgb(8 7 13 / 0.96), rgb(8 7 13 / 0.72) 72%, transparent);
+  will-change: transform, opacity;
+}
+
+.gpuIntro::before {
+  position: absolute;
+  inset-block: 0;
+  left: 0;
+  width: 1px;
+  background: var(--vectant-accent);
+  content: "";
+}
+
+.gpuIntro > p {
+  margin: 0 0 0.8rem;
+  color: var(--vectant-accent-readable);
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.6rem;
+  font-weight: 650;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.gpuIntro h2 {
+  max-width: 12ch;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(3.5rem, 6.9vw, 7.7rem);
+  font-weight: 400;
+  line-height: 0.9;
+  letter-spacing: -0.035em;
+}
+
+.gpuIntro > span {
+  display: block;
+  max-width: 35rem;
+  margin-top: 1rem;
+  color: rgb(226 227 231 / 0.7);
+  font-size: clamp(0.92rem, 1.15vw, 1.06rem);
+  line-height: 1.56;
+}
+
+.gpuPlate {
+  position: absolute;
+  z-index: 3;
+  top: 50%;
+  left: 50%;
+  width: min(76vw, 1080px);
+  aspect-ratio: 4 / 3;
+  margin: 0;
+  overflow: hidden;
+  translate: -50% -46%;
+  background: #06050a;
+  box-shadow:
+    0 0 0 1px rgb(255 255 255 / 0.14),
+    0 44px 120px rgb(0 0 0 / 0.62);
+  transform-origin: center center;
+  will-change: transform, opacity;
+}
+
+.gpuImageLayer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.gpuImage {
+  object-fit: cover;
+}
+
+.gpuAfterLayer {
+  z-index: 2;
+  will-change: clip-path;
+}
+
+.gpuDiffLayer {
+  z-index: 3;
+  mix-blend-mode: normal;
+  will-change: transform, opacity;
+}
+
+.gpuDivider {
+  position: absolute;
+  z-index: 5;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: #f2efe9;
+  box-shadow:
+    0 0 0 1px rgb(8 7 13 / 0.7),
+    0 0 18px rgb(255 255 255 / 0.5);
+  transform: translateX(-50%);
+}
+
+.gpuGates {
+  position: absolute;
+  z-index: 6;
+  top: 0;
+  right: 0;
+  left: 0;
+  display: grid;
+  min-height: 3.15rem;
+  grid-template-columns: repeat(4, 1fr);
+  align-items: center;
+  gap: 0.7rem;
+  padding-inline: clamp(0.8rem, 2vw, 1.6rem);
+  color: rgb(231 233 239 / 0.36);
+  background: rgb(8 7 13 / 0.91);
+  box-shadow: inset 0 -1px 0 rgb(255 255 255 / 0.1);
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.56rem;
+  letter-spacing: 0.075em;
+  text-transform: uppercase;
+  backdrop-filter: blur(14px);
+}
+
+.gpuGates span:not(:first-child) {
+  text-align: center;
+}
+
+.gpuGates span:last-child {
+  text-align: right;
+}
+
+.gpuVerdict {
+  position: absolute;
+  z-index: 7;
+  right: clamp(0.9rem, 2vw, 1.7rem);
+  bottom: clamp(0.9rem, 2vw, 1.7rem);
+  display: grid;
+  width: min(46rem, 72vw);
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: clamp(1.25rem, 3vw, 3.5rem);
+  padding: 1rem 1.15rem 1.1rem;
+  border-left: 1px solid var(--vectant-accent);
+  background: rgb(8 7 13 / 0.91);
+  box-shadow: 0 20px 60px rgb(0 0 0 / 0.4);
+  will-change: transform, opacity;
+}
+
+.gpuVerdictCopy {
+  display: grid;
+  gap: 0.42rem;
+}
+
+.gpuVerdictCopy > span {
+  color: var(--vectant-accent-readable);
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.55rem;
+  font-weight: 650;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.gpuVerdictCopy strong {
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 2.9vw, 3.05rem);
+  font-weight: 400;
+  line-height: 0.95;
+  letter-spacing: -0.045em;
+}
+
+.gpuLatency {
+  display: grid;
+  width: min(15.5rem, 24vw);
+  justify-items: end;
+  text-align: right;
+}
+
+.gpuLatency p {
+  margin: 0 0 0.3rem;
+  color: rgb(231 233 239 / 0.64);
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.5rem;
+  font-weight: 650;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.gpuLatency b {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  color: var(--vectant-accent-display);
+  font-family: var(--font-display-strong);
+  font-size: clamp(2.9rem, 5vw, 5.25rem);
+  font-weight: 700;
+  line-height: 0.78;
+  letter-spacing: -0.075em;
+}
+
+.gpuLatencyRule {
+  position: absolute;
+  right: 0;
+  bottom: -0.14em;
+  left: 0.12em;
+  height: 2px;
+  background: var(--vectant-accent);
+  box-shadow: 0 0 10px rgb(var(--vectant-accent-rgb) / 0.56);
+  transform: scaleX(0);
+  transform-origin: left center;
+  will-change: transform;
+}
+
+.gpuLatency i,
+.gpuLatency em,
+.gpuLatency small {
+  font: inherit;
+  font-style: normal;
+}
+
+.gpuLatency i {
+  margin-right: 0.08em;
+  font-size: 0.48em;
+}
+
+.gpuLatency small {
+  margin-left: 0.14em;
+  font-size: 0.28em;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+
+.gpuLatency > span {
+  max-width: 14.5rem;
+  margin-top: 0.52rem;
+  color: rgb(224 226 232 / 0.62);
+  font-size: 0.64rem;
+  line-height: 1.45;
+}
+
+.gpuLatency a {
+  color: var(--vectant-ui-text);
+  text-decoration: underline;
+  text-decoration-color: rgb(var(--vectant-ui-text-rgb) / 0.52);
+  text-underline-offset: 0.18em;
+}
+
+.gpuLatency a:hover,
+.gpuLatency a:focus-visible {
+  color: #f2efe9;
+}
+
+.gpuLatency a:focus-visible {
+  outline: 2px solid var(--vectant-ui-action);
+  outline-offset: 3px;
+}
+
+@media (max-width: 767px) {
+  .gpuCinema {
+    min-height: 232dvh;
+  }
+
+  .gpuIntro {
+    top: clamp(6.8rem, 13svh, 8rem);
+    right: 1rem;
+    left: 1rem;
+    width: auto;
+    padding: 0.9rem 0.9rem 1rem;
+  }
+
+  .gpuIntro h2 {
+    max-width: 9ch;
+    font-size: clamp(3.1rem, 14.5vw, 4.45rem);
+    line-height: 0.87;
+  }
+
+  .gpuIntro > span {
+    max-width: 23rem;
+    font-size: 0.86rem;
+    line-height: 1.5;
+  }
+
+  .gpuPlate {
+    top: 54%;
+    width: calc(100% - 1rem);
+    aspect-ratio: 1 / 1.08;
+    translate: -50% -46%;
+  }
+
+  .gpuGates {
+    min-height: 4.5rem;
+    grid-template-columns: repeat(2, 1fr);
+    row-gap: 0.35rem;
+    padding-block: 0.5rem;
+    font-size: 0.5rem;
+  }
+
+  .gpuGates span:nth-child(even) {
+    text-align: right;
+  }
+
+  .gpuGates span:nth-child(3) {
+    text-align: left;
+  }
+
+  .gpuVerdict {
+    right: 0.65rem;
+    bottom: 0.65rem;
+    left: 0.65rem;
+    width: auto;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 1rem;
+    padding: 0.85rem 0.9rem 0.95rem;
+  }
+
+  .gpuVerdictCopy strong {
+    font-size: clamp(1.75rem, 8vw, 2.4rem);
+  }
+
+  .gpuLatency {
+    width: min(8.6rem, 35vw);
+  }
+
+  .gpuLatency p {
+    max-width: 7rem;
+    font-size: 0.43rem;
+  }
+
+  .gpuLatency b {
+    font-size: clamp(2.6rem, 12.5vw, 3.8rem);
+  }
+
+  .gpuLatency > span {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gpuCinema {
+    min-height: auto;
+    padding: clamp(5.8rem, 10vw, 8rem) 0 clamp(2rem, 6vw, 5rem);
+  }
+
+  .gpuStage {
+    position: relative;
+    min-height: auto;
+    overflow: visible;
+  }
+
+  .gpuHotPath {
+    display: none;
+  }
+
+  .gpuIntro,
+  .gpuPlate,
+  .gpuAfterLayer,
+  .gpuDiffLayer,
+  .gpuDivider,
+  .gpuVerdict,
+  .gpuGates span {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .gpuIntro {
+    position: relative;
+    inset: auto;
+    width: min(calc(100% - 2rem), 70rem);
+    margin: 0 auto clamp(2rem, 5vw, 4rem);
+  }
+
+  .gpuPlate {
+    position: relative;
+    inset: auto;
+    width: min(calc(100% - 1rem), 1080px);
+    margin-inline: auto;
+    translate: none;
+  }
+
+  .gpuAfterLayer {
+    clip-path: inset(0 0 0 50%) !important;
+  }
+
+  .gpuDiffLayer {
+    opacity: 0.34 !important;
+  }
+
+  .gpuDivider {
+    left: 50% !important;
+  }
+
+  .gpuLatencyRule {
+    transform: scaleX(1) !important;
+  }
+}
+
+@media (max-height: 650px) and (min-width: 768px) {
+  .gpuIntro {
+    top: 5.3rem;
+  }
+
+  .gpuIntro h2 {
+    font-size: clamp(3.2rem, 6vw, 5.6rem);
+  }
+
+  .gpuPlate {
+    width: min(70vw, 850px);
+  }
+}

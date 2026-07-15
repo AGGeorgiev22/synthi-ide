@@ -1,0 +1,410 @@
+.authorityFilm {
+  position: relative;
+  scroll-margin-top: 4.5rem;
+  color: #f2efe9;
+  background: var(--vectant-black);
+}
+
+.authorityPrelude {
+  display: grid;
+  width: min(calc(100% - 2rem), 1460px);
+  min-height: 40dvh;
+  margin-inline: auto;
+  padding-block: clamp(5rem, 9vw, 8rem);
+  align-content: center;
+}
+
+.authorityPrelude h2 {
+  max-width: 13ch;
+  margin: 0;
+  color: #efede8;
+  font-family: var(--font-display);
+  font-size: clamp(3.6rem, 7.2vw, 8rem);
+  font-weight: 500;
+  line-height: 0.86;
+  letter-spacing: -0.062em;
+}
+
+.authorityPreludeWord {
+  display: inline-block;
+  opacity: 0.12;
+}
+
+.authorityStack {
+  position: relative;
+  height: 318dvh;
+}
+
+.authorityStage {
+  position: sticky;
+  top: 0;
+  height: 100dvh;
+  overflow: hidden;
+  background: var(--vectant-black);
+  isolation: isolate;
+}
+
+.authorityScene {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  visibility: hidden;
+  opacity: 0;
+  background: var(--vectant-black);
+}
+
+.authorityScene:first-child {
+  z-index: 2;
+  visibility: visible;
+  opacity: 1;
+}
+
+.authoritySceneMedia {
+  position: absolute;
+  inset: clamp(4.65rem, 7vh, 5.8rem) clamp(0.7rem, 1.5vw, 1.6rem) clamp(4.5rem, 7vh, 5.6rem);
+  overflow: hidden;
+  background: #08090d;
+  box-shadow:
+    inset 0 0 0 1px rgb(255 255 255 / 0.1),
+    0 32px 90px rgb(0 0 0 / 0.36);
+  transform-origin: center center;
+  will-change: transform;
+}
+
+.authoritySceneImage {
+  object-fit: cover;
+}
+
+.authoritySceneCopy {
+  position: absolute;
+  z-index: 4;
+  left: clamp(1.8rem, 5vw, 5.4rem);
+  bottom: clamp(6.2rem, 11vh, 8.6rem);
+  max-width: 50rem;
+  padding: 1.15rem 1.35rem 1.3rem;
+  background: linear-gradient(90deg, rgb(5 6 9 / 0.94), rgb(5 6 9 / 0.72) 72%, transparent);
+  will-change: transform, opacity, clip-path;
+}
+
+.authoritySceneCopy::before {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 1px;
+  background: var(--vectant-accent);
+  content: "";
+}
+
+.authoritySceneCopy h2 {
+  max-width: 12ch;
+  margin: 0;
+  color: #f2efe9;
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 5.6vw, 6.5rem);
+  font-weight: 500;
+  line-height: 0.87;
+  letter-spacing: -0.058em;
+  text-wrap: balance;
+}
+
+.authoritySceneCopy p {
+  max-width: 36rem;
+  margin: 1rem 0 0;
+  color: rgb(226 227 231 / 0.7);
+  font-size: clamp(0.92rem, 1.15vw, 1.06rem);
+  line-height: 1.56;
+}
+
+.authorityChain {
+  position: absolute;
+  z-index: 8;
+  right: clamp(1.4rem, 3vw, 3rem);
+  bottom: 0;
+  left: clamp(1.4rem, 3vw, 3rem);
+  min-height: clamp(4rem, 6vh, 5rem);
+  padding-top: 1.3rem;
+  color: rgb(231 233 239 / 0.68);
+  background: var(--vectant-black);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.09);
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+}
+
+.authorityChainTrack {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 1px;
+  background: rgb(255 255 255 / 0.12);
+}
+
+.authorityChainTrack > i {
+  position: absolute;
+  inset: 0;
+  background: var(--vectant-accent);
+  box-shadow: 0 0 11px rgb(var(--vectant-accent-rgb) / 0.64);
+}
+
+.authorityChainTrack > b {
+  position: absolute;
+  top: 0;
+  transform: translate(-50%, -50%);
+}
+
+.authorityChainTrack em {
+  display: block;
+  width: 9px;
+  height: 9px;
+  border: 2px solid var(--vectant-black);
+  border-radius: 50%;
+  background: var(--vectant-accent);
+  box-shadow: 0 0 0 1px var(--vectant-accent), 0 0 14px rgb(var(--vectant-accent-rgb) / 0.78);
+}
+
+.authorityChainStates {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  align-items: center;
+  gap: 1rem;
+}
+
+.authorityChainStates span {
+  font-size: 0.59rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.authorityChainStates span:not(:first-child) {
+  text-align: center;
+}
+
+.authorityChainStates span:last-child {
+  text-align: right;
+}
+
+.authorityCorridor {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.authorityCorridor path {
+  fill: none;
+  stroke: rgb(var(--vectant-accent-rgb) / 0.19);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.authorityShotRadar .authoritySceneImage {
+  object-position: center 20%;
+}
+
+.authorityShotBlackBox .authoritySceneMedia {
+  left: 34%;
+}
+
+.authorityShotBlackBox .authoritySceneImage {
+  object-position: 74% 48%;
+}
+
+.authorityShotBlackBox .authoritySceneCopy {
+  top: 50%;
+  right: 68%;
+  bottom: auto;
+  left: clamp(1.8rem, 5vw, 5.4rem);
+  max-width: 30rem;
+  transform: translateY(-50%);
+}
+
+.authorityShotBlackBox .authoritySceneCopy h2 {
+  font-size: clamp(3rem, 4.8vw, 5.6rem);
+}
+
+.authorityShotProvenance .authoritySceneMedia {
+  top: 26%;
+}
+
+.authorityShotProvenance .authoritySceneImage {
+  object-position: center 9%;
+}
+
+.authorityShotProvenance .authoritySceneCopy {
+  top: clamp(5.8rem, 9vh, 7.6rem);
+  bottom: auto;
+  max-width: 68rem;
+}
+
+.authorityShotProvenance .authoritySceneCopy h2 {
+  max-width: 14ch;
+  font-size: clamp(3rem, 5vw, 5.8rem);
+}
+
+.authorityShotLanding .authoritySceneImage {
+  object-position: center 67%;
+}
+
+.authorityShotLanding .authoritySceneCopy {
+  right: clamp(1.8rem, 5vw, 5.4rem);
+  left: auto;
+  width: min(42rem, 48vw);
+}
+
+@media (max-width: 900px) and (min-width: 768px) {
+  .authoritySceneCopy h2 {
+    font-size: clamp(3rem, 6.6vw, 5rem);
+  }
+
+  .authorityShotBlackBox .authoritySceneCopy {
+    right: 62%;
+  }
+}
+
+@media (max-width: 767px) {
+  .authorityPrelude {
+    width: calc(100% - 2rem);
+    min-height: 48dvh;
+    padding-block: 6.5rem 5.5rem;
+  }
+
+  .authorityPrelude h2 {
+    max-width: 10ch;
+    font-size: clamp(3.3rem, 15.5vw, 4.8rem);
+    line-height: 0.88;
+  }
+
+  .authorityStack {
+    height: 286dvh;
+  }
+
+  .authoritySceneMedia,
+  .authorityShotBlackBox .authoritySceneMedia,
+  .authorityShotProvenance .authoritySceneMedia {
+    inset: 4.35rem 0.5rem 4.7rem;
+  }
+
+  .authoritySceneImage {
+    width: 980px !important;
+    max-width: none !important;
+    object-fit: cover;
+  }
+
+  .authorityShotRadar .authoritySceneImage {
+    object-position: 24% 18%;
+  }
+
+  .authorityShotBlackBox .authoritySceneImage {
+    object-position: 78% 48%;
+  }
+
+  .authorityShotProvenance .authoritySceneImage {
+    object-position: 24% 8%;
+  }
+
+  .authorityShotLanding .authoritySceneImage {
+    object-position: 80% 69%;
+  }
+
+  .authoritySceneCopy,
+  .authorityShotBlackBox .authoritySceneCopy,
+  .authorityShotProvenance .authoritySceneCopy,
+  .authorityShotLanding .authoritySceneCopy {
+    top: auto;
+    right: 0.95rem;
+    bottom: 5.35rem;
+    left: 0.95rem;
+    width: auto;
+    max-width: none;
+    padding: 0.9rem 0.9rem 1rem;
+    transform: none;
+  }
+
+  .authoritySceneCopy h2,
+  .authorityShotBlackBox .authoritySceneCopy h2,
+  .authorityShotProvenance .authoritySceneCopy h2 {
+    max-width: 10ch;
+    font-size: clamp(2.7rem, 12.8vw, 3.8rem);
+    line-height: 0.88;
+  }
+
+  .authoritySceneCopy p {
+    max-width: 23rem;
+    margin-top: 0.78rem;
+    font-size: 0.84rem;
+    line-height: 1.48;
+  }
+
+  .authorityChain {
+    right: 0.75rem;
+    left: 0.75rem;
+    min-height: 4.15rem;
+    padding-top: 1.25rem;
+  }
+
+  .authorityChainStates {
+    gap: 0.3rem;
+  }
+
+  .authorityChainStates span {
+    font-size: 0.5rem;
+    letter-spacing: 0.04em;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .authorityPreludeWord {
+    opacity: 1;
+  }
+
+  .authorityStack {
+    height: auto;
+    padding-inline: 0.5rem;
+  }
+
+  .authorityStage {
+    position: relative;
+    height: auto;
+    overflow: visible;
+  }
+
+  .authorityScene,
+  .authorityScene:first-child {
+    position: relative;
+    inset: auto;
+    min-height: 78dvh;
+    margin-bottom: 0.5rem;
+    visibility: visible !important;
+    opacity: 1 !important;
+    clip-path: none !important;
+  }
+
+  .authoritySceneMedia,
+  .authorityShotBlackBox .authoritySceneMedia,
+  .authorityShotProvenance .authoritySceneMedia {
+    inset: 0;
+    transform: none !important;
+  }
+
+  .authoritySceneCopy,
+  .authorityShotBlackBox .authoritySceneCopy,
+  .authorityShotProvenance .authoritySceneCopy,
+  .authorityShotLanding .authoritySceneCopy {
+    top: auto;
+    right: clamp(1rem, 4vw, 4rem);
+    bottom: clamp(1.5rem, 5vw, 4rem);
+    left: clamp(1rem, 4vw, 4rem);
+    width: auto;
+    max-width: 50rem;
+    opacity: 1 !important;
+    clip-path: none !important;
+    transform: none !important;
+  }
+
+  .authorityChain,
+  .authorityCorridor {
+    display: none;
+  }
+}

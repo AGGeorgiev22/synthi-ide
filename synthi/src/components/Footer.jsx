@@ -1,111 +1,86 @@
 import Link from "next/link";
+import { ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
+
 import { Logo } from "@/components/Logo";
+import styles from "@/components/Footer.module.css";
+import { PILOT_EMAIL } from "@/lib/pilot";
 
-const PILOT_EMAIL = "aleksandar.kolev@vectant.dev";
-const PILOT_MAILTO = `mailto:${PILOT_EMAIL}?subject=${encodeURIComponent("Vectant proof pilot")}`;
-
-const COLUMNS = [
+const GROUPS = [
   {
-    title: "Product",
+    label: "Product",
     links: [
-      { label: "Runtime", href: "#runtime" },
-      { label: "Collab", href: "#collaboration" },
+      { label: "Guarded run", href: "#guarded-run" },
       { label: "GPU HMR", href: "#gpu-hmr" },
-      { label: "Proof", href: "#proof" },
-      { label: "Licenses", href: "#licenses" },
-      { label: "Trust", href: "#trust" },
-      { label: "Pilot", href: "#pricing" },
+      { label: "Buyer outcomes", href: "#systems" },
+      { label: "Who it is for", href: "#teams" },
     ],
   },
   {
-    title: "Resources",
+    label: "Evidence",
     links: [
-      { label: "FAQ", href: "#faq" },
-      { label: "Docs", href: "#waitlist", soon: true },
-      { label: "Changelog", href: "#waitlist", soon: true },
-      { label: "Contact", href: PILOT_MAILTO },
+      { label: "Proof bundle", href: "#proof" },
+      { label: "Technical reference", href: "/docs" },
+      { label: "Enterprise controls", href: "#technical-confidence" },
+      { label: "Technical questions", href: "#faq" },
+    ],
+  },
+  {
+    label: "Company",
+    links: [
+      { label: "Blog", href: "/blog" },
+      { label: "Terms of service", href: "/terms" },
+      { label: "Privacy", href: "/privacy" },
     ],
   },
 ];
 
 export function Footer() {
   return (
-    <footer className="relative border-t border-line bg-bg">
-      <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8">
-        <div className="grid gap-10 md:grid-cols-[1.8fr_1fr_1fr]">
-          <div className="max-w-sm">
-            <Logo />
-            <p className="mt-4 text-[13.5px] leading-relaxed text-ink-faint">
-              A runtime control plane for AI agents that need to see, run,
-              hot-reload, recover, earn authority, and prove their work.
-            </p>
-            <div className="mt-5 inline-flex items-center gap-2 font-mono text-[11px] text-ink-faint">
-              <span className="h-1.5 w-1.5 rounded-full bg-cyan shadow-[0_0_8px_#2dd4ee]" />
-              Controlled rollout / early access
-            </div>
+    <footer className={styles.footer}>
+      <div className={styles.footerShell}>
+        <div className={styles.footerLead}>
+          <Link href="/" className={styles.footerBrand} aria-label="Vectant home">
+            <Logo className={styles.footerLogo} markClassName={styles.footerMark} />
+          </Link>
+          <div>
+            <h2>
+              <span>Control the run.</span>
+              <span>Keep the proof.</span>
+            </h2>
+            <a href="#pilot" className={styles.footerAction}>
+              Scope the proof pilot
+              <ArrowUpRight size={17} weight="bold" />
+            </a>
           </div>
-
-          {COLUMNS.map((col) => (
-            <div key={col.title}>
-              <h3 className="font-mono text-[11px] uppercase tracking-[0] text-ink-faint">
-                {col.title}
-              </h3>
-              <ul className="mt-4 space-y-2.5">
-                {col.links.map((l) => {
-                  const isInternalRoute = l.href.startsWith("/");
-                  const content = (
-                    <span className="inline-flex items-center gap-1.5">
-                      {l.label}
-                      {l.soon && (
-                        <span className="rounded border border-line px-1 py-px font-mono text-[9px] uppercase tracking-[0] text-ink-faint">
-                          soon
-                        </span>
-                      )}
-                    </span>
-                  );
-                  const cls = "text-[13.5px] text-ink-dim transition-colors hover:text-ink";
-                  if (isInternalRoute) {
-                    return (
-                      <li key={l.label}>
-                        <Link href={l.href} className={cls}>
-                          {content}
-                        </Link>
-                      </li>
-                    );
-                  }
-                  return (
-                    <li key={l.label}>
-                      <a
-                        href={l.href}
-                        className={cls}
-                        {...(l.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                      >
-                        {content}
-                      </a>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-          ))}
         </div>
 
-        <div className="mt-14 flex flex-col items-start justify-between gap-4 border-t border-line pt-6 sm:flex-row sm:items-center">
-          <p className="text-[12.5px] text-ink-faint">
-            Copyright {new Date().getFullYear()} Vectant. All rights reserved.
-          </p>
-          <div className="flex items-center gap-5">
-            <Link href="/privacy" className="text-[12.5px] text-ink-dim transition-colors hover:text-ink">
-              Privacy
-            </Link>
-            <span className="text-[12.5px] text-ink-faint">Cookie-free analytics</span>
-            <a
-              href="#top"
-              className="inline-flex items-center gap-1.5 text-[12.5px] text-ink-dim transition-colors hover:text-ink"
-            >
-              Back to top
-              <span aria-hidden="true" className="-mt-px text-[13px]">↑</span>
-            </a>
+        <div className={styles.footerDirectory}>
+          {GROUPS.map((group) => (
+            <section key={group.label}>
+              <p>{group.label}</p>
+              <nav aria-label={`${group.label} links`}>
+                {group.links.map((link) => (
+                  link.href.startsWith("/") ? (
+                    <Link key={link.label} href={link.href}>{link.label}</Link>
+                  ) : (
+                    <a key={link.label} href={link.href}>{link.label}</a>
+                  )
+                ))}
+              </nav>
+            </section>
+          ))}
+
+          <section className={styles.footerContact}>
+            <p>Contact</p>
+            <span>Bring the guarded repository. Keep your agent stack.</span>
+            <a href={`mailto:${PILOT_EMAIL}`}>{PILOT_EMAIL}</a>
+          </section>
+        </div>
+
+        <div className={styles.footerLegal}>
+          <p>Copyright {new Date().getFullYear()} Vectant. All rights reserved.</p>
+          <div>
+            <a href="#top">Back to top</a>
           </div>
         </div>
       </div>
