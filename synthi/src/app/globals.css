@@ -61,7 +61,7 @@
   --color-brand: var(--vectant-accent);
   --color-brand-2: var(--vectant-accent-readable);
 
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-satoshi), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, "SF Mono", monospace;
   --font-serif: var(--font-serif-display), "Iowan Old Style", Georgia, serif;
 
