@@ -70,7 +70,7 @@ export function MissionProfiles() {
         gsap.set(profileMedia, { autoAlpha: 0, yPercent: 7, scale: 0.985 });
         gsap.set(profileCopy, { autoAlpha: 0, x: 42 });
         gsap.set(indexRef.current, { autoAlpha: 0, y: -10 });
-        gsap.set(indexItems, { color: "rgba(228, 230, 236, 0.34)" });
+        gsap.set(indexItems, { color: "var(--vectant-ui-muted)" });
         gsap.set(progressRef.current, { scaleX: 0, transformOrigin: "left center" });
 
         timeline
@@ -86,7 +86,7 @@ export function MissionProfiles() {
             timeline
               .to(copyRefs.current[index - 1], { autoAlpha: 0, x: -24, duration: 0.18, ease: "power2.in" }, at)
               .to(previous, { autoAlpha: 0, duration: 0.18 }, at + 0.12)
-              .to(indexItems[index - 1], { color: "rgba(228, 230, 236, 0.34)", duration: 0.16 }, at);
+              .to(indexItems[index - 1], { color: "var(--vectant-ui-muted)", duration: 0.16 }, at);
           }
 
           timeline
