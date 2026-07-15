@@ -13,23 +13,23 @@ gsap.registerPlugin(ScrollTrigger, useGSAP);
 const PROFILES = [
   {
     audience: "Agent platform teams",
-    title: "Run the fleet under one contract.",
+    title: "Run multiple agents under one boundary contract.",
     body: "Operate Claude, Codex, Cursor, and internal runners with shared runtime state, explicit budgets, bounded authority, and a visible kill path.",
-    proof: "Many runners. One control plane.",
+    proof: "Multiple runners. One run contract.",
     image: "/product-proof/browser-workflow-observe-ui.png",
     alt: "Vectant workspace with an attached runtime and observable agent workflow controls",
   },
   {
     audience: "Engineering organizations",
     title: "Parallel work without parallel damage.",
-    body: "Keep shared schemas, APIs, auth, and migrations out of the collision zone. Every landing arrives with its chain of custody.",
+    body: "Keep shared schemas, APIs, auth, and migrations out of overlapping write scopes. Every approved change arrives with its evidence trail.",
     proof: "Shared repository. Ordered mutations.",
     image: "/product-proof/codesite-full-workflow-ui.png",
     alt: "CodeSite airspace map showing concurrent flights, mutation boundaries, collision forecasts, and a landing queue",
   },
   {
     audience: "Security + reliability",
-    title: "Make autonomy earn clearance.",
+    title: "Require proof before authority expands.",
     body: "Hold unsafe writes, replay near-misses, and inspect the evidence before agent work reaches a guarded system or production path.",
     proof: "Proof attached. Shutdown authority visible.",
     image: "/codesite-proof/codesite-black-box-desktop.png",
@@ -121,7 +121,7 @@ export function MissionProfiles() {
         <div className={styles.missionCorridor} aria-hidden="true" />
 
         <header ref={introRef} className={styles.missionIntro}>
-          <h2>When agents stop being experiments, Vectant becomes the tower.</h2>
+          <h2>Production agents need a controlled run.</h2>
           <p>For teams that want more agent throughput without giving away authority.</p>
         </header>
 

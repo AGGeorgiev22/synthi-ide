@@ -114,7 +114,7 @@ export function GpuProofChapter() {
 
         <div ref={introRef} className={styles.gpuIntro}>
           <p>GPU hot reload · synthetic run VCT-SAMPLE-001</p>
-          <h2>Change the kernel. Keep the moment.</h2>
+          <h2>Patch the kernel without resetting live state.</h2>
           <span>A compiled patch moves only when live state, ABI, output, and evidence agree.</span>
         </div>
 

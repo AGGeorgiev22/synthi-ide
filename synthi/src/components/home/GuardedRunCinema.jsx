@@ -326,7 +326,7 @@ export function GuardedRunCinema() {
               </svg>
               <div ref={branchStatusRef} className={styles.branchStatus}>
                 <span>Rejected branch retained</span>
-                <strong>Reason rejoins the final proof bundle</strong>
+                <strong>The rejection reason stays in the final proof bundle</strong>
               </div>
             </figure>
           </article>
@@ -338,7 +338,7 @@ export function GuardedRunCinema() {
           >
             <div className={styles.sceneCopy}>
               <span>After execution</span>
-              <h3>The change leaves with its reasons.</h3>
+              <h3>Approved and rejected paths leave in one proof bundle.</h3>
               <p>The approved GPU diff, rejected ABI branch, retained state, and review trail travel together.</p>
               <dl className={styles.proofList}>
                 {PROOF_BUNDLE.map(([term, detail]) => (
