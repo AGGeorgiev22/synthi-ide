@@ -93,7 +93,7 @@
 .hero time {
   display: block;
   margin-top: 2rem;
-  color: rgb(230 224 216 / 0.44);
+  color: var(--vectant-ui-text);
   font-family: var(--font-geist-mono), ui-monospace, monospace;
   font-size: 0.64rem;
   letter-spacing: 0.04em;
@@ -131,7 +131,7 @@
 
 .summary span {
   margin-top: 1rem;
-  color: rgb(230 224 216 / 0.57);
+  color: var(--vectant-ink-secondary);
   font-size: 0.79rem;
   line-height: 1.55;
 }
@@ -166,7 +166,7 @@
 }
 
 .term p {
-  color: rgb(230 224 216 / 0.66);
+  color: var(--vectant-ink-secondary);
   font-size: 0.91rem;
   line-height: 1.7;
 }
@@ -188,7 +188,7 @@
 .contact span {
   display: block;
   margin-top: 0.6rem;
-  color: rgb(230 224 216 / 0.57);
+  color: var(--vectant-ink-secondary);
   font-size: 0.87rem;
 }
 
@@ -212,7 +212,7 @@
   grid-column: 1 / -1;
   width: fit-content;
   margin-top: 1.25rem;
-  color: rgb(230 224 216 / 0.48);
+  color: var(--vectant-ui-text);
   font-family: var(--font-geist-mono), ui-monospace, monospace;
   font-size: 0.64rem;
 }
