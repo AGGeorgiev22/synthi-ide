@@ -4,7 +4,7 @@ const QUESTIONS = [
   {
     topic: "Agents",
     question: "Does Vectant replace our coding agents?",
-    answer: "No. Vectant is the governed runtime around them. Keep Codex, Claude Code, terminal agents, or your own stack while Vectant manages workspace state, authority, and proof.",
+    answer: "No. Vectant governs the client path you bring to a pilot. The exact Codex, Claude Code, terminal-agent, or internal-runner path is validated and written into the pilot boundary before the run.",
   },
   {
     topic: "Pilot",

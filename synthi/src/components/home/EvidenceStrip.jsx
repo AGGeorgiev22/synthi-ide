@@ -50,7 +50,7 @@ export function EvidenceStrip() {
         <div className={styles.evidenceGrid}>
           <article className={`${styles.evidenceCell} ${styles.agentCell}`}>
             <div>
-              <span>Published integrations</span>
+              <span>Pilot-scoped integrations</span>
               <strong>No generally supported list is claimed yet. Candidate paths are validated per pilot.</strong>
             </div>
             <ul aria-label="Candidate agent clients to validate for a pilot">

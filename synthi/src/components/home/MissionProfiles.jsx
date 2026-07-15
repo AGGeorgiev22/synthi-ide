@@ -14,7 +14,7 @@ const PROFILES = [
   {
     audience: "Agent platform teams",
     title: "Run multiple agents under one boundary contract.",
-    body: "Operate Claude, Codex, Cursor, and internal runners with shared runtime state, explicit budgets, bounded authority, and a visible kill path.",
+    body: "A pilot validates the exact client paths you bring—such as Claude Code, Codex, Cursor, or an internal runner—then records shared state, budgets, and authority inside one boundary contract.",
     proof: "Multiple runners. One run contract.",
     image: "/product-proof/browser-workflow-observe-ui.png",
     alt: "Vectant workspace with an attached runtime and observable agent workflow controls",

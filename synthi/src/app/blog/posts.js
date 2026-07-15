@@ -331,7 +331,7 @@ export const POSTS = [
       {
         heading: "A narrower current scope",
         body: [
-          "Vectant's counterfactual-memory work is implemented in the CodeSite and Dojo proof workflow. It compares an observed path with a constrained alternative so an operator can inspect why one action was preferred over another.",
+          "The public CodeSite proof mockup demonstrates a counterfactual-memory workflow. It compares an observed path with a constrained alternative so an operator can inspect why one action was preferred over another; Dojo remains exploratory.",
           "This is deliberately not presented as a universal control plane. The useful claim is smaller: alternate paths can become evidence when their inputs, limits, and result are visible.",
         ],
       },
@@ -361,7 +361,7 @@ export const POSTS = [
       {
         heading: "Bring the stack you already use",
         body: [
-          "Vectant supports a bring-your-own-agent approach, routes compatible VSIX extensions into the appropriate extension runtime, and lets teams compose their workspace around the tools they actually need. The operating question is not which agent won. It is whether the system made the work governable.",
+          "A Vectant pilot scopes the agent and extension paths a team wants to bring, then validates compatibility before those paths enter the boundary contract. The operating question is not which agent won. It is whether the system made the work governable.",
         ],
       },
       {
