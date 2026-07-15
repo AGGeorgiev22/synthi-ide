@@ -172,7 +172,11 @@
 }
 
 .agentCell {
-  grid-column: span 5;
+  grid-column: span 8;
+}
+
+.dojo {
+  grid-column: span 4;
 }
 
 .sample {
@@ -180,13 +184,16 @@
 }
 
 .bundle {
+  grid-column: span 5;
+}
+
+.performance {
   grid-column: span 4;
 }
 
 .controls,
-.data,
-.performance {
-  grid-column: span 4;
+.data {
+  grid-column: span 6;
 }
 
 .evidenceCell span {
@@ -272,6 +279,7 @@
   }
 
   .agentCell,
+  .dojo,
   .sample,
   .bundle,
   .controls,
@@ -305,6 +313,7 @@
   }
 
   .agentCell,
+  .dojo,
   .sample,
   .bundle,
   .controls,

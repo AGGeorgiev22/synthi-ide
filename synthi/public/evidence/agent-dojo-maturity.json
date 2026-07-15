@@ -1,0 +1,38 @@
+{
+  "schemaVersion": "vectant.agent-dojo-maturity.v1",
+  "publishedAt": "2026-07-15T00:00:00Z",
+  "claim": "Agent Dojo turns demonstrated workflows into bounded, proof-gated competencies.",
+  "runtimeScope": "repo-local",
+  "productionRuntimeClaims": 0,
+  "maturityClasses": [
+    "executable",
+    "deterministic_projection",
+    "report_only",
+    "planned"
+  ],
+  "implementedExecutableFoundations": [
+    "Skill Cortex graph intermediate representation and graph runtime",
+    "Materialized synthetic Vivarium fixtures and oracle-backed scenario runs",
+    "Wind Tunnel, Evil Twin, and checkride foundations",
+    "Evidence-claim validation and scoped proof issue, validate, revoke, and replay paths",
+    "Proof-gated dispatch and hosted-runtime session authorization foundations",
+    "Case-law guardrail binding and non-mutating Ghost Mode evidence",
+    "Source snapshot and drift tools, controlled codemod and pull-request preparation",
+    "Reviewed API-backed skill-bus execution and governance foundations"
+  ],
+  "deterministicOrReadOnlySurfaces": [
+    "Skill, cortex, and organoid projections",
+    "Scenario and counterfactual generation",
+    "Evidence-ledger and governance reports",
+    "Source-affordance planning"
+  ],
+  "releaseGatesStillOpen": [
+    "Deployed non-loopback MCP-host conformance",
+    "External durable workflow and evidence stores",
+    "Managed-key custody in a deployed KMS or HSM",
+    "Live external chaos, soak, performance, privacy, and compliance evidence",
+    "Complete production operator workflows",
+    "Broad arbitrary-application source and API graduation"
+  ],
+  "claimBoundary": "The current evidence proves a repo-local proof-gated competency system and release harness. It does not prove an externally deployed Agent Dojo production runtime."
+}

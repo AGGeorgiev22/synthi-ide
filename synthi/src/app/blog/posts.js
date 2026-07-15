@@ -331,7 +331,7 @@ export const POSTS = [
       {
         heading: "A narrower current scope",
         body: [
-          "The public CodeSite proof mockup demonstrates a counterfactual-memory workflow. It compares an observed path with a constrained alternative so an operator can inspect why one action was preferred over another; Dojo remains exploratory.",
+          "The public CodeSite proof demonstrates a bounded counterfactual-memory workflow. Agent Dojo now backs that idea with a repo-local, proof-gated competency runtime: executable Skill Cortex graphs, materialized synthetic Vivarium scenarios, oracle-backed checkrides, evidence-aware proof validation, and non-mutating shadow evidence. Deployed non-loopback production conformance remains an explicit release gate.",
           "This is deliberately not presented as a universal control plane. The useful claim is smaller: alternate paths can become evidence when their inputs, limits, and result are visible.",
         ],
       },

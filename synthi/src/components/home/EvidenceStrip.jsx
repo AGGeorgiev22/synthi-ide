@@ -6,10 +6,10 @@ import styles from "@/components/home/EvidenceStrip.module.css";
 
 const EVIDENCE_LINKS = [
   {
-    key: "performance",
-    label: "Verified evidence integrity",
-    value: "9 / 9 public bundle artifacts match their published SHA-256 digests",
-    href: "/sample-proof/integrity-report.json",
+    key: "dojo",
+    label: "Agent Dojo maturity",
+    value: "Executable Skill Cortex and synthetic Vivarium proof, with external production gates still open",
+    href: "/evidence/agent-dojo-maturity.json",
   },
   {
     key: "sample",
@@ -23,6 +23,12 @@ const EVIDENCE_LINKS = [
     value: "Plan, provenance, runtime events, decision trail, and methodology",
     href: "/sample-guarded-run-proof.json",
     download: true,
+  },
+  {
+    key: "performance",
+    label: "Verified evidence integrity",
+    value: "9 / 9 public bundle artifacts match their published SHA-256 digests",
+    href: "/sample-proof/integrity-report.json",
   },
   {
     key: "controls",
