@@ -53,7 +53,7 @@ export function FinalApproach() {
     () => {
       const media = gsap.matchMedia();
 
-      media.add("(min-width: 768px) and (prefers-reduced-motion: no-preference)", () => {
+      media.add("(min-width: 1200px) and (prefers-reduced-motion: no-preference)", () => {
         gsap.set(surfaceRef.current, { autoAlpha: 0.18, scale: 1.025 });
         gsap.set(atmosphereRef.current, { scale: 1.09, yPercent: 2.5 });
         gsap.set(copyRef.current, { autoAlpha: 0, y: 54 });

@@ -83,7 +83,7 @@
   margin: 0;
   color: #f2efe9;
   font-family: var(--font-display);
-  font-size: clamp(3.15rem, 3.65vw, 4.75rem);
+  font-size: clamp(2.25rem, 3vw, 4.75rem);
   font-weight: 500;
   line-height: 0.85;
   letter-spacing: -0.067em;
@@ -318,7 +318,13 @@
   height: auto;
 }
 
-@media (max-width: 767px) {
+@media (min-width: 1564px) {
+  .finalCopy h2 {
+    font-size: clamp(3rem, calc(5.84vw - 2.7rem), 4.75rem);
+  }
+}
+
+@media (max-width: 1199px) {
   .finalApproach {
     min-height: 0;
   }
@@ -430,7 +436,7 @@
   }
 
   .finalCopy h2 {
-    font-size: clamp(2.8rem, 9vh, 4.3rem);
+    font-size: clamp(2.25rem, min(3vw, 9vh), 4.3rem);
   }
 
   .finalCopy > p {
