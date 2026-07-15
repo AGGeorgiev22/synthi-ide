@@ -149,11 +149,11 @@
 .featuredCopy h2 {
   margin: 1rem 0 1.2rem;
   color: #f4eee7;
-  font-family: var(--font-display);
-  font-size: clamp(2.2rem, 3.45vw, 3.6rem);
-  font-weight: 400;
-  letter-spacing: -0.025em;
-  line-height: 1;
+  font-family: var(--font-sans);
+  font-size: clamp(2.1rem, 3.2vw, 3.4rem);
+  font-weight: 650;
+  letter-spacing: -0.04em;
+  line-height: 1.03;
 }
 
 .featuredCopy > p:not(:first-child),
@@ -254,11 +254,11 @@
 .post h3 {
   margin: 0.9rem 0 0.95rem;
   color: #f4eee7;
-  font-family: var(--font-display);
-  font-size: clamp(1.8rem, 3.1vw, 3.2rem);
-  font-weight: 500;
-  letter-spacing: -0.055em;
-  line-height: 0.98;
+  font-family: var(--font-sans);
+  font-size: clamp(1.7rem, 2.8vw, 2.9rem);
+  font-weight: 620;
+  letter-spacing: -0.042em;
+  line-height: 1.05;
 }
 
 .post h3 a {
