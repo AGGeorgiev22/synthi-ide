@@ -34,7 +34,7 @@
 
 .confidenceHeader p {
   max-width: 42rem;
-  color: rgb(226 228 234 / 0.58);
+  color: var(--vectant-ink-secondary);
   font-size: 0.92rem;
   line-height: 1.65;
 }
@@ -165,7 +165,7 @@
 
 .confidenceInner dd {
   margin: 0.65rem 0 0;
-  color: rgb(226 228 234 / 0.56);
+  color: var(--vectant-ink-secondary);
   font-size: 0.76rem;
   line-height: 1.58;
 }

@@ -38,7 +38,7 @@
 .fieldNotesHeader p {
   max-width: 29rem;
   margin: 0;
-  color: rgb(228 230 236 / 0.62);
+  color: var(--vectant-ink-secondary);
   font-size: clamp(0.94rem, 1.08vw, 1.04rem);
   line-height: 1.62;
 }
@@ -177,7 +177,7 @@
   max-width: 36rem;
   margin: 0;
   padding: 0 clamp(1.35rem, 2.3vw, 2.25rem) clamp(2rem, 3vw, 3rem);
-  color: rgb(224 226 232 / 0.64);
+  color: var(--vectant-ink-secondary);
   font-size: 0.94rem;
   line-height: 1.68;
 }

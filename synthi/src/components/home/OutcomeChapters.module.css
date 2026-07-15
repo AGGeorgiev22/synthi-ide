@@ -51,7 +51,7 @@
 
 .outcomesHeader p {
   max-width: 40rem;
-  color: rgb(226 228 234 / 0.57);
+  color: var(--vectant-ink-secondary);
   font-size: 0.92rem;
   line-height: 1.6;
 }
@@ -195,7 +195,7 @@
 }
 
 .outcomeCopy p {
-  color: rgb(226 228 234 / 0.62);
+  color: var(--vectant-ink-secondary);
   font-size: 0.82rem;
   line-height: 1.55;
 }

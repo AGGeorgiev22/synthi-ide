@@ -33,7 +33,7 @@
 
 .evidenceHeader p {
   max-width: 39rem;
-  color: rgb(226 228 234 / 0.58);
+  color: var(--vectant-ink-secondary);
   font-size: 0.92rem;
   line-height: 1.6;
 }
