@@ -114,7 +114,7 @@ export function CinematicHero() {
           )
           .to(
             earlyProofRef.current,
-            { autoAlpha: 0.94, scale: 1, xPercent: 0, yPercent: 0, duration: 0.2, ease: "power3.out" },
+            { autoAlpha: 1, scale: 1, xPercent: 0, yPercent: 0, duration: 0.24, ease: "power3.out" },
             0.12,
           )
           .to(
@@ -125,7 +125,7 @@ export function CinematicHero() {
           .to(
             earlyProofRef.current,
             { autoAlpha: 0, scale: 0.96, xPercent: -7, yPercent: -4, duration: 0.16, ease: "power2.in" },
-            0.56,
+            0.6,
           )
           .addLabel("conflict", 0.69)
           .to(conflictRef.current, { autoAlpha: 1, scale: 1.15, duration: 0.07, ease: "power3.out" }, "conflict")
@@ -238,6 +238,7 @@ export function CinematicHero() {
               src="/codesite-proof/codesite-radar-desktop.png"
               alt="Vectant CodeSite radar forecasting collisions before a protected path is mutated"
               fill
+              quality={95}
               sizes="(max-width: 767px) 82vw, 34vw"
               className={styles.cinemaEarlyProofImage}
             />
@@ -306,7 +307,8 @@ export function CinematicHero() {
                 src="/product-proof/codesite-full-workflow-ui.png"
                 alt="Vectant CodeSite showing a live authority map, landing queue, and collision forecast"
                 fill
-                sizes="(max-width: 767px) 1120px, 100vw"
+                quality={95}
+                sizes="100vw"
                 className={styles.cinemaProductImage}
               />
             </div>

@@ -34,7 +34,7 @@
 
 .confidenceHeader p {
   max-width: 42rem;
-  color: rgb(226 228 234 / 0.58);
+  color: var(--vectant-ink-secondary);
   font-size: 0.92rem;
   line-height: 1.65;
 }
@@ -165,23 +165,26 @@
 
 .confidenceInner dd {
   margin: 0.65rem 0 0;
-  color: rgb(226 228 234 / 0.56);
+  color: var(--vectant-ink-secondary);
   font-size: 0.76rem;
   line-height: 1.58;
 }
 
 .confidenceInner figure {
   position: relative;
-  min-height: 12rem;
+  aspect-ratio: 72 / 55;
+  min-height: 0;
   margin: 2rem 0 0;
   overflow: hidden;
-  background: var(--vectant-black);
-  box-shadow: 0 0 0 1px rgb(255 255 255 / 0.09);
+  background: var(--vectant-black-elevated);
+  box-shadow:
+    0 0 0 1px var(--vectant-border),
+    0 18px 48px rgb(0 0 0 / 0.24);
 }
 
 .confidenceInner figure img {
-  object-fit: cover;
-  object-position: center 14%;
+  object-fit: contain;
+  object-position: center;
 }
 
 .confidenceCell[data-cell="evidence"] .confidenceInner {
@@ -235,7 +238,4 @@
     padding-top: 0;
   }
 
-  .confidenceInner figure {
-    min-height: 15rem;
-  }
 }

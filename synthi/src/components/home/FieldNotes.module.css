@@ -38,7 +38,7 @@
 .fieldNotesHeader p {
   max-width: 29rem;
   margin: 0;
-  color: rgb(228 230 236 / 0.62);
+  color: var(--vectant-ink-secondary);
   font-size: clamp(0.94rem, 1.08vw, 1.04rem);
   line-height: 1.62;
 }
@@ -133,11 +133,11 @@
   align-self: end;
   max-width: 13ch;
   padding-block: clamp(3rem, 7vh, 5.2rem) 1.4rem;
-  font-family: var(--font-display);
-  font-size: clamp(1.75rem, 2.55vw, 3.1rem);
-  font-weight: 500;
-  line-height: 0.98;
-  letter-spacing: -0.046em;
+  font-family: var(--font-sans);
+  font-size: clamp(1.55rem, 2.1vw, 2.55rem);
+  font-weight: 610;
+  line-height: 1.08;
+  letter-spacing: -0.032em;
   text-wrap: balance;
 }
 
@@ -177,7 +177,7 @@
   max-width: 36rem;
   margin: 0;
   padding: 0 clamp(1.35rem, 2.3vw, 2.25rem) clamp(2rem, 3vw, 3rem);
-  color: rgb(224 226 232 / 0.64);
+  color: var(--vectant-ink-secondary);
   font-size: 0.94rem;
   line-height: 1.68;
 }

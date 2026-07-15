@@ -242,6 +242,7 @@ export function GuardedRunCinema() {
                 src="/product-proof/browser-workflow-observe-ui.png"
                 alt="Vectant attaching an isolated runtime, observation, replay policy, and guarded workspace before execution"
                 fill
+                quality={95}
                 sizes="(max-width: 767px) 100vw, 58vw"
                 className={`${styles.sceneImage} ${styles.boundaryImage}`}
               />
@@ -309,6 +310,7 @@ export function GuardedRunCinema() {
                 src="/codesite-proof/codesite-black-box-desktop.png"
                 alt="Vectant Black Box preserving an allowed read, denied write, escalation, approval, and ordered replay"
                 fill
+                quality={95}
                 sizes="(max-width: 767px) 100vw, 58vw"
                 className={`${styles.sceneImage} ${styles.blackBoxImage}`}
               />
@@ -324,7 +326,7 @@ export function GuardedRunCinema() {
               </svg>
               <div ref={branchStatusRef} className={styles.branchStatus}>
                 <span>Rejected branch retained</span>
-                <strong>Reason rejoins the final proof bundle</strong>
+                <strong>The rejection reason stays in the final proof bundle</strong>
               </div>
             </figure>
           </article>
@@ -336,7 +338,7 @@ export function GuardedRunCinema() {
           >
             <div className={styles.sceneCopy}>
               <span>After execution</span>
-              <h3>The change leaves with its reasons.</h3>
+              <h3>Approved and rejected paths leave in one proof bundle.</h3>
               <p>The approved GPU diff, rejected ABI branch, retained state, and review trail travel together.</p>
               <dl className={styles.proofList}>
                 {PROOF_BUNDLE.map(([term, detail]) => (
@@ -349,6 +351,7 @@ export function GuardedRunCinema() {
                 src="/product-proof/codesite-full-workflow-proof.png"
                 alt="Vectant proof bundle with the reviewed change, authority decisions, runtime state, provenance, and export"
                 fill
+                quality={95}
                 sizes="(max-width: 767px) 100vw, 58vw"
                 className={`${styles.sceneImage} ${styles.proofImage}`}
               />

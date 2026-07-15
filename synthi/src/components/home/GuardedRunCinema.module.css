@@ -76,7 +76,7 @@
 
 .runHeader p {
   max-width: 42rem;
-  color: rgb(226 228 234 / 0.52);
+  color: var(--vectant-ink-secondary);
   font-size: 0.78rem;
   line-height: 1.5;
   text-wrap: pretty;
@@ -123,7 +123,7 @@
   margin-bottom: clamp(2.25rem, 4vh, 3rem);
   grid-template-columns: repeat(3, 1fr);
   align-items: center;
-  color: rgb(226 228 234 / 0.5);
+  color: var(--vectant-ui-text);
   font-family: var(--font-geist-mono), ui-monospace, monospace;
   font-size: 0.56rem;
   letter-spacing: 0.08em;
@@ -223,7 +223,7 @@
 .sceneCopy > p {
   max-width: 33rem;
   margin: 0;
-  color: rgb(226 228 234 / 0.63);
+  color: var(--vectant-ink-secondary);
   font-size: 0.9rem;
   line-height: 1.58;
 }
@@ -234,23 +234,24 @@
   min-height: 25rem;
   margin: 0;
   overflow: hidden;
-  background: var(--vectant-black-raised);
+  background: var(--vectant-black-elevated);
   box-shadow:
-    0 0 0 1px rgb(255 255 255 / 0.13),
+    0 0 0 1px var(--vectant-border),
+    inset 0 0 0 1px rgb(255 255 255 / 0.035),
     0 34px 100px rgb(0 0 0 / 0.48);
 }
 
 .sceneImage {
-  object-fit: cover;
-  object-position: center 14%;
+  object-fit: contain;
+  object-position: center top;
 }
 
 .blackBoxImage {
-  object-position: center 12%;
+  object-position: center top;
 }
 
 .proofImage {
-  object-position: center 10%;
+  object-position: center top;
 }
 
 .sceneMedia figcaption {
@@ -282,9 +283,9 @@
 
 .boundaryList dt,
 .proofList dt {
-  color: rgb(226 228 234 / 0.42);
+  color: var(--vectant-ui-text);
   font-family: var(--font-geist-mono), ui-monospace, monospace;
-  font-size: 0.52rem;
+  font-size: 0.56rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
@@ -321,7 +322,7 @@
 
 .replayReadout p {
   margin: 0;
-  color: rgb(226 228 234 / 0.56);
+  color: var(--vectant-ink-secondary);
   font-size: 0.72rem;
   line-height: 1.45;
 }
@@ -329,9 +330,9 @@
 .replayScrubber {
   display: grid;
   gap: 0.45rem;
-  color: rgb(226 228 234 / 0.48);
+  color: var(--vectant-ui-text);
   font-family: var(--font-geist-mono), ui-monospace, monospace;
-  font-size: 0.52rem;
+  font-size: 0.56rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
@@ -468,14 +469,15 @@
 }
 
 .replay li {
-  color: rgb(226 228 234 / 0.35);
+  color: var(--vectant-ui-text);
   font-family: var(--font-geist-mono), ui-monospace, monospace;
-  font-size: 0.48rem;
+  font-size: 0.54rem;
   letter-spacing: 0.04em;
 }
 
 .replay li[data-active="true"] {
-  color: var(--vectant-accent-readable);
+  color: var(--vectant-ink-primary);
+  font-weight: 700;
 }
 
 .failureBranch {
@@ -621,7 +623,7 @@
   }
 
   .actRail {
-    font-size: 0.48rem;
+    font-size: 0.54rem;
     letter-spacing: 0.04em;
   }
 
@@ -642,16 +644,6 @@
   .sceneMedia {
     height: 72vw;
     min-height: 20rem;
-  }
-
-  .boundaryImage {
-    transform: scale(1.28);
-    transform-origin: 18% 22%;
-  }
-
-  .blackBoxImage {
-    transform: scale(1.16);
-    transform-origin: 62% 24%;
   }
 
   .boundaryList,

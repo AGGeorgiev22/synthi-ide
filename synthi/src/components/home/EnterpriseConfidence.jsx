@@ -104,7 +104,13 @@ export function EnterpriseConfidence() {
 
                 {image ? (
                   <figure>
-                    <Image src={image} alt={alt} fill sizes="(max-width: 767px) 100vw, 44vw" />
+                    <Image
+                      src={image}
+                      alt={alt}
+                      fill
+                      quality={95}
+                      sizes="(max-width: 600px) calc(100vw - 4.3rem), (max-width: 900px) 50vw, 56vw"
+                    />
                   </figure>
                 ) : null}
 

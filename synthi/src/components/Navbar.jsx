@@ -222,7 +222,7 @@ export function Navbar() {
             <div className={styles.navIndexShell}>
               <div className={styles.navIndexIntro}>
                 <h2>Inspect the run from boundary to proof.</h2>
-                <p>Open only the system surface you need. Every chapter stays attached to the same controlled flight.</p>
+                <p>Open only the system surface you need. Every section references the same guarded run record.</p>
               </div>
 
               <nav aria-label="Page sections" className={styles.navIndexGroups}>

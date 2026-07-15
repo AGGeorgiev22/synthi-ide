@@ -45,10 +45,10 @@ export function GpuProofChapter() {
         gsap.set(introRef.current, { autoAlpha: 1, y: 0 });
         gsap.set(plateRef.current, { autoAlpha: 0, scale: 0.84, yPercent: 9 });
         gsap.set(pathRef.current, { strokeDasharray: 1, strokeDashoffset: 1 });
-        gsap.set(gates, { color: "rgba(231, 233, 239, 0.36)" });
+        gsap.set(gates, { color: "var(--vectant-ui-muted)" });
         gsap.set(diffRef.current, { autoAlpha: 0, scale: 0.985 });
         gsap.set(afterMaskRef.current, { clipPath: "inset(0 100% 0 0)" });
-        gsap.set(dividerRef.current, { left: "0%", autoAlpha: 0 });
+        gsap.set(dividerRef.current, { x: 0, autoAlpha: 0 });
         gsap.set(verdictRef.current, { autoAlpha: 0, y: 24 });
         gsap.set(latencyRuleRef.current, { scaleX: 0, transformOrigin: "left center" });
         if (latencyRef.current) latencyRef.current.textContent = "0";
@@ -61,15 +61,19 @@ export function GpuProofChapter() {
           .to(gates[0], { color: "#f2efe9", duration: 0.12 }, 0.56)
           .to(gates[1], { color: "#f2efe9", duration: 0.12 }, 0.72)
           .addLabel("patch", 0.84)
-          .to(gates[2], { color: "var(--vectant-ui-text)", duration: 0.1 }, "patch")
+          .to(gates[2], { color: "var(--vectant-ui-action)", duration: 0.1 }, "patch")
           .to(diffRef.current, { autoAlpha: 1, scale: 1, duration: 0.14, ease: "power3.out" }, "patch")
           .to(diffRef.current, { autoAlpha: 0.48, duration: 0.22 }, 1.02)
           .addLabel("compare", 1.08)
           .to(dividerRef.current, { autoAlpha: 1, duration: 0.06 }, "compare")
           .to(afterMaskRef.current, { clipPath: "inset(0 0% 0 0)", duration: 0.58, ease: "power2.inOut" }, "compare")
-          .to(dividerRef.current, { left: "100%", duration: 0.58, ease: "power2.inOut" }, "compare")
+          .to(
+            dividerRef.current,
+            { x: () => Math.max(0, plateRef.current.clientWidth - 1), duration: 0.58, ease: "power2.inOut" },
+            "compare",
+          )
           .to(diffRef.current, { autoAlpha: 0, duration: 0.28 }, 1.34)
-          .to(gates[3], { color: "var(--vectant-ui-text)", duration: 0.12 }, 1.5)
+          .to(gates[3], { color: "var(--vectant-ui-action)", duration: 0.12 }, 1.5)
           .to(verdictRef.current, { autoAlpha: 1, y: 0, duration: 0.24, ease: "power3.out" }, 1.52)
           .to(
             latency,
@@ -84,7 +88,12 @@ export function GpuProofChapter() {
             },
             1.52,
           )
-          .to(latencyRuleRef.current, { scaleX: 1, duration: 0.2, ease: "power3.out" }, 1.8)
+          .addLabel("latencyComplete", 1.82)
+          .to(
+            latencyRuleRef.current,
+            { scaleX: 1, duration: 0.2, ease: "power3.out" },
+            "latencyComplete",
+          )
           .to(dividerRef.current, { autoAlpha: 0, duration: 0.16 }, 1.64)
           .to(plateRef.current, { scale: 1.025, duration: 0.42, ease: "none" }, 1.58)
           .to({}, { duration: 0.24 });
@@ -110,7 +119,7 @@ export function GpuProofChapter() {
 
         <div ref={introRef} className={styles.gpuIntro}>
           <p>GPU hot reload · synthetic run VCT-SAMPLE-001</p>
-          <h2>Change the kernel. Keep the moment.</h2>
+          <h2>Patch the kernel without resetting live state.</h2>
           <span>A compiled patch moves only when live state, ABI, output, and evidence agree.</span>
         </div>
 
@@ -120,6 +129,7 @@ export function GpuProofChapter() {
               src="/product-proof/gpu-hmr-before.png"
               alt="GPU scene before a live hot reload patch"
               fill
+              quality={95}
               sizes="(max-width: 767px) 92vw, (min-width: 1200px) 1040px, 88vw"
               className={styles.gpuImage}
             />
@@ -130,6 +140,7 @@ export function GpuProofChapter() {
               src="/product-proof/gpu-hmr-after.png"
               alt="GPU scene after the compiled patch, with live state retained"
               fill
+              quality={95}
               sizes="(max-width: 767px) 92vw, (min-width: 1200px) 1040px, 88vw"
               className={styles.gpuImage}
             />
@@ -140,6 +151,7 @@ export function GpuProofChapter() {
               src="/product-proof/gpu-hmr-diff.png"
               alt=""
               fill
+              quality={95}
               sizes="(max-width: 767px) 92vw, (min-width: 1200px) 1040px, 88vw"
               className={styles.gpuImage}
             />
@@ -159,7 +171,7 @@ export function GpuProofChapter() {
               <strong>Live state stayed attached.</strong>
             </div>
             <div className={styles.gpuLatency}>
-              <p>Measured edit-to-visual</p>
+              <p>Synthetic edit-to-visual</p>
               <b aria-label="Under 90 milliseconds">
                 <i aria-hidden="true">&lt;</i>
                 <em ref={latencyRef}>90</em>

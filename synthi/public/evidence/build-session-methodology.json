@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "vectant.build-session-methodology.v1",
+  "publishedAt": "2026-07-15T00:00:00Z",
+  "claim": "One session. 11 continuous days. 1.5k production commits. Hard systems-level code.",
+  "scope": {
+    "repository": "Synthi product and systems repository",
+    "verificationSource": "Reachable Git commit objects in the verified repository snapshot",
+    "refScope": "All local and remote refs available at verification time",
+    "productionCommitDefinition": "A commit in the product repository during the session, including runtime code, tests, infrastructure, proof artifacts, and release documentation required to ship or verify the system."
+  },
+  "session": {
+    "firstRecordedCommit": {
+      "sha": "001de3cfe054a2652282469755e983f59b9484ab",
+      "committedAt": "2026-06-08T00:06:59+03:00"
+    },
+    "lastRecordedCommit": {
+      "sha": "ee8ac14586cde5674434827b4ae29b71fb8e78c0",
+      "committedAt": "2026-06-19T23:01:59+03:00"
+    },
+    "elapsed": "11 days, 22 hours, 55 minutes",
+    "display": "11 continuous days",
+    "dayCountingRule": "The headline reports completed 24-hour days between the boundary commits. The remaining 22 hours and 55 minutes are retained in this record."
+  },
+  "commits": {
+    "display": "1.5k",
+    "exactReachableCommitObjects": 1437,
+    "roundingRule": "The headline reports repository commit volume at 0.5k precision; 1,437 is displayed as 1.5k.",
+    "mergeCommits": 29,
+    "nonMergeCommits": 1408,
+    "commitSetSha256": "dd8da7549c55e83fe9d1427fd3722fc1c4aeebb43696dcbc6b9b2dd697b62c07",
+    "countCommand": "git rev-list --all --count --since='2026-06-08T00:00:00+03:00' --until='2026-06-19T23:59:59+03:00'",
+    "digestCommand": "git log --all --format='%H' --since='2026-06-08T00:00:00+03:00' --until='2026-06-19T23:59:59+03:00' | LC_ALL=C sort | sha256sum"
+  },
+  "systemSurfaceTouches": {
+    "method": "A commit is counted once for each top-level product surface it touched, so surface counts can overlap.",
+    "mcp": 1024,
+    "synthi": 181,
+    "docs": 146,
+    "backend": 102,
+    "k8s": 52,
+    "aiBackend": 10
+  },
+  "qualification": "This is an inspectable repository-history build record. It is not a customer performance benchmark, a claim that every commit was deployed independently, or evidence of external production adoption."
+}

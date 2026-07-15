@@ -4,21 +4,27 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --vectant-black: #08070d;
-  --vectant-black-raised: #0d0b14;
-  --vectant-black-elevated: #12101a;
-  --vectant-black-ink: #17131f;
+  --vectant-black: #08090f;
+  --vectant-black-raised: #10121b;
+  --vectant-black-elevated: #151824;
+  --vectant-black-ink: #1b1e2b;
+  --vectant-border: #242638;
+  --vectant-ink-primary: #f1eee8;
+  --vectant-ink-secondary: #a39eb8;
+  --vectant-ink-muted: #7b7694;
   --vectant-ui-action: #b545ff;
   --vectant-ui-action-rgb: 181 69 255;
   --vectant-ui-deep: #4d4870;
   --vectant-ui-deep-rgb: 77 72 112;
   --vectant-ui-text: #8a85a8;
   --vectant-ui-text-rgb: 138 133 168;
-  --vectant-ui-muted: #6c6885;
-  --vectant-ui-muted-rgb: 108 104 133;
+  --vectant-ui-display: #6c6885;
+  --vectant-ui-display-rgb: 108 104 133;
+  --vectant-ui-muted: var(--vectant-ink-muted);
+  --vectant-ui-muted-rgb: 123 118 148;
   --vectant-accent: var(--vectant-ui-deep);
   --vectant-accent-rgb: var(--vectant-ui-deep-rgb);
-  --vectant-accent-display: var(--vectant-ui-muted);
+  --vectant-accent-display: var(--vectant-ui-text);
   --vectant-accent-readable: var(--vectant-ui-text);
   --vectant-accent-pale: var(--vectant-ui-text);
 }
@@ -34,11 +40,11 @@
   --color-panel: var(--vectant-black-elevated);
   --color-panel-2: #181521;
   --color-graphite: #211d2b;
-  --color-ink: #ede9e1;
-  --color-ink-dim: #a8a39a;
-  --color-ink-faint: #6d6963;
-  --color-line: rgba(255, 255, 255, 0.07);
-  --color-line-2: rgba(255, 255, 255, 0.12);
+  --color-ink: var(--vectant-ink-primary);
+  --color-ink-dim: var(--vectant-ink-secondary);
+  --color-ink-faint: var(--vectant-ink-muted);
+  --color-line: var(--vectant-border);
+  --color-line-2: #34374c;
 
   /* theme-adaptive raised fills (replace ad-hoc bg-white/[x]) */
   --color-surface: rgba(255, 255, 255, 0.018);
@@ -55,7 +61,7 @@
   --color-brand: var(--vectant-accent);
   --color-brand-2: var(--vectant-accent-readable);
 
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-satoshi), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, "SF Mono", monospace;
   --font-serif: var(--font-serif-display), "Iowan Old Style", Georgia, serif;
 
@@ -99,11 +105,11 @@ html.light {
   --color-panel: var(--vectant-black-elevated);
   --color-panel-2: #181521;
   --color-graphite: #211d2b;
-  --color-ink: #ede9e1;
-  --color-ink-dim: #a8a39a;
-  --color-ink-faint: #6d6963;
-  --color-line: rgba(255, 255, 255, 0.07);
-  --color-line-2: rgba(255, 255, 255, 0.12);
+  --color-ink: var(--vectant-ink-primary);
+  --color-ink-dim: var(--vectant-ink-secondary);
+  --color-ink-faint: var(--vectant-ink-muted);
+  --color-line: var(--vectant-border);
+  --color-line-2: #34374c;
   --color-surface: rgba(255, 255, 255, 0.018);
   --color-surface-2: rgba(255, 255, 255, 0.035);
   --color-cyan: #2dd4ee;
@@ -255,10 +261,6 @@ html {
 @layer base {
   body {
     @apply bg-bg text-ink;
-  }
-  h1, h2, h3, h4 {
-    font-family: var(--font-display);
-    letter-spacing: 0;
   }
 }
 

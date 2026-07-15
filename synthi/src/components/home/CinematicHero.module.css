@@ -71,8 +71,8 @@
 }
 
 .cinemaEarlyProofImage {
-  object-fit: cover;
-  object-position: center 8%;
+  object-fit: contain;
+  object-position: center top;
 }
 
 .cinemaVisuallyHidden {
@@ -167,7 +167,7 @@
 
 .cinemaEyebrow {
   margin: 0 0 clamp(1.25rem, 2.2vh, 1.8rem);
-  color: rgb(232 233 236 / 0.65);
+  color: var(--vectant-ink-secondary);
   font-family: var(--font-geist-mono), ui-monospace, monospace;
   font-size: 0.64rem;
   font-weight: 650;
@@ -192,7 +192,8 @@
 }
 
 .cinemaHeroCopy h1 span:last-child {
-  color: var(--vectant-accent-display);
+  color: var(--vectant-ui-text);
+  text-shadow: 0 2px 26px rgb(8 9 15 / 0.82);
 }
 
 .cinemaHeroFooter {
@@ -207,7 +208,7 @@
 .cinemaHeroFooter p {
   max-width: 36rem;
   margin: 0;
-  color: rgb(225 226 230 / 0.68);
+  color: var(--vectant-ink-secondary);
   font-size: clamp(0.95rem, 1.15vw, 1.08rem);
   line-height: 1.58;
 }
@@ -332,8 +333,8 @@
 }
 
 .cinemaProductImage {
-  object-fit: cover;
-  object-position: center 17%;
+  object-fit: contain;
+  object-position: center;
 }
 
 .cinemaProductFrame {
@@ -458,10 +459,6 @@
     clip-path: polygon(9% 0, 100% 0, 100% 100%, 0 100%, 0 10%);
   }
 
-  .cinemaEarlyProofImage {
-    object-position: center 5%;
-  }
-
   .cinemaEyebrow {
     margin-bottom: 1rem;
     font-size: 0.58rem;
@@ -529,13 +526,6 @@
 
   .cinemaProductReveal {
     inset: 4.35rem 0.55rem 0.55rem;
-  }
-
-  .cinemaProductImage {
-    width: 1120px !important;
-    max-width: none !important;
-    object-fit: cover;
-    object-position: 43% 15%;
   }
 
   .cinemaProductTelemetry {

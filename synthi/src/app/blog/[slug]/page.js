@@ -51,7 +51,14 @@ export default async function ArticlePage({ params }) {
         </header>
 
         <figure className={styles.figure}>
-          <Image src={post.image} alt={post.alt} fill priority sizes="(max-width: 767px) 100vw, 90vw" />
+          <Image
+            src={post.image}
+            alt={post.alt}
+            fill
+            priority
+            quality={95}
+            sizes="(max-width: 767px) 100vw, 90vw"
+          />
         </figure>
 
         <div className={styles.body}>
@@ -71,7 +78,13 @@ export default async function ArticlePage({ params }) {
                 {section.image ? (
                   <figure className={styles.inlineFigure}>
                     <span className={styles.inlineImage}>
-                      <Image src={section.image} alt={section.alt} fill sizes="(max-width: 767px) 100vw, 62vw" />
+                      <Image
+                        src={section.image}
+                        alt={section.alt}
+                        fill
+                        quality={95}
+                        sizes="(max-width: 767px) 100vw, 62vw"
+                      />
                     </span>
                     <figcaption>{section.caption}</figcaption>
                   </figure>
