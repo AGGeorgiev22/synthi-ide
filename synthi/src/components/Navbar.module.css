@@ -116,6 +116,7 @@
   font-family: var(--font-geist-mono), ui-monospace, monospace;
   font-size: 0.54rem;
   letter-spacing: 0.11em;
+  pointer-events: none;
 }
 
 .navMission i {
