@@ -174,11 +174,25 @@
 
 .outcomeBody figure img {
   object-fit: cover;
-  transition: transform 900ms cubic-bezier(0.16, 1, 0.3, 1);
+  object-position: var(--outcome-focus-position, center);
+  transform: scale(1.16);
+  transform-origin: center;
 }
 
-.outcome[data-active="true"] .outcomeBody figure img {
-  transform: scale(1.025);
+.outcomes[data-entered="true"] .outcome[data-active="true"] .outcomeBody figure img {
+  animation: outcome-context-reveal 1200ms cubic-bezier(0.16, 1, 0.3, 1) 120ms both;
+}
+
+@keyframes outcome-context-reveal {
+  from {
+    object-position: var(--outcome-focus-position, center);
+    transform: scale(1.16);
+  }
+
+  to {
+    object-position: var(--outcome-context-position, center);
+    transform: scale(1.015);
+  }
 }
 
 .outcomeCopy {
@@ -310,5 +324,12 @@
   .outcomeBody,
   .outcomeBody figure img {
     transition-duration: 0.01ms;
+  }
+
+  .outcomeBody figure img,
+  .outcomes[data-entered="true"] .outcome[data-active="true"] .outcomeBody figure img {
+    animation: none;
+    object-position: var(--outcome-context-position, center);
+    transform: scale(1.015);
   }
 }

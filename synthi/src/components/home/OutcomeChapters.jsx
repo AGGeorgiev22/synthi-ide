@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { CaretRight } from "@phosphor-icons/react";
 
@@ -16,6 +16,7 @@ const OUTCOMES = [
     artifact: "Collision forecast, mutation lease, and landing queue",
     image: "/codesite-proof/codesite-radar-desktop.png",
     alt: "Vectant collision radar forecasting agent work before protected paths overlap",
+    focusPosition: "70% 28%",
     position: "center 8%",
   },
   {
@@ -27,6 +28,7 @@ const OUTCOMES = [
     artifact: "Hosted runtime, observation stream, and workspace program state",
     image: "/product-proof/browser-workflow-observe-ui.png",
     alt: "Vectant workspace with a hosted runtime, observation controls, and live environment state",
+    focusPosition: "72% 24%",
     position: "center 14%",
   },
   {
@@ -38,6 +40,7 @@ const OUTCOMES = [
     artifact: "Scoped permissions, temporary leases, and a visible kill path",
     image: "/product-proof/codesite-line-inspector-ui-desktop.png",
     alt: "Vectant line inspector showing scoped authority, transaction state, evidence, and rationale",
+    focusPosition: "70% 34%",
     position: "center 12%",
   },
   {
@@ -49,6 +52,7 @@ const OUTCOMES = [
     artifact: "Black Box event order, provenance, and proof export",
     image: "/codesite-proof/codesite-black-box-desktop.png",
     alt: "Vectant Black Box preserving denied writes, approval decisions, and ordered replay",
+    focusPosition: "72% 26%",
     position: "center 10%",
   },
   {
@@ -60,15 +64,41 @@ const OUTCOMES = [
     artifact: "Pilot integration contract, allowed tools, and validation criteria",
     image: "/product-proof/investor-demo-workflows.png",
     alt: "Vectant workflow surface with connected agent tools, replay, and export controls",
+    focusPosition: "30% 24%",
     position: "center 13%",
   },
 ];
 
 export function OutcomeChapters() {
   const [active, setActive] = useState(0);
+  const [entered, setEntered] = useState(false);
+  const rootRef = useRef(null);
+
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return undefined;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        setEntered(true);
+        observer.disconnect();
+      },
+      { rootMargin: "0px 0px -18% 0px", threshold: 0.12 },
+    );
+
+    observer.observe(root);
+    return () => observer.disconnect();
+  }, []);
 
   return (
-    <section id="systems" className={styles.outcomes} aria-labelledby="outcomes-title">
+    <section
+      id="systems"
+      ref={rootRef}
+      className={styles.outcomes}
+      data-entered={entered}
+      aria-labelledby="outcomes-title"
+    >
       <div className={styles.outcomesShell}>
         <header className={styles.outcomesHeader}>
           <h2 id="outcomes-title">
@@ -111,7 +141,10 @@ export function OutcomeChapters() {
                       alt={outcome.alt}
                       fill
                       sizes="(max-width: 767px) calc(100vw - 2rem), 58vw"
-                      style={{ objectPosition: outcome.position }}
+                      style={{
+                        "--outcome-focus-position": outcome.focusPosition,
+                        "--outcome-context-position": outcome.position,
+                      }}
                     />
                   </figure>
                   <div className={styles.outcomeCopy}>
