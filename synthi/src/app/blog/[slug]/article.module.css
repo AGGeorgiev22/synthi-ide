@@ -115,7 +115,7 @@
 .body aside p {
   max-width: 12rem;
   margin: 0.8rem 0 0;
-  color: rgb(230 224 216 / 0.5);
+  color: var(--vectant-ui-text);
   font-size: 0.78rem;
   line-height: 1.55;
 }
@@ -137,7 +137,7 @@
 .body p {
   max-width: 43rem;
   margin: 0;
-  color: rgb(230 224 216 / 0.67);
+  color: var(--vectant-ink-secondary);
   font-size: clamp(1rem, 1.25vw, 1.1rem);
   line-height: 1.75;
 }
@@ -165,7 +165,7 @@
 .inlineFigure figcaption {
   display: block;
   margin-top: 0.8rem;
-  color: rgb(230 224 216 / 0.56);
+  color: var(--vectant-ui-text);
   font-size: 0.72rem;
   line-height: 1.45;
 }
@@ -226,7 +226,7 @@
   display: block;
   max-width: 36rem;
   margin-top: 0.65rem;
-  color: rgb(230 224 216 / 0.57);
+  color: var(--vectant-ink-secondary);
   font-size: 0.88rem;
   line-height: 1.55;
 }

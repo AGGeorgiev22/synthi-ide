@@ -128,7 +128,7 @@
   align-items: center;
   gap: 0.75rem;
   border-top: 1px solid rgb(230 224 216 / 0.11);
-  color: rgb(230 224 216 / 0.56);
+  color: var(--vectant-ink-secondary);
   font-size: 0.76rem;
   outline: none;
   transition: color 220ms ease, padding-left 220ms ease;
@@ -172,7 +172,7 @@
 .section header > p {
   max-width: 45rem;
   margin: 0;
-  color: rgb(230 224 216 / 0.62);
+  color: var(--vectant-ink-secondary);
   font-size: 0.93rem;
   line-height: 1.68;
 }
@@ -203,7 +203,7 @@
 .fieldList dd,
 .boundaryList dd {
   margin: 0;
-  color: rgb(230 224 216 / 0.6);
+  color: var(--vectant-ink-secondary);
   font-size: 0.85rem;
   line-height: 1.62;
 }
@@ -241,7 +241,7 @@
 
 .stateList p {
   margin: 0;
-  color: rgb(230 224 216 / 0.57);
+  color: var(--vectant-ink-secondary);
   font-size: 0.82rem;
   line-height: 1.62;
 }
@@ -287,7 +287,7 @@
   margin: 1.4rem 0 0;
   padding-left: 1rem;
   border-left: 1px solid var(--vectant-ui-muted);
-  color: rgb(230 224 216 / 0.5);
+  color: var(--vectant-ui-text);
   font-size: 0.77rem;
   line-height: 1.62;
 }
@@ -324,7 +324,7 @@
 .availabilityGrid li {
   padding-top: 0.8rem;
   border-top: 1px solid rgb(230 224 216 / 0.1);
-  color: rgb(230 224 216 / 0.57);
+  color: var(--vectant-ink-secondary);
   font-size: 0.77rem;
   line-height: 1.5;
 }
@@ -335,13 +335,13 @@
   align-items: center;
   justify-content: space-between;
   border-top: 1px solid rgb(230 224 216 / 0.14);
-  color: rgb(230 224 216 / 0.48);
+  color: var(--vectant-ui-text);
   font-family: var(--font-geist-mono), ui-monospace, monospace;
   font-size: 0.62rem;
 }
 
 .footer p { margin: 0; }
-.footer a { color: rgb(230 224 216 / 0.64); }
+.footer a { color: var(--vectant-ink-secondary); }
 
 @media (max-width: 840px) {
   .hero { grid-template-columns: 1fr; }

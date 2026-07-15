@@ -43,7 +43,7 @@
 
 .header nav a,
 .footer a {
-  color: rgb(230 224 216 / 0.58);
+  color: var(--vectant-ui-text);
   font-family: var(--font-geist-mono), ui-monospace, monospace;
   font-size: 0.64rem;
   letter-spacing: 0.035em;
@@ -97,7 +97,7 @@
 
 .hero > span {
   grid-column: 2;
-  color: rgb(230 224 216 / 0.66);
+  color: var(--vectant-ink-secondary);
   font-size: clamp(0.95rem, 1.25vw, 1.12rem);
   line-height: 1.62;
 }
@@ -140,7 +140,7 @@
 .post > div > span {
   display: block;
   margin-top: 1.25rem;
-  color: rgb(230 224 216 / 0.44);
+  color: var(--vectant-ui-text);
   font-family: var(--font-geist-mono), ui-monospace, monospace;
   font-size: 0.62rem;
   letter-spacing: 0.045em;
@@ -159,7 +159,7 @@
 .featuredCopy > p:not(:first-child),
 .post p {
   margin: 0;
-  color: rgb(230 224 216 / 0.63);
+  color: var(--vectant-ink-secondary);
   font-size: 0.95rem;
   line-height: 1.65;
 }
