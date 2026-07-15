@@ -313,7 +313,11 @@ export function GuardedRunCinema() {
                 className={`${styles.sceneImage} ${styles.blackBoxImage}`}
               />
               <svg className={styles.failureBranch} viewBox="0 0 760 420" preserveAspectRatio="none" aria-hidden="true">
-                <path ref={branchPathRef} d="M 60 186 C 226 186 244 330 392 330 C 536 330 548 186 704 186" />
+                <path
+                  ref={branchPathRef}
+                  pathLength="1"
+                  d="M 60 186 C 226 186 244 330 392 330 C 536 330 548 186 704 186"
+                />
                 <circle cx="60" cy="186" r="5" />
                 <circle cx="392" cy="330" r="7" />
                 <circle cx="704" cy="186" r="5" />
