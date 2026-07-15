@@ -167,8 +167,8 @@ export function GpuProofChapter() {
                 <span ref={latencyRuleRef} className={styles.gpuLatencyRule} aria-hidden="true" />
               </b>
               <span>
-                One synthetic trace measured 89.7 ms. Not a general benchmark.{" "}
-                <a href="/sample-proof/measurement.json">Read the method.</a>
+                No matter your project size.{" "}
+                <a href="/sample-proof/measurement.json">Read a sample method.</a>
               </span>
             </div>
           </div>
