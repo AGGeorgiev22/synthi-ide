@@ -44,6 +44,7 @@ export default function BlogPage() {
             alt={featured.alt}
             fill
             priority
+            quality={95}
             sizes="(max-width: 767px) 100vw, 62vw"
           />
         </div>
@@ -65,7 +66,13 @@ export default function BlogPage() {
           {posts.map((post) => (
             <article key={post.slug} className={styles.post}>
               <Link href={`/blog/${post.slug}`} className={styles.postImage}>
-                <Image src={post.image} alt={post.alt} fill sizes="(max-width: 767px) 100vw, 50vw" />
+                <Image
+                  src={post.image}
+                  alt={post.alt}
+                  fill
+                  quality={95}
+                  sizes="(max-width: 767px) 100vw, 50vw"
+                />
               </Link>
               <div>
                 <span>{post.category}</span>

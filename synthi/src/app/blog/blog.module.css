@@ -123,13 +123,8 @@
 
 .featuredImage img,
 .postImage img {
-  object-fit: cover;
-  transition: transform 750ms cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.featured:hover .featuredImage img,
-.post:hover .postImage img {
-  transform: scale(1.035);
+  object-fit: contain;
+  object-position: center;
 }
 
 .featuredCopy {

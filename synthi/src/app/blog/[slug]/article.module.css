@@ -96,7 +96,8 @@
 }
 
 .figure img {
-  object-fit: cover;
+  object-fit: contain;
+  object-position: center;
 }
 
 .body {
@@ -159,7 +160,8 @@
 }
 
 .inlineImage img {
-  object-fit: cover;
+  object-fit: contain;
+  object-position: center;
 }
 
 .inlineFigure figcaption {
