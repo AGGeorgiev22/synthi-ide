@@ -199,11 +199,11 @@
 }
 
 .gpuVerdictCopy strong {
-  font-family: var(--font-display);
+  font-family: var(--font-sans);
   font-size: clamp(1.75rem, 2.9vw, 3.05rem);
-  font-weight: 400;
-  line-height: 0.95;
-  letter-spacing: -0.045em;
+  font-weight: 650;
+  line-height: 1.02;
+  letter-spacing: -0.038em;
 }
 
 .gpuLatency {
