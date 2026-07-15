@@ -133,11 +133,11 @@
   align-self: end;
   max-width: 13ch;
   padding-block: clamp(3rem, 7vh, 5.2rem) 1.4rem;
-  font-family: var(--font-display);
-  font-size: clamp(1.75rem, 2.55vw, 3.1rem);
-  font-weight: 500;
-  line-height: 0.98;
-  letter-spacing: -0.046em;
+  font-family: var(--font-sans);
+  font-size: clamp(1.55rem, 2.1vw, 2.55rem);
+  font-weight: 610;
+  line-height: 1.08;
+  letter-spacing: -0.032em;
   text-wrap: balance;
 }
 
