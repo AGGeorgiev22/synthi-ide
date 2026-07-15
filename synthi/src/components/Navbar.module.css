@@ -327,10 +327,10 @@
 }
 
 .navIndexGroups summary b {
-  font-family: var(--font-display);
+  font-family: var(--font-sans);
   font-size: 0.95rem;
-  font-weight: 500;
-  letter-spacing: -0.02em;
+  font-weight: 700;
+  letter-spacing: -0.01em;
 }
 
 .navIndexGroups summary em {
@@ -418,11 +418,11 @@
 }
 
 .navIndexLinks span {
-  font-family: var(--font-display);
-  font-size: clamp(2.3rem, 4.4vw, 5rem);
-  font-weight: 500;
-  line-height: 0.88;
-  letter-spacing: -0.058em;
+  font-family: var(--font-sans);
+  font-size: clamp(2.05rem, 3.8vw, 4.2rem);
+  font-weight: 620;
+  line-height: 0.94;
+  letter-spacing: -0.045em;
 }
 
 .navIndexLinks em {
