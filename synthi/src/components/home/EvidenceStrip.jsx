@@ -6,6 +6,12 @@ import styles from "@/components/home/EvidenceStrip.module.css";
 
 const EVIDENCE_LINKS = [
   {
+    key: "performance",
+    label: "Verified evidence integrity",
+    value: "9 / 9 public bundle artifacts match their published SHA-256 digests",
+    href: "/sample-proof/integrity-report.json",
+  },
+  {
     key: "sample",
     label: "Sample guarded run",
     value: "Boundary, denied write, approval, and replay",
@@ -29,12 +35,6 @@ const EVIDENCE_LINKS = [
     label: "Data handling",
     value: "Published pilot privacy and connected-service scope",
     href: "/privacy",
-  },
-  {
-    key: "performance",
-    label: "Verified evidence integrity",
-    value: "9 / 9 public bundle artifacts match their published SHA-256 digests",
-    href: "/sample-proof/integrity-report.json",
   },
 ];
 
