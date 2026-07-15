@@ -57,7 +57,7 @@
 .footerBrand:focus-visible {
   box-shadow:
     0 0 0 2px #d8d0c5,
-    0 0 0 4px #175c66;
+    0 0 0 4px var(--vectant-ui-deep);
 }
 
 .footerMark {
@@ -173,7 +173,7 @@
 .footerLegal a:focus-visible {
   box-shadow:
     0 0 0 2px #d8d0c5,
-    0 0 0 4px #175c66;
+    0 0 0 4px var(--vectant-ui-deep);
 }
 
 .footerLegal {
@@ -182,7 +182,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  color: rgb(23 21 19 / 0.56);
+  color: var(--vectant-ui-deep);
   font-family: var(--font-geist-mono), ui-monospace, monospace;
   font-size: 0.6rem;
   letter-spacing: 0.06em;
