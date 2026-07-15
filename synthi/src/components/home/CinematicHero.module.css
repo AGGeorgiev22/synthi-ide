@@ -468,7 +468,7 @@
   }
 
   .cinemaHeroCopy h1 {
-    font-size: clamp(3.1rem, 13.2vw, 4.5rem);
+    font-size: clamp(2.5rem, 12.5vw, 4.5rem);
     line-height: 0.9;
   }
 
