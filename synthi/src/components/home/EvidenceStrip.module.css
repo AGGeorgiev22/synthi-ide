@@ -97,14 +97,14 @@
 }
 
 .buildProofCopy h3 {
-  max-width: 10ch;
+  max-width: 12ch;
   margin: 0;
   color: #f2efe9;
-  font-family: var(--font-display);
-  font-size: clamp(2.7rem, 4.8vw, 5.25rem);
-  font-weight: 450;
-  line-height: 0.9;
-  letter-spacing: -0.055em;
+  font-family: var(--font-satoshi), ui-sans-serif, system-ui, sans-serif;
+  font-size: clamp(2.35rem, 3.6vw, 4.1rem);
+  font-weight: 590;
+  line-height: 0.94;
+  letter-spacing: -0.052em;
   text-wrap: balance;
 }
 
@@ -324,13 +324,14 @@
   }
 
   .buildProof {
-    min-height: 28rem;
+    min-height: 26rem;
     grid-column: 1;
-    gap: 3.5rem;
+    gap: 2.8rem;
   }
 
   .buildProofCopy h3 {
-    font-size: clamp(3rem, 14vw, 4.2rem);
+    max-width: 11ch;
+    font-size: clamp(2.55rem, 11.5vw, 3.4rem);
   }
 
   .buildProofStats > div {

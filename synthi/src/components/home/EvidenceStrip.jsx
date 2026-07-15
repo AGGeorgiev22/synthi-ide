@@ -57,7 +57,7 @@ export function EvidenceStrip() {
           <article className={`${styles.evidenceCell} ${styles.buildProof}`}>
             <div className={styles.buildProofCopy}>
               <span>A real build record · method attached</span>
-              <h3>One session. Hard runtime, security, and systems work.</h3>
+              <h3>One session. Hard systems-level code.</h3>
               <Link href="/evidence/build-session-methodology.json" className={styles.buildProofLink}>
                 Inspect the commit method
                 <ArrowUpRight size={16} weight="bold" aria-hidden="true" />
