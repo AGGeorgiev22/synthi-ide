@@ -331,7 +331,7 @@ export const POSTS = [
       {
         heading: "A narrower current scope",
         body: [
-          "The public CodeSite proof demonstrates a bounded counterfactual-memory workflow. Agent Dojo now backs that idea with a repo-local, proof-gated competency runtime: executable Skill Cortex graphs, materialized synthetic Vivarium scenarios, oracle-backed checkrides, evidence-aware proof validation, and non-mutating shadow evidence. Deployed non-loopback production conformance remains an explicit release gate.",
+          "The public CodeSite proof shows the path an agent took beside a safer alternative. Agent Dojo now turns reviewed workflows into skills that can be tested in synthetic environments, checked against expected results, and issued with scoped proof. That system runs in the repository today; external production deployment remains gated.",
           "This is deliberately not presented as a universal control plane. The useful claim is smaller: alternate paths can become evidence when their inputs, limits, and result are visible.",
         ],
       },

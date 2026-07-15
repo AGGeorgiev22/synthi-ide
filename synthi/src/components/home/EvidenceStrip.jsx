@@ -7,8 +7,8 @@ import styles from "@/components/home/EvidenceStrip.module.css";
 const EVIDENCE_LINKS = [
   {
     key: "dojo",
-    label: "Agent Dojo maturity",
-    value: "Executable Skill Cortex and synthetic Vivarium proof, with external production gates still open",
+    label: "Teach once · prove before reuse",
+    value: "Turn a reviewed workflow into a testable agent skill before it is allowed near real work",
     href: "/evidence/agent-dojo-maturity.json",
   },
   {
@@ -20,20 +20,20 @@ const EVIDENCE_LINKS = [
   {
     key: "bundle",
     label: "Download sample proof",
-    value: "Plan, provenance, runtime events, decision trail, and methodology",
+    value: "What changed, what was denied, who approved it, and how the result was verified",
     href: "/sample-guarded-run-proof.json",
     download: true,
   },
   {
     key: "performance",
-    label: "Verified evidence integrity",
-    value: "9 / 9 public bundle artifacts match their published SHA-256 digests",
+    label: "Files you can verify",
+    value: "All 9 public proof files match their published SHA-256 fingerprints",
     href: "/sample-proof/integrity-report.json",
   },
   {
     key: "controls",
-    label: "Technical reference",
-    value: "Run schema, decision states, boundaries, export, and availability",
+    label: "How a guarded run works",
+    value: "See the boundary, decision states, evidence record, export, and current availability",
     href: "/docs",
   },
   {
@@ -49,15 +49,15 @@ export function EvidenceStrip() {
     <section className={styles.evidence} aria-labelledby="evidence-title">
       <div className={styles.evidenceShell}>
         <header className={styles.evidenceHeader}>
-          <h2 id="evidence-title">Inspect the system before the pilot.</h2>
-          <p>Public samples, policy, pilot-scoping examples, and measured evidence are labeled by what they prove.</p>
+          <h2 id="evidence-title">See the proof before the pilot.</h2>
+          <p>Open the build record, replay a guarded run, and verify the files yourself. Every claim says what it proves and what it does not.</p>
         </header>
 
         <div className={styles.evidenceGrid}>
           <article className={`${styles.evidenceCell} ${styles.buildProof}`}>
             <div className={styles.buildProofCopy}>
-              <span>Internal build record · methodology attached</span>
-              <h3>One session. Hard systems-level code.</h3>
+              <span>A real build record · method attached</span>
+              <h3>One session. Hard runtime, security, and systems work.</h3>
               <Link href="/evidence/build-session-methodology.json" className={styles.buildProofLink}>
                 Inspect the commit method
                 <ArrowUpRight size={16} weight="bold" aria-hidden="true" />
@@ -81,8 +81,8 @@ export function EvidenceStrip() {
             className={`${styles.evidenceCell} ${styles.agentCell}`}
           >
             <div>
-              <span>Synthi MCP · runtime eyes + hands</span>
-              <strong>Observe the live preview, synchronize HMR and source state, then broker runtime actions. Editing stays in the agent.</strong>
+              <span>Let your agent see and operate the live app</span>
+              <strong>Synthi lets coding agents watch fresh app state, click, type, and replay approved workflows without replacing the editor they already use.</strong>
             </div>
             <ul aria-label="Agent clients Synthi MCP is designed to complement">
               {AGENTS.map(({ name, Mark }) => (
