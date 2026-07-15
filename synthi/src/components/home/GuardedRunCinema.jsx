@@ -242,6 +242,7 @@ export function GuardedRunCinema() {
                 src="/product-proof/browser-workflow-observe-ui.png"
                 alt="Vectant attaching an isolated runtime, observation, replay policy, and guarded workspace before execution"
                 fill
+                quality={95}
                 sizes="(max-width: 767px) 100vw, 58vw"
                 className={`${styles.sceneImage} ${styles.boundaryImage}`}
               />
@@ -309,6 +310,7 @@ export function GuardedRunCinema() {
                 src="/codesite-proof/codesite-black-box-desktop.png"
                 alt="Vectant Black Box preserving an allowed read, denied write, escalation, approval, and ordered replay"
                 fill
+                quality={95}
                 sizes="(max-width: 767px) 100vw, 58vw"
                 className={`${styles.sceneImage} ${styles.blackBoxImage}`}
               />
@@ -349,6 +351,7 @@ export function GuardedRunCinema() {
                 src="/product-proof/codesite-full-workflow-proof.png"
                 alt="Vectant proof bundle with the reviewed change, authority decisions, runtime state, provenance, and export"
                 fill
+                quality={95}
                 sizes="(max-width: 767px) 100vw, 58vw"
                 className={`${styles.sceneImage} ${styles.proofImage}`}
               />

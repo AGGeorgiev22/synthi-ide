@@ -234,23 +234,24 @@
   min-height: 25rem;
   margin: 0;
   overflow: hidden;
-  background: var(--vectant-black-raised);
+  background: var(--vectant-black-elevated);
   box-shadow:
-    0 0 0 1px rgb(255 255 255 / 0.13),
+    0 0 0 1px var(--vectant-border),
+    inset 0 0 0 1px rgb(255 255 255 / 0.035),
     0 34px 100px rgb(0 0 0 / 0.48);
 }
 
 .sceneImage {
-  object-fit: cover;
-  object-position: center 14%;
+  object-fit: contain;
+  object-position: center top;
 }
 
 .blackBoxImage {
-  object-position: center 12%;
+  object-position: center top;
 }
 
 .proofImage {
-  object-position: center 10%;
+  object-position: center top;
 }
 
 .sceneMedia figcaption {
@@ -642,16 +643,6 @@
   .sceneMedia {
     height: 72vw;
     min-height: 20rem;
-  }
-
-  .boundaryImage {
-    transform: scale(1.28);
-    transform-origin: 18% 22%;
-  }
-
-  .blackBoxImage {
-    transform: scale(1.16);
-    transform-origin: 62% 24%;
   }
 
   .boundaryList,
