@@ -45,7 +45,7 @@ export function GpuProofChapter() {
         gsap.set(introRef.current, { autoAlpha: 1, y: 0 });
         gsap.set(plateRef.current, { autoAlpha: 0, scale: 0.84, yPercent: 9 });
         gsap.set(pathRef.current, { strokeDasharray: 1, strokeDashoffset: 1 });
-        gsap.set(gates, { color: "rgba(231, 233, 239, 0.36)" });
+        gsap.set(gates, { color: "var(--vectant-ui-muted)" });
         gsap.set(diffRef.current, { autoAlpha: 0, scale: 0.985 });
         gsap.set(afterMaskRef.current, { clipPath: "inset(0 100% 0 0)" });
         gsap.set(dividerRef.current, { x: 0, autoAlpha: 0 });
@@ -61,7 +61,7 @@ export function GpuProofChapter() {
           .to(gates[0], { color: "#f2efe9", duration: 0.12 }, 0.56)
           .to(gates[1], { color: "#f2efe9", duration: 0.12 }, 0.72)
           .addLabel("patch", 0.84)
-          .to(gates[2], { color: "var(--vectant-ui-text)", duration: 0.1 }, "patch")
+          .to(gates[2], { color: "var(--vectant-ui-action)", duration: 0.1 }, "patch")
           .to(diffRef.current, { autoAlpha: 1, scale: 1, duration: 0.14, ease: "power3.out" }, "patch")
           .to(diffRef.current, { autoAlpha: 0.48, duration: 0.22 }, 1.02)
           .addLabel("compare", 1.08)
@@ -73,7 +73,7 @@ export function GpuProofChapter() {
             "compare",
           )
           .to(diffRef.current, { autoAlpha: 0, duration: 0.28 }, 1.34)
-          .to(gates[3], { color: "var(--vectant-ui-text)", duration: 0.12 }, 1.5)
+          .to(gates[3], { color: "var(--vectant-ui-action)", duration: 0.12 }, 1.5)
           .to(verdictRef.current, { autoAlpha: 1, y: 0, duration: 0.24, ease: "power3.out" }, 1.52)
           .to(
             latency,
