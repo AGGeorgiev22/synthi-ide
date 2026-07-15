@@ -18,7 +18,6 @@ const PROFILES = [
     proof: "Many runners. One control plane.",
     image: "/product-proof/browser-workflow-observe-ui.png",
     alt: "Vectant workspace with an attached runtime and observable agent workflow controls",
-    position: "center 18%",
   },
   {
     audience: "Engineering organizations",
@@ -27,7 +26,6 @@ const PROFILES = [
     proof: "Shared repository. Ordered mutations.",
     image: "/product-proof/codesite-full-workflow-ui.png",
     alt: "CodeSite airspace map showing concurrent flights, mutation boundaries, collision forecasts, and a landing queue",
-    position: "center 22%",
   },
   {
     audience: "Security + reliability",
@@ -36,7 +34,6 @@ const PROFILES = [
     proof: "Proof attached. Shutdown authority visible.",
     image: "/codesite-proof/codesite-black-box-desktop.png",
     alt: "CodeSite black box showing a denied write, quarantine action, ordered replay, and attached proof bundle",
-    position: "center 20%",
   },
 ];
 
@@ -145,9 +142,9 @@ export function MissionProfiles() {
                   src={profile.image}
                   alt={profile.alt}
                   fill
+                  quality={95}
                   sizes="(max-width: 767px) 100vw, 62vw"
                   className={styles.missionImage}
-                  style={{ objectPosition: profile.position }}
                 />
               </figure>
 
