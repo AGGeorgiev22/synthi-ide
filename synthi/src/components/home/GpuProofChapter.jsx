@@ -48,7 +48,7 @@ export function GpuProofChapter() {
         gsap.set(gates, { color: "rgba(231, 233, 239, 0.36)" });
         gsap.set(diffRef.current, { autoAlpha: 0, scale: 0.985 });
         gsap.set(afterMaskRef.current, { clipPath: "inset(0 100% 0 0)" });
-        gsap.set(dividerRef.current, { left: "0%", autoAlpha: 0 });
+        gsap.set(dividerRef.current, { x: 0, autoAlpha: 0 });
         gsap.set(verdictRef.current, { autoAlpha: 0, y: 24 });
         gsap.set(latencyRuleRef.current, { scaleX: 0, transformOrigin: "left center" });
         if (latencyRef.current) latencyRef.current.textContent = "0";
@@ -67,7 +67,11 @@ export function GpuProofChapter() {
           .addLabel("compare", 1.08)
           .to(dividerRef.current, { autoAlpha: 1, duration: 0.06 }, "compare")
           .to(afterMaskRef.current, { clipPath: "inset(0 0% 0 0)", duration: 0.58, ease: "power2.inOut" }, "compare")
-          .to(dividerRef.current, { left: "100%", duration: 0.58, ease: "power2.inOut" }, "compare")
+          .to(
+            dividerRef.current,
+            { x: () => Math.max(0, plateRef.current.clientWidth - 1), duration: 0.58, ease: "power2.inOut" },
+            "compare",
+          )
           .to(diffRef.current, { autoAlpha: 0, duration: 0.28 }, 1.34)
           .to(gates[3], { color: "var(--vectant-ui-text)", duration: 0.12 }, 1.5)
           .to(verdictRef.current, { autoAlpha: 1, y: 0, duration: 0.24, ease: "power3.out" }, 1.52)
