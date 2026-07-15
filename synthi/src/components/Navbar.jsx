@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import {
   AnimatePresence,
   motion,
@@ -154,9 +155,9 @@ export function Navbar() {
         aria-label="Primary navigation"
         className={`${styles.navRail} ${scrolled || open ? styles.navRailContracted : ""}`}
       >
-        <a href="#top" aria-label="Vectant home" className={styles.navHome}>
+        <Link href="/" aria-label="Vectant home" className={styles.navHome}>
           <AnimatedLogo expanded={!scrolled && !open} interactive={false} />
-        </a>
+        </Link>
 
         <AnimatePresence mode="wait" initial={false}>
           {!scrolled && !open ? (
