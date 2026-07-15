@@ -166,7 +166,7 @@ export function GpuProofChapter() {
               <strong>Live state stayed attached.</strong>
             </div>
             <div className={styles.gpuLatency}>
-              <p>Measured edit-to-visual</p>
+              <p>Synthetic edit-to-visual</p>
               <b aria-label="Under 90 milliseconds">
                 <i aria-hidden="true">&lt;</i>
                 <em ref={latencyRef}>90</em>
