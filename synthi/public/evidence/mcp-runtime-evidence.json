@@ -1,0 +1,49 @@
+{
+  "schemaVersion": "vectant.mcp-runtime-evidence.v1",
+  "publishedAt": "2026-07-15T00:00:00Z",
+  "positioning": "Synthi gives coding agents eyes and hands inside the running workspace while the agent keeps its own editor, filesystem, version control, and reasoning loop.",
+  "responsibilityBoundary": {
+    "agentOwns": [
+      "Code editing and file operations",
+      "Version-control decisions",
+      "Planning and reasoning",
+      "Choice of client or agent harness"
+    ],
+    "synthiProvides": [
+      "Live preview and screenshot observation",
+      "HMR, lifecycle, event-log, and source-state synchronization",
+      "Located mouse, keyboard, drag, wheel, and browser actions",
+      "Runtime compile triggers and deterministic verification predicates",
+      "Taught workflow contracts, generated Playwright, and app-specific MCP tools"
+    ]
+  },
+  "implementedRuntimeLoop": {
+    "observation": ["screenshot", "event log", "lifecycle", "HMR", "source state", "usage"],
+    "action": ["mouse", "keyboard", "drag", "wheel", "compile trigger", "saved browser workflow"],
+    "synchronization": ["post-HMR frame barrier", "source-state attribution", "optional input acknowledgement"]
+  },
+  "internalRepoLocalHostedRuntimeSweep": {
+    "seededProjects": 48,
+    "failedChecks": 0,
+    "generatedPlaywrightExportsExecuted": 46,
+    "freshMcpPrivateWorkflowCallsCompleted": 46,
+    "visualReplays": 27
+  },
+  "mcpOnlyCodexAcceptance": {
+    "hostedAttach": true,
+    "localAttach": false,
+    "privateWorkflowToolCalled": true,
+    "shellExecutionDisabled": true,
+    "commandExecutionCount": 0,
+    "visualPostconditionVerified": true
+  },
+  "qualification": "These are internal repo-local and hosted-runtime acceptance results. They do not establish deployed third-party MCP-host conformance or broad production use.",
+  "notYetProven": [
+    "Deployed third-party MCP-host production validation",
+    "Real external identity-provider validation",
+    "Universal OCR or VLM verification",
+    "Twenty-four-hour cloud soak",
+    "Production TURN reachability",
+    "Production token-issuer integration"
+  ]
+}

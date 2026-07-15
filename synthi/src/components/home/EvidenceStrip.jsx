@@ -70,19 +70,23 @@ export function EvidenceStrip() {
             </dl>
           </article>
 
-          <article className={`${styles.evidenceCell} ${styles.agentCell}`}>
+          <Link
+            href="/evidence/mcp-runtime-evidence.json"
+            className={`${styles.evidenceCell} ${styles.agentCell}`}
+          >
             <div>
-              <span>Pilot-scoped integrations</span>
-              <strong>No generally supported list is claimed yet. Candidate paths are validated per pilot.</strong>
+              <span>Synthi MCP · runtime eyes + hands</span>
+              <strong>Observe the live preview, synchronize HMR and source state, then broker runtime actions. Editing stays in the agent.</strong>
             </div>
-            <ul aria-label="Candidate agent clients to validate for a pilot">
+            <ul aria-label="Agent clients Synthi MCP is designed to complement">
               {AGENTS.map(({ name, Mark }) => (
                 <li key={name} aria-label={name} title={name}>
                   <Mark size={20} />
                 </li>
               ))}
             </ul>
-          </article>
+            <i aria-hidden="true"><ArrowUpRight size={16} weight="bold" /></i>
+          </Link>
 
           {EVIDENCE_LINKS.map((item) => (
             <Link
