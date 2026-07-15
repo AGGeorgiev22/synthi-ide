@@ -72,9 +72,6 @@ export function OutcomeChapters() {
         <header className={styles.outcomesHeader}>
           <h2 id="outcomes-title">
             Five outcomes.
-            <span className={styles.inlineProof} aria-hidden="true">
-              <Image src="/product-proof/gpu-hmr-diff.png" alt="" fill sizes="112px" />
-            </span>
             One control plane.
           </h2>
           <p>Open a chapter to inspect the mechanism, the buyer result, and the artifact that proves it.</p>
