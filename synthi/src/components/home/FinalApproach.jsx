@@ -107,10 +107,11 @@ export function FinalApproach() {
         <div ref={surfaceRef} className={styles.finalSurface}>
           <Image
             ref={atmosphereRef}
-            src="/cinema/controlled-flight-dawn.png"
+            src="/cinema/controlled-flight-dawn-6k.png"
             alt=""
             fill
-            sizes="100vw"
+            quality={90}
+            sizes="(max-aspect-ratio: 12/5) 270vh, 110vw"
             className={styles.finalAtmosphere}
             aria-hidden="true"
           />
