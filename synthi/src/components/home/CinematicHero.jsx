@@ -308,7 +308,7 @@ export function CinematicHero() {
                 alt="Vectant CodeSite showing a live authority map, landing queue, and collision forecast"
                 fill
                 quality={95}
-                sizes="(max-width: 767px) 1120px, 100vw"
+                sizes="100vw"
                 className={styles.cinemaProductImage}
               />
             </div>
