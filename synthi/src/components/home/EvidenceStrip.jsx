@@ -67,11 +67,11 @@ export function EvidenceStrip() {
             <dl className={styles.buildProofStats}>
               <div>
                 <dt>Continuous days</dt>
-                <dd>11</dd>
+                <dd>23</dd>
               </div>
               <div>
                 <dt>Production commits</dt>
-                <dd>1.5k</dd>
+                <dd>2.4k</dd>
               </div>
             </dl>
           </article>
@@ -82,9 +82,9 @@ export function EvidenceStrip() {
           >
             <div>
               <span>Let your agent see and operate the live app</span>
-              <strong>Synthi lets coding agents watch fresh app state, click, type, and replay approved workflows without replacing the editor they already use.</strong>
+              <strong>Vectant lets coding agents watch fresh app state, click, type, and replay approved workflows without replacing the editor they already use.</strong>
             </div>
-            <ul aria-label="Agent clients Synthi MCP is designed to complement">
+            <ul aria-label="Agent clients Vectant MCP is designed to complement">
               {AGENTS.map(({ name, Mark }) => (
                 <li key={name} aria-label={name} title={name}>
                   <Mark size={20} />
