@@ -36,6 +36,90 @@ function clean(value, maxLength) {
   return typeof value === "string" ? value.trim().slice(0, maxLength) : "";
 }
 
+function formatReceivedAt(value) {
+  return new Intl.DateTimeFormat("en-US", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+    timeZone: "UTC",
+    timeZoneName: "short",
+  }).format(value);
+}
+
+function escapeHtml(value) {
+  return value.replace(/[&<>"']/g, (character) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;",
+  })[character]);
+}
+
+function pilotEmailHtml({ email, company, workflow, receivedAt }) {
+  const safeEmail = escapeHtml(email);
+  const safeCompany = escapeHtml(company);
+  const safeWorkflow = escapeHtml(workflow).replace(/\r?\n/g, "<br />");
+  const safeReceivedAt = escapeHtml(receivedAt);
+  const logoUrl = process.env.EMAIL_LOGO_URL || "https://vectant.dev/Vectant_v3_nobg.png";
+  const safeLogoUrl = escapeHtml(logoUrl);
+  const replyHref = `mailto:${encodeURIComponent(email)}?subject=${encodeURIComponent(`Re: Proof pilot request from ${company}`)}`;
+
+  return `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark" />
+    <title>Proof pilot request from ${safeCompany}</title>
+  </head>
+  <body style="margin:0; padding:0; background:#0B0C10; color:#F4F4F5; font-family:'Helvetica Neue', Arial, sans-serif;">
+    <div style="display:none; max-height:0; overflow:hidden; opacity:0; color:transparent;">
+      Proof pilot request from ${safeCompany}.
+    </div>
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background:#0B0C10;">
+      <tr>
+        <td align="center" style="padding:52px 20px 44px;">
+          <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="max-width:620px; text-align:left;">
+            <tr>
+              <td style="padding:0 0 58px;">
+                <img src="${safeLogoUrl}" alt="Vectant" width="180" style="display:block; width:180px; height:auto; border:0;" />
+                <div style="padding-top:6px; font-size:14px; line-height:1.3; color:#A1A1AA;">Proof Pilot</div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div style="font-size:30px; line-height:1.15; letter-spacing:-0.02em; font-weight:600; color:#F4F4F5;">${safeCompany}</div>
+                <div style="padding-top:8px; font-size:13px; line-height:1.5; color:#A1A1AA; font-family:'IBM Plex Mono', 'SFMono-Regular', Menlo, Consolas, monospace;">${safeEmail}</div>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding-top:50px;">
+                <div style="font-size:15px; line-height:1.5; color:#A1A1AA;">wants to test</div>
+                <div style="padding-top:10px; max-width:570px; font-size:16px; line-height:1.6; color:#F4F4F5;">${safeWorkflow}</div>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding-top:34px;">
+                <a href="${replyHref}" style="font-size:15px; line-height:1.5; font-weight:600; color:#F4F4F5; text-decoration:none;">Reply to ${safeCompany} <span style="color:#B545FF;">&rarr;</span></a>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding-top:56px; border-bottom:1px solid #292B35;"></td>
+            </tr>
+            <tr>
+              <td style="padding-top:16px;">
+                <div style="font-size:11px; line-height:1.5; color:#A1A1AA; font-family:'IBM Plex Mono', 'SFMono-Regular', Menlo, Consolas, monospace;">Received ${safeReceivedAt} &middot; proof pilot form</div>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>`;
+}
+
 export async function POST(request) {
   if (rateLimited(request)) {
     return NextResponse.json(
@@ -52,7 +136,7 @@ export async function POST(request) {
   }
 
   const email = clean(body.email, 160).toLowerCase();
-  const company = clean(body.company, 120);
+  const company = clean(body.company, 120).replace(/\s+/g, " ");
   const workflow = clean(body.workflow, 1400);
 
   if (!EMAIL_PATTERN.test(email)) {
@@ -67,6 +151,8 @@ export async function POST(request) {
       { status: 400 },
     );
   }
+
+  const receivedAt = formatReceivedAt(new Date());
 
   if (!process.env.RESEND_API_KEY) {
     return NextResponse.json(
@@ -86,16 +172,22 @@ export async function POST(request) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: process.env.RESEND_FROM_EMAIL || "Vectant <vectant.dev@gmail.com>",
+        from: process.env.RESEND_FROM_EMAIL || "Vectant <pilot@vectant.dev>",
         to: PILOT_EMAIL,
         reply_to: email,
-        subject: `Proof pilot request: ${company}`,
+        subject: `Proof pilot request from ${company}`,
+        html: pilotEmailHtml({ email, company, workflow, receivedAt }),
         text: [
-          `Work email: ${email}`,
-          `Company or team: ${company}`,
+          company,
+          email,
           "",
-          "Difficult system and guarded workflow:",
+          "wants to test",
+          "",
           workflow,
+          "",
+          `Reply to ${company} ->`,
+          "",
+          `Received ${receivedAt} · proof pilot form`,
         ].join("\n"),
       }),
       signal: controller.signal,
@@ -119,4 +211,25 @@ export async function POST(request) {
   } finally {
     clearTimeout(timeout);
   }
+}
+
+export async function GET() {
+  if (process.env.NODE_ENV === "production") {
+    return new NextResponse("Not found", { status: 404 });
+  }
+
+  return new NextResponse(
+    pilotEmailHtml({
+      email: "dev@synthi.app",
+      company: "Synthi Systems",
+      workflow: "A guarded workflow that lets an agent inspect a difficult repository, propose a change, and preserve a reviewable proof bundle before anything reaches production.",
+      receivedAt: formatReceivedAt(new Date()),
+    }),
+    {
+      headers: {
+        "Cache-Control": "no-store",
+        "Content-Type": "text/html; charset=utf-8",
+      },
+    },
+  );
 }
