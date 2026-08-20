@@ -1,5 +1,39 @@
 export const POSTS = [
   {
+    slug: "introducing-zilm",
+    category: "Product announcement",
+    date: "August 21, 2026",
+    theme: "announcement",
+    title: "Introducing ZILM: project-agnostic GPU hot module replacement",
+    summary:
+      "Today we are launching ZILM. Change GPU code, preserve runtime state, and see the result in milliseconds.",
+    image: "/zilm-cover.png",
+    alt: "ZILM GPU HMR product artwork with spectral light and the ZILM wordmark",
+    sections: [
+      {
+        heading: "Change the code without rebuilding the world",
+        body: [
+          "GPU work carries expensive context. A compiled application, a loaded model, a renderer in motion, or the exact state that made a bug visible. Every full rebuild throws that context away before you can see whether the change helped.",
+          "ZILM keeps the running application alive while the code changes. It is project-agnostic GPU hot module replacement for the systems that do not fit a template.",
+        ],
+      },
+      {
+        heading: "Drop it into the project you already have",
+        body: [
+          "ZILM requires zero configuration and no ZILM-specific code. Bring the project, language, and runtime that already matter to your team. CUDA, ROCm, CUTLASS, custom kernels, neural networks, renderers, and larger GPU applications are all in scope.",
+          "Runtime state is preserved across edits, even when those edits change memory layouts. The session stays where you left it so the next iteration starts from the same evidence, not a recreated approximation.",
+        ],
+      },
+      {
+        heading: "A tighter loop for people and agents",
+        body: [
+          "The current target is under 50ms from edit to visual and under 90ms for an agent to make a change and verify it through the running application. That is enough time to keep the result in the same thought as the change.",
+          "ZILM is available on Vectant today. Bring the GPU project that is slowing you down and start with the live loop.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "the-cache-stampede",
     category: "Scalability",
     educational: true,

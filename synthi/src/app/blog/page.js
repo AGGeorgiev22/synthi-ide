@@ -38,7 +38,11 @@ export default function BlogPage() {
       </section>
 
       <section className={styles.featured} aria-labelledby="featured-title">
-        <div className={styles.featuredImage}>
+        <Link
+          href={`/blog/${featured.slug}`}
+          className={styles.featuredImage}
+          aria-label={`Read ${featured.title}`}
+        >
           <Image
             src={featured.image}
             alt={featured.alt}
@@ -47,7 +51,7 @@ export default function BlogPage() {
             quality={95}
             sizes="(max-width: 767px) 100vw, 62vw"
           />
-        </div>
+        </Link>
         <div className={styles.featuredCopy}>
           <p>Featured</p>
           <span>{featured.category}</span>

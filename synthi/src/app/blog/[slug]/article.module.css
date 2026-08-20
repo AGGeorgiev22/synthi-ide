@@ -306,3 +306,202 @@
     transition-duration: 0.01ms;
   }
 }
+
+/* Product announcements use the quiet, paper-like editorial treatment from
+   the Vectant journal. Other articles keep the dark article system above. */
+.announcementPage {
+  --announcement-bg: #f6f4ee;
+  --announcement-ink: #292723;
+  --announcement-muted: #77736c;
+  --announcement-line: rgba(41, 39, 35, 0.15);
+  min-height: 100dvh;
+  color: var(--announcement-ink);
+  background:
+    radial-gradient(circle at 86% 6%, rgba(219, 166, 132, 0.22), transparent 23rem),
+    var(--announcement-bg);
+}
+
+.announcementPage .header,
+.announcementPage .hero,
+.announcementPage .figure,
+.announcementPage .body,
+.announcementPage .cta {
+  width: min(calc(100% - 3rem), 1120px);
+}
+
+.announcementPage .header {
+  min-height: 5.2rem;
+  border-bottom-color: var(--announcement-line);
+}
+
+.announcementPage .logo {
+  color: var(--announcement-ink) !important;
+}
+
+.announcementPage .backLink {
+  color: var(--announcement-muted);
+}
+
+.announcementPage .backLink:hover,
+.announcementPage .backLink:focus-visible {
+  color: var(--announcement-ink);
+}
+
+.announcementPage .hero {
+  position: relative;
+  display: grid;
+  padding-block: clamp(5.5rem, 10vw, 9.5rem) clamp(3.8rem, 7vw, 6rem);
+  grid-template-columns: minmax(0, 1fr) minmax(10rem, 0.28fr);
+  gap: clamp(2rem, 6vw, 7rem);
+  align-items: end;
+}
+
+.announcementPage .hero > p,
+.announcementPage .heroMeta > span,
+.announcementPage .cta p,
+.announcementPage .body aside > span {
+  color: #a05d3e;
+}
+
+.announcementPage .hero h1 {
+  grid-column: 1;
+  max-width: 10ch;
+  margin: 1.2rem 0 1.35rem;
+  color: var(--announcement-ink);
+  font-family: var(--font-cabinet), sans-serif;
+  font-size: clamp(3.9rem, 7vw, 7.2rem);
+  font-weight: 500;
+  letter-spacing: -0.07em;
+  line-height: 0.9;
+}
+
+.announcementPage .hero > span {
+  grid-column: 1;
+  max-width: 34rem;
+  color: var(--announcement-muted);
+  font-size: clamp(1rem, 1.25vw, 1.15rem);
+  line-height: 1.65;
+}
+
+.announcementPage .heroMeta {
+  grid-column: 2;
+  grid-row: 1 / span 3;
+  align-self: end;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.38rem;
+  padding-bottom: 0.35rem;
+}
+
+.announcementPage .heroMeta span,
+.announcementPage .heroMeta strong {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.04em;
+}
+
+.announcementPage .heroMeta strong {
+  margin-bottom: 0.85rem;
+  color: var(--announcement-ink);
+  font-weight: 500;
+}
+
+.announcementPage .figure {
+  min-height: min(56vw, 42rem);
+  border: 1px solid var(--announcement-line);
+  background: #d9e0e3;
+}
+
+.announcementPage .figure img {
+  object-fit: cover;
+}
+
+.announcementPage .body {
+  grid-template-columns: minmax(10rem, 0.55fr) minmax(0, 1.45fr);
+}
+
+.announcementPage .body aside p,
+.announcementPage .body p {
+  color: var(--announcement-muted);
+}
+
+.announcementPage .body h2 {
+  color: var(--announcement-ink);
+  font-family: var(--font-cabinet), sans-serif;
+  font-weight: 500;
+}
+
+.announcementPage .body section + section {
+  margin-top: clamp(3.4rem, 6vw, 5.25rem);
+}
+
+.announcementPage .cta {
+  margin-top: clamp(6rem, 11vw, 10rem);
+  border-top-color: var(--announcement-line);
+}
+
+.announcementPage .cta p {
+  color: var(--announcement-ink);
+}
+
+.announcementPage .cta span {
+  color: var(--announcement-muted);
+}
+
+.announcementPage .cta a {
+  color: #f6f4ee;
+  background: var(--announcement-ink);
+}
+
+.announcementPage .cta a:hover,
+.announcementPage .cta a:focus-visible {
+  color: var(--announcement-ink);
+  background: #dba17f;
+}
+
+@media (max-width: 767px) {
+  .announcementPage .header,
+  .announcementPage .hero,
+  .announcementPage .figure,
+  .announcementPage .body,
+  .announcementPage .cta {
+    width: min(calc(100% - 2rem), 1120px);
+  }
+
+  .announcementPage .hero {
+    grid-template-columns: 1fr;
+    gap: 1.4rem;
+    padding-block: 5.2rem 4.5rem;
+  }
+
+  .announcementPage .body {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .announcementPage .hero h1,
+  .announcementPage .hero > span,
+  .announcementPage .heroMeta {
+    grid-column: auto;
+    grid-row: auto;
+  }
+
+  .announcementPage .hero h1 {
+    font-size: clamp(3.55rem, 16vw, 5.5rem);
+  }
+
+  .announcementPage .heroMeta {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.38rem 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--announcement-line);
+  }
+
+  .announcementPage .heroMeta strong {
+    margin-bottom: 0.5rem;
+  }
+
+  .announcementPage .figure {
+    min-height: 68vw;
+  }
+}

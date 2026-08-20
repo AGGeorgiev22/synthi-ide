@@ -32,7 +32,7 @@ export default async function ArticlePage({ params }) {
   if (!post) notFound();
 
   return (
-    <main className={styles.page} id="top">
+    <main className={`${styles.page} ${post.theme === "announcement" ? styles.announcementPage : ""}`} id="top">
       <header className={styles.header}>
         <Link href="/" className={styles.brand} aria-label="Vectant home">
           <AnimatedLogo expanded={false} className={styles.logo} markClassName={styles.mark} />
@@ -45,9 +45,19 @@ export default async function ArticlePage({ params }) {
 
       <article>
         <header className={styles.hero}>
-          <p>{post.category}</p>
+          <p>{post.category}{post.date ? ` / ${post.date}` : ""}</p>
           <h1>{post.title}</h1>
           <span>{post.summary}</span>
+          {post.theme === "announcement" ? (
+            <aside className={styles.heroMeta}>
+              <span>Product</span>
+              <strong>Vectant</strong>
+              <span>Release</span>
+              <strong>{post.date}</strong>
+              <span>Read time</span>
+              <strong>3 min</strong>
+            </aside>
+          ) : null}
         </header>
 
         <figure className={styles.figure}>
@@ -65,7 +75,9 @@ export default async function ArticlePage({ params }) {
           <aside>
             <span>{post.educational ? post.category : "Vectant"}</span>
             <p>
-              {post.educational
+              {post.theme === "announcement"
+                ? "Change the code. Keep the run."
+                : post.educational
                 ? "A visual explanation of infrastructure that most people only notice when it fails."
                 : "Runtime control, scoped authority, and reviewable proof."}
             </p>
@@ -109,7 +121,18 @@ export default async function ArticlePage({ params }) {
         </div>
       </article>
 
-      {post.educational ? (
+      {post.theme === "announcement" ? (
+        <section className={styles.cta}>
+          <div>
+            <p>Now available on Vectant</p>
+            <span>Bring your existing GPU project and start the live loop.</span>
+          </div>
+          <a href="https://vectant.dev" target="_blank" rel="noreferrer">
+            Try ZILM
+            <ArrowUpRight size={16} weight="bold" />
+          </a>
+        </section>
+      ) : post.educational ? (
         <section className={styles.cta}>
           <div>
             <p>More explainers</p>
