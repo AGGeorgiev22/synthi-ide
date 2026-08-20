@@ -4,10 +4,13 @@ import { ArrowLeft, ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
 import { notFound } from "next/navigation";
 
 import { AnimatedLogo } from "@/components/Logo";
+import { Footer } from "@/components/Footer";
 import { PILOT_MAILTO } from "@/lib/pilot";
 
 import { POSTS, getPost } from "../posts";
 import styles from "./article.module.css";
+
+const SITE_URL = "https://vectant.dev";
 
 export function generateStaticParams() {
   return POSTS.map((post) => ({ slug: post.slug }));
@@ -19,9 +22,44 @@ export async function generateMetadata({ params }) {
 
   if (!post) return {};
 
+  const canonicalUrl = `${SITE_URL}/blog/${post.slug}`;
+
   return {
-    title: `${post.title} - Vectant`,
+    title: `${post.title} | Vectant`,
     description: post.summary,
+    keywords: post.theme === "announcement"
+      ? ["GPU hot module replacement", "GPU HMR", "CUDA hot reload", "ROCm development", "ZILM", "Vectant"]
+      : undefined,
+    alternates: {
+      canonical: canonicalUrl,
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+        "max-video-preview": -1,
+      },
+    },
+    openGraph: {
+      type: "article",
+      url: canonicalUrl,
+      title: post.title,
+      description: post.summary,
+      siteName: "Vectant",
+      images: [{ url: post.image, alt: post.alt }],
+      publishedTime: post.publishedAt,
+      authors: ["Vectant"],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.summary,
+      images: [post.image],
+    },
   };
 }
 
@@ -31,9 +69,59 @@ export default async function ArticlePage({ params }) {
 
   if (!post) notFound();
 
+  const canonicalUrl = `${SITE_URL}/blog/${post.slug}`;
+  const articleJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: post.title,
+    description: post.summary,
+    image: `${SITE_URL}${post.image}`,
+    mainEntityOfPage: canonicalUrl,
+    url: canonicalUrl,
+    ...(post.publishedAt ? { datePublished: post.publishedAt, dateModified: post.publishedAt } : {}),
+    author: {
+      "@type": "Organization",
+      name: "Vectant",
+      url: SITE_URL,
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "Vectant",
+      url: SITE_URL,
+    },
+    breadcrumb: {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: SITE_URL,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Blog",
+          item: `${SITE_URL}/blog`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: post.title,
+          item: canonicalUrl,
+        },
+      ],
+    },
+  };
+
   return (
-    <main className={`${styles.page} ${post.theme === "announcement" ? styles.announcementPage : ""}`} id="top">
-      <header className={styles.header}>
+    <>
+      <main className={`${styles.page} ${post.theme === "announcement" ? styles.announcementPage : ""}`} id="top">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd).replace(/</g, "\\u003c") }}
+        />
+        <header className={styles.header}>
         <Link href="/" className={styles.brand} aria-label="Vectant home">
           <AnimatedLogo expanded={false} className={styles.logo} markClassName={styles.mark} />
         </Link>
@@ -41,9 +129,9 @@ export default async function ArticlePage({ params }) {
           <ArrowLeft size={15} weight="bold" />
           Back to blog
         </Link>
-      </header>
+        </header>
 
-      <article>
+        <article>
         <header className={styles.hero}>
           <p>{post.category}{post.date ? ` / ${post.date}` : ""}</p>
           <h1>{post.title}</h1>
@@ -119,9 +207,9 @@ export default async function ArticlePage({ params }) {
             ) : null}
           </div>
         </div>
-      </article>
+        </article>
 
-      {post.theme === "announcement" ? (
+        {post.theme === "announcement" ? (
         <section className={styles.cta}>
           <div>
             <p>Now available on Vectant</p>
@@ -154,7 +242,9 @@ export default async function ArticlePage({ params }) {
             <ArrowUpRight size={16} weight="bold" />
           </a>
         </section>
-      )}
-    </main>
+        )}
+      </main>
+      <Footer />
+    </>
   );
 }

@@ -3,6 +3,7 @@ export const POSTS = [
     slug: "introducing-zilm",
     category: "Product announcement",
     date: "August 21, 2026",
+    publishedAt: "2026-08-21T00:00:00.000Z",
     theme: "announcement",
     title: "Introducing ZILM: project-agnostic GPU hot module replacement",
     summary:

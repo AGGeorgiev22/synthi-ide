@@ -9,8 +9,17 @@ import { POSTS } from "./posts";
 import styles from "./blog.module.css";
 
 export const metadata = {
-  title: "Blog - Vectant",
-  description: "Writing about runtime control, agent authority, and reviewable proof.",
+  title: "Engineering blog for production agents | Vectant",
+  description:
+    "Technical articles on GPU development, runtime control, agent authority, and reviewable proof for production systems.",
+  alternates: { canonical: "/blog" },
+  openGraph: {
+    type: "website",
+    url: "/blog",
+    title: "Engineering blog for production agents | Vectant",
+    description:
+      "Technical articles on GPU development, runtime control, agent authority, and reviewable proof for production systems.",
+  },
 };
 
 const [featured, ...posts] = POSTS;

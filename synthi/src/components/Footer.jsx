@@ -9,19 +9,19 @@ const GROUPS = [
   {
     label: "Product",
     links: [
-      { label: "Guarded run", href: "#guarded-run" },
-      { label: "GPU HMR", href: "#gpu-hmr" },
-      { label: "Buyer outcomes", href: "#systems" },
-      { label: "Who it is for", href: "#teams" },
+      { label: "Guarded run", href: "/#guarded-run" },
+      { label: "GPU HMR", href: "/#gpu-hmr" },
+      { label: "Buyer outcomes", href: "/#systems" },
+      { label: "Who it is for", href: "/#teams" },
     ],
   },
   {
     label: "Evidence",
     links: [
-      { label: "Proof bundle", href: "#proof" },
+      { label: "Proof bundle", href: "/#proof" },
       { label: "Technical reference", href: "/docs" },
-      { label: "Enterprise controls", href: "#technical-confidence" },
-      { label: "Technical questions", href: "#faq" },
+      { label: "Enterprise controls", href: "/#technical-confidence" },
+      { label: "Technical questions", href: "/#faq" },
     ],
   },
   {
@@ -47,10 +47,10 @@ export function Footer() {
               <span>Control the run.</span>
               <span>Keep the proof.</span>
             </h2>
-            <a href="#pilot" className={styles.footerAction}>
+            <Link href="/#pilot" className={styles.footerAction}>
               Scope the proof pilot
               <ArrowUpRight size={17} weight="bold" />
-            </a>
+            </Link>
           </div>
         </div>
 

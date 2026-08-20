@@ -3,6 +3,19 @@ import { Navbar } from "@/components/Navbar";
 import { VectantLanding } from "@/components/VectantLanding";
 import { Footer } from "@/components/Footer";
 
+export const metadata = {
+  title: "Vectant - Runtime Control Plane for Production Agents",
+  description:
+    "Run production agents with scoped authority, live runtime state, and reviewable proof in a cloud development environment.",
+  alternates: { canonical: "/" },
+  openGraph: {
+    url: "/",
+    title: "Vectant - Runtime Control Plane for Production Agents",
+    description:
+      "Run production agents with scoped authority, live runtime state, and reviewable proof in a cloud development environment.",
+  },
+};
+
 export default function Home() {
   return (
     <>

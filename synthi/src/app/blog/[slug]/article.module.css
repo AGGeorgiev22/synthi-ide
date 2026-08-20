@@ -310,15 +310,9 @@
 /* Product announcements keep the article system's dark Vectant surface while
    using a slightly more structured release header. */
 .announcementPage {
-  --announcement-bg: var(--vectant-black);
   --announcement-ink: #f4eee7;
   --announcement-muted: var(--vectant-ink-secondary);
   --announcement-line: rgb(230 224 216 / 0.14);
-  min-height: 100dvh;
-  color: var(--announcement-ink);
-  background:
-    radial-gradient(circle at 10% -8%, rgb(var(--vectant-accent-rgb) / 0.13), transparent 24rem),
-    var(--announcement-bg);
 }
 
 .announcementPage .header,

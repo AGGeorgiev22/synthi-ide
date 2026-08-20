@@ -7,8 +7,17 @@ import { PILOT_MAILTO } from "@/lib/pilot";
 import styles from "./docs.module.css";
 
 export const metadata = {
-  title: "Technical Reference - Vectant",
-  description: "The public Vectant pilot reference for run boundaries, decisions, proof exports, and control availability.",
+  title: "Technical reference for agent runtime control | Vectant",
+  description:
+    "The public Vectant reference for guarded runs, scoped agent authority, recorded decisions, proof exports, and pilot availability.",
+  alternates: { canonical: "/docs" },
+  openGraph: {
+    type: "website",
+    url: "/docs",
+    title: "Technical reference for agent runtime control | Vectant",
+    description:
+      "The public Vectant reference for guarded runs, scoped agent authority, recorded decisions, proof exports, and pilot availability.",
+  },
 };
 
 const RUN_FIELDS = [

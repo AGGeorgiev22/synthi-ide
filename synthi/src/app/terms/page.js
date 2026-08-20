@@ -7,8 +7,15 @@ import { PILOT_EMAIL, PILOT_MAILTO } from "@/lib/pilot";
 import styles from "./terms.module.css";
 
 export const metadata = {
-  title: "Terms of Service - Vectant",
+  title: "Terms of Service | Vectant",
   description: "The terms that govern access to Vectant and its pilot services.",
+  alternates: { canonical: "/terms" },
+  openGraph: {
+    type: "website",
+    url: "/terms",
+    title: "Terms of Service | Vectant",
+    description: "The terms that govern access to Vectant and its pilot services.",
+  },
 };
 
 const SECTIONS = [

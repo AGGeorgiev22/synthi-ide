@@ -7,8 +7,15 @@ import { PILOT_EMAIL } from "@/lib/pilot";
 import styles from "./privacy.module.css";
 
 export const metadata = {
-  title: "Privacy Policy - Vectant",
+  title: "Privacy Policy | Vectant",
   description: "How Vectant handles information for its website and pilot services.",
+  alternates: { canonical: "/privacy" },
+  openGraph: {
+    type: "website",
+    url: "/privacy",
+    title: "Privacy Policy | Vectant",
+    description: "How Vectant handles information for its website and pilot services.",
+  },
 };
 
 const PRIVACY_MAILTO = `mailto:${PILOT_EMAIL}?subject=${encodeURIComponent(
