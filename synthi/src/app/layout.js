@@ -4,6 +4,7 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { Analytics } from "@vercel/analytics/next";
+import { SITE_SOCIAL_IMAGE, SITE_URL } from "@/lib/seo";
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
@@ -50,7 +51,6 @@ const cabinetGrotesk = localFont({
   display: "swap",
 });
 
-const SITE_URL = "https://vectant.dev";
 const siteDescription =
   "Vectant is the cloud development environment where agents work under scoped authority, live runtime state, and reviewable proof.";
 
@@ -97,14 +97,14 @@ export const metadata = {
     siteName: "Vectant",
     type: "website",
     locale: "en_US",
-    images: [{ url: "/opengraph-image.png", alt: "Vectant runtime control plane" }],
+    images: [SITE_SOCIAL_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
     title: "Vectant - Runtime Control Plane for Production Agents",
     description:
       "The cloud runtime where production agents run with scoped authority, live state, and proof a reviewer can inspect.",
-    images: ["/opengraph-image.png"],
+    images: [SITE_SOCIAL_IMAGE.url],
   },
   icons: {
     icon: "/Vectant-logo-white.svg",

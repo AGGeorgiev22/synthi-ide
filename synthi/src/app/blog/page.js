@@ -4,6 +4,7 @@ import { ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
 
 import { AnimatedLogo, Logo } from "@/components/Logo";
 import { PILOT_MAILTO } from "@/lib/pilot";
+import { SITE_SOCIAL_IMAGE } from "@/lib/seo";
 
 import { POSTS } from "./posts";
 import styles from "./blog.module.css";
@@ -19,6 +20,14 @@ export const metadata = {
     title: "Engineering blog for production agents | Vectant",
     description:
       "Technical articles on GPU development, runtime control, agent authority, and reviewable proof for production systems.",
+    images: [SITE_SOCIAL_IMAGE],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Engineering blog for production agents | Vectant",
+    description:
+      "Technical articles on GPU development, runtime control, agent authority, and reviewable proof for production systems.",
+    images: [SITE_SOCIAL_IMAGE.url],
   },
 };
 

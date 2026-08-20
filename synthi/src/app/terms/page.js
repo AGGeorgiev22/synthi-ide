@@ -3,6 +3,7 @@ import { ArrowLeft, ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
 
 import { AnimatedLogo } from "@/components/Logo";
 import { PILOT_EMAIL, PILOT_MAILTO } from "@/lib/pilot";
+import { SITE_SOCIAL_IMAGE } from "@/lib/seo";
 
 import styles from "./terms.module.css";
 
@@ -15,6 +16,13 @@ export const metadata = {
     url: "/terms",
     title: "Terms of Service | Vectant",
     description: "The terms that govern access to Vectant and its pilot services.",
+    images: [SITE_SOCIAL_IMAGE],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Terms of Service | Vectant",
+    description: "The terms that govern access to Vectant and its pilot services.",
+    images: [SITE_SOCIAL_IMAGE.url],
   },
 };
 

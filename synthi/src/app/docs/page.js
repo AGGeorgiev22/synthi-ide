@@ -3,6 +3,7 @@ import { ArrowDown, ArrowLeft, ArrowUpRight } from "@phosphor-icons/react/dist/s
 
 import { AnimatedLogo } from "@/components/Logo";
 import { PILOT_MAILTO } from "@/lib/pilot";
+import { SITE_SOCIAL_IMAGE } from "@/lib/seo";
 
 import styles from "./docs.module.css";
 
@@ -17,6 +18,14 @@ export const metadata = {
     title: "Technical reference for agent runtime control | Vectant",
     description:
       "The public Vectant reference for guarded runs, scoped agent authority, recorded decisions, proof exports, and pilot availability.",
+    images: [SITE_SOCIAL_IMAGE],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Technical reference for agent runtime control | Vectant",
+    description:
+      "The public Vectant reference for guarded runs, scoped agent authority, recorded decisions, proof exports, and pilot availability.",
+    images: [SITE_SOCIAL_IMAGE.url],
   },
 };
 

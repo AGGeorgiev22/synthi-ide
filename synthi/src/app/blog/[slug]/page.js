@@ -23,6 +23,18 @@ export async function generateMetadata({ params }) {
   if (!post) return {};
 
   const canonicalUrl = `${SITE_URL}/blog/${post.slug}`;
+  const socialImage = post.slug === "introducing-zilm"
+    ? {
+      url: `${SITE_URL}/zilm-cover.png`,
+      width: 3388,
+      height: 1858,
+      type: "image/png",
+      alt: post.alt,
+    }
+    : {
+      url: `${SITE_URL}${post.image}`,
+      alt: post.alt,
+    };
 
   return {
     title: `${post.title} | Vectant`,
@@ -50,7 +62,7 @@ export async function generateMetadata({ params }) {
       title: post.title,
       description: post.summary,
       siteName: "Vectant",
-      images: [{ url: post.image, alt: post.alt }],
+      images: [socialImage],
       publishedTime: post.publishedAt,
       authors: ["Vectant"],
     },
@@ -58,7 +70,7 @@ export async function generateMetadata({ params }) {
       card: "summary_large_image",
       title: post.title,
       description: post.summary,
-      images: [post.image],
+      images: [socialImage.url],
     },
   };
 }

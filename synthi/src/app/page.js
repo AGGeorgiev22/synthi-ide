@@ -2,6 +2,7 @@ import { SmoothScroll } from "@/components/SmoothScroll";
 import { Navbar } from "@/components/Navbar";
 import { VectantLanding } from "@/components/VectantLanding";
 import { Footer } from "@/components/Footer";
+import { SITE_SOCIAL_IMAGE } from "@/lib/seo";
 
 export const metadata = {
   title: "Vectant - Runtime Control Plane for Production Agents",
@@ -13,6 +14,14 @@ export const metadata = {
     title: "Vectant - Runtime Control Plane for Production Agents",
     description:
       "Run production agents with scoped authority, live runtime state, and reviewable proof in a cloud development environment.",
+    images: [SITE_SOCIAL_IMAGE],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Vectant - Runtime Control Plane for Production Agents",
+    description:
+      "Run production agents with scoped authority, live runtime state, and reviewable proof in a cloud development environment.",
+    images: [SITE_SOCIAL_IMAGE.url],
   },
 };
 
