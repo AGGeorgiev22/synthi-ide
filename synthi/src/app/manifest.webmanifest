@@ -1,0 +1,17 @@
+{
+  "name": "Vectant — Runtime Control Plane for Production Coding Agents",
+  "short_name": "Vectant",
+  "description": "Vectant gives production coding agents scoped authority, live environment state, and reviewable proof.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#090B16",
+  "theme_color": "#090B16",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

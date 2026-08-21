@@ -4,7 +4,7 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { Analytics } from "@vercel/analytics/next";
-import { SITE_SOCIAL_IMAGE, SITE_URL } from "@/lib/seo";
+import { SITE_DESCRIPTION, SITE_ICON, SITE_NAME, SITE_SOCIAL_IMAGE, SITE_URL } from "@/lib/seo";
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
@@ -51,12 +51,13 @@ const cabinetGrotesk = localFont({
   display: "swap",
 });
 
-const siteDescription =
-  "Vectant is the cloud development environment where agents work under scoped authority, live runtime state, and reviewable proof.";
-
 export const metadata = {
-  title: "Vectant | Runtime Control Plane for Production Agents",
-  description: siteDescription,
+  title: "Vectant | Runtime Control Plane for Production Coding Agents",
+  description: SITE_DESCRIPTION,
+  applicationName: SITE_NAME,
+  creator: SITE_NAME,
+  publisher: SITE_NAME,
+  category: "Developer tools",
   keywords: [
     "cloud IDE",
     "AI development environment",
@@ -79,7 +80,7 @@ export const metadata = {
     "runtime layer",
     "runtime",
   ],
-  authors: [{ name: "Vectant" }],
+  authors: [{ name: SITE_NAME }],
   metadataBase: new URL(SITE_URL),
   alternates: {
     canonical: SITE_URL,
@@ -96,25 +97,30 @@ export const metadata = {
     },
   },
   openGraph: {
-    title: "Vectant | Runtime Control Plane for Production Agents",
+    title: "Vectant | Runtime Control Plane for Production Coding Agents",
     description:
       "The cloud development environment where autonomous agents see the app, run the build, preserve state, earn scoped authority, and ship reviewable evidence.",
     url: SITE_URL,
-    siteName: "Vectant",
+    siteName: SITE_NAME,
     type: "website",
     locale: "en_US",
     images: [SITE_SOCIAL_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Vectant | Runtime Control Plane for Production Agents",
+    title: "Vectant | Runtime Control Plane for Production Coding Agents",
     description:
       "The cloud runtime where production agents run with scoped authority, live state, and proof a reviewer can inspect.",
     images: [SITE_SOCIAL_IMAGE.url],
   },
   icons: {
-    icon: "/Vectant-logo-white.svg",
-    shortcut: "/Vectant-logo-white.svg",
+    icon: [{ url: "/icon.svg", type: "image/svg+xml", sizes: "any" }],
+    shortcut: ["/icon.svg"],
+    apple: [{ url: "/icon.svg", type: "image/svg+xml", sizes: "512x512" }],
+  },
+  manifest: "/manifest.webmanifest",
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || undefined,
   },
 };
 
@@ -123,19 +129,27 @@ export default function RootLayout({ children }) {
     "@context": "https://schema.org",
     "@graph": [
       {
-        "@type": "Organization",
+        "@type": "OnlineBusiness",
         "@id": `${SITE_URL}/#organization`,
-        name: "Vectant",
+        name: SITE_NAME,
+        alternateName: "Vectant Runtime Control Plane",
         url: SITE_URL,
-        logo: `${SITE_URL}/Vectant-logo-white.svg`,
-        description: siteDescription,
+        logo: {
+          "@type": "ImageObject",
+          url: SITE_ICON,
+          contentUrl: SITE_ICON,
+          width: 512,
+          height: 512,
+        },
+        description: SITE_DESCRIPTION,
+        email: "pilot@vectant.dev",
       },
       {
         "@type": "WebSite",
         "@id": `${SITE_URL}/#website`,
-        name: "Vectant",
+        name: SITE_NAME,
         url: SITE_URL,
-        description: siteDescription,
+        description: SITE_DESCRIPTION,
         publisher: { "@id": `${SITE_URL}/#organization` },
         inLanguage: "en-US",
       },

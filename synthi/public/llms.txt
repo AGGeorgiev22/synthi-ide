@@ -1,0 +1,26 @@
+# Vectant
+
+Vectant is a runtime control plane for production coding agents. It gives teams scoped authority, live environment state, and reviewable proof for work performed by agents in cloud development environments.
+
+## Primary pages
+
+- [Home](https://vectant.dev/): Product overview and evidence for guarded agent runs.
+- [Technical reference](https://vectant.dev/docs): Public details on run boundaries, decisions, evidence, and pilot availability.
+- [Engineering blog](https://vectant.dev/blog): Technical articles from Vectant.
+
+## ZILM
+
+ZILM is Vectant's project-agnostic GPU hot module replacement capability. It is designed to apply GPU code changes while preserving runtime state, so developers can evaluate changes without discarding the live context that matters. The canonical technical announcement is [Introducing ZILM: project-agnostic GPU hot module replacement](https://vectant.dev/blog/introducing-zilm).
+
+## Product facts
+
+- Vectant is for teams running production coding agents.
+- A guarded run records requested actions, authority checks, approvals or denials, runtime evidence, and output artifacts.
+- Vectant supports pilot-scoped environments; publicly described roadmap items are not presented as generally available features.
+
+## Canonical URLs
+
+- Product: https://vectant.dev/
+- ZILM article: https://vectant.dev/blog/introducing-zilm
+- Blog feed: https://vectant.dev/blog/feed.xml
+- Sitemap: https://vectant.dev/sitemap.xml

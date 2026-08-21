@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-labelledby="title description">
+  <title id="title">Vectant</title>
+  <desc id="description">The Vectant V mark</desc>
+  <defs>
+    <linearGradient id="field" x1="36" y1="32" x2="476" y2="480" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#231933"/>
+      <stop offset="1" stop-color="#090B16"/>
+    </linearGradient>
+    <linearGradient id="signal" x1="155" y1="143" x2="366" y2="381" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FF3DBE"/>
+      <stop offset=".34" stop-color="#FF5C2A"/>
+      <stop offset=".7" stop-color="#7C5CFF"/>
+      <stop offset="1" stop-color="#22D3EE"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#field)"/>
+  <rect x="42" y="42" width="428" height="428" rx="86" fill="none" stroke="#F8F7FC" stroke-opacity=".16" stroke-width="4"/>
+  <path d="M145 145h-42v222h42M367 145h42v222h-42" fill="none" stroke="#F8F7FC" stroke-width="25" stroke-linecap="square"/>
+  <path d="M171 100h-68v68M341 100h68v68M171 412h-68v-68M341 412h68v-68" fill="none" stroke="url(#signal)" stroke-width="13" stroke-linecap="square"/>
+  <path d="m188 169 68 174 68-174" fill="none" stroke="url(#signal)" stroke-width="38" stroke-linecap="square" stroke-linejoin="miter"/>
+</svg>

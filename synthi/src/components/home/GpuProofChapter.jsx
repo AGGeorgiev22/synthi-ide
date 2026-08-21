@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -118,9 +119,12 @@ export function GpuProofChapter() {
         </svg>
 
         <div ref={introRef} className={styles.gpuIntro}>
-          <p>GPU hot reload · synthetic run VCT-SAMPLE-001</p>
+          <p>ZILM GPU hot module replacement · synthetic run VCT-SAMPLE-001</p>
           <h2>Patch the kernel without resetting live state.</h2>
-          <span>A compiled patch moves only when live state, ABI, output, and evidence agree.</span>
+          <span>
+            A compiled patch moves only when live state, ABI, output, and evidence agree.{" "}
+            <Link href="/blog/introducing-zilm">Read the ZILM launch note.</Link>
+          </span>
         </div>
 
         <figure ref={plateRef} className={styles.gpuPlate}>

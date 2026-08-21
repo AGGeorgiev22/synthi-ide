@@ -10,23 +10,36 @@ import { POSTS } from "./posts";
 import styles from "./blog.module.css";
 
 export const metadata = {
-  title: "Engineering blog for production agents | Vectant",
+  title: "ZILM GPU hot module replacement & engineering blog | Vectant",
   description:
-    "Technical articles on GPU development, runtime control, agent authority, and reviewable proof for production systems.",
-  alternates: { canonical: "/blog" },
+    "The Vectant engineering blog: ZILM GPU hot module replacement, production coding agents, runtime control, and reviewable proof.",
+  keywords: [
+    "ZILM",
+    "GPU hot module replacement",
+    "GPU HMR",
+    "CUDA hot reload",
+    "production coding agents",
+    "developer infrastructure",
+  ],
+  alternates: {
+    canonical: "/blog",
+    types: {
+      "application/rss+xml": [{ url: "/blog/feed.xml", title: "Vectant engineering blog RSS" }],
+    },
+  },
   openGraph: {
     type: "website",
     url: "/blog",
-    title: "Engineering blog for production agents | Vectant",
+    title: "ZILM GPU hot module replacement & engineering blog | Vectant",
     description:
-      "Technical articles on GPU development, runtime control, agent authority, and reviewable proof for production systems.",
+      "The Vectant engineering blog: ZILM GPU hot module replacement, production coding agents, runtime control, and reviewable proof.",
     images: [SITE_SOCIAL_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Engineering blog for production agents | Vectant",
+    title: "ZILM GPU hot module replacement & engineering blog | Vectant",
     description:
-      "Technical articles on GPU development, runtime control, agent authority, and reviewable proof for production systems.",
+      "The Vectant engineering blog: ZILM GPU hot module replacement, production coding agents, runtime control, and reviewable proof.",
     images: [SITE_SOCIAL_IMAGE.url],
   },
 };
@@ -34,8 +47,37 @@ export const metadata = {
 const [featured, ...posts] = POSTS;
 
 export default function BlogPage() {
+  const blogJsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Blog",
+        "@id": "https://vectant.dev/blog/#blog",
+        name: "Vectant engineering blog",
+        description:
+          "Technical writing about ZILM GPU hot module replacement, production coding agents, runtime control, and reviewable proof.",
+        url: "https://vectant.dev/blog",
+        inLanguage: "en-US",
+        publisher: { "@id": "https://vectant.dev/#organization" },
+      },
+      {
+        "@type": "ItemList",
+        itemListElement: POSTS.map((post, index) => ({
+          "@type": "ListItem",
+          position: index + 1,
+          url: `https://vectant.dev/blog/${post.slug}`,
+          name: post.title,
+        })),
+      },
+    ],
+  };
+
   return (
     <main className={styles.page} id="top">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(blogJsonLd).replace(/</g, "\\u003c") }}
+      />
       <header className={styles.header}>
         <Link href="/" className={styles.brand} aria-label="Vectant home">
           <AnimatedLogo expanded={false} className={styles.logo} markClassName={styles.mark} />
@@ -48,10 +90,10 @@ export default function BlogPage() {
       </header>
 
       <section className={styles.hero} aria-labelledby="journal-title">
-        <p>The Vectant blog</p>
-        <h1 id="journal-title">Operating notes for systems that let agents act.</h1>
+        <p>The Vectant engineering blog</p>
+        <h1 id="journal-title">ZILM, GPU hot module replacement, and production-agent systems.</h1>
         <span>
-          Arguments, product evidence, and design direction for agent systems that need a real runtime boundary.
+          Technical writing on ZILM GPU HMR, runtime control, agent authority, and reviewable proof.
         </span>
       </section>
 

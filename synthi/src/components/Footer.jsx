@@ -11,6 +11,7 @@ const GROUPS = [
     links: [
       { label: "Guarded run", href: "/#guarded-run" },
       { label: "GPU HMR", href: "/#gpu-hmr" },
+      { label: "ZILM GPU HMR", href: "/blog/introducing-zilm" },
       { label: "Buyer outcomes", href: "/#systems" },
       { label: "Who it is for", href: "/#teams" },
     ],

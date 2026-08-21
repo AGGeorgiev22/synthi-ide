@@ -88,9 +88,21 @@ export default async function ArticlePage({ params }) {
     headline: post.title,
     description: post.summary,
     image: `${SITE_URL}${post.image}`,
-    mainEntityOfPage: canonicalUrl,
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": canonicalUrl,
+    },
     url: canonicalUrl,
     ...(post.publishedAt ? { datePublished: post.publishedAt, dateModified: post.publishedAt } : {}),
+    articleSection: post.category,
+    keywords: post.theme === "announcement"
+      ? ["ZILM", "GPU hot module replacement", "GPU HMR", "CUDA hot reload", "ROCm development"]
+      : [post.category, "production coding agents", "developer infrastructure"],
+    inLanguage: "en-US",
+    isPartOf: {
+      "@type": "Blog",
+      "@id": `${SITE_URL}/blog/#blog`,
+    },
     author: {
       "@type": "Organization",
       name: "Vectant",
@@ -100,6 +112,12 @@ export default async function ArticlePage({ params }) {
       "@type": "Organization",
       name: "Vectant",
       url: SITE_URL,
+      logo: {
+        "@type": "ImageObject",
+        url: `${SITE_URL}/icon.svg`,
+        width: 512,
+        height: 512,
+      },
     },
     breadcrumb: {
       "@type": "BreadcrumbList",

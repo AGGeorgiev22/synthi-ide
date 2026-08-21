@@ -1,4 +1,4 @@
-const SITE_URL = "https://vectant.dev";
+import { SITE_URL } from "@/lib/seo";
 
 export default function robots() {
   return {
@@ -6,10 +6,9 @@ export default function robots() {
       {
         userAgent: "*",
         allow: "/",
-        disallow: "/api/",
+        disallow: ["/api/", "/_next/"],
       },
     ],
     sitemap: `${SITE_URL}/sitemap.xml`,
-    host: SITE_URL,
   };
 }

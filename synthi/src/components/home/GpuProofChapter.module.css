@@ -84,6 +84,18 @@
   line-height: 1.56;
 }
 
+.gpuIntro > span a {
+  color: #f2efe9;
+  text-decoration: underline;
+  text-decoration-color: rgb(var(--vectant-accent-rgb) / 0.82);
+  text-underline-offset: 0.2em;
+}
+
+.gpuIntro > span a:hover,
+.gpuIntro > span a:focus-visible {
+  color: var(--vectant-accent-display);
+}
+
 .gpuPlate {
   position: absolute;
   z-index: 3;
