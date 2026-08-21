@@ -41,7 +41,7 @@ export function NewsRegardingVectant() {
       <div className={styles.newsShell}>
         <header className={styles.newsHeader}>
           <h2 id="news-regarding-vectant">News regarding Vectant.</h2>
-          <p>Product releases and engineering writing from the team building controlled runs for coding agents.</p>
+          <p>Product releases and engineering writing from the team.</p>
           <Link href="/blog" className={styles.allNews}>
             Browse all writing
             <ArrowUpRight size={17} weight="light" aria-hidden="true" />
