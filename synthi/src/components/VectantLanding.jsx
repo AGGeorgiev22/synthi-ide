@@ -6,6 +6,7 @@ import { FinalApproach } from "@/components/home/FinalApproach";
 import { GpuProofChapter } from "@/components/home/GpuProofChapter";
 import { GuardedRunCinema } from "@/components/home/GuardedRunCinema";
 import { MissionProfiles } from "@/components/home/MissionProfiles";
+import { NewsRegardingVectant } from "@/components/home/NewsRegardingVectant";
 import { OutcomeChapters } from "@/components/home/OutcomeChapters";
 import styles from "@/components/VectantLanding.module.css";
 
@@ -16,6 +17,7 @@ export function VectantLanding() {
       <EvidenceStrip />
       <GuardedRunCinema />
       <GpuProofChapter />
+      <NewsRegardingVectant />
       <OutcomeChapters />
       <MissionProfiles />
       <EnterpriseConfidence />
