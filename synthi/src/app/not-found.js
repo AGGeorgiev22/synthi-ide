@@ -25,9 +25,9 @@ export default function NotFound() {
       <section className={styles.content} aria-labelledby="not-found-heading">
         <div className={styles.message}>
           <p className={styles.status}>Route status: 404</p>
-          <h1 id="not-found-heading">This route does not resolve.</h1>
+          <h1 id="not-found-heading">No route lives here.</h1>
           <p className={styles.intro}>
-            The page may have moved, or the address is incomplete. Start from the control plane or inspect the technical reference.
+            The address may be stale, private, or incomplete. Return to Vectant or continue from the technical reference.
           </p>
           <div className={styles.actions}>
             <Link href="/" className={styles.primaryAction}>
@@ -41,9 +41,16 @@ export default function NotFound() {
           </div>
         </div>
 
-        <aside className={styles.statusPanel} aria-label="Not found status">
-          <span>404</span>
-          <p>Not found</p>
+        <aside className={styles.routeArtifact} aria-label="Route resolution failed: page not found">
+          <div className={styles.routeFrame}>
+            <p>There is no endpoint at this address.</p>
+            <div className={styles.errorCode} aria-hidden="true">
+              <span>4</span>
+              <span>0</span>
+              <span>4</span>
+            </div>
+          </div>
+          <p className={styles.routeCaption}>A path needs a destination.</p>
         </aside>
       </section>
     </main>
