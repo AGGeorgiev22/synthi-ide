@@ -114,6 +114,7 @@
 .postImage {
   position: relative;
   overflow: hidden;
+  border-radius: 12px;
 }
 
 .featuredImage {
