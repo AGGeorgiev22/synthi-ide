@@ -404,6 +404,7 @@
   min-height: min(56vw, 42rem);
   border: 0;
   background: var(--vectant-black-ink);
+  border-radius: 12px;
 }
 
 .announcementPage .figure img {
