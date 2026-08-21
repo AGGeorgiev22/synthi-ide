@@ -55,7 +55,7 @@ const siteDescription =
   "Vectant is the cloud development environment where agents work under scoped authority, live runtime state, and reviewable proof.";
 
 export const metadata = {
-  title: "Vectant - Runtime Control Plane for Production Agents",
+  title: "Vectant | Runtime Control Plane for Production Agents",
   description: siteDescription,
   keywords: [
     "cloud IDE",
@@ -72,6 +72,12 @@ export const metadata = {
     "MCP",
     "developer tools",
     "Vectant",
+    "ai infra",
+    "deep tech",
+    "novel",
+    "enterprise infra",
+    "runtime layer",
+    "runtime",
   ],
   authors: [{ name: "Vectant" }],
   metadataBase: new URL(SITE_URL),
@@ -90,7 +96,7 @@ export const metadata = {
     },
   },
   openGraph: {
-    title: "Vectant - Runtime Control Plane for Production Agents",
+    title: "Vectant | Runtime Control Plane for Production Agents",
     description:
       "The cloud development environment where autonomous agents see the app, run the build, preserve state, earn scoped authority, and ship reviewable evidence.",
     url: SITE_URL,
@@ -101,7 +107,7 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Vectant - Runtime Control Plane for Production Agents",
+    title: "Vectant | Runtime Control Plane for Production Agents",
     description:
       "The cloud runtime where production agents run with scoped authority, live state, and proof a reviewer can inspect.",
     images: [SITE_SOCIAL_IMAGE.url],
