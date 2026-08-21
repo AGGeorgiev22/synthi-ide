@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowLeft, ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
 
 import { Logo } from "@/components/Logo";
+import { NotFoundBackgroundLoader } from "@/app/NotFoundBackgroundLoader";
 import styles from "@/app/not-found.module.css";
 
 export const metadata = {
@@ -16,6 +17,7 @@ export const metadata = {
 export default function NotFound() {
   return (
     <main className={styles.notFound}>
+      <NotFoundBackgroundLoader />
       <header className={styles.header}>
         <Link href="/" className={styles.brand} aria-label="Vectant home">
           <Logo className={styles.logo} />

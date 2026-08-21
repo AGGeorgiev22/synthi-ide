@@ -10,6 +10,52 @@
     var(--vectant-black);
 }
 
+.background {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.signal,
+.echo {
+  position: absolute;
+  display: block;
+  border-radius: 50%;
+  will-change: transform;
+}
+
+.signal {
+  top: -17rem;
+  right: -10rem;
+  width: min(48vw, 43rem);
+  aspect-ratio: 1;
+  background: radial-gradient(circle, rgb(var(--vectant-accent-rgb) / 0.2), transparent 68%);
+}
+
+.echo {
+  bottom: -23rem;
+  left: -16rem;
+  width: min(44vw, 36rem);
+  aspect-ratio: 1;
+  border: 1px solid rgb(var(--vectant-accent-rgb) / 0.18);
+  box-shadow: inset 0 0 5rem rgb(var(--vectant-accent-rgb) / 0.05);
+}
+
+.backgroundTrace {
+  position: absolute;
+  bottom: 7%;
+  left: -14%;
+  display: block;
+  width: min(58rem, 80vw);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgb(var(--vectant-accent-rgb) / 0.48), transparent);
+  opacity: 0.82;
+  transform: rotate(-34deg);
+  transform-origin: left center;
+  will-change: transform;
+}
+
 .header,
 .content {
   position: relative;
@@ -271,5 +317,11 @@
   .primaryAction,
   .secondaryAction {
     transition-duration: 0.01ms;
+  }
+
+  .signal,
+  .echo,
+  .backgroundTrace {
+    will-change: auto;
   }
 }
