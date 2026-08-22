@@ -90,10 +90,10 @@ export default function BlogPage() {
       </header>
 
       <section className={styles.hero} aria-labelledby="journal-title">
-        <p>The Vectant engineering blog</p>
-        <h1 id="journal-title">ZILM, GPU hot module replacement, and production-agent systems.</h1>
+        <p>Engineering blog</p>
+        <h1 id="journal-title">The Vectant Blog</h1>
         <span>
-          Technical writing on ZILM GPU HMR, runtime control, agent authority, and reviewable proof.
+          Product news, and technical writing.
         </span>
       </section>
 
