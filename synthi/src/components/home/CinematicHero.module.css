@@ -1,6 +1,8 @@
 .cinemaHero {
+  --cinema-boundary: #e77d3e;
+  --cinema-boundary-rgb: 231 125 62;
   position: relative;
-  min-height: 244dvh;
+  min-height: 220dvh;
   color: #f2efe9;
   background: var(--vectant-black);
 }
@@ -10,35 +12,53 @@
   top: 0;
   min-height: 100dvh;
   overflow: hidden;
-  background: var(--vectant-black);
+  background:
+    radial-gradient(68% 90% at 50% 42%, rgb(28 31 44 / 0.44), transparent 65%),
+    var(--vectant-black);
   isolation: isolate;
 }
 
+.cinemaHeroSticky::after {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  opacity: 0;
+  background: radial-gradient(46% 58% at 50% 45%, rgb(var(--cinema-boundary-rgb) / 0.2), transparent 72%);
+  content: "";
+  pointer-events: none;
+  transition: opacity 540ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cinemaHeroSticky[data-action-active="true"]::after {
+  opacity: 1;
+}
+
+.cinemaHeroSticky[data-action-active="true"] .cinemaBoundaryLine {
+  stroke-width: 1.7;
+  filter: drop-shadow(0 0 9px rgb(var(--cinema-boundary-rgb) / 0.88));
+}
+
 .cinemaAtmosphere,
-.cinemaAtmosphereDepth,
-.cinemaAtmosphereFar,
-.cinemaFlightPaths,
-.cinemaProductFrame,
-.cinemaShutters {
+.cinemaCloudScan,
+.cinemaOrbit,
+.cinemaBoundary {
   position: absolute;
   inset: 0;
 }
 
 .cinemaAtmosphere {
   z-index: 0;
-  transform-origin: 62% 54%;
-  will-change: transform;
+  transform-origin: 50% 48%;
+  will-change: transform, clip-path;
 }
 
-.cinemaAtmosphereDepth {
-  overflow: hidden;
-  will-change: transform;
-}
-
-.cinemaAtmosphereFar,
-.cinemaAtmosphereNear {
-  transform-origin: 61% 57%;
-  will-change: transform;
+.cinemaAtmosphere::after {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgb(8 9 15 / 0.68), transparent 34%, rgb(8 9 15 / 0.15) 62%, rgb(8 9 15 / 0.8)),
+    radial-gradient(72% 78% at 50% 44%, transparent 38%, rgb(8 9 15 / 0.72));
+  content: "";
 }
 
 .cinemaAtmosphereImage {
@@ -46,132 +66,135 @@
   object-position: 57% center;
 }
 
-.cinemaEarlyProof {
-  position: absolute;
+.cinemaCloudScan {
   z-index: 1;
-  top: clamp(5.4rem, 14svh, 10rem);
-  right: clamp(-4.8rem, -3.8vw, -2rem);
-  width: min(37vw, 42rem);
-  height: min(72dvh, 45rem);
-  margin: 0;
-  overflow: hidden;
-  background: var(--vectant-black-raised);
-  box-shadow:
-    inset 0 0 0 1px rgb(255 255 255 / 0.15),
-    -34px 48px 96px rgb(0 0 0 / 0.46);
-  clip-path: polygon(11% 0, 100% 0, 100% 100%, 0 100%, 0 12%);
-  transform-origin: 70% 50%;
-  will-change: transform, opacity;
+  height: 25%;
+  background: linear-gradient(180deg, transparent, rgb(var(--cinema-boundary-rgb) / 0.1) 48%, rgb(var(--cinema-boundary-rgb) / 0.62) 51%, transparent 57%);
+  mix-blend-mode: screen;
+  pointer-events: none;
 }
 
-.cinemaEarlyProofCamera {
-  position: absolute;
-  inset: 0;
-  will-change: transform;
-}
-
-.cinemaEarlyProofImage {
-  object-fit: contain;
-  object-position: center top;
-}
-
-.cinemaVisuallyHidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  clip-path: inset(50%);
-  white-space: nowrap;
-}
-
-.cinemaFlightPaths {
+.cinemaOrbit {
   z-index: 2;
   width: 100%;
   height: 100%;
   overflow: visible;
   pointer-events: none;
+  transform-origin: 50% 50%;
+  will-change: transform;
 }
 
-.cinemaIntrusionPath,
-.cinemaRouteToken path {
+.cinemaOrbitLine,
+.cinemaOrbitInner {
+  fill: none;
+  vector-effect: non-scaling-stroke;
+}
+
+.cinemaOrbitLine {
+  stroke: rgb(232 237 240 / 0.48);
+  stroke-width: 1;
+}
+
+.cinemaOrbitInner {
+  stroke: rgb(var(--cinema-boundary-rgb) / 0.34);
+  stroke-width: 0.7;
+  stroke-dasharray: 2 11;
+}
+
+.cinemaBoundary {
+  z-index: 3;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.cinemaBoundaryLine,
+.cinemaBoundaryTravel,
+.cinemaBoundaryIdlePulse {
   fill: none;
   stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
 }
 
-.cinemaIntrusionPath {
-  stroke: rgb(231 237 243 / 0.88);
-  stroke-width: 1.4;
-  filter: drop-shadow(0 0 6px rgb(214 233 246 / 0.32));
+.cinemaBoundaryLine {
+  stroke: var(--cinema-boundary);
+  stroke-width: 1.25;
+  filter: drop-shadow(0 0 5px rgb(var(--cinema-boundary-rgb) / 0.56));
 }
 
-.cinemaRouteToken rect {
-  fill: #f2efe9;
-  stroke: var(--vectant-black);
+.cinemaBoundaryTravel {
+  stroke: #ffd9bc;
+  stroke-width: 2.4;
+  filter: drop-shadow(0 0 8px rgb(var(--cinema-boundary-rgb) / 0.9));
+}
+
+.cinemaBoundaryIdlePulse {
+  stroke: rgb(255 230 209 / 0.9);
   stroke-width: 2;
+  stroke-dasharray: 0.025 0.975;
+  filter: drop-shadow(0 0 7px rgb(var(--cinema-boundary-rgb) / 0.9));
 }
 
-.cinemaRouteToken path {
-  stroke: rgb(242 239 233 / 0.5);
-  stroke-width: 1;
+.cinemaVanishingPoint {
+  fill: #ffe5d1;
+  filter: drop-shadow(0 0 9px rgb(var(--cinema-boundary-rgb) / 0.94));
+  transform-box: fill-box;
+  transform-origin: center;
 }
 
-.cinemaConflictPoint circle:first-child {
-  fill: var(--vectant-accent);
-  filter: drop-shadow(0 0 10px rgb(var(--vectant-accent-rgb) / 0.92));
-}
-
-.cinemaConflictPoint circle:last-child {
-  fill: rgb(var(--vectant-accent-rgb) / 0.08);
-  stroke: rgb(var(--vectant-accent-rgb) / 0.48);
-  stroke-width: 1;
-}
-
-.cinemaIncident {
+.cinemaBrandMark {
   position: absolute;
-  z-index: 9;
-  top: 46%;
-  left: calc(45.25% + 1.7rem);
-  display: grid;
-  gap: 0.28rem;
-  padding-left: 0.9rem;
-  border-left: 1px solid var(--vectant-accent);
+  z-index: 5;
+  top: clamp(1.15rem, 2.8vw, 2rem);
+  left: clamp(1.2rem, 3.3vw, 3.4rem);
+  opacity: 0.84;
+}
+
+.cinemaBrandMark img {
+  width: auto;
+  height: clamp(0.78rem, 0.9vw, 0.96rem);
+}
+
+.cinemaBoundaryLabel {
+  position: absolute;
+  z-index: 8;
+  top: 0;
+  left: 0;
+  display: flex;
+  gap: 0.45rem;
+  color: #ffe5d1;
   font-family: var(--font-geist-mono), ui-monospace, monospace;
-  letter-spacing: 0.045em;
+  font-size: 0.57rem;
+  font-weight: 650;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
+  white-space: nowrap;
   pointer-events: none;
 }
 
-.cinemaIncident span {
-  color: var(--vectant-accent-readable);
-  font-size: 0.62rem;
-  font-weight: 700;
-}
-
-.cinemaIncident strong {
-  color: rgb(239 239 236 / 0.78);
-  font-size: 0.64rem;
-  font-weight: 500;
+.cinemaBoundaryLabel span {
+  color: var(--cinema-boundary);
 }
 
 .cinemaHeroCopy {
   position: absolute;
   z-index: 5;
-  top: clamp(5.4rem, 17.5svh, 12rem);
-  left: clamp(1.4rem, 6.2vw, 6.8rem);
+  top: clamp(6.3rem, 18svh, 11.3rem);
+  left: clamp(1.2rem, 6.1vw, 6.8rem);
   width: min(90vw, 91rem);
-  text-align: left;
-  will-change: transform, opacity, clip-path;
+  transform-origin: 42% 52%;
+  will-change: transform, opacity;
 }
 
 .cinemaEyebrow {
   margin: 0 0 clamp(1.25rem, 2.2vh, 1.8rem);
-  color: var(--vectant-ink-secondary);
+  color: rgb(242 239 233 / 0.62);
   font-family: var(--font-geist-mono), ui-monospace, monospace;
-  font-size: 0.64rem;
+  font-size: 0.61rem;
   font-weight: 650;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
 }
 
@@ -179,38 +202,94 @@
   margin: 0;
   color: #f2efe9;
   font-family: var(--font-display);
-  font-size: clamp(3.8rem, min(6.35vw, 13svh), 7rem);
+  font-size: clamp(3.5rem, min(6vw, 12.6svh), 7rem);
   font-weight: 400;
   line-height: 0.87;
   letter-spacing: -0.035em;
 }
 
-.cinemaHeroCopy h1 span {
+.cinemaHeadlineLine {
   display: block;
   white-space: nowrap;
+}
+
+.cinemaHeadlineLead,
+.cinemaHeadlineBound {
+  display: inline;
+}
+
+.cinemaCharacterMask {
+  display: inline-block;
+  overflow: hidden;
+  padding-bottom: 0.1em;
+  vertical-align: bottom;
+}
+
+.cinemaCharacter {
+  display: inline-block;
+  transform-origin: left center;
   will-change: transform, opacity;
 }
 
-.cinemaHeroCopy h1 span:last-child {
-  color: var(--vectant-ui-text);
-  text-shadow: 0 2px 26px rgb(8 9 15 / 0.82);
+.cinemaBoundWord {
+  position: relative;
+  display: inline-block;
+  color: #fff4eb;
+  text-shadow: 0 0 0 transparent;
+}
+
+.cinemaBoundWord::before,
+.cinemaBoundWord::after {
+  position: absolute;
+  top: 67%;
+  height: 1px;
+  opacity: 0;
+  background: linear-gradient(90deg, transparent, var(--cinema-boundary));
+  content: "";
+  pointer-events: none;
+  transform: scaleX(0);
+  transition: transform 360ms cubic-bezier(0.16, 1, 0.3, 1), opacity 180ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cinemaBoundWord::before {
+  right: calc(100% + 0.13em);
+  width: min(20vw, 21rem);
+  transform-origin: right center;
+}
+
+.cinemaBoundWord::after {
+  left: calc(100% + 0.1em);
+  width: min(30vw, 32rem);
+  background: linear-gradient(90deg, var(--cinema-boundary), transparent);
+  transform-origin: left center;
+}
+
+.cinemaBoundWordLocked {
+  color: #fff4eb;
+  text-shadow: 1px 0 0 rgb(var(--cinema-boundary-rgb) / 0.32), -1px 0 0 rgb(221 234 255 / 0.17);
+}
+
+.cinemaBoundWordLocked::before,
+.cinemaBoundWordLocked::after {
+  opacity: 0.88;
+  transform: scaleX(1);
 }
 
 .cinemaHeroFooter {
   display: flex;
-  max-width: 74rem;
+  max-width: 76rem;
   align-items: flex-end;
   justify-content: space-between;
   gap: 2rem;
-  margin-top: clamp(1.5rem, 3.4vh, 2.6rem);
+  margin-top: clamp(1.55rem, 3.4vh, 2.7rem);
 }
 
-.cinemaHeroFooter p {
-  max-width: 36rem;
+.cinemaHeroFooter > p {
+  max-width: 34rem;
   margin: 0;
   color: var(--vectant-ink-secondary);
-  font-size: clamp(0.95rem, 1.15vw, 1.08rem);
-  line-height: 1.58;
+  font-size: clamp(0.94rem, 1.1vw, 1.07rem);
+  line-height: 1.55;
 }
 
 .cinemaActions {
@@ -228,32 +307,29 @@
   justify-content: center;
   gap: 0.7rem;
   padding: 0.35rem 0.4rem 0.35rem 1.05rem;
-  white-space: nowrap;
-  font-size: 0.76rem;
+  border: 0;
+  font: inherit;
+  font-size: 0.75rem;
   font-weight: 740;
   letter-spacing: -0.012em;
+  line-height: 1;
   outline: none;
-  transition:
-    transform 420ms cubic-bezier(0.16, 1, 0.3, 1),
-    color 420ms cubic-bezier(0.16, 1, 0.3, 1),
-    background-color 420ms cubic-bezier(0.16, 1, 0.3, 1),
-    box-shadow 420ms cubic-bezier(0.16, 1, 0.3, 1);
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: transform 420ms cubic-bezier(0.16, 1, 0.3, 1), color 420ms cubic-bezier(0.16, 1, 0.3, 1), background-color 420ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 420ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .cinemaPrimaryAction {
-  color: #f2efe9;
-  background: var(--vectant-accent);
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 0.32),
-    0 18px 46px rgb(var(--vectant-accent-rgb) / 0.24);
+  color: #181119;
+  background: #f2efe9;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.7), 0 16px 38px rgb(0 0 0 / 0.22);
 }
 
 .cinemaSecondaryAction {
   color: #f2efe9;
-  background: rgb(8 7 13 / 0.7);
-  box-shadow:
-    inset 0 0 0 1px rgb(242 239 233 / 0.28),
-    inset 0 1px 0 rgb(255 255 255 / 0.08);
+  background: rgb(8 9 15 / 0.72);
+  box-shadow: inset 0 0 0 1px rgb(242 239 233 / 0.28), inset 0 1px 0 rgb(255 255 255 / 0.08);
 }
 
 .cinemaPrimaryAction > span,
@@ -263,8 +339,9 @@
   height: 2.45rem;
   align-items: center;
   justify-content: center;
-  background: rgb(23 19 31 / 0.1);
-  transition: transform 420ms cubic-bezier(0.16, 1, 0.3, 1);
+  color: var(--cinema-boundary);
+  background: rgb(20 18 25 / 0.08);
+  transition: transform 420ms cubic-bezier(0.16, 1, 0.3, 1), background-color 420ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .cinemaSecondaryAction > span {
@@ -277,13 +354,14 @@
 }
 
 .cinemaPrimaryAction:hover {
-  background: var(--vectant-ui-muted);
+  background: #fff8f2;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.8), 0 22px 50px rgb(var(--cinema-boundary-rgb) / 0.16);
 }
 
 .cinemaSecondaryAction:hover {
   color: #fff7f2;
-  background: rgb(var(--vectant-accent-rgb) / 0.12);
-  box-shadow: inset 0 0 0 1px rgb(var(--vectant-accent-rgb) / 0.62);
+  background: rgb(var(--cinema-boundary-rgb) / 0.11);
+  box-shadow: inset 0 0 0 1px rgb(var(--cinema-boundary-rgb) / 0.65), inset 0 1px 0 rgb(255 255 255 / 0.1);
 }
 
 .cinemaPrimaryAction:hover > span,
@@ -297,132 +375,136 @@
 }
 
 .cinemaPrimaryAction:focus-visible,
-.cinemaSecondaryAction:focus-visible {
-  box-shadow:
-    0 0 0 2px var(--vectant-black),
-    0 0 0 4px var(--vectant-ui-action);
+.cinemaSecondaryAction:focus-visible,
+.cinemaExecutionHeader button:focus-visible {
+  box-shadow: 0 0 0 2px var(--vectant-black), 0 0 0 4px var(--cinema-boundary);
 }
 
-.cinemaReducedNarrative {
-  display: none;
-}
-
-.cinemaProductReveal {
+.cinemaExecution {
   position: absolute;
-  z-index: 3;
-  inset: clamp(4.65rem, 7vh, 5.8rem) clamp(0.65rem, 1.4vw, 1.5rem) clamp(0.7rem, 1.4vw, 1.5rem);
-  margin: 0;
-  overflow: hidden;
-  background: var(--vectant-black-raised);
-  box-shadow:
-    0 0 0 1px rgb(255 255 255 / 0.13),
-    0 52px 130px rgb(0 0 0 / 0.68);
-  transform-origin: 50% 52%;
-  will-change: transform, opacity;
+  z-index: 7;
+  top: clamp(8rem, 17vh, 11rem);
+  right: clamp(1rem, 5.7vw, 6.5rem);
+  width: min(27rem, 34vw);
+  padding: 1px;
+  background: linear-gradient(145deg, rgb(var(--cinema-boundary-rgb) / 0.78), rgb(242 239 233 / 0.2) 36%, rgb(var(--cinema-boundary-rgb) / 0.18) 74%);
+  clip-path: polygon(0 0, calc(100% - 1.7rem) 0, 100% 1.7rem, 100% 100%, 0 100%);
+  box-shadow: 0 28px 80px rgb(0 0 0 / 0.36);
 }
 
-.cinemaProductWindow,
-.cinemaProductCamera {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
+.cinemaExecutionCore {
+  padding: 1.05rem;
+  background: linear-gradient(140deg, rgb(19 19 27 / 0.97), rgb(8 9 15 / 0.96));
+  clip-path: polygon(0 0, calc(100% - 1.64rem) 0, 100% 1.64rem, 100% 100%, 0 100%);
 }
 
-.cinemaProductCamera {
-  will-change: transform;
-}
-
-.cinemaProductImage {
-  object-fit: contain;
-  object-position: center;
-}
-
-.cinemaProductFrame {
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-}
-
-.cinemaProductFrame path {
-  fill: none;
-  stroke: rgb(var(--vectant-accent-rgb) / 0.58);
-  stroke-width: 1.1;
-  filter: drop-shadow(0 0 5px rgb(var(--vectant-accent-rgb) / 0.46));
-}
-
-.cinemaProductTelemetry {
-  position: absolute;
-  z-index: 3;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  display: grid;
-  min-height: 3rem;
-  grid-template-columns: repeat(4, auto);
+.cinemaExecutionHeader {
+  display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  padding-inline: clamp(0.85rem, 2vw, 1.8rem);
-  color: rgb(228 230 235 / 0.58);
-  background: rgb(8 7 13 / 0.9);
-  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.11);
-  font-family: var(--font-geist-mono), ui-monospace, monospace;
-  font-size: 0.6rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  backdrop-filter: blur(16px);
-}
-
-.cinemaProductTelemetry strong {
-  margin-left: 0.3rem;
+  margin-bottom: 1.05rem;
   color: #f2efe9;
-  font-weight: 650;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.59rem;
+  font-weight: 700;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
 }
 
-.cinemaShutters {
-  z-index: 8;
-  overflow: hidden;
+.cinemaExecutionHeader button {
+  display: inline-grid;
+  width: 1.75rem;
+  height: 1.75rem;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  color: rgb(242 239 233 / 0.82);
+  background: rgb(255 255 255 / 0.07);
+  cursor: pointer;
+  transition: color 250ms cubic-bezier(0.16, 1, 0.3, 1), background-color 250ms cubic-bezier(0.16, 1, 0.3, 1), transform 250ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cinemaExecutionHeader button:hover {
+  color: #fff;
+  background: rgb(var(--cinema-boundary-rgb) / 0.2);
+  transform: scale(0.95);
+}
+
+.cinemaExecutionSteps {
+  display: grid;
+  gap: 0.68rem;
+}
+
+.cinemaExecutionStep {
+  display: grid;
+  grid-template-columns: 6.2rem minmax(0, 1fr);
+  gap: 0.75rem;
+  align-items: baseline;
+  color: rgb(242 239 233 / 0.72);
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.64rem;
+  line-height: 1.35;
+}
+
+.cinemaExecutionStep strong {
+  color: var(--cinema-boundary);
+  font-weight: 700;
+  letter-spacing: 0.07em;
+}
+
+.cinemaExecutionStep span {
+  overflow-wrap: anywhere;
+}
+
+.cinemaDeniedResult {
+  display: grid;
+  gap: 0.32rem;
+  margin-top: 1rem;
+  padding-top: 0.84rem;
+  color: rgb(255 221 200 / 0.9);
+  box-shadow: inset 0 1px 0 rgb(var(--cinema-boundary-rgb) / 0.42);
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.59rem;
+  letter-spacing: 0.05em;
+}
+
+.cinemaDeniedResult strong {
+  color: var(--cinema-boundary);
+  font-size: 0.57rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.cinemaUnauthorizedPacket {
+  position: absolute;
+  z-index: 6;
+  top: 23%;
+  right: 11%;
+  display: grid;
+  gap: 0.3rem;
+  min-width: 11rem;
+  padding: 0.65rem 0.76rem;
+  color: #f4e7dd;
+  background: rgb(20 18 24 / 0.82);
+  box-shadow: inset 0 0 0 1px rgb(var(--cinema-boundary-rgb) / 0.54);
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.56rem;
+  letter-spacing: 0.055em;
   pointer-events: none;
 }
 
-.cinemaShutters i {
-  position: absolute;
-  top: -2%;
-  bottom: -2%;
-  width: 57%;
-  display: block;
-  background:
-    radial-gradient(circle at 50% 50%, rgb(20 23 29 / 0.95), var(--vectant-black) 58%),
-    var(--vectant-black);
-  will-change: transform;
+.cinemaUnauthorizedPacket strong {
+  color: var(--cinema-boundary);
+  font-size: 0.54rem;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
 }
 
-.cinemaShutterLeft {
-  left: -1px;
-  clip-path: polygon(0 0, 100% 0, 66% 50%, 100% 100%, 0 100%);
-  box-shadow: 20px 0 70px rgb(0 0 0 / 0.75);
-}
-
-.cinemaShutterRight {
-  right: -1px;
-  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 34% 50%);
-  box-shadow: -20px 0 70px rgb(0 0 0 / 0.75);
-}
-
-@media (max-width: 900px) {
-  .cinemaEarlyProof {
-    right: -7vw;
-    width: 45vw;
-  }
-
-  .cinemaHeroCopy {
-    top: clamp(8rem, 16vh, 10rem);
-    left: clamp(1.1rem, 4vw, 2.5rem);
-    width: calc(100% - clamp(2.2rem, 8vw, 5rem));
-  }
-
-  .cinemaHeroCopy h1 {
-    font-size: clamp(3.75rem, 9.2vw, 6rem);
+@media (max-width: 1080px) {
+  .cinemaExecution {
+    width: min(25rem, 39vw);
   }
 
   .cinemaHeroFooter {
@@ -437,62 +519,69 @@
 
 @media (max-width: 767px) {
   .cinemaHero {
-    min-height: 224dvh;
+    min-height: 186dvh;
   }
 
   .cinemaAtmosphereImage {
     object-position: 54% center;
   }
 
+  .cinemaOrbit {
+    inset: 5% -28% auto;
+    width: 156%;
+    height: 74%;
+  }
+
+  .cinemaBrandMark {
+    top: 1.15rem;
+    left: 1rem;
+  }
+
   .cinemaHeroCopy {
-    top: clamp(7.3rem, 14.5svh, 9rem);
+    top: clamp(6.2rem, 13.5svh, 8.2rem);
     left: 1rem;
     width: calc(100% - 2rem);
   }
 
-  .cinemaEarlyProof {
-    top: 38%;
-    right: -16vw;
-    width: 78vw;
-    height: 48dvh;
-    min-height: 22rem;
-    clip-path: polygon(9% 0, 100% 0, 100% 100%, 0 100%, 0 10%);
-  }
-
   .cinemaEyebrow {
     margin-bottom: 1rem;
-    font-size: 0.58rem;
+    font-size: 0.55rem;
   }
 
   .cinemaHeroCopy h1 {
-    font-size: clamp(2.5rem, 12.5vw, 4.5rem);
+    font-size: clamp(1.95rem, 7.5vw, 3.7rem);
     line-height: 0.9;
   }
 
-  .cinemaHeroCopy h1 span:last-child {
-    font-size: 0.64em;
-    letter-spacing: -0.048em;
+  .cinemaHeadlineLine:last-child {
+    white-space: normal;
+  }
+
+  .cinemaHeadlineLead,
+  .cinemaHeadlineBound {
+    display: inline;
+  }
+
+  .cinemaBoundWord::before {
+    width: 15vw;
+  }
+
+  .cinemaBoundWord::after {
+    width: 22vw;
   }
 
   .cinemaHeroFooter {
-    display: grid;
     gap: 1.2rem;
-    margin-top: 1.3rem;
+    margin-top: 1.35rem;
   }
 
-  .cinemaHeroFooter p {
-    max-width: 24rem;
+  .cinemaHeroFooter > p {
+    max-width: 25rem;
     font-size: 0.9rem;
-    line-height: 1.52;
-  }
-
-  .cinemaPrimaryAction {
-    width: max-content;
-    min-height: 3rem;
+    line-height: 1.5;
   }
 
   .cinemaActions {
-    display: grid;
     width: 100%;
     grid-template-columns: 1fr 1fr;
   }
@@ -502,49 +591,56 @@
     width: 100%;
     min-height: 3rem;
     justify-content: space-between;
-    padding-left: 0.8rem;
-    font-size: 0.68rem;
+    padding-left: 0.76rem;
+    font-size: 0.66rem;
   }
 
   .cinemaPrimaryAction > span,
   .cinemaSecondaryAction > span {
-    width: 2.3rem;
-    height: 2.3rem;
+    width: 2.25rem;
+    height: 2.25rem;
   }
 
-  .cinemaIncident {
-    top: 48%;
-    left: calc(45.25% + 0.8rem);
-    max-width: 10.5rem;
+  .cinemaExecution {
+    top: auto;
+    right: 0.65rem;
+    bottom: 0.75rem;
+    left: 0.65rem;
+    width: auto;
   }
 
-  .cinemaIncident span,
-  .cinemaIncident strong {
-    font-size: 0.53rem;
-    line-height: 1.35;
+  .cinemaExecutionCore {
+    padding: 0.9rem;
   }
 
-  .cinemaProductReveal {
-    inset: 4.35rem 0.55rem 0.55rem;
+  .cinemaExecutionStep {
+    grid-template-columns: 5.55rem minmax(0, 1fr);
+    font-size: 0.58rem;
   }
 
-  .cinemaProductTelemetry {
-    grid-template-columns: repeat(2, auto);
-    row-gap: 0.4rem;
-    padding-block: 0.55rem;
-    font-size: 0.52rem;
+  .cinemaUnauthorizedPacket {
+    top: 44%;
+    right: 0.75rem;
+    min-width: 9rem;
+    font-size: 0.48rem;
   }
 
-  .cinemaShutters i {
-    width: 62%;
+  .cinemaBoundaryLabel {
+    display: none;
+  }
+}
+
+@media (max-width: 520px) {
+  .cinemaHeroCopy h1 {
+    font-size: clamp(2.25rem, 11.3vw, 3.4rem);
   }
 
-  .cinemaShutterLeft {
-    clip-path: polygon(0 0, 100% 0, 58% 50%, 100% 100%, 0 100%);
+  .cinemaActions {
+    grid-template-columns: 1fr;
   }
 
-  .cinemaShutterRight {
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 42% 50%);
+  .cinemaExecution {
+    bottom: 0.5rem;
   }
 }
 
@@ -555,111 +651,23 @@
 
   .cinemaHeroSticky {
     position: relative;
-    min-height: auto;
-    overflow: visible;
+    min-height: 48rem;
   }
 
   .cinemaAtmosphere {
-    position: relative;
-    height: 100svh;
-    min-height: 42rem;
+    clip-path: none !important;
   }
 
-  .cinemaHeroCopy {
-    top: clamp(8rem, 17vh, 11rem);
-  }
-
-  .cinemaFlightPaths,
-  .cinemaIncident,
-  .cinemaEarlyProof,
-  .cinemaShutters {
+  .cinemaCloudScan,
+  .cinemaBoundaryIdlePulse,
+  .cinemaUnauthorizedPacket {
     display: none;
   }
 
-  .cinemaProductReveal {
-    position: relative;
-    inset: auto;
-    height: min(76svh, 52rem);
-    min-height: 31rem;
-    margin: 0 clamp(0.6rem, 1.5vw, 1.5rem) clamp(0.6rem, 1.5vw, 1.5rem);
-    opacity: 1 !important;
+  .cinemaHeroCopy,
+  .cinemaAtmosphere,
+  .cinemaOrbit,
+  .cinemaBoundary {
     transform: none !important;
-  }
-
-  .cinemaProductCamera,
-  .cinemaProductFrame,
-  .cinemaProductTelemetry {
-    opacity: 1 !important;
-    transform: none !important;
-  }
-
-  .cinemaReducedNarrative {
-    position: relative;
-    display: grid;
-    margin: 0 clamp(0.6rem, 1.5vw, 1.5rem) 0.6rem;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1px;
-    background: rgb(255 255 255 / 0.12);
-  }
-
-  .cinemaReducedNarrative article {
-    display: grid;
-    min-height: 8.5rem;
-    align-content: space-between;
-    gap: 1rem;
-    padding: 1.15rem;
-    background: var(--vectant-black-raised);
-  }
-
-  .cinemaReducedNarrative span {
-    color: var(--vectant-accent-readable);
-    font-family: var(--font-geist-mono), ui-monospace, monospace;
-    font-size: 0.57rem;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-  }
-
-  .cinemaReducedNarrative strong {
-    max-width: 32rem;
-    color: rgb(242 239 233 / 0.78);
-    font-size: 0.9rem;
-    font-weight: 540;
-    line-height: 1.5;
-  }
-}
-
-@media (max-width: 560px) {
-  .cinemaHeroCopy h1 span:last-child {
-    max-width: 100%;
-    line-height: 0.96;
-    white-space: normal;
-  }
-
-  .cinemaActions,
-  .cinemaReducedNarrative {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-height: 650px) and (min-width: 768px) {
-  .cinemaHeroCopy {
-    top: 5.4rem;
-  }
-
-  .cinemaEyebrow {
-    margin-bottom: 0.75rem;
-  }
-
-  .cinemaHeroCopy h1 {
-    font-size: clamp(3.55rem, 7.4vw, 6.8rem);
-  }
-
-  .cinemaHeroFooter {
-    margin-top: 1rem;
-  }
-
-  .cinemaProductReveal {
-    top: 4.35rem;
   }
 }
