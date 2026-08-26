@@ -67,11 +67,11 @@ export function EvidenceStrip() {
             <dl className={styles.buildProofStats}>
               <div>
                 <dt>Continuous days</dt>
-                <dd>23</dd>
+                <dd>34</dd>
               </div>
               <div>
                 <dt>Production commits</dt>
-                <dd>2.4k</dd>
+                <dd>3.8k</dd>
               </div>
             </dl>
           </article>
